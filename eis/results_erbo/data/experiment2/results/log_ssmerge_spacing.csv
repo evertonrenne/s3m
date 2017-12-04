@@ -1,0 +1,443 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548;/src/com/googlecode/jmxtrans/util/JmxUtils;getConcatedTypeNameValues(Query,List<String>,String);public static String getConcatedTypeNameValues(Query query, List<String> typeNames, String typeName) {
+        Set<String> queryTypeNames = query.getTypeNames();
+        if (queryTypeNames != null && queryTypeNames.size() > 0) {
+            List<String> allNames = new ArrayList<String>(queryTypeNames);
+            for (String name : typeNames) {
+                if (!allNames.contains(name)) {
+                    allNames.add(name);
+                }
+            }
+            return getConcatedTypeNameValues(allNames, typeName);
+        } else {
+            return getConcatedTypeNameValues(typeNames, typeName);
+        }
+    };;public static String getConcatedTypeNameValues(Query query, List<String> typeNames, String typeName) {
+		Set<String> queryTypeNames = query.getTypeNames();
+		if (queryTypeNames != null && queryTypeNames.size() > 0) {
+			List<String> allNames = new ArrayList<String>(queryTypeNames);
+			for (String name : typeNames) {
+				if (!allNames.contains(name)) {
+					allNames.add(name);
+				}
+			}
+			return getConcatedTypeNameValues(allNames, typeName);
+		} else {
+			return getConcatedTypeNameValues(typeNames, typeName);
+		}
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548;/src/com/googlecode/jmxtrans/model/Query;setTypeNames(Set<String>);;;public void setTypeNames(Set<String> typeNames) {
+        this.typeNames = typeNames;
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548;/src/com/googlecode/jmxtrans/model/Query;getTypeNames();;;public Set<String> getTypeNames() {
+        return typeNames;
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;setupTest();;;@Before
+	public void	setupTest () {
+		this.mockQuery = mock(Query.class);
+		this.mockResult = mock(Result.class);
+
+		this.writer = new OpenTSDBWriter();
+
+		this.startLoopbackSocket();
+
+			//
+			// Setup common mock interactions.
+			//
+
+		when(this.mockResult.getValues()).thenReturn(createValueMap("x-att1-x", "120021"));
+		when(this.mockResult.getAttributeName()).thenReturn("X-ATT-X");
+		when(this.mockResult.getClassName()).thenReturn("X-DOMAIN.PKG.CLASS-X");
+		when(this.mockResult.getTypeName()).thenReturn("Type=x-type-x,Group=x-group-x,Other=x-other-x,Name=x-name-x");
+
+		this.writer.addSetting("typeNames", Arrays.asList(new String[] { "Type", "Group", "Name", "Missing" }));
+		this.writer.addSetting("host", "localhost");
+		this.writer.addSetting("port", Integer.valueOf(4242));
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;cleanupTest();;;@After
+	public void	cleanupTest () {
+		this.stopLoopbackSocket();
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;testMergedTypeNameValues1();;;@Test
+	public void	testMergedTypeNameValues1 () throws Exception {
+		List<String>	result;
+
+		// Verify the default is the same as the TRUE path.
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		validateMergedTypeNameValues(result, true);
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;testMergedTypeNameValues2();;;@Test
+	public void	testMergedTypeNameValues2 () throws Exception {
+		List<String>	result;
+
+		this.writer.addSetting("mergeTypeNamesTags", Boolean.TRUE);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		validateMergedTypeNameValues(result, true);
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;testMergedTypeNameValues3();;;@Test
+	public void	testMergedTypeNameValues3 () throws Exception {
+		List<String>	result;
+
+		// Verify the FALSE path.
+		this.writer.addSetting("mergeTypeNamesTags", Boolean.FALSE);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		validateMergedTypeNameValues(result, false);
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;testTagSetting();;;@Test
+	public void	testTagSetting () throws Exception {
+		List<String>		result;
+		Map<String, String>	tagMap;
+
+		when(this.mockResult.getValues()).thenReturn(createValueMap("X-ATT-X", "120021"));
+
+		// Verify empty tag map.
+		tagMap = new HashMap<String, String>();
+		this.writer.addSetting("tags", tagMap);
+		this.writer.setTypeNames(new LinkedList());
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021 host=[^ ]*$"));
+
+
+		// Verify tag map with multiple values.
+		tagMap = new HashMap<String, String>();
+		tagMap.put("x-tag1-x", "x-tag1val-x");
+		tagMap.put("x-tag2-x", "x-tag2val-x");
+		tagMap.put("x-tag3-x", "x-tag3val-x");
+		this.writer.addSetting("tags", tagMap);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+		assertTrue(result.get(0).matches(".*host=.*"));
+		assertTrue(result.get(0).matches(".*\\bx-tag1-x=x-tag1val-x\\b.*"));
+		assertTrue(result.get(0).matches(".*\\bx-tag2-x=x-tag2val-x\\b.*"));
+		assertTrue(result.get(0).matches(".*\\bx-tag3-x=x-tag3val-x\\b.*"));
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;testEmptyResultValues();;;@Test
+	public void	testEmptyResultValues () throws Exception {
+		List<String>		result;
+
+		when(this.mockResult.getValues()).thenReturn(null);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		assertEquals(0, result.size());
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;startLoopbackSocket();;;protected void	startLoopbackSocket() {
+		try {
+			this.loopbackSocket = new ServerSocket(4242);
+		}
+		catch ( IOException io_exc ) {
+			LOG.warn("Failed to setup test server socket on port 4242", io_exc);
+		}
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;stopLoopbackSocket();;;protected void	stopLoopbackSocket() {
+		try {
+			if ( this.loopbackSocket != null ) {
+				this.loopbackSocket.close();
+				this.loopbackSocket = null;
+			}
+		}
+		catch ( IOException io_exc ) {
+			LOG.warn("Failed to close test server socket on port 4242", io_exc);
+		}
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests;createValueMap(Object);;;protected Map<String, Object>	createValueMap (Object... keysAndValues) {
+		Map<String, Object>	result;
+		int			iter;
+
+		result = new HashMap<String, Object>();
+		iter = 0;
+		while ( iter < keysAndValues.length ) {
+			if ( iter < ( keysAndValues.length - 1 ) ) {
+				result.put(keysAndValues[iter].toString(), keysAndValues[iter + 1]);
+				iter += 2;
+			}
+			else {
+				result.put(keysAndValues[iter].toString(), null);
+				iter++;
+			}
+		}
+
+		return	result;
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/util/JmxUtilsTests;testGetTypeNameValueMap();;;@Test
+	public void testGetTypeNameValueMap () {
+		assertEquals(java.util.Collections.EMPTY_MAP, JmxUtils.getTypeNameValueMap(null));
+		assertEquals(java.util.Collections.EMPTY_MAP, JmxUtils.getTypeNameValueMap(""));
+		assertEquals(makeMap("x-key1-x", ""), JmxUtils.getTypeNameValueMap("x-key1-x"));
+		assertEquals(makeMap("x-key1-x", "", "x-key2-x", ""),
+		             JmxUtils.getTypeNameValueMap("x-key1-x,x-key2-x"));
+		assertEquals(makeMap("x-key1-x", "x-value1-x"),
+		             JmxUtils.getTypeNameValueMap("x-key1-x=x-value1-x"));
+		assertEquals(makeMap("x-key1-x", "x-value1-x", "y-key2-y", "y-value2-y"),
+		             JmxUtils.getTypeNameValueMap("x-key1-x=x-value1-x,y-key2-y=y-value2-y"));
+		assertEquals(
+			makeMap("x-key1-x", "x-value1-x", "y-key2-y", "y-value2-y", "z-key3-z", "z-value3-z"),
+			JmxUtils.getTypeNameValueMap("x-key1-x=x-value1-x,y-key2-y=y-value2-y,z-key3-z=z-value3-z"));
+		assertEquals(
+			makeMap("x-key1-x", "x-value1-x", "y-key2-y", "", "yy-key2.5-yy", "a=1",
+			        "z-key3-z", "z-value3-z"),
+			JmxUtils.getTypeNameValueMap(
+				"x-key1-x=x-value1-x,y-key2-y,yy-key2.5-yy=a=1,z-key3-z=z-value3-z"));
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/util/JmxUtilsTests;testGetConcatenatedTypeNameValues();;;@Test
+	public void testGetConcatenatedTypeNameValues () {
+		assertNull(JmxUtils.getConcatedTypeNameValues(null, "a=1"));
+		assertNull(JmxUtils.getConcatedTypeNameValues(Collections.EMPTY_LIST, "a=1"));
+		assertEquals("", JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x"), ""));
+		assertEquals("", JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x", "y-key2-y"), ""));
+		assertEquals("x-value1-x",
+		             JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x"), "x-key1-x=x-value1-x"));
+		assertEquals("", JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x"), "y-key2-y=y-value2-y"));
+		assertEquals("x-value1-x_y-value2-y",
+		             JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x", "y-key2-y"),
+		                                                "x-key1-x=x-value1-x,y-key2-y=y-value2-y"));
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/test/com/googlecode/jmxtrans/util/JmxUtilsTests;makeMap(String);;;protected Map<String, String>   makeMap (String... keysAndValues) {
+		Map<String, String> result;
+		int                 cur;
+
+		result = new HashMap<String, String>();
+
+		cur = 0;
+		while ( cur < keysAndValues.length ) {
+			if ( cur < keysAndValues.length - 1 ) {
+				result.put(keysAndValues[cur], keysAndValues[cur + 1]);
+				cur += 2;
+			}
+			else {
+				result.put(keysAndValues[cur], "");
+				cur++;
+			}
+		}
+
+		return	result;
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/util/JmxConnectionFactory;validateObject(Object,Object);;;            conn.getMBeanServerConnection().getMBeanCount();
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/util/JmxUtils;cleanupStr(String);;;		clean = clean.replace("/", "_");
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/util/JmxUtils;getTypeNameValueMap(String);;;public static Map<String, String>   getTypeNameValueMap (String typeNameStr) {
+		if ( typeNameStr == null ) {
+			return  java.util.Collections.EMPTY_MAP;
+		}
+
+		HashMap result = new HashMap();
+		String[] tokens = typeNameStr.split(",");
+
+		for (String oneToken : tokens) {
+			if ( oneToken.length() > 0 ) {
+				String[] keyValue = splitTypeNameValue(oneToken);
+				result.put(keyValue[0], keyValue[1]);
+			}
+		}
+		return result;
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/util/JmxUtils;splitTypeNameValue(String);;;private static String[] splitTypeNameValue (String typeNameToken) {
+		String[]	result;
+		String[]	keys = typeNameToken.split("=", 2);
+
+		if ( keys.length == 2 ) {
+			result = keys;
+		}
+		else {
+			result = new String[2];
+			result[0] = keys[0];
+			result[1] = "";
+		}
+
+		return  result;
+	}
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/NamingStrategy;formatName(Result);;;String  formatName (Result result);
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/naming/JexlNamingStrategy;JexlNamingStrategy();;;public  JexlNamingStrategy () throws JexlException {
+        jexl = new JexlEngine();
+        this.parsedExpr = jexl.createExpression(DEFAULT_EXPRESSION);
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/naming/JexlNamingStrategy;JexlNamingStrategy(String);;;public  JexlNamingStrategy (String expr) throws JexlException {
+        jexl = new JexlEngine();
+        this.parsedExpr = jexl.createExpression(expr);
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/naming/JexlNamingStrategy;formatName(Result);;;@Override
+    public String formatName (Result result) {
+        String      formatted;
+        JexlContext context = new MapContext();
+
+        this.populateContext(context, result);
+        try {
+            formatted = (String) this.parsedExpr.evaluate(context);
+        } catch ( JexlException jexlExc ) {
+            LOG.error("error applying JEXL expression to query results", jexlExc);
+            formatted = null;
+        }
+
+        return formatted;
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/naming/JexlNamingStrategy;setExpression(String);;;public void setExpression (String expr) throws JexlException {
+        this.parsedExpr = this.jexl.createExpression(expr);
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/naming/JexlNamingStrategy;populateContext(JexlContext,Result);;;protected void  populateContext (JexlContext context, Result result) {
+        context.set(VAR__CLASSNAME, result.getClassName());
+        context.set(VAR__ATTRIBUTE_NAME, result.getAttributeName());
+        context.set(VAR__CLASSNAME_ALIAS, result.getClassNameAlias());
+
+        String effectiveClassname = result.getClassNameAlias();
+        if ( effectiveClassname == null ) {
+            effectiveClassname = result.getClassName();
+        }
+        context.set(VAR__EFFECTIVE_CLASSNAME, effectiveClassname);
+
+        context.set(VAR__RESULT, result);
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/naming/ClassAttributeNamingStrategy;setDelimiter(String);;;public void setDelimiter (String delim) {
+        this.delimiter = delim;
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/naming/ClassAttributeNamingStrategy;getDelimiter();;;public String   getDelimiter () {
+        return  this.delimiter;
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/naming/ClassAttributeNamingStrategy;formatName(Result);;;@Override
+    public String   formatName (Result result) {
+        StringBuilder   formatted = new StringBuilder();
+        String          attName   = result.getAttributeName();
+        String          className = result.getClassNameAlias();
+
+        if ( className == null )
+            className = result.getClassName();
+
+        formatted.append(className);
+        formatted.append(delimiter);
+        formatted.append(attName);
+
+        return  formatted.toString();
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter;sendOutput(String);;;protected abstract void sendOutput(String metricLine) throws IOException;
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter;doWrite(Query);;;@Override
+    public void doWrite(Query query) throws Exception {
+        this.startOutput();
+        for (Result result : query.getResults()) {
+            for(String resultString: resultParser(result)) {
+                if (isDebugEnabled())
+                    System.out.println(resultString);
+
+                this.sendOutput(resultString);
+            }
+        }
+        this.finishOutput();
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter;validateSetup(Query);;;@Override
+    public void validateSetup(Query query) throws ValidationException {
+        if (host == null || port == null) {
+            throw new ValidationException("Host and port can't be null", query);
+        }
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter;stop();;;@Override
+    public void stop() throws LifecycleException {
+        this.shutdownSender();
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter;getAddHostnameTagDefault();;;@Override
+    protected boolean   getAddHostnameTagDefault() {
+        return  true;
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter;prepareSender();;;@Override
+    protected void  prepareSender() throws LifecycleException {
+        try {
+            socket = new Socket(host, port);
+        } catch(UnknownHostException e) {
+            log.error("error opening socket to OpenTSDB", e);
+            throw new LifecycleException(e);
+        } catch(IOException e) {
+            log.error("error opening socket to OpenTSDB", e);
+            throw new LifecycleException(e);
+        }
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter;shutdownSender();;;@Override
+    protected void  shutdownSender() throws LifecycleException {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            log.error("error closing socket to OpenTSDB");
+            throw new LifecycleException(e);
+        }
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter;startOutput();;;@Override
+    protected void  startOutput() throws IOException {
+        try {
+            this.out = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            log.error("error getting the output stream", e);
+            throw e;
+        }
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter;sendOutput(String);;;@Override
+    protected void  sendOutput (String metricLine) throws IOException {
+        try {
+            this.out.writeBytes("put " + metricLine + "\n"); 
+        } catch (IOException e) {
+            log.error("error writing result to the output stream", e);
+            throw e;
+        }
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9;/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter;finishOutput();;;@Override
+    protected void  finishOutput () throws IOException {
+        try {
+            this.out.flush();
+        } catch (IOException e) {
+            log.error("flush failed");
+            throw e;
+        }
+
+            // Read and log the response from the server for diagnostic purposes.
+
+        InputStreamReader socketInputStream = new InputStreamReader(socket.getInputStream());
+        BufferedReader bufferedSocketInputStream = new BufferedReader(socketInputStream);
+        String line;
+        while (socketInputStream.ready() && (line = bufferedSocketInputStream.readLine()) != null) {
+            log.warn("OpenTSDB says: " + line); 
+        }
+    }
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b;/src/com/googlecode/jmxtrans/model/output/LibratoWriter;LibratoWriter(ImmutableList<String>,boolean,Boolean,URL,Integer,String,String,String,Integer,Map<String,Object>);;;		this.httpUserAgent =
+				"jmxtrans-standalone/1 " + "(" +
+						System.getProperty("java.vm.name") + "/" + System.getProperty("java.version") + "; " +
+						System.getProperty("os.name") + "-" + System.getProperty("os.arch") + "/" + System.getProperty("os.version")
+						+ ")";
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b;/src/com/googlecode/jmxtrans/model/output/LibratoWriter;writeToLibrato(Server,Query,List<Result>);;;			urlConnection.setRequestProperty("User-Agent", httpUserAgent);
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b;/test/com/googlecode/jmxtrans/model/output/LibratoWriterTest;httpUserAgentContainsAppropriateInformation();;;@Test
+	public void httpUserAgentContainsAppropriateInformation() throws MalformedURLException {
+		LibratoWriter writer = new LibratoWriter(
+				ImmutableList.<String>of(),
+				false,
+				false,
+				new URL(LibratoWriter.DEFAULT_LIBRATO_API_URL),
+				1000,
+				"username",
+				"token",
+				null,
+				null,
+				ImmutableMap.<String, Object>of()
+		);
+
+		assertThat(writer.httpUserAgent)
+				.startsWith("jmxtrans-standalone/")
+				.contains(System.getProperty("os.name"))
+				.contains(System.getProperty("os.arch"))
+				.contains(System.getProperty("os.version"))
+				.contains(System.getProperty("java.vm.name"))
+				.contains(System.getProperty("java.version"));
+	}

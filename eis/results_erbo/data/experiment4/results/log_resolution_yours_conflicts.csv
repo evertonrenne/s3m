@@ -1,0 +1,81 @@
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_56c5899_75037c8/rev_56c5899-75037c8/cucumber-maven-plugin/src/main/java/cucumber/mojo/CucumberMojo.java;<<<<<<< MINE
+    @Override
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b339f00_326f52b/rev_b339f00-326f52b/cuke4duke-maven-plugin/src/main/java/cuke4duke/mojo/CucumberMojo.java;<<<<<<< MINE
+    /**
+     * @parameter expression="${cucumber.bin}"
+     */
+    private File cucumberBin;
+
+    @SuppressWarnings({"unchecked"})
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b339f00_326f52b/rev_b339f00-326f52b/cuke4duke-maven-plugin/src/main/java/cuke4duke/mojo/AbstractJRubyMojo.java;<<<<<<< MINE
+    /**
+     * Installs gems. Each string must follow one of the following patterns:
+     *
+     * <ul>
+     *   <li>name</li>
+     *   <li>name:version</li>
+     *   <li>name:version:github</li>
+     * </ul>
+     */
+    @SuppressWarnings({"unchecked"})
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/GuiceFactoryTest.java;<<<<<<< MINE
+    @Ignore("Needs to be fixed")
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b57da8b_8c8dc21/rev_b57da8b-8c8dc21/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+        } catch (IOException e) {
+            //Oh well?
+        }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+        this.tags = tags;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_beb39a9_6c0dccd/rev_beb39a9-6c0dccd/java/src/test/java/cucumber/runtime/java/JavaBackendTest.java;<<<<<<< MINE
+        public void buildBackendWorldsAndRunBeforeHooks(Reporter reporter) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void runUnreportedStep(String file, Locale locale, String stepKeyword, String stepName, int line, List<DataTableRow> dataTableRows, DocString docString) throws Throwable {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_442c4ed_4439178/rev_442c4ed-4439178/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        this.runtimeOptions = runtimeOptions;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b7d2505_d90c7af/rev_b7d2505-d90c7af/core/src/main/java/cucumber/runtime/model/CucumberScenarioOutline.java;<<<<<<< MINE
+                if (text.isEmpty()) {
+                    throw new CucumberException("Step generated from scenario outline '" + token + "' is empty");
+                }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b66c765_0ac2df0/rev_b66c765-0ac2df0/core/src/main/java/cucumber/runtime/RuntimeOptions.java;<<<<<<< MINE
+        if (!parsedJunitOptions.isEmpty()) {
+            junitOptions.clear();
+            junitOptions.addAll(parsedJunitOptions);
+        }
+    }
+=======
+>>>>>>> YOURS

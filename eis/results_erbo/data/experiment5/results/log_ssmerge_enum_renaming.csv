@@ -1,0 +1,2 @@
+revision;file;enum
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_cac2ca8_501497d/rev_cac2ca8-501497d;/core/src/main/java/org/elasticsearch/search/aggregations/bucket/terms/TermsAggregatorFactory;GLOBAL_ORDINALS_LOW_CARDINALITY

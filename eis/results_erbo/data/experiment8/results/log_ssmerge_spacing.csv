@@ -1,0 +1,195 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04;/metrics-spring/src/main/java/com/yammer/metrics/spring/config/MetricsNamespaceHandler;init();;;		registerBeanDefinitionParser("jmx-reporter", new JmxReporterBeanDefinitionParser());
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04;/metrics-spring/src/main/java/com/yammer/metrics/spring/config/JmxReporterBeanDefinitionParser;getBeanClass(Element);;;@Override
+	protected Class<?> getBeanClass(Element element) {
+		return JmxReporterFactory.class;
+	}
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04;/metrics-spring/src/main/java/com/yammer/metrics/spring/config/JmxReporterBeanDefinitionParser;shouldGenerateIdAsFallback();;;@Override
+	protected boolean shouldGenerateIdAsFallback() {
+		return true;
+	}
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04;/metrics-spring/src/main/java/com/yammer/metrics/spring/config/JmxReporterBeanDefinitionParser;doParse(Element,BeanDefinitionBuilder);;;@Override
+	protected void doParse(Element element, BeanDefinitionBuilder builder) {
+		builder.setFactoryMethod("createInstance");
+		builder.addConstructorArgReference(element.getAttribute("metrics-registry"));
+	}
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector;InstrumentedRequestDirector(MetricsRegistry,Log,HttpRequestExecutor,ClientConnectionManager,ConnectionReuseStrategy,ConnectionKeepAliveStrategy,HttpRoutePlanner,HttpProcessor,HttpRequestRetryHandler,RedirectStrategy,AuthenticationStrategy,AuthenticationStrategy,UserTokenHandler,HttpParams);;;InstrumentedRequestDirector(MetricsRegistry registry,
+                                Log log,
+                                HttpRequestExecutor requestExec,
+                                ClientConnectionManager conman,
+                                ConnectionReuseStrategy reustrat,
+                                ConnectionKeepAliveStrategy kastrat,
+                                HttpRoutePlanner rouplan,
+                                HttpProcessor httpProcessor,
+                                HttpRequestRetryHandler retryHandler,
+                                RedirectStrategy redirectStrategy,
+                                AuthenticationStrategy targetAuthStrategy,
+                                AuthenticationStrategy proxyAuthStrategy,
+                                UserTokenHandler userTokenHandler,
+                                HttpParams params) {
+        super(log,
+              requestExec,
+              conman,
+              reustrat,
+              kastrat,
+              rouplan,
+              httpProcessor,
+              retryHandler,
+              redirectStrategy,
+              targetAuthStrategy,
+              proxyAuthStrategy,
+              userTokenHandler,
+              params);
+        getTimer = registry.newTimer(HttpClient.class, "get-requests");
+        postTimer = registry.newTimer(HttpClient.class, "post-requests");
+        headTimer = registry.newTimer(HttpClient.class, "head-requests");
+        putTimer = registry.newTimer(HttpClient.class, "put-requests");
+        deleteTimer = registry.newTimer(HttpClient.class, "delete-requests");
+        optionsTimer = registry.newTimer(HttpClient.class, "options-requests");
+        traceTimer = registry.newTimer(HttpClient.class, "trace-requests");
+        connectTimer = registry.newTimer(HttpClient.class, "connect-requests");
+        moveTimer = registry.newTimer(HttpClient.class, "move-requests");
+        patchTimer = registry.newTimer(HttpClient.class, "patch-requests");
+        otherTimer = registry.newTimer(HttpClient.class, "other-requests");
+    }
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient;InstrumentedHttpClient(MetricsRegistry,InstrumentedClientConnManager,HttpParams);;;public InstrumentedHttpClient(MetricsRegistry registry,
+                                  InstrumentedClientConnManager manager,
+                                  HttpParams params) {
+        super(manager, params);
+        this.registry = registry;
+    }
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient;createClientRequestDirector(HttpRequestExecutor,ClientConnectionManager,ConnectionReuseStrategy,ConnectionKeepAliveStrategy,HttpRoutePlanner,HttpProcessor,HttpRequestRetryHandler,RedirectStrategy,AuthenticationStrategy,AuthenticationStrategy,UserTokenHandler,HttpParams);;;@Override
+    protected RequestDirector createClientRequestDirector(HttpRequestExecutor requestExec,
+                                                          ClientConnectionManager conman,
+                                                          ConnectionReuseStrategy reustrat,
+                                                          ConnectionKeepAliveStrategy kastrat,
+                                                          HttpRoutePlanner rouplan,
+                                                          HttpProcessor httpProcessor,
+                                                          HttpRequestRetryHandler retryHandler,
+                                                          RedirectStrategy redirectStrategy,
+                                                          AuthenticationStrategy targetAuthStrategy,
+                                                          AuthenticationStrategy proxyAuthStrategy,
+                                                          UserTokenHandler userTokenHandler,
+                                                          HttpParams params) {
+        return new InstrumentedRequestDirector(
+                registry,
+                log,
+                requestExec,
+                conman,
+                reustrat,
+                kastrat,
+                rouplan,
+                httpProcessor,
+                retryHandler,
+                redirectStrategy,
+                targetAuthStrategy,
+                proxyAuthStrategy,
+                userTokenHandler,
+                params);
+    }
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/main/java/com/yammer/metrics/reporting/JmxReporter;registerBean(MetricName,MetricMBean,ObjectName);;;
+        if ( server.isRegistered(objectName) ){
+            server.unregisterMBean(objectName);
+        }
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample;ExponentiallyDecayingSample(int,double,Clock);;;public ExponentiallyDecayingSample(int reservoirSize, double alpha, Clock clock) {
+        this.values = new ConcurrentSkipListMap<Double, Long>();
+        this.lock = new ReentrantReadWriteLock();
+        this.alpha = alpha;
+        this.reservoirSize = reservoirSize;
+        this.clock = clock;
+        clear();
+    }
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample;update(long,long);;;
+        rescaleIfNeeded();
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample;update(long,long);            final double priority = weight(timestamp - startTime) / ThreadLocalRandom.current().nextDouble();;;            final double priority = weight(timestamp - startTime) / ThreadLocalRandom.current()
+                                                                                     .nextDouble();
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample;rescale(long,long);;;
+                // make sure the counter is in sync with the number of stored samples.
+                count.set(values.size());
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest;aHeavilyBiasedSampleOf100OutOf1000Elements();;;
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest;longPeriodsOfInactivityShouldNotCorruptSamplingState();;;@Test
+    public void longPeriodsOfInactivityShouldNotCorruptSamplingState() {
+        final ManualClock clock = new ManualClock();
+        final ExponentiallyDecayingSample sample = new ExponentiallyDecayingSample(10,
+                                                                                   0.015,
+                                                                                   clock);
+
+        // add 1000 values at a rate of 10 values/second
+        for (int i = 0; i < 1000; i++) {
+            sample.update(1000 + i);
+            clock.addMillis(100);
+        }
+        assertThat("the sample has 10 elements", sample.getSnapshot().size(), is(10));
+        assertAllValuesBetween(sample, 1000, 2000);
+
+        // wait for 15 hours and add another value.
+        // this should trigger a rescale. Note that the number of samples will be reduced to 2
+        // because of the very small scaling factor that will make all existing priorities equal to
+        // zero after rescale.
+        clock.addHours(15);
+        sample.update(2000);
+        assertThat("the sample has 2 elements", sample.getSnapshot().size(), is(2));
+        assertAllValuesBetween(sample, 1000, 3000);
+
+
+        // add 1000 values at a rate of 10 values/second
+        for (int i = 0; i < 1000; i++) {
+            sample.update(3000 + i);
+            clock.addMillis(100);
+        }
+        assertThat("the sample has 10 elements", sample.getSnapshot().size(), is(10));
+        assertAllValuesBetween(sample, 3000, 4000);
+
+
+    }
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest;assertAllValuesBetween(ExponentiallyDecayingSample,double,double);;;@SuppressWarnings("unchecked")
+    private void assertAllValuesBetween(ExponentiallyDecayingSample sample,
+                                        double min, double max) {
+        for (double i : sample.getSnapshot().getValues()) {
+            assertThat("the sample only contains elements from the population",
+                       i,
+                       is(allOf(
+                               lessThan(max),
+                               greaterThanOrEqualTo(min)
+                       )));
+        }
+
+    }
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest;addMillis(long);;;public void addMillis(long millis) {
+            ticksInNanos += TimeUnit.MILLISECONDS.toNanos(millis);
+        }
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b;/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest;addHours(long);;;public void addHours(long hours) {
+            ticksInNanos += TimeUnit.HOURS.toNanos(hours);
+        }
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e;/metrics-core/src/main/java/com/yammer/metrics/core/HealthCheck;healthy(String,Object);;;public static Result healthy(String message, Object... args) {
+            return healthy(String.format(message, args));
+        }
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e;/metrics-core/src/main/java/com/yammer/metrics/core/HealthCheck;unhealthy(String,Object);;;public static Result unhealthy(String message, Object... args) {
+            return unhealthy(String.format(message, args));
+        }
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e;/metrics-core/src/test/java/com/yammer/metrics/core/tests/HealthCheckTest;canHaveHealthyResultsWithFormattedMessages();;;@Test
+    public void canHaveHealthyResultsWithFormattedMessages() throws Exception {
+        final Result result = Result.healthy("foo %s", "bar");
+
+        assertThat(result.isHealthy(),
+                    is(true));
+        
+        assertThat(result.getMessage(),
+                    is("foo bar"));
+
+        assertThat(result.getError(),
+                    is(nullValue()));
+    }
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e;/metrics-core/src/test/java/com/yammer/metrics/core/tests/HealthCheckTest;canHaveUnhealthyResultsWithFormattedMessages();;;@Test
+    public void canHaveUnhealthyResultsWithFormattedMessages() throws Exception {
+        final Result result = Result.unhealthy("foo %s %d", "bar", 123);
+
+        assertThat(result.isHealthy(),
+                    is(false));
+        
+        assertThat(result.getMessage(),
+                    is("foo bar 123"));
+
+        assertThat(result.getError(),
+                    is(nullValue()));
+    }

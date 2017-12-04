@@ -1,0 +1,966 @@
+file;linedbasedConf
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04/metrics-spring/src/main/java/com/yammer/metrics/spring/config/MetricsNamespaceHandler.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04/metrics-spring/src/main/java/com/yammer/metrics/spring/config/JmxReporterBeanDefinitionParser.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04/metrics-spring/src/main/java/com/yammer/metrics/spring/config/AnnotationDrivenBeanDefinitionParser.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04/metrics-spring/src/main/java/com/yammer/metrics/spring/config/AnnotationDrivenBeanDefinitionParser.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04/metrics-spring/src/main/java/com/yammer/metrics/spring/config/AnnotationDrivenBeanDefinitionParser.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_b3e9cdd_73d827d/rev_b3e9cdd-73d827d/metrics-annotation/src/main/java/com/yammer/metrics/annotation/Gauge.java;<<<<<<< MINE
+    /**
+     * The gauge's name.
+     */
+||||||| BASE
+=======
+    String group() default "";
+    String type() default "";
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;<<<<<<< MINE
+||||||| BASE
+import org.apache.http.impl.conn.tsccm.ConnPoolByRoute;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+=======
+import org.apache.http.impl.conn.SystemDefaultDnsResolver;
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;<<<<<<< MINE
+        super(registry, connTTL, connTTLTimeUnit);
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "available-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer getValue() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getAvailable();
+                                     }
+                                 });
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "leased-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer getValue() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getLeased();
+                                     }
+                                 });
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "max-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer getValue() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getMax();
+                                     }
+                                 });
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "pending-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer getValue() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getPending();
+                                     }
+                                 });
+||||||| BASE
+        super(registry, connTTL, connTTLTimeUnit);
+        Metrics.newGauge(ClientConnectionManager.class,
+                         "connections",
+                         new Gauge<Integer>() {
+                             @Override
+                             public Integer value() {
+                                 // this acquires a lock on the connection pool; remove if contention sucks
+                                 return getConnectionsInPool();
+                             }
+                         });
+    }
+
+    @Override
+    protected ConnPoolByRoute createConnectionPool(long connTTL,
+                                                   TimeUnit connTTLTimeUnit) {
+        return new InstrumentedConnByRoute(connOperator, connPerRoute, 20, connTTL, connTTLTimeUnit);
+=======
+        this(metricsRegistry, registry, connTTL, connTTLTimeUnit, new SystemDefaultDnsResolver());
+    }
+
+    public InstrumentedClientConnManager(MetricsRegistry metricsRegistry,
+                                         SchemeRegistry schemeRegistry,
+                                         long connTTL,
+                                         TimeUnit connTTLTimeUnit,
+                                         DnsResolver dnsResolver) {
+        super(schemeRegistry, connTTL, connTTLTimeUnit, dnsResolver);
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "available-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer value() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getAvailable();
+                                     }
+                                 });
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "leased-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer value() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getLeased();
+                                     }
+                                 });
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "max-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer value() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getMax();
+                                     }
+                                 });
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "pending-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer value() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getPending();
+                                     }
+                                 });
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/reporting/JmxReporter.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;<<<<<<< MINE
+
+    }
+
+    private void rescaleIfNeeded() {
+        final long now = clock.getTick();
+||||||| BASE
+        final long now = System.nanoTime();
+=======
+
+    }
+
+    private void rescaleIfNeeded() {
+        final long now = clock.tick();
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;<<<<<<< MINE
+    private long currentTimeInSeconds() {
+        return TimeUnit.MILLISECONDS.toSeconds(clock.getTime());
+||||||| BASE
+    private long tick() {
+        return TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+=======
+    private long currentTimeInSeconds() {
+        return TimeUnit.MILLISECONDS.toSeconds(clock.time());
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest.java;<<<<<<< MINE
+
+    @Test
+    public void longPeriodsOfInactivityShouldNotCorruptSamplingState() {
+        final ManualClock clock = new ManualClock();
+        final ExponentiallyDecayingSample sample = new ExponentiallyDecayingSample(10,
+                                                                                   0.015,
+                                                                                   clock);
+
+        // add 1000 values at a rate of 10 values/second
+        for (int i = 0; i < 1000; i++) {
+            sample.update(1000 + i);
+            clock.addMillis(100);
+        }
+        assertThat("the sample has 10 elements", sample.getSnapshot().size(), is(10));
+        assertAllValuesBetween(sample, 1000, 2000);
+
+        // wait for 15 hours and add another value.
+        // this should trigger a rescale. Note that the number of samples will be reduced to 2
+        // because of the very small scaling factor that will make all existing priorities equal to
+        // zero after rescale.
+        clock.addHours(15);
+        sample.update(2000);
+        assertThat("the sample has 2 elements", sample.getSnapshot().size(), is(2));
+        assertAllValuesBetween(sample, 1000, 3000);
+
+
+        // add 1000 values at a rate of 10 values/second
+        for (int i = 0; i < 1000; i++) {
+            sample.update(3000 + i);
+            clock.addMillis(100);
+        }
+        assertThat("the sample has 10 elements", sample.getSnapshot().size(), is(10));
+        assertAllValuesBetween(sample, 3000, 4000);
+
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void assertAllValuesBetween(ExponentiallyDecayingSample sample,
+                                        double min, double max) {
+        for (double i : sample.getSnapshot().getValues()) {
+            assertThat("the sample only contains elements from the population",
+                       i,
+                       is(allOf(
+                               lessThan(max),
+                               greaterThanOrEqualTo(min)
+                       )));
+        }
+
+    }
+
+    class ManualClock extends Clock {
+        long ticksInNanos = 0;
+
+        public void addMillis(long millis) {
+            ticksInNanos += TimeUnit.MILLISECONDS.toNanos(millis);
+        }
+
+        public void addHours(long hours) {
+            ticksInNanos += TimeUnit.HOURS.toNanos(hours);
+        }
+
+        @Override
+        public long getTick() {
+            return ticksInNanos;
+        }
+
+        @Override
+        public long getTime() {
+            return TimeUnit.NANOSECONDS.toMillis(ticksInNanos);
+        }
+
+    }
+
+||||||| BASE
+=======
+
+    @Test
+    public void longPeriodsOfInactivityShouldNotCorruptSamplingState() {
+        final ManualClock clock = new ManualClock();
+        final ExponentiallyDecayingSample sample = new ExponentiallyDecayingSample(10,
+                                                                                   0.015,
+                                                                                   clock);
+
+        // add 1000 values at a rate of 10 values/second
+        for (int i = 0; i < 1000; i++) {
+            sample.update(1000 + i);
+            clock.addMillis(100);
+        }
+        assertThat("the sample has 10 elements", sample.getSnapshot().size(), is(10));
+        assertAllValuesBetween(sample, 1000, 2000);
+
+        // wait for 15 hours and add another value.
+        // this should trigger a rescale. Note that the number of samples will be reduced to 2
+        // because of the very small scaling factor that will make all existing priorities equal to
+        // zero after rescale.
+        clock.addHours(15);
+        sample.update(2000);
+        assertThat("the sample has 2 elements", sample.getSnapshot().size(), is(2));
+        assertAllValuesBetween(sample, 1000, 3000);
+
+
+        // add 1000 values at a rate of 10 values/second
+        for (int i = 0; i < 1000; i++) {
+            sample.update(3000 + i);
+            clock.addMillis(100);
+        }
+        assertThat("the sample has 10 elements", sample.getSnapshot().size(), is(10));
+        assertAllValuesBetween(sample, 3000, 4000);
+
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void assertAllValuesBetween(ExponentiallyDecayingSample sample,
+                                        double min, double max) {
+        for (double i : sample.getSnapshot().getValues()) {
+            assertThat("the sample only contains elements from the population",
+                       i,
+                       is(allOf(
+                               lessThan(max),
+                               greaterThanOrEqualTo(min)
+                       )));
+        }
+
+    }
+
+    class ManualClock extends Clock {
+        long ticksInNanos = 0;
+
+        public void addMillis(long millis) {
+            ticksInNanos += TimeUnit.MILLISECONDS.toNanos(millis);
+        }
+
+        public void addHours(long hours) {
+            ticksInNanos += TimeUnit.HOURS.toNanos(hours);
+        }
+
+        @Override
+        public long tick() {
+            return ticksInNanos;
+        }
+
+        @Override
+        public long time() {
+            return TimeUnit.NANOSECONDS.toMillis(ticksInNanos);
+        }
+
+    }
+
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e/metrics-core/src/main/java/com/yammer/metrics/core/HealthCheck.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e/metrics-core/src/main/java/com/yammer/metrics/core/HealthCheck.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e/metrics-core/src/test/java/com/yammer/metrics/core/tests/HealthCheckTest.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e/metrics-core/src/test/java/com/yammer/metrics/core/tests/HealthCheckTest.java;null
+/experiment/projects/dropwizard-metrics/revisions/rev_3bb71a7_2ca845b/rev_3bb71a7-2ca845b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;<<<<<<< MINE
+package com.yammer.metrics.httpclient;
+
+import com.yammer.metrics.MetricRegistry;
+import com.yammer.metrics.Timer;
+import org.apache.commons.logging.Log;
+import org.apache.http.*;
+import org.apache.http.client.*;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
+import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.impl.client.DefaultRequestDirector;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpProcessor;
+import org.apache.http.protocol.HttpRequestExecutor;
+
+import java.io.IOException;
+
+import static com.yammer.metrics.MetricRegistry.name;
+
+class InstrumentedRequestDirector extends DefaultRequestDirector {
+
+    private final MetricRegistry registry;
+    private final HttpClientMetricNameStrategy metricNameStrategy;
+    private final String name;
+
+    InstrumentedRequestDirector(MetricRegistry registry,
+                                String name,
+                                HttpClientMetricNameStrategy metricNameStrategy,
+                                Log log,
+                                HttpRequestExecutor requestExec,
+                                ClientConnectionManager conman,
+                                ConnectionReuseStrategy reustrat,
+                                ConnectionKeepAliveStrategy kastrat,
+                                HttpRoutePlanner rouplan,
+                                HttpProcessor httpProcessor,
+                                HttpRequestRetryHandler retryHandler,
+                                RedirectStrategy redirectStrategy,
+                                AuthenticationStrategy targetAuthStrategy,
+                                AuthenticationStrategy proxyAuthStrategy,
+                                UserTokenHandler userTokenHandler,
+                                HttpParams params) {
+        super(log,
+              requestExec,
+              conman,
+              reustrat,
+              kastrat,
+              rouplan,
+              httpProcessor,
+              retryHandler,
+              redirectStrategy,
+              targetAuthStrategy,
+              proxyAuthStrategy,
+              userTokenHandler,
+              params);
+        this.registry = registry;
+        this.name = name;
+        this.metricNameStrategy = metricNameStrategy;
+    }
+
+    @Override
+    public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context) throws HttpException, IOException {
+        final Timer.Context timerContext = timer(request).time();
+        try {
+            return super.execute(target, request, context);
+        } finally {
+            timerContext.stop();
+        }
+    }
+
+    private Timer timer(HttpRequest request) {
+        return registry.timer(metricNameStrategy.getNameFor(name, request));
+    }
+}||||||| BASE
+package com.yammer.metrics.httpclient;
+
+import com.yammer.metrics.MetricRegistry;
+import com.yammer.metrics.Timer;
+import org.apache.commons.logging.Log;
+import org.apache.http.*;
+import org.apache.http.client.*;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
+import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.impl.client.DefaultRequestDirector;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpProcessor;
+import org.apache.http.protocol.HttpRequestExecutor;
+
+import java.io.IOException;
+
+import static com.yammer.metrics.MetricRegistry.name;
+
+class InstrumentedRequestDirector extends DefaultRequestDirector {
+    private final static String GET = "GET", POST = "POST", HEAD = "HEAD", PUT = "PUT",
+            OPTIONS = "OPTIONS", DELETE = "DELETE", TRACE = "TRACE",
+            CONNECT = "CONNECT", MOVE = "MOVE", PATCH = "PATCH";
+
+    private final Timer getTimer;
+    private final Timer postTimer;
+    private final Timer headTimer;
+    private final Timer putTimer;
+    private final Timer deleteTimer;
+    private final Timer optionsTimer;
+    private final Timer traceTimer;
+    private final Timer connectTimer;
+    private final Timer moveTimer;
+    private final Timer patchTimer;
+    private final Timer otherTimer;
+
+    InstrumentedRequestDirector(MetricRegistry registry,
+                                String name,
+                                Log log,
+                                HttpRequestExecutor requestExec,
+                                ClientConnectionManager conman,
+                                ConnectionReuseStrategy reustrat,
+                                ConnectionKeepAliveStrategy kastrat,
+                                HttpRoutePlanner rouplan,
+                                HttpProcessor httpProcessor,
+                                HttpRequestRetryHandler retryHandler,
+                                RedirectStrategy redirectStrategy,
+                                AuthenticationStrategy targetAuthStrategy,
+                                AuthenticationStrategy proxyAuthStrategy,
+                                UserTokenHandler userTokenHandler,
+                                HttpParams params) {
+        super(log,
+              requestExec,
+              conman,
+              reustrat,
+              kastrat,
+              rouplan,
+              httpProcessor,
+              retryHandler,
+              redirectStrategy,
+              targetAuthStrategy,
+              proxyAuthStrategy,
+              userTokenHandler,
+              params);
+        getTimer = registry.timer(name(HttpClient.class, name, "get-requests"));
+        postTimer = registry.timer(name(HttpClient.class, name, "post-requests"));
+        headTimer = registry.timer(name(HttpClient.class, name, "head-requests"));
+        putTimer = registry.timer(name(HttpClient.class, name, "put-requests"));
+        deleteTimer = registry.timer(name(HttpClient.class, name, "delete-requests"));
+        optionsTimer = registry.timer(name(HttpClient.class, name, "options-requests"));
+        traceTimer = registry.timer(name(HttpClient.class, name, "trace-requests"));
+        connectTimer = registry.timer(name(HttpClient.class, name, "connect-requests"));
+        moveTimer = registry.timer(name(HttpClient.class, name, "move-requests"));
+        patchTimer = registry.timer(name(HttpClient.class, name, "patch-requests"));
+        otherTimer = registry.timer(name(HttpClient.class, name, "other-requests"));
+    }
+
+    @Override
+    public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context) throws HttpException, IOException {
+        final Timer.Context timerContext = timer(request).time();
+        try {
+            return super.execute(target, request, context);
+        } finally {
+            timerContext.stop();
+        }
+    }
+
+    private Timer timer(HttpRequest request) {
+        final String method = request.getRequestLine().getMethod();
+        if (GET.equalsIgnoreCase(method)) {
+            return getTimer;
+        } else if (POST.equalsIgnoreCase(method)) {
+            return postTimer;
+        } else if (PUT.equalsIgnoreCase(method)) {
+            return putTimer;
+        } else if (HEAD.equalsIgnoreCase(method)) {
+            return headTimer;
+        } else if (DELETE.equalsIgnoreCase(method)) {
+            return deleteTimer;
+        } else if (OPTIONS.equalsIgnoreCase(method)) {
+            return optionsTimer;
+        } else if (TRACE.equalsIgnoreCase(method)) {
+            return traceTimer;
+        } else if (CONNECT.equalsIgnoreCase(method)) {
+            return connectTimer;
+        } else if (PATCH.equalsIgnoreCase(method)) {
+            return patchTimer;
+        } else if (MOVE.equalsIgnoreCase(method)) {
+            return moveTimer;
+        }
+        return otherTimer;
+    }
+}=======
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_3bb71a7_2ca845b/rev_3bb71a7-2ca845b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;<<<<<<< MINE
+package com.yammer.metrics.httpclient;
+
+import com.yammer.metrics.MetricRegistry;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.ConnectionReuseStrategy;
+import org.apache.http.client.*;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
+import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpProcessor;
+import org.apache.http.protocol.HttpRequestExecutor;
+
+import static com.yammer.metrics.httpclient.HttpClientMetricNameStrategies.METHOD_ONLY;
+
+public class InstrumentedHttpClient extends DefaultHttpClient {
+    private final Log log = LogFactory.getLog(getClass());
+
+    private final MetricRegistry registry;
+    private final String name;
+    private final HttpClientMetricNameStrategy metricNameStrategy;
+
+    public InstrumentedHttpClient(MetricRegistry registry,
+                                  InstrumentedClientConnManager manager,
+                                  HttpParams params,
+                                  String name,
+                                  HttpClientMetricNameStrategy metricNameStrategy) {
+        super(manager, params);
+        this.registry = registry;
+        this.name = name;
+        this.metricNameStrategy = metricNameStrategy;
+    }
+
+    public InstrumentedHttpClient(MetricRegistry registry,
+                                  InstrumentedClientConnManager manager,
+                                  HttpParams params,
+                                  String name) {
+        this(registry, manager, params, name, METHOD_ONLY);
+    }
+
+    public InstrumentedHttpClient(MetricRegistry registry,
+                                  HttpParams params) {
+        this(registry, new InstrumentedClientConnManager(registry), params, null);
+    }
+
+    public InstrumentedHttpClient(MetricRegistry registry) {
+        this(registry, new InstrumentedClientConnManager(registry), null, null);
+    }
+
+    public InstrumentedHttpClient(MetricRegistry registry, HttpClientMetricNameStrategy metricNameStrategy) {
+        this(registry, new InstrumentedClientConnManager(registry), null, null, metricNameStrategy);
+    }
+
+    public InstrumentedHttpClient(MetricRegistry registry, String name, HttpClientMetricNameStrategy metricNameStrategy) {
+        this(registry, new InstrumentedClientConnManager(registry), null, name, metricNameStrategy);
+    }
+
+    @Override
+    protected RequestDirector createClientRequestDirector(HttpRequestExecutor requestExec,
+                                                          ClientConnectionManager conman,
+                                                          ConnectionReuseStrategy reustrat,
+                                                          ConnectionKeepAliveStrategy kastrat,
+                                                          HttpRoutePlanner rouplan,
+                                                          HttpProcessor httpProcessor,
+                                                          HttpRequestRetryHandler retryHandler,
+                                                          RedirectStrategy redirectStrategy,
+                                                          AuthenticationStrategy targetAuthStrategy,
+                                                          AuthenticationStrategy proxyAuthStrategy,
+                                                          UserTokenHandler userTokenHandler,
+                                                          HttpParams params) {
+        return new InstrumentedRequestDirector(
+                registry,
+                name,
+                metricNameStrategy,
+                log,
+                requestExec,
+                conman,
+                reustrat,
+                kastrat,
+                rouplan,
+                httpProcessor,
+                retryHandler,
+                redirectStrategy,
+                targetAuthStrategy,
+                proxyAuthStrategy,
+                userTokenHandler,
+                params);
+    }
+}||||||| BASE
+package com.yammer.metrics.httpclient;
+
+import com.yammer.metrics.MetricRegistry;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.ConnectionReuseStrategy;
+import org.apache.http.client.*;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
+import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpProcessor;
+import org.apache.http.protocol.HttpRequestExecutor;
+
+public class InstrumentedHttpClient extends DefaultHttpClient {
+    private final Log log = LogFactory.getLog(getClass());
+
+    private final MetricRegistry registry;
+    private final String name;
+
+    public InstrumentedHttpClient(MetricRegistry registry,
+                                  InstrumentedClientConnManager manager,
+                                  HttpParams params,
+                                  String name) {
+        super(manager, params);
+        this.registry = registry;
+        this.name = name;
+    }
+
+    public InstrumentedHttpClient(MetricRegistry registry,
+                                  HttpParams params) {
+        this(registry, new InstrumentedClientConnManager(registry), params, null);
+    }
+
+    public InstrumentedHttpClient(MetricRegistry registry) {
+        this(registry, new InstrumentedClientConnManager(registry), null, null);
+    }
+
+    @Override
+    protected RequestDirector createClientRequestDirector(HttpRequestExecutor requestExec,
+                                                          ClientConnectionManager conman,
+                                                          ConnectionReuseStrategy reustrat,
+                                                          ConnectionKeepAliveStrategy kastrat,
+                                                          HttpRoutePlanner rouplan,
+                                                          HttpProcessor httpProcessor,
+                                                          HttpRequestRetryHandler retryHandler,
+                                                          RedirectStrategy redirectStrategy,
+                                                          AuthenticationStrategy targetAuthStrategy,
+                                                          AuthenticationStrategy proxyAuthStrategy,
+                                                          UserTokenHandler userTokenHandler,
+                                                          HttpParams params) {
+        return new InstrumentedRequestDirector(
+                registry,
+                name,
+                log,
+                requestExec,
+                conman,
+                reustrat,
+                kastrat,
+                rouplan,
+                httpProcessor,
+                retryHandler,
+                redirectStrategy,
+                targetAuthStrategy,
+                proxyAuthStrategy,
+                userTokenHandler,
+                params);
+    }
+}=======
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_3bb71a7_2ca845b/rev_3bb71a7-2ca845b/metrics-httpclient/src/test/java/com/yammer/metrics/httpclient/InstrumentedHttpClientTest.java;<<<<<<< MINE
+package com.yammer.metrics.httpclient;
+
+import com.yammer.metrics.MetricRegistry;
+import com.yammer.metrics.MetricRegistryListener;
+import com.yammer.metrics.Timer;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
+public class InstrumentedHttpClientTest {
+
+    @Mock
+    public HttpClientMetricNameStrategy metricNameStrategy;
+    @Mock
+    public MetricRegistryListener registryListener;
+
+    private MetricRegistry metricRegistry;
+    private HttpClient client;
+
+    @Before
+    public void init() {
+        metricRegistry = new MetricRegistry();
+        metricRegistry.addListener(registryListener);
+        client = new InstrumentedHttpClient(metricRegistry, metricNameStrategy);
+    }
+
+    @Test
+    public void registersExpectedMetricsGivenNameStrategy() throws Exception {
+        HttpGet get = new HttpGet("http://google.com?q=anything");
+        String metricName = "some.made.up.metric.name";
+
+        when(metricNameStrategy.getNameFor(anyString(), eq(get))).thenReturn(metricName);
+
+        try {
+            client.execute(get);
+        } catch (Exception e) {
+        }
+
+        verify(registryListener).onTimerAdded(eq(metricName), any(Timer.class));
+    }
+}||||||| BASE
+package com.yammer.metrics.httpclient;
+
+import com.yammer.metrics.MetricRegistry;
+import org.apache.http.client.HttpClient;
+import org.junit.Test;
+
+import static org.fest.assertions.api.Assertions.assertThat;
+
+public class InstrumentedHttpClientTest {
+    private final MetricRegistry registry = new MetricRegistry();
+    private final HttpClient client = new InstrumentedHttpClient(registry);
+
+    @Test
+    public void hasAnInstrumentedConnectionManager() throws Exception {
+
+        assertThat(client.getConnectionManager())
+                .isInstanceOf(InstrumentedClientConnManager.class);
+    }
+}=======
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8bdd210_4ff25d5/rev_8bdd210-4ff25d5/metrics-httpclient/src/main/java/com/codahale/metrics/httpclient/InstrumentedRequestDirector.java;<<<<<<< MINE
+class InstrumentedRequestDirector extends DefaultRequestDirector {
+
+    private final MetricRegistry registry;
+    private final HttpClientMetricNameStrategy metricNameStrategy;
+    private final String name;
+||||||| BASE
+class InstrumentedRequestDirector extends DefaultRequestDirector {
+    private final static String GET = "GET", POST = "POST", HEAD = "HEAD", PUT = "PUT",
+            OPTIONS = "OPTIONS", DELETE = "DELETE", TRACE = "TRACE",
+            CONNECT = "CONNECT", MOVE = "MOVE", PATCH = "PATCH";
+
+    private final Timer getTimer;
+    private final Timer postTimer;
+    private final Timer headTimer;
+    private final Timer putTimer;
+    private final Timer deleteTimer;
+    private final Timer optionsTimer;
+    private final Timer traceTimer;
+    private final Timer connectTimer;
+    private final Timer moveTimer;
+    private final Timer patchTimer;
+    private final Timer otherTimer;
+=======
+public class InstrumentedRequestDirector extends DefaultRequestDirector {
+    private final static String GET = "GET", POST = "POST", HEAD = "HEAD", PUT = "PUT",
+            OPTIONS = "OPTIONS", DELETE = "DELETE", TRACE = "TRACE",
+            CONNECT = "CONNECT", MOVE = "MOVE", PATCH = "PATCH";
+
+    private final Timer getTimer;
+    private final Timer postTimer;
+    private final Timer headTimer;
+    private final Timer putTimer;
+    private final Timer deleteTimer;
+    private final Timer optionsTimer;
+    private final Timer traceTimer;
+    private final Timer connectTimer;
+    private final Timer moveTimer;
+    private final Timer patchTimer;
+    private final Timer otherTimer;
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8bdd210_4ff25d5/rev_8bdd210-4ff25d5/metrics-httpclient/src/main/java/com/codahale/metrics/httpclient/InstrumentedRequestDirector.java;<<<<<<< MINE
+    InstrumentedRequestDirector(MetricRegistry registry,
+                                String name,
+                                HttpClientMetricNameStrategy metricNameStrategy,
+                                Log log,
+                                HttpRequestExecutor requestExec,
+                                ClientConnectionManager conman,
+                                ConnectionReuseStrategy reustrat,
+                                ConnectionKeepAliveStrategy kastrat,
+                                HttpRoutePlanner rouplan,
+                                HttpProcessor httpProcessor,
+                                HttpRequestRetryHandler retryHandler,
+                                RedirectStrategy redirectStrategy,
+                                AuthenticationStrategy targetAuthStrategy,
+                                AuthenticationStrategy proxyAuthStrategy,
+                                UserTokenHandler userTokenHandler,
+                                HttpParams params) {
+||||||| BASE
+    InstrumentedRequestDirector(MetricRegistry registry,
+                                String name,
+                                Log log,
+                                HttpRequestExecutor requestExec,
+                                ClientConnectionManager conman,
+                                ConnectionReuseStrategy reustrat,
+                                ConnectionKeepAliveStrategy kastrat,
+                                HttpRoutePlanner rouplan,
+                                HttpProcessor httpProcessor,
+                                HttpRequestRetryHandler retryHandler,
+                                RedirectStrategy redirectStrategy,
+                                AuthenticationStrategy targetAuthStrategy,
+                                AuthenticationStrategy proxyAuthStrategy,
+                                UserTokenHandler userTokenHandler,
+                                HttpParams params) {
+=======
+    public InstrumentedRequestDirector(MetricRegistry registry,
+                                       String name,
+                                       Log log,
+                                       HttpRequestExecutor requestExec,
+                                       ClientConnectionManager conman,
+                                       ConnectionReuseStrategy reustrat,
+                                       ConnectionKeepAliveStrategy kastrat,
+                                       HttpRoutePlanner rouplan,
+                                       HttpProcessor httpProcessor,
+                                       HttpRequestRetryHandler retryHandler,
+                                       RedirectStrategy redirectStrategy,
+                                       AuthenticationStrategy targetAuthStrategy,
+                                       AuthenticationStrategy proxyAuthStrategy,
+                                       UserTokenHandler userTokenHandler,
+                                       HttpParams params) {
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_a29c81a_c3041c6/rev_a29c81a-c3041c6/metrics-servlets/src/test/java/com/codahale/metrics/servlets/MetricsServletTest.java;<<<<<<< MINE
+import com.codahale.metrics.health.HealthCheckRegistry;
+
+import org.eclipse.jetty.testing.ServletTester;
+||||||| BASE
+import org.eclipse.jetty.testing.ServletTester;
+=======
+import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.servlet.ServletTester;
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_b7976ef_65faea8/rev_b7976ef-65faea8/metrics-core/src/main/java/com/codahale/metrics/ExponentiallyDecayingReservoir.java;<<<<<<< MINE
+     * @param clock the clock used to timestamp samples and track rescaling
+||||||| BASE
+=======
+     * @param clock the {@link Clock} to use
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_ce7cdff_48140b7/rev_ce7cdff-48140b7/metrics-core/src/main/java/com/codahale/metrics/JmxReporter.java;<<<<<<< MINE
+        private final Map<ObjectName, ObjectName> registered;
+||||||| BASE
+        private final Set<ObjectName> registered;
+=======
+        private final Set<ObjectName> registered;
+		private final ObjectNameFactory objectNameFactory;
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_ce7cdff_48140b7/rev_ce7cdff-48140b7/metrics-core/src/main/java/com/codahale/metrics/JmxReporter.java;<<<<<<< MINE
+            this.registered = new ConcurrentHashMap<ObjectName, ObjectName>();
+        }
+
+        private void registerMBean(Object mBean, ObjectName objectName) throws InstanceAlreadyExistsException, JMException {
+            ObjectInstance objectInstance = mBeanServer.registerMBean(mBean, objectName);
+            if (objectInstance != null) {
+                // the websphere mbeanserver rewrites the objectname to include
+                // cell, node & server info
+                // make sure we capture the new objectName for unregistration
+                registered.put(objectName, objectInstance.getObjectName());
+            } else {
+                registered.put(objectName, objectName);
+            }
+        }
+
+        private void unregisterMBean(ObjectName originalObjectName) throws InstanceNotFoundException, MBeanRegistrationException {
+            ObjectName storedObjectName = registered.remove(originalObjectName);
+            if (storedObjectName != null) {
+                mBeanServer.unregisterMBean(storedObjectName);
+            } else {
+                mBeanServer.unregisterMBean(originalObjectName);
+            }
+||||||| BASE
+            this.registered = new CopyOnWriteArraySet<ObjectName>();
+=======
+            this.registered = new CopyOnWriteArraySet<ObjectName>();
+            this.objectNameFactory = objectNameFactory;
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_41ba6c3_d814f12/rev_41ba6c3-d814f12/metrics-servlets/src/main/java/com/codahale/metrics/servlets/MetricsServlet.java;<<<<<<< MINE
+         * @return the {@link MetricFilter} that shall be used to filter metrics, or {@link MetricFilter#ALL} if
+||||||| BASE
+         * Returns the {@link MetricFilter} that shall be used to filter metrics, or {@link MetricFilter#ALL} if
+=======
+         * Returns the name of the parameter used to specify the jsonp callback, if any.
+         */
+        protected String getJsonpCallbackParameter() {
+            return null;
+        }
+
+        /**
+         * Returns the {@link MetricFilter} that shall be used to filter metrics, or {@link MetricFilter#ALL} if
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_73b2e5f_cb6980f/rev_73b2e5f-cb6980f/metrics-graphite/src/main/java/com/codahale/metrics/graphite/Graphite.java;<<<<<<< MINE
+    protected Socket socket;
+    protected Writer writer;
+    protected int failures;
+||||||| BASE
+    private Socket socket;
+    private Writer writer;
+    private int failures;
+=======
+    private Socket socket;
+    private Writer writer;
+    private int failures;
+    
+    /**
+     * Creates a new client which connects to the given address using the default
+     * {@link SocketFactory}.
+     *
+     * @param hostname The hostname of the Carbon server
+     * @param port The port of the Carbon server
+     */
+    public Graphite(String hostname, int port) {
+        this(new InetSocketAddress(hostname, port));
+    }
+    
+    /**
+     * Creates a new client which connects to the given address and socket factory.
+     *
+     * @param hostname The hostname of the Carbon server
+     * @param port The port of the Carbon server
+     * @param socketFactory the socket factory
+     */
+    public Graphite(String hostname, int port, SocketFactory socketFactory) {
+        this(new InetSocketAddress(hostname, port), socketFactory);
+    }
+>>>>>>> YOURS

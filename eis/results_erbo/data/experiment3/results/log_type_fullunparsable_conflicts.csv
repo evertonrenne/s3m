@@ -1,0 +1,179 @@
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_37833de_497bc19/rev_37833de-497bc19/src/main/java/com/netflix/astyanax/serializers/SerializerPackageImpl.java;<<<<<<< MINE
+        ComparatorType type = ComparatorType.getByClassName(keyType);
+        if (type == null)
+=======
+        String comparatorType = StringUtils.substringBefore(keyType, "(");
+        ComparatorType type = ComparatorType.getByClassName(comparatorType);
+
+        if (type == null) {
+            throw new UnknownComparatorException(keyType);
+        }
+
+        if (type == ComparatorType.COMPOSITETYPE) {
+            try {
+                this.keySerializer = new SpecificCompositeSerializer((CompositeType) TypeParser.parse(keyType));
+                return this;
+            }
+            catch (ConfigurationException e) {
+                // Ignore and simply use the default serializer
+            }
+            throw new UnknownComparatorException(keyType);
+        }
+        else if (type == ComparatorType.DYNAMICCOMPOSITETYPE) {
+            // TODO
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/Mapping.java;<<<<<<< MINE
+        return new Mapping<T>(clazz, new DefaultAnnotationSet());
+    }
+=======
+        return new Mapping<T>(clazz, new DefaultAnnotationSet(), false);
+	}
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/Mapping.java;<<<<<<< MINE
+    public static <T> Mapping<T> make(Class<T> clazz,
+            AnnotationSet<?, ?> annotationSet) {
+        return new Mapping<T>(clazz, annotationSet);
+=======
+    public static <T> Mapping<T> make(Class<T> clazz, AnnotationSet<?, ?> annotationSet, boolean includeParentFields) {
+        return new Mapping<T>(clazz, annotationSet, includeParentFields);
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/Mapping.java;<<<<<<< MINE
+    public Mapping(Class<T> clazz) {
+        this(clazz, new DefaultAnnotationSet());
+=======
+    public Mapping(Class<T> clazz, boolean includeParentFields) {
+        this(clazz, new DefaultAnnotationSet(), includeParentFields);
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/Mapping.java;<<<<<<< MINE
+    public Mapping(Class<T> clazz, AnnotationSet<?, ?> annotationSet) {
+=======
+    public Mapping(Class<T> clazz, AnnotationSet<?, ?> annotationSet, boolean includeParentFields) {
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/Mapping.java;<<<<<<< MINE
+        for (Field field : clazz.getDeclaredFields()) {
+            String name = mapField(field, annotationSet, builder, usedNames,
+                    isKey);
+=======
+
+		List<Field> allFields = getFields(clazz, includeParentFields);
+        for (Field field : allFields) {
+            String name = mapField(field, annotationSet, builder, usedNames, isKey);
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/Coercions.java;<<<<<<< MINE
+            throw new UnsupportedOperationException();
+=======
+			boolean sc = false;
+			for (Class face : field.getType().getInterfaces()) {
+				if (face.equals(StringCoercible.class)) {
+            		objValue = column.getStringCoercibleValue(field.getType());
+					break;
+				}
+			}
+			if (objValue == null) {
+				throw new UnsupportedOperationException(
+					"Field datatype not supported: " + field.getType().getCanonicalName());
+			}
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/Coercions.java;<<<<<<< MINE
+                    throw new UnsupportedOperationException();
+=======
+                    throw new UnsupportedOperationException(
+						"Column datatype not supported: " + objValue.getClass().getCanonicalName());
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/MappingCache.java;<<<<<<< MINE
+        return getMapping(clazz, new DefaultAnnotationSet());
+    }
+=======
+		return getMapping(clazz, false);		
+	}
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/MappingCache.java;<<<<<<< MINE
+            AnnotationSet<?, ?> annotationSet) {
+=======
+            AnnotationSet<?, ?> annotationSet, boolean includeParentFields) {
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/MappingCache.java;<<<<<<< MINE
+            mapping = new Mapping<T>(clazz, annotationSet);
+=======
+            mapping = new Mapping<T>(clazz, annotationSet, includeParentFields);
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+ * 
+=======
+ *
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+ * 
+=======
+ *
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+ * 
+=======
+ *
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+ * 
+=======
+ *
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+ * 
+=======
+ *
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                                                columnFamily.getKeySerializer().toBytesList(keys), 
+                                                new ColumnParent().setColumn_family(columnFamily.getName()), 
+                                                predicate, 
+=======
+                                                columnFamily.getKeySerializer().toBytesList(keys),
+                                                new ColumnParent().setColumn_family(columnFamily.getName()),
+                                                predicate,
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                                        if (!firstPage && !cfmap.isEmpty() && 
+=======
+                                        if (!firstPage && !cfmap.isEmpty() &&
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                                        StringSerializer.get().toByteBuffer(cql), 
+=======
+                                        StringSerializer.get().toByteBuffer(cql),
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/serializers/AnnotatedCompositeSerializer.java;<<<<<<< MINE
+            public void nextComponent() {
+=======
+            public void getNextComponent() {
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/AstyanaxConfiguration.java;<<<<<<< MINE
+    /**
+     * TODO
+     */
+=======
+	
+	/**
+	 * @return
+	 */
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-core/src/main/java/com/netflix/astyanax/connectionpool/impl/ConnectionPoolType.java;<<<<<<< MINE
+    TOKEN_AWARE, ROUND_ROBIN, BAG
+=======
+    TOKEN_AWARE, ROUND_ROBIN, BAG;
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-recipes/src/main/java/com/netflix/astyanax/recipes/storage/ObjectReader.java;<<<<<<< MINE
+                                            totalBytesRead.addAndGet(chunk.limit());
+=======
+                                            totalBytesRead.addAndGet(chunk.remaining());
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-recipes/src/main/java/com/netflix/astyanax/recipes/storage/ObjectReader.java;<<<<<<< MINE
+                        os.write(chunks.get(i).array());
+=======
+                    	
+                        ByteBuffer bb = chunks.get(i);
+                        byte[] bytes = new byte[bb.remaining()];
+                        bb.get(bytes, 0, bytes.length);
+                        os.write(bytes);
+                        
+                        //os.write(chunks.get(i).array());
+>>>>>>> YOURS

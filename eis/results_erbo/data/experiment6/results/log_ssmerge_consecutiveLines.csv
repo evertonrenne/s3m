@@ -1,0 +1,682 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment6/projects/databus/revisions/rev_3744018_5eec32f/rev_3744018-5eec32f;/databus2-relay/databus2-relay-impl/src/test/java/com/linkedin/databus2/relay/TestDatabusRelayMain;testRelayChainingSCNRegress();			relay1.getInboundEventStatisticsCollector();//force merge of stats;
+
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn: "+ stats2.getMaxScn() +
+							  "; source relay max scn:" + stats.getMaxScn());
+					return stats2.getMaxScn() == stats.getMaxScn();
+				}
+			}, "chained relay caught up", 25000, log);
+
+			Assert.assertEquals(stats2.getNumSysEvents(), firstGenWindows);
+			Assert.assertEquals(stats2.getMinScn(), stats.getMinScn());
+			Assert.assertEquals(stats2.getNumDataEvents(), firstGenDataEvents);;			relay1.getInboundEventStatisticsCollector();//force merge of stats;
+
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();					
+					log.debug("chained relay max scn: "+ stats2.getMaxScn() +
+							  "; source relay max scn:" + stats.getMaxScn());
+					return stats2.getMaxScn() == stats.getMaxScn();
+				}
+			}, "chained relay caught up", 25000, log);
+
+			Assert.assertEquals(stats2.getNumSysEvents(), firstGenWindows);
+			Assert.assertEquals(stats2.getMinScn(), stats.getMinScn());
+			Assert.assertEquals(stats2.getNumDataEvents(), firstGenDataEvents);;		
+		
+/home/ramdisk/experiment6/projects/databus/revisions/rev_3744018_5eec32f/rev_3744018-5eec32f;/databus2-relay/databus2-relay-impl/src/test/java/com/linkedin/databus2/relay/TestDatabusRelayMain;testRelayChainingSCNRegress();			relay3.getInboundEventStatisticsCollector();//force merge of stats;
+
+			// wait until client got all events or for maxTimeout;
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn:" + stats2.getMaxScn() +
+							"; master relay max scn:" + stats3.getMaxScn());
+					return stats2.getMaxScn() == stats3.getMaxScn();
+				}
+			}, "chained relay caught up with new master", 30000, log);;			relay3.getInboundEventStatisticsCollector();//force merge of stats;
+
+			// wait until client got all events or for maxTimeout;
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();					
+					log.debug("chained relay max scn:" + stats2.getMaxScn() + 
+							"; master relay max scn:" + stats3.getMaxScn());
+					return stats2.getMaxScn() == stats3.getMaxScn();
+				}
+			}, "chained relay caught up with new master", 30000, log);;		
+			Thread.sleep(35000);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;testMultiWindowsHappyPath();                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);;                        new StreamConsumerCallbackFactory(),
+                        null
+                        );;                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;testOneWindowTwoIndependentConsumersHappyPath();                        new StreamConsumerCallbackFactory(),
+                        null,;                        new StreamConsumerCallbackFactory(),;                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;runDispatcherRollback(int,int,int,int,int,double,boolean,int,int,long,long,boolean);            //Single threaded execution of consumer
+            MultiConsumerCallback mConsumer = new MultiConsumerCallback(allRegistrations,Executors.newFixedThreadPool(1),
+                    consumerTimeBudgetMs,new StreamConsumerCallbackFactory(),null, null);;            //Single threaded execution of consumer
+            MultiConsumerCallback mConsumer = new MultiConsumerCallback(allRegistrations,Executors.newFixedThreadPool(1),
+                    consumerTimeBudgetMs,new StreamConsumerCallbackFactory(),null);;            final UnifiedClientStats unifiedStats = new UnifiedClientStats(0, "test", "test.unified");
+            // single-threaded execution of consumer
+            MultiConsumerCallback mConsumer =
+                new MultiConsumerCallback(allRegistrations,
+                                          Executors.newFixedThreadPool(1),
+                                          consumerTimeBudgetMs,
+                                          new StreamConsumerCallbackFactory(null, unifiedStats),
+                                          null,
+                                          unifiedStats,
+                                          null);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;runDispatcherRollback(int,int,int,int,int,double,boolean,int,int,long,long,boolean);            TestDispatcher<DatabusCombinedConsumer> dispatcher = new TestDispatcher<DatabusCombinedConsumer>("rollBackcheck",
+                    connConfig,
+                    subs,
+                    new InMemoryPersistenceProvider(),
+                    dataEventsBuffer,
+                    mConsumer,
+                    bootstrapCheckpointsPerWindow == 0);;            TestDispatcher<DatabusCombinedConsumer> dispatcher = new TestDispatcher<DatabusCombinedConsumer>("rollBackcheck",
+                    connConfig,
+                    subs,
+                    new InMemoryPersistenceProvider(),
+                    dataEventsBuffer,
+                    mConsumer);;            TestDispatcher<DatabusCombinedConsumer> dispatcher =
+                new TestDispatcher<DatabusCombinedConsumer>("rollBackcheck",
+                                                            connConfig,
+                                                            subs,
+                                                            new InMemoryPersistenceProvider(),
+                                                            dataEventsBuffer,
+                                                            mConsumer,
+                                                            bootstrapCheckpointsPerWindow == 0);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;testShutdownBeforeRollback();                                    new StreamConsumerCallbackFactory(),
+                                    callbackStats,
+                                    null);;                                    new StreamConsumerCallbackFactory(),
+                                    callbackStats);;                                    new StreamConsumerCallbackFactory(callbackStats, unifiedStats),
+                                    callbackStats,
+                                    unifiedStats,
+                                    null);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;testPartialWindowRollback();              new MultiConsumerCallback(
+                      allRegistrations,
+                      Executors.newFixedThreadPool(2),
+                      1000,
+                      new StreamConsumerCallbackFactory(),
+                      callbackStats,
+                      null);;              new MultiConsumerCallback(
+                      allRegistrations,
+                      Executors.newFixedThreadPool(2),
+                      1000,
+                      new StreamConsumerCallbackFactory(),
+                      callbackStats);;          new MultiConsumerCallback(allRegistrations,
+                                    Executors.newFixedThreadPool(2),
+                                    1000,
+                                    new StreamConsumerCallbackFactory(callbackStats, unifiedStats),
+                                    callbackStats,
+                                    unifiedStats,
+                                    null);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestBootstrapPullThread;createBootstrapPullThread(boolean,boolean,boolean,boolean,boolean,String,int,int,boolean,long,long,String);	  clientProps.setProperty("client.runtime.bootstrap.enabled", "true");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).name", "bs1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).port", "10001");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).sources", "source1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).name", "bs2");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).port", "10002");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).sources", "source1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).name", "bs3");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).port", "10003");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).sources", "source1");
+
+	  clientProps.setProperty("client.runtime.relay(1).name", "relay1");
+	  clientProps.setProperty("client.runtime.relay(1).port", "10001");
+	  clientProps.setProperty("client.runtime.relay(1).sources", "source1");
+	  clientProps.setProperty("client.runtime.relay(2).name", "relay2");
+	  clientProps.setProperty("client.runtime.relay(2).port", "10002");
+	  clientProps.setProperty("client.runtime.relay(2).sources", "source1");
+	  clientProps.setProperty("client.runtime.relay(3).name", "relay3");
+	  clientProps.setProperty("client.runtime.relay(3).port", "10003");
+	  clientProps.setProperty("client.runtime.relay(3).sources", "source1");
+
+	  clientProps.setProperty("client.connectionDefaults.eventBuffer.maxSize", "100000");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.maxRetryNum", "9");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncFactor", "1.0");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncDelta", "1");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.initSleep", "1");
+
+	  DatabusHttpClientImpl.Config clientConfBuilder = new DatabusHttpClientImpl.Config();
+	  ConfigLoader<DatabusHttpClientImpl.StaticConfig> configLoader =
+			  new ConfigLoader<DatabusHttpClientImpl.StaticConfig>("client.", clientConfBuilder);
+	  configLoader.loadConfig(clientProps);
+
+	  DatabusHttpClientImpl.StaticConfig clientConf = clientConfBuilder.build();
+	  DatabusSourcesConnection.StaticConfig srcConnConf = clientConf.getConnectionDefaults();
+
+	  DatabusHttpClientImpl client = new DatabusHttpClientImpl(clientConf);
+
+	  client.registerDatabusBootstrapListener(new LoggingConsumer(), null, "source1");
+
+	  Assert.assertNotNull(client, "client instantiation ok");
+
+	  DatabusHttpClientImpl.RuntimeConfig clientRtConf = clientConf.getRuntime().build();
+
+	  //we keep the index of the next server we expect to see
+	  AtomicInteger serverIdx = new AtomicInteger(-1);
+
+	  //generate the order in which we should see the servers
+	  List<ServerInfo> relayOrder = new ArrayList<ServerInfo>(clientRtConf.getRelays());
+	  if (LOG.isInfoEnabled())
+	  {
+		  StringBuilder sb = new StringBuilder();
+		  for (ServerInfo serverInfo: relayOrder)
+		  {
+			  sb.append(serverInfo.getName());
+			  sb.append(" ");
+		  }
+		  LOG.info("Relay order:" + sb.toString());
+	  }
+
+	  List<IdNamePair> sourcesResponse = new ArrayList<IdNamePair>();
+	  sourcesResponse.add(new IdNamePair(1L, "source1"));
+
+	  Map<Long, List<RegisterResponseEntry>> registerResponse = new HashMap<Long, List<RegisterResponseEntry>>();
+
+	  List<RegisterResponseEntry> regResponse = new ArrayList<RegisterResponseEntry>();
+	  regResponse.add(new RegisterResponseEntry(1L, (short)1, SCHEMA$.toString()));
+	  registerResponse.put(1L, regResponse);
+
+	  ChunkedBodyReadableByteChannel channel = EasyMock.createMock(ChunkedBodyReadableByteChannel.class);
+
+	  if ( ! readDataException)
+	  {
+		  EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(null).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(null).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(null).anyTimes();
+	  } else {
+		  EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(exceptionName).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(exceptionName).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(exceptionName).anyTimes();
+	  }
+
+	  if ( phaseCompleted)
+	    EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn("true").anyTimes();
+	  else
+		EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn(null).anyTimes();
+
+	  EasyMock.replay(channel);
+
+	  DbusEventBuffer dbusBuffer = EasyMock.createMock(DbusEventBuffer.class);
+	  dbusBuffer.endEvents(false, -1, false, false, null);
+	  EasyMock.expectLastCall().anyTimes();
+	  EasyMock.expect(dbusBuffer.injectEvent(EasyMock.<DbusEventInternalReadable>notNull())).andReturn(true).anyTimes();
+	  EasyMock.expect(dbusBuffer.getEventSerializationVersion()).andReturn(DbusEventFactory.DBUS_EVENT_V1).anyTimes();
+
+	  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull(),
+	                                        org.easymock.EasyMock.<List<InternalDatabusEventsListener>>notNull(),
+	                                        org.easymock.EasyMock.<DbusEventsStatisticsCollector>isNull()))
+	          .andReturn(numBytesRead).anyTimes();
+
+	  if ( readDataThrowException)
+	  {
+		  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+		          .andThrow(new RuntimeException("dummy")).anyTimes();
+	  } else {
+		  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+		          .andReturn(numBytesRead).anyTimes();
+	  }
+
+	  EasyMock.expect(dbusBuffer.acquireIterator(EasyMock.<String>notNull())).andReturn(null).anyTimes();
+	  dbusBuffer.waitForFreeSpace((int)(10000 * 100.0 / clientConf.getPullerBufferUtilizationPct()));
+	  EasyMock.expectLastCall().anyTimes();
+	  EasyMock.expect(dbusBuffer.getBufferFreeReadSpace()).andReturn(freeReadSpace).anyTimes();
+
+	  EasyMock.replay(dbusBuffer);
+
+	  //This guy succeeds on /sources but fails on /register
+	  MockBootstrapConnection mockSuccessConn = new MockBootstrapConnection(startScn, targetScn, channel, serverIdx,
+	                                                                        muteTransition);
+
+	  DatabusBootstrapConnectionFactory mockConnFactory =
+			  org.easymock.EasyMock.createMock("mockRelayFactory", DatabusBootstrapConnectionFactory.class);
+
+	  //each server should be tried MAX_RETRIES time until all retries are exhausted
+
+	  if ( throwBSConnException )
+	  {
+		  EasyMock.expect(mockConnFactory.createConnection(
+				  EasyMock.<ServerInfo>notNull(),
+				  EasyMock.<ActorMessageQueue>notNull(),
+				  EasyMock.<RemoteExceptionHandler>notNull())).andThrow(new RuntimeException("Mock Error")).anyTimes();
+	  } else if ( failBsConnection) {
+		  EasyMock.expect(mockConnFactory.createConnection(
+				  EasyMock.<ServerInfo>notNull(),
+				  EasyMock.<ActorMessageQueue>notNull(),
+				  EasyMock.<RemoteExceptionHandler>notNull())).andReturn(null).anyTimes();;	  clientProps.setProperty("client.runtime.bootstrap.enabled", "true");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).name", "bs1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).port", "10001");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).sources", "source1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).name", "bs2");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).port", "10002");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).sources", "source1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).name", "bs3");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).port", "10003");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).sources", "source1");
+
+	  clientProps.setProperty("client.runtime.relay(1).name", "relay1");
+	  clientProps.setProperty("client.runtime.relay(1).port", "10001");
+	  clientProps.setProperty("client.runtime.relay(1).sources", "source1");
+	  clientProps.setProperty("client.runtime.relay(2).name", "relay2");
+	  clientProps.setProperty("client.runtime.relay(2).port", "10002");
+	  clientProps.setProperty("client.runtime.relay(2).sources", "source1");
+	  clientProps.setProperty("client.runtime.relay(3).name", "relay3");
+	  clientProps.setProperty("client.runtime.relay(3).port", "10003");
+	  clientProps.setProperty("client.runtime.relay(3).sources", "source1");
+
+	  clientProps.setProperty("client.connectionDefaults.eventBuffer.maxSize", "100000");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.maxRetryNum", "9");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncFactor", "1.0");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncDelta", "1");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.initSleep", "1");
+
+	  DatabusHttpClientImpl.Config clientConfBuilder = new DatabusHttpClientImpl.Config();
+	  ConfigLoader<DatabusHttpClientImpl.StaticConfig> configLoader =
+			  new ConfigLoader<DatabusHttpClientImpl.StaticConfig>("client.", clientConfBuilder);
+	  configLoader.loadConfig(clientProps);
+
+	  DatabusHttpClientImpl.StaticConfig clientConf = clientConfBuilder.build();
+	  DatabusSourcesConnection.StaticConfig srcConnConf = clientConf.getConnectionDefaults();
+
+	  DatabusHttpClientImpl client = new DatabusHttpClientImpl(clientConf);
+
+	  client.registerDatabusBootstrapListener(new LoggingConsumer(), null, "source1");
+
+	  Assert.assertNotNull(client, "client instantiation ok");
+
+	  DatabusHttpClientImpl.RuntimeConfig clientRtConf = clientConf.getRuntime().build();
+
+	  //we keep the index of the next server we expect to see
+	  AtomicInteger serverIdx = new AtomicInteger(-1);
+
+	  //generate the order in which we should see the servers
+	  List<ServerInfo> relayOrder = new ArrayList<ServerInfo>(clientRtConf.getRelays());
+	  if (LOG.isInfoEnabled())
+	  {
+		  StringBuilder sb = new StringBuilder();
+		  for (ServerInfo serverInfo: relayOrder)
+		  {
+			  sb.append(serverInfo.getName());
+			  sb.append(" ");
+		  }
+		  LOG.info("Relay order:" + sb.toString());
+	  }
+
+	  List<IdNamePair> sourcesResponse = new ArrayList<IdNamePair>();
+	  sourcesResponse.add(new IdNamePair(1L, "source1"));
+
+	  Map<Long, List<RegisterResponseEntry>> registerResponse = new HashMap<Long, List<RegisterResponseEntry>>();
+
+	  List<RegisterResponseEntry> regResponse = new ArrayList<RegisterResponseEntry>();
+	  regResponse.add(new RegisterResponseEntry(1L, (short)1, SCHEMA$.toString()));
+	  registerResponse.put(1L, regResponse);
+
+	  ChunkedBodyReadableByteChannel channel = EasyMock.createMock(ChunkedBodyReadableByteChannel.class);
+
+	  if ( ! readDataException)
+	  {
+		  EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(null).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(null).anyTimes();
+	  } else {
+		  EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(exceptionName).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(exceptionName).anyTimes();
+	  }
+
+	  if ( phaseCompleted)
+	    EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn("true").anyTimes();
+	  else
+		EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn(null).anyTimes();
+
+	  EasyMock.replay(channel);
+
+	  DbusEventBuffer dbusBuffer = EasyMock.createMock(DbusEventBuffer.class);
+	  dbusBuffer.endEvents(false, -1, false, false, null);
+	  EasyMock.expectLastCall().anyTimes();
+	  EasyMock.expect(dbusBuffer.injectEvent(EasyMock.<DbusEventInternalReadable>notNull())).andReturn(true).anyTimes();
+	  EasyMock.expect(dbusBuffer.getEventSerializationVersion()).andReturn(DbusEventFactory.DBUS_EVENT_V1).anyTimes();
+
+	  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull(),
+	                                        org.easymock.EasyMock.<List<InternalDatabusEventsListener>>notNull(),
+	                                        org.easymock.EasyMock.<DbusEventsStatisticsCollector>isNull()))
+	          .andReturn(numBytesRead).anyTimes();
+
+	  if ( readDataThrowException)
+	  {
+		  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+		          .andThrow(new RuntimeException("dummy")).anyTimes();
+	  } else {
+		  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+		          .andReturn(numBytesRead).anyTimes();
+	  }
+
+	  EasyMock.expect(dbusBuffer.acquireIterator(EasyMock.<String>notNull())).andReturn(null).anyTimes();
+	  dbusBuffer.waitForFreeSpace((int)(10000 * 100.0 / clientConf.getPullerBufferUtilizationPct()));
+	  EasyMock.expectLastCall().anyTimes();
+	  EasyMock.expect(dbusBuffer.getBufferFreeReadSpace()).andReturn(freeReadSpace).anyTimes();
+
+	  EasyMock.replay(dbusBuffer);
+
+	  //This guy succeeds on /sources but fails on /register
+	  MockBootstrapConnection mockSuccessConn = new MockBootstrapConnection(startScn, targetScn, channel, serverIdx,
+	                                                                        muteTransition);
+
+	  DatabusBootstrapConnectionFactory mockConnFactory =
+			  org.easymock.EasyMock.createMock("mockRelayFactory", DatabusBootstrapConnectionFactory.class);
+
+	  //each server should be tried MAX_RETRIES time until all retries are exhausted
+
+	  if ( throwBSConnException )
+	  {
+		  EasyMock.expect(mockConnFactory.createConnection(
+				  EasyMock.<ServerInfo>notNull(),
+				  EasyMock.<ActorMessageQueue>notNull(),
+				  EasyMock.<RemoteExceptionHandler>notNull())).andThrow(new RuntimeException("Mock Error")).anyTimes();
+	  } else if ( failBsConnection) {
+		  EasyMock.expect(mockConnFactory.createConnection(
+				  EasyMock.<ServerInfo>notNull(),
+				  EasyMock.<ActorMessageQueue>notNull(),
+				  EasyMock.<RemoteExceptionHandler>notNull())).andReturn(null).anyTimes();;    clientProps.setProperty("client.runtime.bootstrap.enabled", "true");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).name", "bs1");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).host", "localhost");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).port", "10001");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).sources", "source1");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).name", "bs2");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).host", "localhost");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).port", "10002");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).sources", "source1");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).name", "bs3");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).host", "localhost");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).port", "10003");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).sources", "source1");
+
+    clientProps.setProperty("client.runtime.relay(1).name", "relay1");
+    clientProps.setProperty("client.runtime.relay(1).port", "10001");
+    clientProps.setProperty("client.runtime.relay(1).sources", "source1");
+    clientProps.setProperty("client.runtime.relay(2).name", "relay2");
+    clientProps.setProperty("client.runtime.relay(2).port", "10002");
+    clientProps.setProperty("client.runtime.relay(2).sources", "source1");
+    clientProps.setProperty("client.runtime.relay(3).name", "relay3");
+    clientProps.setProperty("client.runtime.relay(3).port", "10003");
+    clientProps.setProperty("client.runtime.relay(3).sources", "source1");
+
+    clientProps.setProperty("client.connectionDefaults.eventBuffer.maxSize", "100000");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.maxRetryNum", "9");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncFactor", "1.0");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncDelta", "1");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.initSleep", "1");
+
+    DatabusHttpClientImpl.Config clientConfBuilder = new DatabusHttpClientImpl.Config();
+    ConfigLoader<DatabusHttpClientImpl.StaticConfig> configLoader =
+        new ConfigLoader<DatabusHttpClientImpl.StaticConfig>("client.", clientConfBuilder);
+    configLoader.loadConfig(clientProps);
+
+    DatabusHttpClientImpl.StaticConfig clientConf = clientConfBuilder.build();
+    DatabusSourcesConnection.StaticConfig srcConnConf = clientConf.getConnectionDefaults();
+
+    DatabusHttpClientImpl client = new DatabusHttpClientImpl(clientConf);
+
+    client.registerDatabusBootstrapListener(new LoggingConsumer(), null, "source1");
+
+    Assert.assertNotNull(client, "client instantiation ok");
+
+    DatabusHttpClientImpl.RuntimeConfig clientRtConf = clientConf.getRuntime().build();
+
+    //we keep the index of the next server we expect to see
+    AtomicInteger serverIdx = new AtomicInteger(-1);
+
+    //generate the order in which we should see the servers
+    List<ServerInfo> relayOrder = new ArrayList<ServerInfo>(clientRtConf.getRelays());
+    if (LOG.isInfoEnabled())
+    {
+      StringBuilder sb = new StringBuilder();
+      for (ServerInfo serverInfo: relayOrder)
+      {
+        sb.append(serverInfo.getName());
+        sb.append(" ");
+      }
+      LOG.info("Relay order:" + sb.toString());
+    }
+
+    List<IdNamePair> sourcesResponse = new ArrayList<IdNamePair>();
+    sourcesResponse.add(new IdNamePair(1L, "source1"));
+
+    Map<Long, List<RegisterResponseEntry>> registerResponse = new HashMap<Long, List<RegisterResponseEntry>>();
+
+    List<RegisterResponseEntry> regResponse = new ArrayList<RegisterResponseEntry>();
+    regResponse.add(new RegisterResponseEntry(1L, (short)1, SCHEMA$.toString()));
+    registerResponse.put(1L, regResponse);
+
+    ChunkedBodyReadableByteChannel channel = EasyMock.createMock(ChunkedBodyReadableByteChannel.class);
+
+    if ( ! readDataException)
+    {
+      EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(null).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(null).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(null).anyTimes();
+    } else {
+      EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(exceptionName).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(exceptionName).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(exceptionName).anyTimes();
+    }
+
+    if ( phaseCompleted)
+      EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn("true").anyTimes();
+    else
+    EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn(null).anyTimes();
+
+    EasyMock.replay(channel);
+
+    DbusEventBuffer dbusBuffer = EasyMock.createMock(DbusEventBuffer.class);
+    dbusBuffer.endEvents(false, -1, false, false, null);
+    EasyMock.expectLastCall().anyTimes();
+    EasyMock.expect(dbusBuffer.injectEvent(EasyMock.<DbusEventInternalReadable>notNull())).andReturn(true).anyTimes();
+    EasyMock.expect(dbusBuffer.getEventSerializationVersion()).andReturn(DbusEventFactory.DBUS_EVENT_V1).anyTimes();
+
+    EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull(),
+                                          org.easymock.EasyMock.<List<InternalDatabusEventsListener>>notNull(),
+                                          org.easymock.EasyMock.<DbusEventsStatisticsCollector>isNull()))
+            .andReturn(numBytesRead).anyTimes();
+
+    if ( readDataThrowException)
+    {
+      EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+              .andThrow(new RuntimeException("dummy")).anyTimes();
+    } else {
+      EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+              .andReturn(numBytesRead).anyTimes();
+    }
+
+    EasyMock.expect(dbusBuffer.acquireIterator(EasyMock.<String>notNull())).andReturn(null).anyTimes();
+    dbusBuffer.waitForFreeSpace((int)(10000 * 100.0 / clientConf.getPullerBufferUtilizationPct()));
+    EasyMock.expectLastCall().anyTimes();
+    EasyMock.expect(dbusBuffer.getBufferFreeReadSpace()).andReturn(freeReadSpace).anyTimes();
+
+    EasyMock.replay(dbusBuffer);
+
+    //This guy succeeds on /sources but fails on /register
+    MockBootstrapConnection mockSuccessConn = new MockBootstrapConnection(startScn, targetScn, channel, serverIdx,
+                                                                          muteTransition);
+
+    DatabusBootstrapConnectionFactory mockConnFactory =
+        org.easymock.EasyMock.createMock("mockRelayFactory", DatabusBootstrapConnectionFactory.class);
+
+    //each server should be tried MAX_RETRIES time until all retries are exhausted
+
+    if ( throwBSConnException )
+    {
+      EasyMock.expect(mockConnFactory.createConnection(
+          EasyMock.<ServerInfo>notNull(),
+          EasyMock.<ActorMessageQueue>notNull(),
+          EasyMock.<RemoteExceptionHandler>notNull())).andThrow(new RuntimeException("Mock Error")).anyTimes();
+    } else if ( failBsConnection) {
+      EasyMock.expect(mockConnFactory.createConnection(
+          EasyMock.<ServerInfo>notNull(),
+          EasyMock.<ActorMessageQueue>notNull(),
+          EasyMock.<RemoteExceptionHandler>notNull())).andReturn(null).anyTimes();
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl;DatabusV2RegistrationImpl(RegistrationId,DatabusHttpClientImpl,CheckpointPersistenceProvider,String[],AbstractDatabusCombinedConsumer[]);                                     DatabusHttpClientImpl client,
+                                     CheckpointPersistenceProvider ckptProvider,
+                                     String[] sources,
+                                     AbstractDatabusCombinedConsumer[] consumers)
+    {
+    	_id = id;
+    	_status = new Status();
+    	_client = client;
+    	_checkpointPersistenceProvider = ckptProvider;
+    	_state = RegistrationState.INIT;
+    	_sources = new ArrayList<String>();
+    	_consumers = new ArrayList<DatabusCombinedConsumer>();
+        _log = Logger.getLogger(getClass().getName() +
+                			(null  == _id ? "" : "." + _id.getId()));
+        if ( null != sources)
+        	_sources.addAll(Arrays.asList(sources));
+
+    	if ( null != consumers)
+    		_consumers.addAll(Arrays.asList(consumers));
+    };                                     DatabusHttpClientImpl client,
+                                     CheckpointPersistenceProvider ckptProvider,
+                                     String[] sources,
+                                     AbstractDatabusCombinedConsumer[] consumers)
+    {
+    	_id = id;
+    	_status = new Status();
+    	_client = client;
+    	_checkpointPersistenceProvider = ckptProvider;
+    	_state = RegistrationState.INIT;
+    	_sources = new ArrayList<String>();
+    	_consumers = new ArrayList<DatabusCombinedConsumer>();
+        _log = Logger.getLogger(getClass().getName() +
+                			(null  == _id ? "" : "." + _id.getId()));
+        if ( null != sources)
+        	_sources.addAll(Arrays.asList(sources));
+
+    	if ( null != consumers)
+    		_consumers.addAll(Arrays.asList(consumers));
+
+    	LoggingConsumer c = null;
+    	try {
+			c = new LoggingConsumer(client.getClientStaticConfig().getLoggingListener());
+		} catch (InvalidConfigException e) {
+			_log.error("Unable to instantiate logging consumer",e);
+		}
+    	_loggingConsumer = c;
+    };                                   DatabusHttpClientImpl client,
+                                   CheckpointPersistenceProvider ckptProvider,
+                                   String[] sources,
+                                   AbstractDatabusCombinedConsumer[] consumers)
+  {
+    _id = id;
+    _status = new Status();
+    _client = client;
+    _checkpointPersistenceProvider = ckptProvider;
+    _state = RegistrationState.INIT;
+    _sources = new ArrayList<String>();
+    _consumers = new ArrayList<DatabusCombinedConsumer>();
+    _log = Logger.getLogger(getClass().getName() + (null  == _id ? "" : "." + _id.getId()));
+    if ( null != sources)
+      _sources.addAll(Arrays.asList(sources));
+    if ( null != consumers)
+      _consumers.addAll(Arrays.asList(consumers));
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl;addSubscriptions(String);           throws IllegalStateException
+   {
+	   	if ( ! _state.isPreStartState())
+	   		throw new IllegalStateException("Cannot add sources when state is running or shut down. Current State :" + _state);;           throws IllegalStateException
+   {
+	   	if ( ! _state.isPreStartState())
+	   		throw new IllegalStateException("Cannot add sources when state is running/shutdown. Current State :" + _state);;          throws IllegalStateException
+  {
+    if ( ! _state.isPreStartState())
+      throw new IllegalStateException("Cannot add sources when state is running or shut down. Current State :" + _state);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl;start();		boolean canConsumerBootstrap = false;
+		_streamConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();
+		_streamConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(streamConsumers, _sources, _filterConfig));;		boolean canConsumerBootstrap = false;
+		_streamConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();
+		_streamConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(streamConsumers, _sources, _filterConfig));
+		_streamConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(_loggingConsumer, _sources, _filterConfig));;    boolean enableBootstrap = _client.getClientStaticConfig().getRuntime().getBootstrap().isEnabled();
+    Set<ServerInfo> candidateBootstrapServers = new HashSet<ServerInfo>();
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl;start();		if (enableBootstrap && canConsumerBootstrap)
+		{
+			if ( (null == bootstrapServers) || ( bootstrapServers.isEmpty()))
+				throw new DatabusClientException("No configured bootstrap servers in the client to start");
+
+			for (ServerInfo s : bootstrapServers)
+			{
+				if (canServe(s,_sources))
+					candidateBootstrapServers.add(s);
+			}
+
+			if (candidateBootstrapServers.isEmpty())
+				throw new DatabusClientException("No candidate bootstrap servers for source : " + _sources);
+
+			_bootstrapConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();;
+			_bootstrapConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(bootstrapConsumers, _sources, _filterConfig));
+		};		if (enableBootstrap && canConsumerBootstrap)
+		{
+			if ( (null == bootstrapServers) || ( bootstrapServers.isEmpty()))
+				throw new DatabusClientException("No configured bootstrap servers in the client to start");
+
+			for (ServerInfo s : bootstrapServers)
+			{
+				if (canServe(s,_sources))
+					candidateBootstrapServers.add(s);
+			}
+
+			if (candidateBootstrapServers.isEmpty())
+				throw new DatabusClientException("No candidate bootstrap servers for source : " + _sources);
+
+			_bootstrapConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();;
+			_bootstrapConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(bootstrapConsumers, _sources, _filterConfig));
+			_bootstrapConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(_loggingConsumer, _sources, _filterConfig));
+
+		};      _bootstrapConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();;
+      _bootstrapConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(bootstrapConsumers, _sources, _filterConfig));
+    }
+
+    // All validations done. Setup and start
+    initializeStatsCollectors();
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;testPerf();            new StreamConsumerCallbackFactory(),
+            statsCollector,
+            null);;            new StreamConsumerCallbackFactory(),
+            statsCollector);;            new StreamConsumerCallbackFactory(consumerStatsCollector, unifiedStatsCollector),
+            consumerStatsCollector,
+            unifiedStatsCollector,
+            null);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;test1StreamConsumerCallFailure();            new StreamConsumerCallbackFactory(),
+            null,;            new StreamConsumerCallbackFactory(),;            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;testConsumersWithException(Throwable);            new StreamConsumerCallbackFactory(),
+            null,;            new StreamConsumerCallbackFactory(),;            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;test1ConsumerTimeout();            new StreamConsumerCallbackFactory(),
+            statsCollector,
+            null);;            new StreamConsumerCallbackFactory(),
+            statsCollector);;            new StreamConsumerCallbackFactory(consumerStatsCollector, unifiedStatsCollector),
+            consumerStatsCollector,
+            unifiedStatsCollector,
+            null);

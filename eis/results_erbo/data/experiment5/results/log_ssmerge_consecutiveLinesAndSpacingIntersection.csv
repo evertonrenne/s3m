@@ -1,0 +1,47 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_75ff5b5_3275939/rev_75ff5b5-3275939;/src/main/java/org/elasticsearch/index/query/GeoShapeQueryParser;getArgs(ShapeBuilder,ShapeRelation);            throw new ElasticsearchIllegalArgumentException("");;            throw new ElasticsearchIllegalArgumentException("");
+        ;            throw new IllegalArgumentException("");
+        
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/cluster/routing/ShardRouting;buildTargetRelocatingShard();        return new ShardRouting(index, shardId, relocatingNodeId, currentNodeId, restoreSource, primaryTerm, primary, ShardRoutingState.INITIALIZING, version, unassignedInfo,
+                AllocationId.newTargetRelocation(allocationId), true, expectedShardSize);;        return new ShardRouting(index, shardId, relocatingNodeId, currentNodeId, restoreSource, primary, ShardRoutingState.INITIALIZING, version, unassignedInfo,
+                AllocationId.newTargetRelocation(allocationId), true, expectedShardSize);;        return new ShardRouting(index, shardId, relocatingNodeId, currentNodeId, restoreSource, primary, ShardRoutingState.INITIALIZING, version, unassignedInfo,
+            AllocationId.newTargetRelocation(allocationId), true, expectedShardSize);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/cluster/routing/ShardRouting;toXContent(XContentBuilder,Params);                .field("state", state())
+                .field("primary", primary())
+                .field("primary_term", primaryTerm())
+                .field("node", currentNodeId())
+                .field("relocating_node", relocatingNodeId())
+                .field("shard", shardId().id())
+                .field("index", shardId().index().name())
+                .field("version", version);
+        if (expectedShardSize != UNAVAILABLE_EXPECTED_SHARD_SIZE){;                .field("state", state())
+                .field("primary", primary())
+                .field("node", currentNodeId())
+                .field("relocating_node", relocatingNodeId())
+                .field("shard", shardId().id())
+                .field("index", shardId().index().name())
+                .field("version", version);
+        if (expectedShardSize != UNAVAILABLE_EXPECTED_SHARD_SIZE){;            .field("state", state())
+            .field("primary", primary())
+            .field("node", currentNodeId())
+            .field("relocating_node", relocatingNodeId())
+            .field("shard", shardId().id())
+            .field("index", shardId().index().name())
+            .field("version", version);
+        if (expectedShardSize != UNAVAILABLE_EXPECTED_SHARD_SIZE) {
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SIfElse;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SCatch;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SDo;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SFor;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SWhile;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SIf;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/STry;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SDeclaration;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_90ef933_be168f5/rev_90ef933-be168f5;/core/src/main/java/org/elasticsearch/action/DocWriteResponse;toXContent(XContentBuilder,Params);                .field(Fields._TYPE, type)
+                .field(Fields._ID, id)
+                .field(Fields._VERSION, version);;            .field(Fields._TYPE, type)
+            .field(Fields._ID, id)
+            .field(Fields._VERSION, version);;            .field(Fields._TYPE, type)
+            .field(Fields._ID, id)
+            .field(Fields._VERSION, version)
+            .field("forced_refresh", forcedRefresh);

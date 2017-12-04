@@ -1,0 +1,123 @@
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04/metrics-spring/src/main/java/com/yammer/metrics/spring/config/MetricsNamespaceHandler.java;<<<<<<< MINE
+=======
+		registerBeanDefinitionParser("jmx-reporter", new JmxReporterBeanDefinitionParser());
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;<<<<<<< MINE
+=======
+        getTimer = registry.newTimer(HttpClient.class, "get-requests");
+        postTimer = registry.newTimer(HttpClient.class, "post-requests");
+        headTimer = registry.newTimer(HttpClient.class, "head-requests");
+        putTimer = registry.newTimer(HttpClient.class, "put-requests");
+        deleteTimer = registry.newTimer(HttpClient.class, "delete-requests");
+        optionsTimer = registry.newTimer(HttpClient.class, "options-requests");
+        traceTimer = registry.newTimer(HttpClient.class, "trace-requests");
+        connectTimer = registry.newTimer(HttpClient.class, "connect-requests");
+        moveTimer = registry.newTimer(HttpClient.class, "move-requests");
+        patchTimer = registry.newTimer(HttpClient.class, "patch-requests");
+        otherTimer = registry.newTimer(HttpClient.class, "other-requests");
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;<<<<<<< MINE
+=======
+                registry,
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/reporting/JmxReporter.java;<<<<<<< MINE
+=======
+
+        if ( server.isRegistered(objectName) ){
+            server.unregisterMBean(objectName);
+        }
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;<<<<<<< MINE
+=======
+        this(reservoirSize, alpha, Clock.defaultClock());
+    }
+
+    /**
+     * Creates a new {@link ExponentiallyDecayingSample}.
+     *
+     * @param reservoirSize the number of samples to keep in the sampling reservoir
+     * @param alpha         the exponential decay factor; the higher this is, the more biased the
+     *                      sample will be towards newer values
+     */
+    public ExponentiallyDecayingSample(int reservoirSize, double alpha, Clock clock) {
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;<<<<<<< MINE
+=======
+        this.clock = clock;
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;<<<<<<< MINE
+=======
+
+                // make sure the counter is in sync with the number of stored samples.
+                count.set(values.size());
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e/metrics-core/src/main/java/com/yammer/metrics/core/HealthCheck.java;<<<<<<< MINE
+=======
+         * Returns a healthy {@link Result} with a formatted message.
+         *
+         * Message formatting follows the same rules as 
+         * {@link String#format(String, Object...)}.
+         *
+         * @param message a message format
+         * @param args    the arguments apply to the message format
+         * @return a healthy {@link Result} with an additional message
+         * @see String#format(String, Object...)
+         */
+        public static Result healthy(String message, Object... args) {
+            return healthy(String.format(message, args));
+        }
+
+        /**
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e/metrics-core/src/main/java/com/yammer/metrics/core/HealthCheck.java;<<<<<<< MINE
+=======
+         * Returns an unhealthy {@link Result} with a formatted message.
+         *
+         * Message formatting follows the same rules as 
+         * {@link String#format(String, Object...)}.
+         *
+         * @param message a message format
+         * @param args    the arguments apply to the message format
+         * @return an unhealthy {@link Result} with an additional message
+         * @see String#format(String, Object...)
+         */
+        public static Result unhealthy(String message, Object... args) {
+            return unhealthy(String.format(message, args));
+        }
+
+        /**
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e/metrics-core/src/test/java/com/yammer/metrics/core/tests/HealthCheckTest.java;<<<<<<< MINE
+=======
+    public void canHaveHealthyResultsWithFormattedMessages() throws Exception {
+        final Result result = Result.healthy("foo %s", "bar");
+
+        assertThat(result.isHealthy(),
+                    is(true));
+        
+        assertThat(result.getMessage(),
+                    is("foo bar"));
+
+        assertThat(result.getError(),
+                    is(nullValue()));
+    }
+
+    @Test
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_53d236f_194af4e/rev_53d236f-194af4e/metrics-core/src/test/java/com/yammer/metrics/core/tests/HealthCheckTest.java;<<<<<<< MINE
+=======
+    public void canHaveUnhealthyResultsWithFormattedMessages() throws Exception {
+        final Result result = Result.unhealthy("foo %s %d", "bar", 123);
+
+        assertThat(result.isHealthy(),
+                    is(false));
+        
+        assertThat(result.getMessage(),
+                    is("foo bar 123"));
+
+        assertThat(result.getError(),
+                    is(nullValue()));
+    }
+
+    @Test
+>>>>>>> YOURS

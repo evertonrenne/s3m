@@ -1,0 +1,2 @@
+revision;file;methodSignature;references
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_a20aab8_5afcbce/rev_a20aab8-5afcbce;/src/main/java/com/netflix/astyanax/recipes/locks/ColumnPrefixDistributedRowLock;releaseWithMutation(MutationBatch,boolean);;0

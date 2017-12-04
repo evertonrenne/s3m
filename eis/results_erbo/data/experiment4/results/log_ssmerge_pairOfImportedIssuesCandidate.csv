@@ -1,0 +1,25 @@
+revision;file;leftImport;rightImport;conflictUnmerge
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_77ec863_34f31fb/rev_77ec863-34f31fb.revisions;/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_77ec863_34f31fb/rev_77ec863-34f31fb/ioke/src/main/java/cucumber/runtime/ioke/IokeBackend.java;importcucumber.classpath.Consumer;;importcucumber.resources.Consumer;;
+import cucumber.table.Table;
+import cucumber.classpath.Classpath;
+import cucumber.classpath.Consumer;
+import cucumber.io.Resource;
+=======
+import cucumber.Table;
+import cucumber.resources.Resource;
+import cucumber.resources.Resources;
+import cucumber.resources.Consumer;
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_77ec863_34f31fb/rev_77ec863-34f31fb.revisions;/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_77ec863_34f31fb/rev_77ec863-34f31fb/ioke/src/main/java/cucumber/runtime/ioke/IokeBackend.java;importcucumber.io.Resource;;importcucumber.resources.Resource;;
+import cucumber.table.Table;
+import cucumber.classpath.Classpath;
+import cucumber.classpath.Consumer;
+import cucumber.io.Resource;
+=======
+import cucumber.Table;
+import cucumber.resources.Resource;
+import cucumber.resources.Resources;
+import cucumber.resources.Consumer;
+
+

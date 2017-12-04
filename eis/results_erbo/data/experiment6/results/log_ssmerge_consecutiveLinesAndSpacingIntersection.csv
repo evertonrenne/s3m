@@ -1,0 +1,59 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment6/projects/databus/revisions/rev_3744018_5eec32f/rev_3744018-5eec32f;/databus2-relay/databus2-relay-impl/src/test/java/com/linkedin/databus2/relay/TestDatabusRelayMain;testRelayChainingSCNRegress();			relay1.getInboundEventStatisticsCollector();//force merge of stats;
+
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn: "+ stats2.getMaxScn() +
+							  "; source relay max scn:" + stats.getMaxScn());
+					return stats2.getMaxScn() == stats.getMaxScn();
+				}
+			}, "chained relay caught up", 25000, log);
+
+			Assert.assertEquals(stats2.getNumSysEvents(), firstGenWindows);
+			Assert.assertEquals(stats2.getMinScn(), stats.getMinScn());
+			Assert.assertEquals(stats2.getNumDataEvents(), firstGenDataEvents);;			relay1.getInboundEventStatisticsCollector();//force merge of stats;
+
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();					
+					log.debug("chained relay max scn: "+ stats2.getMaxScn() +
+							  "; source relay max scn:" + stats.getMaxScn());
+					return stats2.getMaxScn() == stats.getMaxScn();
+				}
+			}, "chained relay caught up", 25000, log);
+
+			Assert.assertEquals(stats2.getNumSysEvents(), firstGenWindows);
+			Assert.assertEquals(stats2.getMinScn(), stats.getMinScn());
+			Assert.assertEquals(stats2.getNumDataEvents(), firstGenDataEvents);;		
+		
+/home/ramdisk/experiment6/projects/databus/revisions/rev_3744018_5eec32f/rev_3744018-5eec32f;/databus2-relay/databus2-relay-impl/src/test/java/com/linkedin/databus2/relay/TestDatabusRelayMain;testRelayChainingSCNRegress();			relay3.getInboundEventStatisticsCollector();//force merge of stats;
+
+			// wait until client got all events or for maxTimeout;
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn:" + stats2.getMaxScn() +
+							"; master relay max scn:" + stats3.getMaxScn());
+					return stats2.getMaxScn() == stats3.getMaxScn();
+				}
+			}, "chained relay caught up with new master", 30000, log);;			relay3.getInboundEventStatisticsCollector();//force merge of stats;
+
+			// wait until client got all events or for maxTimeout;
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();					
+					log.debug("chained relay max scn:" + stats2.getMaxScn() + 
+							"; master relay max scn:" + stats3.getMaxScn());
+					return stats2.getMaxScn() == stats3.getMaxScn();
+				}
+			}, "chained relay caught up with new master", 30000, log);;		
+			Thread.sleep(35000);

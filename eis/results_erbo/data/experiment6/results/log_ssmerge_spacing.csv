@@ -1,0 +1,1506 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment6/projects/databus/revisions/rev_3744018_5eec32f/rev_3744018-5eec32f;/databus2-relay/databus2-relay-impl/src/test/java/com/linkedin/databus2/relay/TestDatabusRelayMain;testRelayChainingSCNRegress();			relay1.getInboundEventStatisticsCollector();//force merge of stats;
+
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn: "+ stats2.getMaxScn() +
+							  "; source relay max scn:" + stats.getMaxScn());
+					return stats2.getMaxScn() == stats.getMaxScn();
+				}
+			}, "chained relay caught up", 25000, log);
+
+			Assert.assertEquals(stats2.getNumSysEvents(), firstGenWindows);
+			Assert.assertEquals(stats2.getMinScn(), stats.getMinScn());
+			Assert.assertEquals(stats2.getNumDataEvents(), firstGenDataEvents);;			relay1.getInboundEventStatisticsCollector();//force merge of stats;
+
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();					
+					log.debug("chained relay max scn: "+ stats2.getMaxScn() +
+							  "; source relay max scn:" + stats.getMaxScn());
+					return stats2.getMaxScn() == stats.getMaxScn();
+				}
+			}, "chained relay caught up", 25000, log);
+
+			Assert.assertEquals(stats2.getNumSysEvents(), firstGenWindows);
+			Assert.assertEquals(stats2.getMinScn(), stats.getMinScn());
+			Assert.assertEquals(stats2.getNumDataEvents(), firstGenDataEvents);;		
+		
+/home/ramdisk/experiment6/projects/databus/revisions/rev_3744018_5eec32f/rev_3744018-5eec32f;/databus2-relay/databus2-relay-impl/src/test/java/com/linkedin/databus2/relay/TestDatabusRelayMain;testRelayChainingSCNRegress();			relay3.getInboundEventStatisticsCollector();//force merge of stats;
+
+			// wait until client got all events or for maxTimeout;
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn:" + stats2.getMaxScn() +
+							"; master relay max scn:" + stats3.getMaxScn());
+					return stats2.getMaxScn() == stats3.getMaxScn();
+				}
+			}, "chained relay caught up with new master", 30000, log);;			relay3.getInboundEventStatisticsCollector();//force merge of stats;
+
+			// wait until client got all events or for maxTimeout;
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();					
+					log.debug("chained relay max scn:" + stats2.getMaxScn() + 
+							"; master relay max scn:" + stats3.getMaxScn());
+					return stats2.getMaxScn() == stats3.getMaxScn();
+				}
+			}, "chained relay caught up with new master", 30000, log);;		
+			Thread.sleep(35000);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_bf4c533_0afcc46/rev_bf4c533-0afcc46;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestChunkedBodyReadableByteChannel;setupClass();;;@BeforeClass
+  public void setupClass()
+  {
+    TestUtil.setupLogging(true, null, Level.ERROR);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_bf4c533_0afcc46/rev_bf4c533-0afcc46;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestChunkedBodyReadableByteChannel;testUnblockWriteOnClose();;;@Test
+  /** Block the writer because of running out of buffer space and check it times out eventually */
+  public void testUnblockWriteOnClose()
+  {
+    ChunkedBodyReadableByteChannel channel = new ChunkedBodyReadableByteChannel();
+
+    StringBuilder megabyte = new StringBuilder(1000000);
+    while (megabyte.length() < 1000000)
+    {
+      megabyte.append("TeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeSt");
+    }
+
+    StringBuilder chunkBuilder = new StringBuilder(5200000);
+    for (int i = 0; i < 5; ++i)
+    {
+      chunkBuilder.append(megabyte);
+    }
+    String chunk = chunkBuilder.toString();
+    String chunk2 = "Hello there.";
+
+    HttpResponseReplayer responseReplayer = new HttpResponseReplayer(channel, null, new String[]{chunk2, chunk});
+
+    Thread replayerThread = new Thread(responseReplayer, "replayer");
+
+    replayerThread.start();
+
+    TestUtil.sleep(ChunkedBodyReadableByteChannel.MAX_CHUNK_SPACE_WAIT_MS / 2);
+    Assert.assertTrue(replayerThread.isAlive());
+
+    Assert.assertTrue(joinThreadWithExpoBackoff(replayerThread,
+                                                ChunkedBodyReadableByteChannel.MAX_CHUNK_SPACE_WAIT_MS));
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_bf4c533_0afcc46/rev_bf4c533-0afcc46;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestChunkedBodyReadableByteChannel;testUnblockReadOnPrematureClose();;;@Test
+  /** make sure the reader does not hang if the channel is closed while it is reading. */
+  public void testUnblockReadOnPrematureClose() throws IOException
+  {
+    final ChunkedBodyReadableByteChannel channel = new ChunkedBodyReadableByteChannel();
+
+    StringBuilder kilobyte = new StringBuilder(1000);
+    while (kilobyte.length() < 1000)
+    {
+      kilobyte.append("TeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeSt");
+    }
+
+    final int chunkNum = 10000;
+    String[] chunks = new String[chunkNum];
+    for (int i = 0; i < chunkNum; ++i) chunks[i] = kilobyte.toString();
+
+    HttpResponseReplayer responseReplayer = new HttpResponseReplayer(channel, null, chunks);
+
+    Thread replayerThread = new Thread(responseReplayer);
+    //a flag if the read is finished
+    final AtomicBoolean out = new AtomicBoolean(false);
+
+    //start a thread waiting for data on the channel
+    final Thread readerThread = new Thread(new Runnable()
+      {
+
+        @Override
+        public void run()
+        {
+          ByteBuffer tmp = ByteBuffer.allocate(10 * 1024 * 1024);
+          try
+          {
+            channel.read(tmp);
+            out.set(true);
+          }
+          catch (IOException ioe)
+          {
+            out.set(true);
+          }
+        }
+      });
+    readerThread.setDaemon(true);
+
+    replayerThread.start();
+    readerThread.start();
+
+    TestUtil.sleep(5);
+
+    channel.close();
+
+    boolean replayerDone = joinThreadWithExpoBackoff(replayerThread, 30000);
+    Assert.assertTrue(replayerDone);
+
+    boolean readerDone = joinThreadWithExpoBackoff(readerThread, 30000);
+    Assert.assertTrue(readerDone);
+
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-server/databus-bootstrap-server-impl/src/test/java/com/linkedin/databus/bootstrap/server/TestBootstrapSCNProcessor;testShouldBypassSnapshot();;;    final long longestDbTxnTimeMins = 240L;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/BootstrapServerConfig;getLongestDbTxnTimeMins();;;public long getLongestDbTxnTimeMins()
+  {
+    return longestDbTxnTimeMins;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/BootstrapServerConfig;setLongestDbTxnTimeMins(long);;;public void setLongestDbTxnTimeMins(long longestDbTxnTimeMins)
+  {
+    this.longestDbTxnTimeMins = longestDbTxnTimeMins;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/BootstrapServerConfig;BootstrapServerConfig();;;    longestDbTxnTimeMins = DEFAULT_LONGEST_DB_TXN_TIME_MINS;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/StartSCNRequestProcessor;doProcess(DatabusRequest);;;
+    } catch (RequestProcessingException ex) {
+      LOG.error("Got exception while calculating startSCN", ex);
+      throw ex;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/BootstrapServerStaticConfig;BootstrapServerStaticConfig(Long,Map<String,Long>,Map<String,Boolean>,boolean,Map<String,Boolean>,int,boolean,BootstrapReadOnlyConfig,long);;;public BootstrapServerStaticConfig(Long defaultRowsThresholdForSnapshotBypass,
+                                       Map<String, Long> rowsThresholdForSnapshotBypass,
+                                       Map<String, Boolean> disableSnapshotBypass,
+                                       boolean predicatePushDown,
+                                       Map<String, Boolean> predicatePushDownBypass,
+                                       int queryTimeoutInSec,
+                                       boolean enableMinScnCheck,
+                                       BootstrapReadOnlyConfig db,
+                                       long longestDbTxnTimeMins)
+    {
+		  super();
+		  this.defaultRowsThresholdForSnapshotBypass = defaultRowsThresholdForSnapshotBypass;
+		  this.rowsThresholdForSnapshotBypass = rowsThresholdForSnapshotBypass;
+		  this.disableSnapshotBypass = disableSnapshotBypass;
+		  this.predicatePushDown = predicatePushDown;
+          this.predicatePushDownBypass = predicatePushDownBypass;
+          this.queryTimeoutInSec = queryTimeoutInSec;
+          this.enableMinScnCheck = enableMinScnCheck;
+		  this.db = db;
+      this._longestDbTxnTimeMins = longestDbTxnTimeMins;
+	  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/BootstrapServerStaticConfig;getLongestDbTxnTimeMins();;;public long getLongestDbTxnTimeMins()
+    {
+      return _longestDbTxnTimeMins;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain;main(String[]);    ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain;main(String[]);    ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain;main(String[]);    
+    BootstrapDBCleaner cleaner = new BootstrapDBCleaner("StandAloneCleaner", 
+    													_sCleanerConfig, 
+    													_sBootstrapConfig, 
+    													null, ;;    BootstrapDBCleaner cleaner = new BootstrapDBCleaner("StandAloneCleaner",
+    													_sCleanerConfig,
+    													_sBootstrapConfig,
+    													null,
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain;parseArgs(String[]);      ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain;parseArgs(String[]);      ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain;parseArgs(String[]);	  ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain;parseArgs(String[]);      ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain;parseArgs(String[]);      ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain;parseArgs(String[]);      ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus2-example/databus2-example-relay/src/main/java/com/linkedin/databus/relay/example/PersonRelayServer;main(String[]);;;     cli.parseRelayConfig();
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/main/java/com/linkedin/databus/client/pub/DatabusV3Registration;getParentRegistration();;;public DatabusV3Registration getParentRegistration();
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;startZookeeper();     TestUtil.setupLoggingWithTimestampedFile(true, "/tmp/TestClusterCheckpointPersistenceProvider_",
+                                              ".log", Level.WARN);
+     File zkroot = FileUtils.createTempDir("TestClusterCheckpointPersistenceProvider_zkroot");
+     LOG.info("starting ZK on port " + localZkPort + " and datadir " + zkroot.getAbsolutePath());;;    TestUtil.setupLoggingWithTimestampedFile(true, "/tmp/TestClusterCheckpointPersistenceProvider_",
+        ".log", Level.WARN);
+    File zkroot = FileUtils.createTempDir("TestClusterCheckpointPersistenceProvider_zkroot");
+    LOG.info("starting ZK on port " + localZkPort + " and datadir " + zkroot.getAbsolutePath());
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;startZookeeper();     ZkServer zkServer = TestUtil.startZkServer(zkroot.getAbsolutePath(), 0,
+                                                localZkPort , 2000);
+     if (zkServer != null)
+     {
+       _localZkServers  = new Vector<ZkServer>(1);
+       _localZkServers.add(zkServer);
+     };;    ZkServer zkServer = TestUtil.startZkServer(zkroot.getAbsolutePath(), 0,
+        localZkPort , 2000);
+    if (zkServer != null)
+    {
+      _localZkServers  = new Vector<ZkServer>(1);
+      _localZkServers.add(zkServer);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;stopZookeeper();      if (_localZkServers != null)
+      {
+          TestUtil.stopLocalZookeeper(_localZkServers);
+      };;    if (_localZkServers != null)
+    {
+      TestUtil.stopLocalZookeeper(_localZkServers);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;testFrequencyOfCheckpoints();    public void testFrequencyOfCheckpoints() throws Exception
+    {
+        Checkpoint cp = new Checkpoint();
+        long startWindowScn = 50532L;
+        cp.setWindowScn(startWindowScn);
+        cp.setWindowOffset(-1);
+        cp.setConsumptionMode(DbusClientMode.ONLINE_CONSUMPTION);;;  public void testFrequencyOfCheckpoints() throws Exception
+  {
+    Checkpoint cp = new Checkpoint();
+    long startWindowScn = 50532L;
+    cp.setWindowScn(startWindowScn);
+    cp.setWindowOffset(-1);
+    cp.setConsumptionMode(DbusClientMode.ONLINE_CONSUMPTION);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;testFrequencyOfCheckpoints();    int checkPointIntervalMs = 200;;        int checkPointIntervalMs = 200;;    final int checkPointIntervalMs = 75;
+    final long delayMs = 31;
+    final int numAttemptedWrites = 7;
+    // We should write at 0, 31, 62, 93, 123, 155, 186, but only at at 0, 93, 155
+    // Persistent provider clock: 0              75           150            225
+    // checkpoint store clock     0    31   62       93  123      155  186
+    final int expectedActualStores = 3;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;testFrequencyOfCheckpoints();        String id = "5";
+        String clusterName = "test-cluster-freq";
+        ClusterCheckpointPersistenceProvider.createCluster(zkAddr, clusterName);
+        ClusterCheckpointPersistenceProvider.Config conf = new ClusterCheckpointPersistenceProvider.Config();
+        conf.setClusterName(clusterName);
+        conf.setZkAddr(zkAddr);
+        conf.setCheckpointIntervalMs(checkPointIntervalMs);;;    String id = "5";
+    String clusterName = "test-cluster-freq";
+    ClusterCheckpointPersistenceProvider.createCluster(zkAddr, clusterName);
+    ClusterCheckpointPersistenceProvider.Config conf = new ClusterCheckpointPersistenceProvider.Config();
+    conf.setClusterName(clusterName);
+    conf.setZkAddr(zkAddr);
+    conf.setCheckpointIntervalMs(checkPointIntervalMs);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;testFrequencyOfCheckpoints();;;  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;testMultipleClusterCheckpointPersistence();;;      }
+      for (CheckpointRW cpRW : cpRws)
+      {
+        cpRW.start();
+      }
+      for (CheckpointRW cpRW : cpRws)
+      {
+        cpRW.join(10000);
+        Assert.assertFalse(cpRW.hasError());
+      }
+    }
+    catch (Exception e)
+    {
+      Assert.assertTrue(false);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;CheckpointRW(String,String,long);        {
+            _clusterName = cluster;
+            _partitionId = partitionId;
+            _startScn = startScn;
+        };;    {
+      _clusterName = cluster;
+      _partitionId = partitionId;
+      _startScn = startScn;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;hasError();        {
+            return _hasError;
+        };;    {
+      return _hasError;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;getClusterName();        {
+            return _clusterName;
+        };;    {
+      return _clusterName;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;run();;;          Thread.sleep(_delayMs);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider;run();;;      }
+      catch (Exception e)
+      {
+        LOG.error("Exception caught " + e, e);
+        _hasError = true;
+      }
+      finally
+      {
+        ClusterCheckpointPersistenceProvider.close(_clusterName);
+      }
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;runPartialWindowCheckpointPersistence(int,int,int);;;        //Assumption: generates events with  non-decreasing timestamps
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;runPartialWindowCheckpointPersistence(int,int,int);;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;runPartialWindowCheckpointPersistence(int,int,int);;;
+
+            Assert.assertEquals(cp.getWindowOffset().longValue() , -1L);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;runPartialWindowCheckpointPersistence(int,int,int);;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;createCheckpoint(DispatcherState,DbusEvent);;;@Override
+    protected Checkpoint createCheckpoint(DispatcherState curState,
+            DbusEvent event) {
+      if (_isRelayDispatcher)
+      {
+       return createOnlineConsumptionCheckpoint(_lastWindowScn, _lastEowTsNsecs, curState,event);
+      }
+      else
+      {
+        // TODO for bootstrap dispatcher: Update the prev checkpoint.
+        return createOnlineConsumptionCheckpoint(_lastWindowScn, _lastEowTsNsecs, curState, event);
+      }
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;StateVerifyingStreamConsumer(DatabusStreamConsumer);;;public StateVerifyingStreamConsumer(DatabusStreamConsumer delegate)
+    {
+        this(delegate, null);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;StateVerifyingStreamConsumer(DatabusStreamConsumer,Logger);;;public StateVerifyingStreamConsumer(DatabusStreamConsumer delegate, Logger log)
+    {
+        super(delegate, null);
+        _expectedStates.add(State.START_CONSUMPTION);
+        _curState = null;
+        _log = null != log ? log : Logger.getLogger(StateVerifyingStreamConsumer.class);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;expectStates(State);;;private void expectStates(State... states)
+    {
+      _expectedStates.clear();
+      _expectedStates.add(State.STOP_CONSUMPTION); //always expect stop consumption in case of an error
+      for (State state: states)
+      {
+        _expectedStates.add(state);
+      }
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartConsumption();;;@Override
+    public ConsumerCallbackResult onStartConsumption()
+    {
+        assertState(State.START_CONSUMPTION);
+        expectStates(State.START_DATA_EVENT_SEQUENCE);
+
+        return super.onStartConsumption();
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStopConsumption();;;@Override
+    public ConsumerCallbackResult onStopConsumption()
+    {
+        assertState(State.STOP_CONSUMPTION);
+        _expectedStates.clear();
+
+        return super.onStopConsumption();
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartDataEventSequence(SCN);;;@Override
+    public ConsumerCallbackResult onStartDataEventSequence(SCN startScn)
+    {
+        assertState(State.START_DATA_EVENT_SEQUENCE);
+        expectStates(State.END_DATA_EVENT_SEQUENCE, State.START_SOURCE);
+
+        return super.onStartDataEventSequence(startScn);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onEndDataEventSequence(SCN);;;@Override
+    public ConsumerCallbackResult onEndDataEventSequence(SCN endScn)
+    {
+        assertState(State.END_DATA_EVENT_SEQUENCE);
+        expectStates(State.START_DATA_EVENT_SEQUENCE);
+
+        return super.onEndDataEventSequence(endScn);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onRollback(SCN);;;@Override
+    public ConsumerCallbackResult onRollback(SCN startScn)
+    {
+        _expectedStates.clear();
+        expectStates(State.START_DATA_EVENT_SEQUENCE);
+
+        return super.onRollback(startScn);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartSource(String,Schema);;;@Override
+    public ConsumerCallbackResult onStartSource(String source, Schema sourceSchema)
+    {
+        assertState(State.START_SOURCE);
+        expectStates(State.DATA_EVENT, State.END_SOURCE);
+
+        return super.onStartSource(source, sourceSchema);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onEndSource(String,Schema);;;@Override
+    public ConsumerCallbackResult onEndSource(String source, Schema sourceSchema)
+    {
+        assertState(State.END_SOURCE);
+        expectStates(State.START_SOURCE, State.END_DATA_EVENT_SEQUENCE);
+
+        return super.onEndSource(source, sourceSchema);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onDataEvent(DbusEvent,DbusEventDecoder);;;@Override
+    public synchronized ConsumerCallbackResult onDataEvent(DbusEvent e, DbusEventDecoder eventDecoder)
+    {
+        assertState(State.DATA_EVENT);
+        expectStates(State.DATA_EVENT, State.END_SOURCE);
+
+        return super.onDataEvent(e, eventDecoder);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onCheckpoint(SCN);;;@Override
+    public ConsumerCallbackResult onCheckpoint(SCN checkpointScn)
+    {
+        expectStates(State.DATA_EVENT, State.START_SOURCE, State.END_SOURCE,
+                     State.START_DATA_EVENT_SEQUENCE, State.END_DATA_EVENT_SEQUENCE);
+
+        return super.onCheckpoint(checkpointScn);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;assertState(State);;;private synchronized void assertState(State curState)
+    {
+      _log.debug("in state: " + curState + "; expected states: " + _expectedStates);
+        assert _expectedStates.contains(curState) : "Unexpected state: " + curState + " expected: "
+                + _expectedStates;
+        _curState = curState;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getCurState();;;public State getCurState()
+    {
+        return _curState;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getLog();;;@Override
+    public Logger getLog()
+    {
+      return _log;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;RollbackFailingConsumer(DatabusCombinedConsumer,Logger,int);;;public RollbackFailingConsumer(DatabusCombinedConsumer delegate, Logger log,
+                                 int maxRollbacks)
+  {
+    super(delegate, log);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onRollback(SCN);;;@Override
+  public ConsumerCallbackResult onRollback(SCN rollbackScn)
+  {
+    ++_rollbackCnt;
+    return super.onRollback(rollbackScn);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onDataEvent(DbusEvent,DbusEventDecoder);;;@Override
+  public ConsumerCallbackResult onDataEvent(DbusEvent e, DbusEventDecoder eventDecoder)
+  {
+    return _checkpointSeen ? ConsumerCallbackResult.ERROR : super.onDataEvent(e, eventDecoder);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onCheckpoint(SCN);;;@Override
+  public ConsumerCallbackResult onCheckpoint(SCN checkpointScn)
+  {
+    _checkpointSeen = true;
+    return ConsumerCallbackResult.SKIP_CHECKPOINT;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getRollbackCnt();;;public int getRollbackCnt()
+  {
+    return _rollbackCnt;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;EventCountingConsumer(DatabusStreamConsumer,Hashtable<Long,AtomicInteger>,Hashtable<Short,AtomicInteger>);;;public EventCountingConsumer(DatabusStreamConsumer delegate,
+            Hashtable<Long, AtomicInteger> keyCounts,
+            Hashtable<Short, AtomicInteger> srcidCounts)
+    {
+        super(delegate, null);
+        _keyCounts = keyCounts;
+        _srcidCounts = srcidCounts;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onDataEvent(DbusEvent,DbusEventDecoder);;;@Override
+    public ConsumerCallbackResult onDataEvent(DbusEvent e, DbusEventDecoder eventDecoder)
+    {
+        assert null != e : "Null event";
+
+        //System.err.println("e=" + e.toString());
+
+        AtomicInteger counter = _keyCounts.get(e.key());
+        assert null != counter : "No counter for key: " + e.key();
+        counter.incrementAndGet();
+
+        AtomicInteger srcidCount = _srcidCounts.get((short)e.getSourceId());
+        assert null != srcidCount : "No counter for source:" + e.getSourceId();
+        srcidCount.incrementAndGet();
+        _metadataSchema = ((DbusEventAvroDecoder)eventDecoder).getLatestMetadataSchema();
+        return super.onDataEvent(e, eventDecoder);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getMetadataSchema();;;public VersionedSchema getMetadataSchema()
+    {
+        return _metadataSchema;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;DataEventFailingStreamConsumer();;;public DataEventFailingStreamConsumer()
+    {
+        this((short)-1);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;DataEventFailingStreamConsumer(short);;;public DataEventFailingStreamConsumer(short failingSrcid)
+    {
+        _failingSrcid = failingSrcid;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onDataEvent(DbusEvent,DbusEventDecoder);;;@Override
+    public ConsumerCallbackResult onDataEvent(DbusEvent e, DbusEventDecoder eventDecoder)
+    {
+        return (_failingSrcid > 0) && (_failingSrcid != (short)e.getSourceId()) ? ConsumerCallbackResult.SUCCESS
+                : ConsumerCallbackResult.ERROR;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;DataSourceFailingStreamConsumer();;;public DataSourceFailingStreamConsumer()
+    {
+        this(null);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;DataSourceFailingStreamConsumer(String);;;public DataSourceFailingStreamConsumer(String failingSrc)
+    {
+        _failingSrc = failingSrc;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartSource(String,Schema);;;@Override
+    public ConsumerCallbackResult onStartSource(String source, Schema sourceSchema)
+    {
+        boolean result = _failingSrc != null && ! source.equals(_failingSrc);
+
+        //System.err.println("startSource[" + source + "]:" + result);
+
+        return result ? ConsumerCallbackResult.SUCCESS : ConsumerCallbackResult.ERROR;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;InMemoryPersistenceProvider();;;public InMemoryPersistenceProvider()
+    {
+        _checkpoints = new HashMap<List<String>, Checkpoint>();
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;storeCheckpoint(List<String>,Checkpoint);;;@Override
+    public void storeCheckpoint(List<String> sourceNames, Checkpoint checkpoint) throws IOException
+    {
+        _checkpoints.put(sourceNames, checkpoint);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;loadCheckpoint(List<String>);;;@Override
+    public Checkpoint loadCheckpoint(List<String> sourceNames)
+    {
+        return _checkpoints.get(sourceNames);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;removeCheckpoint(List<String>);;;@Override
+    public void removeCheckpoint(List<String> sourceNames)
+    {
+        _checkpoints.remove(sourceNames);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getCheckpoints();;;public HashMap<List<String>,Checkpoint> getCheckpoints()
+    {
+        return _checkpoints;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;TimeoutTestConsumer(long);;;public TimeoutTestConsumer(long timeoutMs)
+    {
+        this(timeoutMs,0,0,0,0,0);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;TimeoutTestConsumer(long,int,int,int,int);;;public TimeoutTestConsumer(long timeoutMs,int failCheckPoint,int failData,int failEndWindow,int numFailureTimes)
+    {
+        this(timeoutMs,timeoutMs,failCheckPoint,failData,failEndWindow,numFailureTimes);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartConsumption();;;@Override
+    public ConsumerCallbackResult onStartConsumption() {
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStopConsumption();;;@Override
+    public ConsumerCallbackResult onStopConsumption() {
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartDataEventSequence(SCN);;;@Override
+    public ConsumerCallbackResult onStartDataEventSequence(SCN startScn) {
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onEndDataEventSequence(SCN);;;@Override
+    public ConsumerCallbackResult onEndDataEventSequence(SCN endScn) {
+        _countEndWindow++;
+        _curWindowCount++;
+        try {
+            Thread.sleep(_controlEventTimeoutInMs);
+        } catch (InterruptedException e1) {
+        }
+        if (_curWindowCount == _failEndWindow)
+        {
+            _countFailureTimes++;
+            if (_countFailureTimes < _numFailureTimes)
+            {
+                //reset countData to simulate another failure;
+                _curWindowCount = 0;
+            }
+            return ConsumerCallbackResult.ERROR;
+        }
+        _lastSeenWindowScn = ((SingleSourceSCN) endScn).getSequence();
+        _lastTsInNanosOfWindow=_lastTsInNanosOfEvent;
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onRollback(SCN);;;@Override
+    public ConsumerCallbackResult onRollback(SCN rollbackScn) {
+        System.out.println("Rollback called on Scn = "  + rollbackScn);
+        ++_numRollbacks;
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartSource(String,Schema);;;@Override
+    public ConsumerCallbackResult onStartSource(String source,
+            Schema sourceSchema) {
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onEndSource(String,Schema);;;@Override
+    public ConsumerCallbackResult onEndSource(String source, Schema sourceSchema) {
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onDataEvent(DbusEvent,DbusEventDecoder);;;@Override
+    public ConsumerCallbackResult onDataEvent(DbusEvent e,
+            DbusEventDecoder eventDecoder) {
+        _countData++;
+        _curDataCount++;
+        _lastTsInNanosOfEvent = e.timestampInNanos();
+        if (!e.isValid())
+        {
+            return ConsumerCallbackResult.ERROR;
+        }
+        try {
+            Thread.sleep(_timeoutInMs);
+        } catch (InterruptedException e1) {
+        }
+
+        if ((_failData != 0 ) && (_curDataCount ==_failData))
+        {
+            _countFailureTimes++;
+            if (_countFailureTimes < _numFailureTimes)
+            {
+                //reset countData to simulate another failure;
+                _curDataCount = 0;
+            }
+            return ConsumerCallbackResult.ERROR ;
+        }
+        else
+        {
+            _events.add(e.hashCode());
+            _storeData++;
+            return ConsumerCallbackResult.SUCCESS;
+        }
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onCheckpoint(SCN);;;@Override
+    public ConsumerCallbackResult onCheckpoint(SCN checkpointScn) {
+        _countCheckPoint++;
+        _curCkptCount++;
+        try {
+            Thread.sleep(_controlEventTimeoutInMs);
+        } catch (InterruptedException e1) {
+        }
+        if  ((_failCheckPoint != 0) && ((_curCkptCount == _failCheckPoint) || (_curCkptCount <= -_failCheckPoint)))
+        {
+            _countFailureTimes++;
+            if (_countFailureTimes < _numFailureTimes)
+            {
+                //reset countData to simulate another failure;
+                _curCkptCount = 0;
+            }
+            return ConsumerCallbackResult.ERROR ;
+        } else {
+            _storeCheckpoint++;
+            _lastSeenCheckpointScn = ((SingleSourceSCN) checkpointScn).getSequence();
+            return ConsumerCallbackResult.SUCCESS;
+        }
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onError(Throwable);;;@Override
+    public ConsumerCallbackResult onError(Throwable err) {
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getDataCallbackCount();;;public int getDataCallbackCount()
+    {
+        return _countData;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getWindowCount();;;public int getWindowCount()
+    {
+        return _countEndWindow;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getCheckpointCallbackCount();;;public int getCheckpointCallbackCount()
+    {
+        return _countCheckPoint;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getLastSeenWindowScn();;;public long getLastSeenWindowScn()
+    {
+        return _lastSeenWindowScn;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getLastSeenCheckpointScn();;;public long getLastSeenCheckpointScn()
+    {
+        return _lastSeenCheckpointScn;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getStoredDataCount();;;public int getStoredDataCount()
+    {
+        return _storeData;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getStoredCheckpointCount();;;public int getStoredCheckpointCount()
+    {
+        return _storeCheckpoint;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getNumUniqStoredEvents();;;public int getNumUniqStoredEvents()
+    {
+        return _events.size();
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getNumFailedTimes();;;public int getNumFailedTimes()
+    {
+        return _countFailureTimes;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getLastTsInNanosOfEvent();;;public long getLastTsInNanosOfEvent()
+    {
+      return _lastTsInNanosOfEvent;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getLastTsInNanosOfWindow();;;public long getLastTsInNanosOfWindow()
+    {
+      return _lastTsInNanosOfWindow;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;toString();;;@Override
+    public String toString()
+    {
+        return " Data callbacks = " + getDataCallbackCount()
+                + " Windows = " + getWindowCount()
+                + " Checkpoint callbacks = " + getCheckpointCallbackCount()
+                + " Stored Data count = " + getStoredDataCount()
+                + " Stored Checkpoint count = " + getStoredCheckpointCount()
+                + " Unique stored data count = " + getNumUniqStoredEvents()
+                + " Number of times failed = " + getNumFailedTimes()
+                + " Last seen window scn = " + getLastSeenWindowScn()
+                + " Last seen checkpoint scn = " + getLastSeenCheckpointScn();
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartBootstrap();;;@Override
+    public ConsumerCallbackResult onStartBootstrap()
+    {
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStopBootstrap();;;@Override
+    public ConsumerCallbackResult onStopBootstrap()
+    {
+        return ConsumerCallbackResult.SUCCESS;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartBootstrapSequence(SCN);;;@Override
+    public ConsumerCallbackResult onStartBootstrapSequence(SCN startScn)
+    {
+        return onStartDataEventSequence(startScn);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onEndBootstrapSequence(SCN);;;@Override
+    public ConsumerCallbackResult onEndBootstrapSequence(SCN endScn)
+    {
+        return onEndDataEventSequence(endScn);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onStartBootstrapSource(String,Schema);;;@Override
+    public ConsumerCallbackResult onStartBootstrapSource(String sourceName,
+            Schema sourceSchema)
+    {
+       return onStartSource(sourceName, sourceSchema);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onEndBootstrapSource(String,Schema);;;@Override
+    public ConsumerCallbackResult onEndBootstrapSource(String name,
+            Schema sourceSchema)
+    {
+        return onEndSource(name, sourceSchema);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onBootstrapEvent(DbusEvent,DbusEventDecoder);;;@Override
+    public ConsumerCallbackResult onBootstrapEvent(DbusEvent e,
+            DbusEventDecoder eventDecoder)
+    {
+        return onDataEvent(e, eventDecoder);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onBootstrapRollback(SCN);;;@Override
+    public ConsumerCallbackResult onBootstrapRollback(SCN batchCheckpointScn)
+    {
+        return onRollback(batchCheckpointScn);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onBootstrapCheckpoint(SCN);;;@Override
+    public ConsumerCallbackResult onBootstrapCheckpoint(SCN checkpointScn)
+    {
+        return onCheckpoint(checkpointScn);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;onBootstrapError(Throwable);;;@Override
+    public ConsumerCallbackResult onBootstrapError(Throwable err)
+    {
+        return onError(err);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;canBootstrap();;;@Override
+    public boolean canBootstrap()
+    {
+        return true;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher;getNumRollbacks();;;public int getNumRollbacks()
+    {
+      return _numRollbacks;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestBootstrapPullThread;testBootstrapPendingEvent();;;    EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(null).times(2);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher;doDispatchEvents();;;              _lastEowTsNsecs = nextEvent.timestampInNanos();
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher;doDispatchEvents();;;                //the first window (startEvents()) can have a eop whose sequence() is non-zero but timestamp 0 e.g. in chained relay .
+                //The reason is that the eop's timestamp is the max timestamp of all data events seen so far.
+                if (nextEvent.timestampInNanos() > 0)
+                {
+                  _lastEowTsNsecs = nextEvent.timestampInNanos();
+                }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher;createOnlineConsumptionCheckpoint(long,long,DispatcherState,DbusEvent);;;public static Checkpoint createOnlineConsumptionCheckpoint(long lastCompleteWindowScn, long lastEowTsNsecs, DispatcherState curState, DbusEvent event)
+  {
+      //TODO: What does this mean? "For online consumption ; this means that a complete event window hasn't been read yet."
+      //So until we have support from RelayPuller resuming from mid-window ; there is no point in trying to save  a parital window
+      long windowScn = lastCompleteWindowScn;
+      if (windowScn < 0)
+      {
+          if (event.isCheckpointMessage())
+          {
+              //control event; then safe to set to sequence; useful when relayPuller writes checkpoint to buffer to
+              //be passed on to bootstrapPuller
+              windowScn = event.sequence();
+            // TODO: According to DbusEventFactory.createCheckpointEvent, event,sequence() is always 0!
+            // Is this even executed? If we send a checkpoint event from the relay, we could be screwed!
+          }
+          else
+          {
+              //there's no sufficient data: not a single window has been processed.
+              windowScn = event.sequence() > 0 ? event.sequence()-1 : 0;
+              // TODO Can't do this math for timestamp. See DDSDBUS-3149
+          }
+      }
+      return Checkpoint.createOnlineConsumptionCheckpoint(windowScn, lastEowTsNsecs);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/ClusterFileLoggingClient;createConsumerFactory(String,String,String);;;protected abstract DbusClusterConsumerFactory createConsumerFactory(String cluster,
+	                                                                    String valueFilePrefix,
+	                                                                    String eventDumpPrefix);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/ClusterFileLoggingClient;createPartitionListener(String);;;protected abstract DbusPartitionListener createPartitionListener(String cluster);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;getMetadataDumpFile();    	return _metadataDumpFile;;;      return _metadataDumpFile;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;getEventDumpFile();;;public String getEventDumpFile()
+    {
+      return _eventDumpFile;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;isAppendOnly();    	return _append;;;      return _append;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;StaticConfig(String,String,String,boolean);;;public StaticConfig(String valueDumpFile, String metadataDumpFile, String eventDumpFile, boolean append)
+    {
+      _valueDumpFile = valueDumpFile;
+      _metadataDumpFile = metadataDumpFile;
+      _eventDumpFile = eventDumpFile;
+      _append = append;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;getMetadataDumpFile();    	return _metadataDumpFile;;;      return _metadataDumpFile;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;getEventDumpFile();;;public String getEventDumpFile()
+    {
+      return _eventDumpFile;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;setMetadataDumpFile(String);    	_metadataDumpFile = metadataDumpFile;;;      _metadataDumpFile = metadataDumpFile;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;setEventDumpFile(String);;;public void setEventDumpFile(String eventDumpFile)
+    {
+      _eventDumpFile = eventDumpFile;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;getAppendOnly();public boolean getAppendOnly() {
+		return _appendOnly;
+	};;public boolean getAppendOnly()
+    {
+      return _appendOnly;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;setAppendOnly(boolean);public void setAppendOnly(boolean appendOnly) {
+		this._appendOnly = appendOnly;
+	};;public void setAppendOnly(boolean appendOnly)
+    {
+      this._appendOnly = appendOnly;
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;DatabusFileLoggingConsumer(String,String,String,boolean);;;public DatabusFileLoggingConsumer(String valueDumpFile,
+                                    String metadataDumpFile,
+                                    String eventDumpFile,
+                                    boolean appendOnly)
+  throws IOException
+  {
+    LOG.info("DatabusFileLoggingConsumer instantiated with payload-value dump file: " + valueDumpFile +
+             ", metadata dump file: " + metadataDumpFile +
+             ", raw-event dump file: " + eventDumpFile +
+             ", appendOnly: " + appendOnly);
+
+    if (valueDumpFile != null)
+    {
+      _fileBasedDecodedValueCallback = new ClientFileBasedEventTrackingCallback(valueDumpFile, appendOnly);
+      _fileBasedDecodedValueCallback.init();
+    }
+
+    if (metadataDumpFile != null)
+    {
+      _fileBasedMetadataCallback = new ClientFileBasedMetadataTrackingCallback(metadataDumpFile, appendOnly);
+      _fileBasedMetadataCallback.init();
+    }
+
+    if (eventDumpFile != null)
+    {
+      _fileBasedRawEventCallback = new FileBasedEventTrackingCallback(eventDumpFile, appendOnly);
+      _fileBasedRawEventCallback.init();
+    }
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;onCheckpoint(SCN);  public ConsumerCallbackResult onCheckpoint(SCN checkpointScn) {;;  public ConsumerCallbackResult onCheckpoint(SCN checkpointScn)
+  {
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;LogTypedValue(DbusEvent,DbusEventDecoder);protected void LogTypedValue(DbusEvent e, DbusEventDecoder eventDecoder) {;;protected void LogTypedValue(DbusEvent e, DbusEventDecoder eventDecoder)
+  {
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;onDataEvent(DbusEvent,DbusEventDecoder);  public ConsumerCallbackResult onDataEvent(DbusEvent e, DbusEventDecoder eventDecoder) {;;  public ConsumerCallbackResult onDataEvent(DbusEvent e, DbusEventDecoder eventDecoder)
+  {
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;onDataEvent(DbusEvent,DbusEventDecoder);    ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;onDataEvent(DbusEvent,DbusEventDecoder);;;
+    if (_fileBasedRawEventCallback != null)
+    {
+      _fileBasedRawEventCallback.onEvent(e);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;onBootstrapEvent(DbusEvent,DbusEventDecoder);;;
+    if (_fileBasedRawEventCallback != null)
+    {
+      _fileBasedRawEventCallback.onEvent(e);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer;printBootstrapEventInfo(BootstrapStage,String);;;    // There are integration tests that rely on this message (they look for "EndBootstrapSequence:" in the logs)
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer;createTypedConsumer(String);protected DatabusFileLoggingConsumer createTypedConsumer(String valueDumpFile) throws IOException;;protected DatabusFileLoggingConsumer createTypedConsumer(String valueDumpFile)
+  throws IOException
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer;createTypedConsumer(String,String);;;protected DatabusFileLoggingConsumer createTypedConsumer(String valueDumpFile, String eventDumpFile)
+  throws IOException
+  {
+    return new DatabusFileLoggingConsumer(valueDumpFile, null, eventDumpFile, false);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer;mainFunction(String);    ;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer;mainFunction(String);    ;;
+    if (null != filterConfig)
+    	reg.withServerSideFilter(filterConfig);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/netty/NettyHttpDatabusBootstrapConnection;finishResponse();;;        LOG.error("Failed to process /startscn response");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/netty/RemoteExceptionHandler;getExceptionName(ChunkedBodyReadableByteChannel);;;    if (result==null)
+    {
+      result = readChannel.getMetadata(DatabusHttpHeaders.DATABUS_ERROR_CLASS_HEADER);
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/netty/RemoteExceptionHandler;getException(ChunkedBodyReadableByteChannel);;;      else if (err.equalsIgnoreCase(BootstrapDatabaseTooYoungException.class.getName()))
+      {
+        remoteException = new BootstrapDatabaseTooYoungException();
+      }
+      else if (err.equalsIgnoreCase(BootstrapDBException.class.getName()))
+      {
+        remoteException = new BootstrapDBException();
+      }
+      else if (err.equalsIgnoreCase(SQLException.class.getName()))
+      {
+        remoteException = new SQLException();
+      }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;testPerf();;;    LOG.info("\n\nstarting testPerf()");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;test1StreamConsumerHappyPath();;;    LOG.info("\n\nstarting test1StreamConsumerHappyPath()");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;test1StreamConsumerCallFailure();;;    LOG.info("\n\nstarting test1StreamConsumerCallFailure()");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;testConsumersWithException();;;    LOG.info("\n\nstarting testConsumersWithException()");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;test3IndependentStreamConsumersHappyPath();;;    LOG.info("\n\nstarting test3IndependentStreamConsumersHappyPath()");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;test3IndependentStreamConsumersWithFailure();;;    LOG.info("\n\nstarting test3IndependentStreamConsumersWithFailure()");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;test3GroupedStreamConsumersHappyPath();;;    LOG.info("\n\nstarting test3GroupedStreamConsumersHappyPath()");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;test3GroupedStreamConsumersWithFailure();;;    LOG.info("\n\nstarting test3GroupedStreamConsumersWithFailure()");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback;test1ConsumerTimeout();;;    LOG.info("\n\nstarting test1ConsumerTimeout()");
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/DbusEventAvroDecoder;dumpEventValueInJSON(DbusEvent,OutputStream);;;      g.writeFieldName("partId");
+      g.writeNumber(Integer.valueOf(e.getPartitionId()));
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-container/src/main/java/com/linkedin/databus2/core/container/request/DatabusRequest;setError(Throwable);;;      if (_responseThrowable.getMessage() != null)
+      {
+        _responseContent.addMetadata(DatabusHttpHeaders.DATABUS_ERROR_MESSAGE_HEADER, _responseThrowable.getMessage());
+      }
+      else
+      {
+        _responseContent.addMetadata(DatabusHttpHeaders.DATABUS_ERROR_MESSAGE_HEADER, "No message provided");
+      }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-container/src/main/java/com/linkedin/databus2/core/container/request/DatabusRequest;setError(Throwable);;;        if (cause.getMessage() != null)
+        {
+          _responseContent.addMetadata(DatabusHttpHeaders.DATABUS_ERROR_CAUSE_MESSAGE_HEADER,cause.getMessage());
+        }
+        else
+        {
+          _responseContent.addMetadata(DatabusHttpHeaders.DATABUS_ERROR_CAUSE_MESSAGE_HEADER,"No message provided");
+        }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-container/src/main/java/com/linkedin/databus2/core/container/request/DatabusRequest;setError(Throwable);;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/TestCheckpoint;testCreateOnlineCheckpoints();;;    Assert.assertFalse(cp.getFlexible());
+    Assert.assertEquals(cp.getTsNsecs(), Checkpoint.UNSET_TS_NSECS);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/TestCheckpoint;testOnlineCheckpointAsserts();;;
+    try
+    {
+      newCp = Checkpoint.createFlexibleCheckpoint();
+      newCp.setTsNsecs(1L);
+      newCp.assertCheckpoint();
+      Assert.fail("InvalidCheckpointException expected");
+    }
+    catch (InvalidCheckpointException e)
+    {
+      // ok
+    }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/TestCheckpoint;testTimestampBasedCheckpoint();;;@Test
+  public void testTimestampBasedCheckpoint() throws Exception
+  {
+    final long ts = 23534677L;
+    Checkpoint cp = Checkpoint.createOnlineConsumptionCheckpoint(0L);
+    cp.setTsNsecs(ts);
+
+    Assert.assertTrue(cp.assertCheckpoint());
+
+    String serCp = cp.toString();
+
+    Checkpoint newCp = new Checkpoint(serCp);
+    Assert.assertTrue(newCp.assertCheckpoint());
+    Assert.assertEquals(newCp.getTsNsecs(), ts);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/util/TestStringUtils;testSanitizeDbUri();;;@Test
+ public void testSanitizeDbUri()
+ {
+   String s = StringUtils.sanitizeDbUri("jdbc:oracle:thin:uSeR/p4ssw0rd@db.company.com:1521/SCHEMA");
+   Assert.assertEquals(s, "jdbc:oracle:thin:*/*@db.company.com:1521/SCHEMA");
+
+   s = StringUtils.sanitizeDbUri("jdbc:oracle:thick:uSeR/p4ssw0rd@db.company.com:1521/SCHEMA");
+   Assert.assertEquals(s, "jdbc:oracle:thick:uSeR/p4ssw0rd@db.company.com:1521/SCHEMA");
+
+   s = StringUtils.sanitizeDbUri("jdbc:oracle:thin:fancy-uri/v1/v2(123,456,789)@(DESCRIPTION=(LOAD_BALANCE=on)(FAILOVER=on)(ADDRESS=(PROTOCOL=TCP)(HOST=db1.host.com)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=db2.host.com)(PORT=1521))(CONNECT_DATA=(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))");
+   Assert.assertEquals(s, "jdbc:oracle:thin:*/*@(DESCRIPTION=(LOAD_BALANCE=on)(FAILOVER=on)(ADDRESS=(PROTOCOL=TCP)(HOST=db1.host.com)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=db2.host.com)(PORT=1521))(CONNECT_DATA=(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))");
+
+   s = StringUtils.sanitizeDbUri("jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=3306)(password=p4ssw0rd)(user=uSeR)/db");
+   Assert.assertEquals(s, "jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=3306)(password=*)(user=*)/db");
+
+   s = StringUtils.sanitizeDbUri("jdbc:mysql://localhost:3306/DB?profileSQL=true&user=Godzilla&password=KingKong");
+   Assert.assertEquals(s, "jdbc:mysql://localhost:3306/DB?profileSQL=true&user=*&password=*");
+
+   s = StringUtils.sanitizeDbUri("jdbc:MySqL://localhost:3306/DB?profileSQL=true&user=Godzilla&password=KingKong");
+   Assert.assertEquals(s, "jdbc:MySqL://localhost:3306/DB?profileSQL=true&user=Godzilla&password=KingKong");
+ }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;setTsNsecs(long);;;public void setTsNsecs(long nsecs)
+  {
+    internalData.put(TS_NSECS, Long.valueOf(nsecs));
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;getTsNsecs();;;public long getTsNsecs()
+  {
+    return number2Long((Number)internalData.get(TS_NSECS), UNSET_TS_NSECS);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;setBootstrapStartNsecs(long);;;public void setBootstrapStartNsecs(long nsecs)
+  {
+    internalData.put(BOOTSTRAP_START_TSNSECS, Long.valueOf(nsecs));
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;getBootstrapStartNsecs();;;public long getBootstrapStartNsecs()
+  {
+    return number2Long((Number)internalData.get(BOOTSTRAP_START_TSNSECS), UNSET_BOOTSTRAP_START_NSECS);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;endEvents(long,long);;;private void endEvents(long endWindowScn, long nsecs)
+  {
+    setFullyConsumed(endWindowScn);
+    setTsNsecs(nsecs);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;setFullyConsumed(long);;;private void setFullyConsumed(long endWindowScn)
+  {
+    currentWindowOffset = FULLY_CONSUMED_WINDOW_OFFSET;
+    this.clearWindowOffset();
+    this.setWindowScn(endWindowScn);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;setFlexible();;;    setTsNsecs(UNSET_TS_NSECS);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;clearBootstrapStartTsNsecs();;;public void clearBootstrapStartTsNsecs()
+  {
+    setBootstrapStartNsecs(UNSET_BOOTSTRAP_START_NSECS);
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;resetBootstrap();;;    clearBootstrapStartTsNsecs();
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;createOnlineConsumptionCheckpoint(long,long);;;public static Checkpoint createOnlineConsumptionCheckpoint(long lastConsumedScn, long tsNanos)
+  {
+    Checkpoint cp = createOnlineConsumptionCheckpoint(lastConsumedScn);
+    cp.setTsNsecs(tsNanos);
+    return cp;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;hashCode();;;    lhash = Fnv1aHashImpl.addLong32(lhash, getTsNsecs());
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;hashCode();;;      lhash = Fnv1aHashImpl.addLong32(lhash, getBootstrapStartNsecs());
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;assertOnlineCheckpoint();;;      long tsNsecs = getTsNsecs();
+      // tsNsecs should be unset.
+      if (tsNsecs != UNSET_TS_NSECS)
+      {
+        throw new InvalidCheckpointException("unexpected tsNsecs:" + tsNsecs, this);
+      }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint;assertOnlineCheckpoint();;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/test/DbusEventAppender;addBootstrapCheckpointEventToBuffer(long,long,int);public void addBootstrapCheckpointEventToBuffer(long lastScn, long dataEventCount, int numCheckpoints);;public void addBootstrapCheckpointEventToBuffer(long lastScn, long dataEventCount,int numCheckpoints)
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/test/DbusEventAppender;addBootstrapCheckpointEventToBuffer(long,long,int);;;    cp.setSnapshotOffset(dataEventCount);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/test/DbusEventAppender;getBootstrapCheckpoint();;;public Checkpoint getBootstrapCheckpoint()
+  {
+    return _bootstrapCheckpoint;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/test/DbusEventAppender;setBootstrapCheckpoint(Checkpoint);;;public void setBootstrapCheckpoint(Checkpoint checkpoint)
+  {
+    _bootstrapCheckpoint = checkpoint;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/util/StringUtils;sanitizeDbUri(String);;;public static String sanitizeDbUri(String uri)
+  {
+    String result = uri;
+    Matcher m = ORA_JDBC_URI_PATTERN.matcher(uri);
+    if (m.matches())
+    {
+      result = m.group(1) + "*/*" + m.group(4);
+    }
+    else if (uri.startsWith("jdbc:mysql:"))
+    {
+      Matcher m1 = MYSQL_JDBC_PATTERN1.matcher(result);
+      Matcher m2 = MYSQL_JDBC_PATTERN2.matcher(result);
+      if (m1.find())
+      {
+        result = m1.replaceAll("($1*)");
+      }
+      else if (m2.find())
+      {
+        result = m2.replaceAll("$1*");
+      }
+    }
+
+    return result;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/BootstrapDBPeriodicTriggerThread;run();;;    LOG.info("PeriodicTrigger Config :" + _config);
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/BootstrapApplierThread;isRunning();;;public boolean isRunning()
+  {
+    return _isRunning;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/DatabusBootstrapProducer;doShutdown();;;
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner;isAnyCleanerRunning();;;public synchronized boolean isAnyCleanerRunning()
+  {
+    for (Map.Entry<String, Future<?>> entry : _cleanerFutures.entrySet())
+    {
+      Future<?> cleanerFuture = entry.getValue();
+      if (!cleanerFuture.isDone())
+      {
+        LOG.debug("Cleaner process is running for source = " + entry.getKey());
+        return true;
+      }
+    }
+    LOG.info("There are no cleaner processes running");
+    return false;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner;sleepTillNoCleanerIsRunning();;;public synchronized void sleepTillNoCleanerIsRunning()
+  throws DatabusException, InterruptedException
+  {
+    final long maxWaitTime = TERMINATION_TIMEOUT_IN_MS;
+    long waitTime = 0;
+    while (isAnyCleanerRunning())
+    {
+      if (waitTime >= TERMINATION_TIMEOUT_IN_MS)
+      {
+        throw new DatabusException("The cleaners have not terminated within " + maxWaitTime + " ms");
+      }
+      final long sleepIntervalInMs = 100;
+      Thread.sleep(sleepIntervalInMs);
+      waitTime += sleepIntervalInMs;
+    }
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleanerQueryExecutor;BootstrapDBCleanerQueryExecutor(String,Connection,BootstrapDBCleanerQueryHelper);;;public BootstrapDBCleanerQueryExecutor(String name, Connection conn, BootstrapDBCleanerQueryHelper bootstrapDBCleanerQueryHelper)
+  {
+    _name = name;
+    LOG = Logger.getLogger(MODULE + "." + name);
+    if (null != conn)
+    {
+      _conn = conn;
+    }
+    else
+    {
+      throw new DatabusRuntimeException("Invalid to pass in a null connection object");
+    }
+
+    if (null != bootstrapDBCleanerQueryHelper)
+    {
+      _bootstrapDBCleanerQueryHelper = bootstrapDBCleanerQueryHelper;
+    }
+    else
+    {
+      throw new DatabusRuntimeException("Invalid to pass in a null for bootstrapDBCleanerQueryHelper");
+    }
+
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;BootstrapDBSingleSourceCleaner(String,String,DatabusThreadBase,BootstrapCleanerStaticConfig,BootstrapReadOnlyConfig);;;public BootstrapDBSingleSourceCleaner(String name,
+                                        String source,
+                                        DatabusThreadBase applier,
+                                        BootstrapCleanerStaticConfig bootstrapCleanerStaticConfig,
+                                        BootstrapReadOnlyConfig bootstrapReadOnlyConfig)
+  throws SQLException
+  {
+    _name = name;
+    _source = source;
+    _applier = applier;
+    _bootstrapCleanerStaticConfig = bootstrapCleanerStaticConfig;
+    _bootstrapReadOnlyConfig = bootstrapReadOnlyConfig;
+    LOG = Logger.getLogger(name);
+
+    Connection conn = getOrCreateConnection();
+    if (null != source)
+    {
+      try
+      {
+        List<SourceStatusInfo> ssil = _bootstrapDao.getSourceIdAndStatusFromName(Arrays.asList(source), false);
+        assert(ssil.size() == 1);
+        _sourceStatusInfo = ssil.get(0);
+      } catch (BootstrapDatabaseTooOldException bto)
+      {
+        LOG.error(
+            "Not expected to receive this exception as activeCheck is turned-off",
+            bto);
+        throw new RuntimeException(bto);
+      }
+    }
+    _bootstrapDBCleanerQueryHelper = BootstrapDBCleanerQueryHelper.getInstance();
+    _bootstrapDBCleanerQueryExecutor = new BootstrapDBCleanerQueryExecutor(_name, conn, _bootstrapDBCleanerQueryHelper);
+    _eventFactory = new DbusEventV1Factory();
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;getOrCreateConnection();;;private Connection getOrCreateConnection() throws SQLException
+  {
+    Connection conn = null;
+
+    if (_bootstrapDao == null)
+    {
+      LOG.info("<<<< Creating Bootstrap Connection!! >>>>");
+      BootstrapConn dbConn = new BootstrapConn();
+      final boolean autoCommit = true;
+      _bootstrapDao = new BootstrapDBMetaDataDAO(dbConn,
+          _bootstrapReadOnlyConfig.getBootstrapDBHostname(),
+          _bootstrapReadOnlyConfig.getBootstrapDBUsername(),
+          _bootstrapReadOnlyConfig.getBootstrapDBPassword(),
+          _bootstrapReadOnlyConfig.getBootstrapDBName(), autoCommit);
+      try
+      {
+        dbConn.initBootstrapConn(autoCommit,
+            _bootstrapReadOnlyConfig.getBootstrapDBUsername(),
+            _bootstrapReadOnlyConfig.getBootstrapDBPassword(),
+            _bootstrapReadOnlyConfig.getBootstrapDBHostname(),
+            _bootstrapReadOnlyConfig.getBootstrapDBName());
+      } catch (Exception e)
+      {
+        LOG.fatal("Unable to open BootstrapDB Connection !!", e);
+        throw new RuntimeException(
+            "Got exception when getting bootstrap DB Connection.", e);
+      }
+    }
+
+    try
+    {
+      conn = _bootstrapDao.getBootstrapConn().getDBConn();
+    } catch (SQLException e)
+    {
+      LOG.fatal("Not able to open BootstrapDB Connection !!", e);
+      throw new RuntimeException(
+          "Got exception when getting bootstrap DB Connection.", e);
+    }
+    return conn;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;run();;;@Override
+  public void run()
+  {
+    doClean();
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;doClean();;;private void doClean()
+  {
+    try
+    {
+      incCleanerStats();
+
+      SourceStatusInfo s = _sourceStatusInfo;
+      {
+        assert(s.getSrcName().equals(_source));
+        BootstrapDBType type = _bootstrapCleanerStaticConfig.getBootstrapType(s.getSrcName());
+
+        LOG.info("Cleaner running for source :" + s.getSrcName() + "("
+            + s.getSrcId() + ") with bootstrapDB type :" + type);
+
+        BootstrapLogInfo logInfo = _bootstrapDBCleanerQueryExecutor.getThresholdWindowSCN(type, s.getSrcId());
+
+        if (null == logInfo)
+        {
+          LOG.info("No WindowSCN. Nothing to cleanup for source : "
+              + s.getSrcName());
+          return;
+        }
+
+        LOG.info("LOG info with lowest windowSCN :" + logInfo);
+
+        LOG.info("Begin phase 1 : Gather candidate loginfo :");
+        List<BootstrapLogInfo> candidateLogsInfo = _bootstrapDBCleanerQueryExecutor.getCandidateLogsInfo(
+            logInfo.getMinWindowSCN(), (short) (s.getSrcId()));
+        if ((null == candidateLogsInfo) || (candidateLogsInfo.isEmpty()))
+        {
+          LOG.info("No logs to cleanup for source :" + s.getSrcName() + "("
+              + s.getSrcId() + ")");
+          return;
+        }
+        LOG.info("End phase 1 : Gather candidate loginfo :");
+
+        LOG.info("Initial Candidate Set for Source :" + s.getSrcName()
+            + " is :" + candidateLogsInfo);
+        RetentionStaticConfig rConf = _bootstrapCleanerStaticConfig.getRetentionConfig(s
+            .getSrcName());
+        LOG.info("Retention Config for source :" + s.getSrcName() + " is :"
+            + rConf);
+
+        LOG.info("Begin phase 2 : Filter based on retention config :");
+        long scn = filterCandidateLogInfo((short) s.getSrcId(),
+            candidateLogsInfo,
+            _bootstrapCleanerStaticConfig.getRetentionConfig(s.getSrcName()));
+
+        LOG.info("Log tables to be deleted for source :" + s.getSrcName() + "("
+            + s.getSrcId() + ") are :" + candidateLogsInfo
+            + ", Max SCN of deleted logs:" + scn);
+        LOG.info("End phase 2 : Filter based on retention config :");
+
+        if ((scn <= 0) || (candidateLogsInfo.isEmpty()))
+        {
+          LOG.info("Source :" + s.getSrcName() + "(" + s.getSrcId()
+              + ") No log tables to be deleted !! MaxSCN : " + scn
+              + ", candidateLogs :" + candidateLogsInfo);
+          return;
+        }
+
+        LOG.info("Begin phase 3 : Updating Meta Info :");
+        BootstrapLogInfo firstValidLog = _bootstrapDBCleanerQueryExecutor.getFirstLogTableWithGreaterSCN(
+            (short) s.getSrcId(), scn);
+        _bootstrapDBCleanerQueryExecutor.updateSource(firstValidLog);
+        LOG.info("End phase 3 : Updating Meta Info :");
+
+        LOG.info("Begin phase 4 : Deleting Log tables :");
+        // marking logs as done; if any failures; there is a chance that the
+        // logs have to be cleaned up later
+        _bootstrapDBCleanerQueryExecutor.markDeleted(candidateLogsInfo);
+        _bootstrapDBCleanerQueryExecutor.dropTables(candidateLogsInfo);
+        LOG.info("End phase 4 : Deleting Log tables :");
+
+        if ((_bootstrapCleanerStaticConfig.getBootstrapType(s.getSrcName()) == BootstrapDBType.BOOTSTRAP_CATCHUP_APPLIER_RUNNING)
+            && ((_applier != null) || _bootstrapCleanerStaticConfig.forceTabTableCleanup(s
+                .getSrcName())))
+        {
+          LOG.info("Source :" + s.getSrcName() + "(" + s.getSrcId()
+              + ") is running in catchup_applier_running mode. "
+              + "Will delete all rows whose scn is less than or equal to "
+              + scn);
+          if ((null != _applier) && (_applier.isAlive()))
+          {
+            LOG.info("Begin phase 5 : Pausing Applier and deleting Rows from tab table :");
+
+            LOG.info("Requesting applier to pause !!");
+            _applier.pause();
+            LOG.info("Applier paused !!");
+          }
+
+          try
+          {
+            // mark ahead of time; if this doesn't work this time; it will next
+            // cycle
+            _bootstrapDao.updateMinScnOfSnapshot(s.getSrcId(), scn);
+            String srcTable = _bootstrapDBCleanerQueryHelper.getSrcTable(s.getSrcId());
+            int numRowsDeleted = _bootstrapDBCleanerQueryExecutor.deleteTable(srcTable, scn);
+            LOG.info("Number of Rows deleted for source  :" + s.getSrcName()
+                + "(" + s.getSrcId() + ") :" + numRowsDeleted);
+            if (numRowsDeleted > 0
+                && _bootstrapCleanerStaticConfig.isOptimizeTableEnabled(s.getSrcName()))
+            {
+              LOG.info("Optimizing table to reclaim space for source :"
+                  + s.getSrcName() + "(" + s.getSrcId() + ")");
+              _bootstrapDBCleanerQueryExecutor.optimizeTable(srcTable);
+            }
+          } finally
+          {
+            if ((null != _applier) && (_applier.isAlive()))
+            {
+              LOG.info("Requesting applier to resume !!");
+              _applier.unpause();
+              LOG.info("Applier resumed !!");
+            }
+          }
+
+          LOG.info("End phase 5 : Deleting Rows from tab table :");
+        }
+
+        LOG.info("Cleaner done for source :" + s.getSrcName() + "("
+            + s.getSrcId() + ")");
+      }
+    } catch (SQLException ex)
+    {
+      LOG.error("Got SQL exception while cleaning bootstrapDB !!", ex);
+    } catch (InterruptedException ie)
+    {
+      LOG.error("Got interrupted exception while cleaning bootstrapDB !!", ie);
+    } finally
+    {
+      decCleanerStats();
+    }
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;getBootstrapDao();;;public BootstrapDBMetaDataDAO getBootstrapDao()
+  {
+    return _bootstrapDao;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;isCleanerRunning();;;public boolean isCleanerRunning()
+  {
+    return _isCleaning;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;getName();;;public String getName()
+  {
+    return _name;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;close();;;public void close()
+  {
+    if (_bootstrapDao != null)
+    {
+      _bootstrapDao.close();
+      _bootstrapDao = null;
+    }
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;getNumCleanersRunningHWM();;;public static int getNumCleanersRunningHWM()
+  {
+    return _numCleanersRunningHWM.get();
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;getMilliSecTime(RetentionStaticConfig);;;private long getMilliSecTime(RetentionStaticConfig config)
+  {
+    long qty = config.getRetentionQuantity();
+    long milliSecQty = -1;
+
+    switch (config.getRetentiontype())
+    {
+    case RETENTION_SECONDS:
+      milliSecQty = qty * DbusConstants.NUM_MSECS_IN_SEC;
+      break;
+
+    default:
+      throw new RuntimeException("Retention Config (" + config
+          + ") expected to be time based but is not !!");
+
+    }
+    return milliSecQty;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;filterCandidateLogInfo(short,List<BootstrapLogInfo>,RetentionStaticConfig);;;private long filterCandidateLogInfo(short srcId,
+      List<BootstrapLogInfo> candidateLogsInfo, RetentionStaticConfig config)
+      throws SQLException
+  {
+    switch (config.getRetentiontype())
+    {
+    case NO_CLEANUP:
+      return -1;
+    case RETENTION_LOGS:
+    {
+      Iterator<BootstrapLogInfo> itr = candidateLogsInfo.iterator();
+      BootstrapLogInfo lastValidLog = null;
+      int i = 0;
+      while (i < config.getRetentionQuantity() && itr.hasNext())
+      {
+        BootstrapLogInfo log = itr.next();
+        LOG.info("Removing the log table :" + log.getLogTable()
+            + " from the delete List as it is too recent. Retaining :"
+            + config.getRetentionQuantity() + " logs");
+        itr.remove();
+        lastValidLog = log;
+        i++;
+      }
+      _lastValidLog = lastValidLog;
+      break;
+    }
+
+    case RETENTION_SECONDS:
+    {
+      long quantity = config.getRetentionQuantity();
+      LOG.info("Retaining tables which could contain events which is less than "
+          + quantity + " seconds old !!");
+      long currTs = System.currentTimeMillis() * DbusConstants.NUM_NSECS_IN_MSEC;
+      long nanoSecQty = getMilliSecTime(config) * DbusConstants.NUM_NSECS_IN_MSEC;
+      long threshold = (currTs - nanoSecQty);
+
+      LOG.info("Removing tables from the delete-list whose last row has timestamp newer than :"
+          + threshold + " nanosecs");
+
+      Iterator<BootstrapLogInfo> itr = candidateLogsInfo.iterator();
+      BootstrapLogInfo lastValidLog = null;
+      LOG.info("Timestamp Threshold for src id :" + srcId + " is :" + threshold
+          + ", Retention Config " + config + "(" + nanoSecQty + " nanosecs)");
+
+      while (itr.hasNext())
+      {
+        BootstrapLogInfo log = itr.next();
+
+        long timestamp = _bootstrapDBCleanerQueryExecutor.getNanoTimestampOfLastEventinLog(log, _eventFactory);
+
+        if (timestamp < threshold)
+        {
+          LOG.info("Reached the log table whose timestamp (" + timestamp
+              + ") is less than the threshold (" + threshold + ").");
+          break;
+        }
+        else
+        {
+          LOG.info("Removing the log table :"
+              + log.getLogTable()
+              + " from the delete List as it is too recent. Last Event Timestamp :"
+              + timestamp + ", threshold :" + threshold);
+          lastValidLog = log;
+          itr.remove();
+        }
+      }
+      _lastValidLog = lastValidLog;
+    }
+      break;
+    }
+
+    long scn = -1;
+
+    if (!candidateLogsInfo.isEmpty())
+      scn = _bootstrapDBCleanerQueryExecutor.getSCNOfLastEventinLog(candidateLogsInfo.get(0), _eventFactory);
+
+    return scn;
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;incCleanerStats();;;private void incCleanerStats()
+  {
+    _isCleaning = true;
+
+    // Update HWM
+    int curCleanersHwm = _numCleanersRunningHWM.get();
+    // Increment internal metrics used for measuring parallelism
+    int curCleaners = _numCleanersRunning.incrementAndGet();
+    if (curCleanersHwm < curCleaners)
+    {
+      _numCleanersRunningHWM.set(curCleaners);
+    }
+  }
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8;/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner;decCleanerStats();;;private void decCleanerStats()
+  {
+    _isCleaning = false;
+
+    // Decrement internal metrics used for measuring parallelism
+    _numCleanersRunning.decrementAndGet();
+  }

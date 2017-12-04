@@ -1,0 +1,558 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be93884_a608db1/rev_be93884-a608db1;/src/main/java/org/elasticsearch/search/DefaultSearchServiceModule;configure();;;@Override
+    protected void configure() {
+        bind(SearchService.class).asEagerSingleton();
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be93884_a608db1/rev_be93884-a608db1;/src/main/java/org/elasticsearch/search/SearchModule;SearchModule(Settings);;;public SearchModule(Settings settings) {
+        this.settings = settings;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be93884_a608db1/rev_be93884-a608db1;/src/main/java/org/elasticsearch/search/SearchServiceModule;SearchServiceModule(Settings);;;public SearchServiceModule(Settings settings) {
+        this.settings = settings;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be93884_a608db1/rev_be93884-a608db1;/src/main/java/org/elasticsearch/search/SearchServiceModule;configure();;;@Override
+    protected void configure() {
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be93884_a608db1/rev_be93884-a608db1;/src/main/java/org/elasticsearch/search/SearchServiceModule;spawnModules();;;@Override
+    public Iterable<? extends Module> spawnModules() {
+        return ImmutableList.of(createModule(settings.getAsClass(IMPL, DefaultSearchServiceModule.class), settings));
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be93884_a608db1/rev_be93884-a608db1;/src/test/java/org/elasticsearch/test/search/MockSearchServiceModule;configure();;;@Override
+    protected void configure() {
+        bind(SearchService.class).to(MockSearchService.class).asEagerSingleton();
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_75ff5b5_3275939/rev_75ff5b5-3275939;/src/main/java/org/elasticsearch/index/query/GeoShapeQueryParser;getArgs(ShapeBuilder,ShapeRelation);            throw new ElasticsearchIllegalArgumentException("");;            throw new ElasticsearchIllegalArgumentException("");
+        ;            throw new IllegalArgumentException("");
+        
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_61e9461_59d9f7e/rev_61e9461-59d9f7e;/src/main/java/org/elasticsearch/index/query/ScriptQueryParser;names();        return new String[]{ScriptQueryBuilder.NAME};;        return new String[]{NAME};;        return new String[] { NAME };
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_33b3323_b78211d/rev_33b3323-b78211d;/core/src/main/java/org/elasticsearch/index/query/TermsQueryBuilder;doXContent(XContentBuilder,Params);;;
+        if (boost != -1) {
+            builder.field("boost", boost);
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9d47e80_f5f7325/rev_9d47e80-f5f7325;/core/src/main/java/org/elasticsearch/index/query/RangeQueryBuilder;format(String);;;public RangeQueryBuilder format(String format) {
+        this.format = format;
+        return this;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/test/java/org/elasticsearch/plugins/PluggableTransportModuleIT;CountingAssertingLocalTransport(Settings,ThreadPool,Version,NamedWriteableRegistry);;;@Inject
+        public CountingAssertingLocalTransport(Settings settings, ThreadPool threadPool, Version version, NamedWriteableRegistry namedWriteableRegistry) {
+            super(settings, threadPool, version, namedWriteableRegistry);
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/test/java/org/elasticsearch/transport/netty/NettyTransportIT;ExceptionThrowingNettyTransport(Settings,ThreadPool,NetworkService,BigArrays,Version,NamedWriteableRegistry);;;@Inject
+        public ExceptionThrowingNettyTransport(Settings settings, ThreadPool threadPool, NetworkService networkService, BigArrays bigArrays, Version version, NamedWriteableRegistry namedWriteableRegistry) {
+            super(settings, threadPool, networkService, bigArrays, version, namedWriteableRegistry);
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/test/java/org/elasticsearch/transport/netty/SimpleNettyTransportTests;build(Settings,Version,NamedWriteableRegistry);;;@Override
+    protected MockTransportService build(Settings settings, Version version, NamedWriteableRegistry namedWriteableRegistry) {
+        int startPort = 11000 + randomIntBetween(0, 255);
+        int endPort = startPort + 10;
+        settings = Settings.builder().put(settings).put("transport.tcp.port", startPort + "-" + endPort).build();
+        MockTransportService transportService = new MockTransportService(settings, new NettyTransport(settings, threadPool, new NetworkService(settings), BigArrays.NON_RECYCLING_INSTANCE, version, namedWriteableRegistry), threadPool);
+        transportService.start();
+        return transportService;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/test/java/org/elasticsearch/transport/local/SimpleLocalTransportTests;build(Settings,Version,NamedWriteableRegistry);;;@Override
+    protected MockTransportService build(Settings settings, Version version, NamedWriteableRegistry namedWriteableRegistry) {
+        MockTransportService transportService = new MockTransportService(Settings.EMPTY, new LocalTransport(settings, threadPool, version, namedWriteableRegistry), threadPool);
+        transportService.start();
+        return transportService;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/test/java/org/elasticsearch/test/transport/AssertingLocalTransport;AssertingLocalTransport(Settings,ThreadPool,Version,NamedWriteableRegistry);;;@Inject
+    public AssertingLocalTransport(Settings settings, ThreadPool threadPool, Version version, NamedWriteableRegistry namedWriteableRegistry) {
+        super(settings, threadPool, version, namedWriteableRegistry);
+        final long seed = settings.getAsLong(ESIntegTestCase.SETTING_INDEX_SEED, 0l);
+        random = new Random(seed);
+        minVersion = settings.getAsVersion(ASSERTING_TRANSPORT_MIN_VERSION_KEY, Version.V_0_18_0);
+        maxVersion = settings.getAsVersion(ASSERTING_TRANSPORT_MAX_VERSION_KEY, Version.CURRENT);
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/main/java/org/elasticsearch/transport/TransportModule;configure();;;        bind(NamedWriteableRegistry.class).asEagerSingleton();
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/main/java/org/elasticsearch/common/io/stream/StreamOutput;writeGenericValue(Object);;;            @SuppressWarnings("unchecked")
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/main/java/org/elasticsearch/common/io/stream/FilterStreamInput;readByte();;;@Override
+    public byte readByte() throws IOException {
+        return delegate.readByte();
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/main/java/org/elasticsearch/common/io/stream/FilterStreamInput;readBytes(byte[],int,int);;;@Override
+    public void readBytes(byte[] b, int offset, int len) throws IOException {
+        delegate.readBytes(b, offset, len);
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/main/java/org/elasticsearch/common/io/stream/FilterStreamInput;reset();;;@Override
+    public void reset() throws IOException {
+        delegate.reset();
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/main/java/org/elasticsearch/common/io/stream/FilterStreamInput;read();;;@Override
+    public int read() throws IOException {
+        return delegate.read();
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171;/core/src/main/java/org/elasticsearch/common/io/stream/FilterStreamInput;close();;;@Override
+    public void close() throws IOException {
+        delegate.close();
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_394e551_dbb01f5/rev_394e551-dbb01f5;/core/src/test/java/org/elasticsearch/search/rescore/QueryRescorerIT;testMultipleRescores();                QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", English.intToEnglish(8)))
+                        .boostMode(CombineFunction.REPLACE).add(ScoreFunctionBuilders.scriptFunction(new Script("1000.0f")))).setScoreMode(
+                "total");;                QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", English.intToEnglish(8))).boostMode(CombineFunction.REPLACE)
+.add(ScoreFunctionBuilders.scriptFunction(new Script("1000.0f")))).setScoreMode(
+                "total");;                QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", English.intToEnglish(8)),
+                        ScoreFunctionBuilders.scriptFunction(new Script("1000.0f"))).boostMode(CombineFunction.REPLACE)).setScoreMode("total");
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_394e551_dbb01f5/rev_394e551-dbb01f5;/core/src/test/java/org/elasticsearch/search/rescore/QueryRescorerIT;testMultipleRescores();                QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", English.intToEnglish(7)))
+                        .boostMode(CombineFunction.REPLACE).add(ScoreFunctionBuilders.scriptFunction(new Script("10000.0f"))));                QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", English.intToEnglish(7))).boostMode(CombineFunction.REPLACE)
+.add(ScoreFunctionBuilders.scriptFunction(new Script("10000.0f"))));                QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", English.intToEnglish(7)),
+                        ScoreFunctionBuilders.scriptFunction(new Script("10000.0f"))).boostMode(CombineFunction.REPLACE))
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_2b94126_74d6411/rev_2b94126-74d6411;/core/src/test/java/org/elasticsearch/index/query/plugin/DummyQueryParserPlugin;doHashCode();;;@Override
+        protected int doHashCode() {
+            return 0;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b364cf5_ebec4bd/rev_b364cf5-ebec4bd;/core/src/test/java/org/elasticsearch/cluster/DiskUsageTests;testFillDiskUsage();                        null, null, null, null, null, new FsInfo(0, node1FSInfo), null, null, null, null),;                        null,null,null,null,null,new FsInfo(0, node1FSInfo), null,null,null,null),;                        null,null,null,null,null,new FsInfo(0, node1FSInfo), null,null,null,null,null),
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b364cf5_ebec4bd/rev_b364cf5-ebec4bd;/core/src/test/java/org/elasticsearch/cluster/DiskUsageTests;testFillDiskUsage();                        null, null, null, null, null, new FsInfo(0, node2FSInfo), null, null, null, null),;                        null,null,null,null,null, new FsInfo(0, node2FSInfo), null,null,null,null),;                        null,null,null,null,null, new FsInfo(0, node2FSInfo), null,null,null,null,null),
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b364cf5_ebec4bd/rev_b364cf5-ebec4bd;/core/src/test/java/org/elasticsearch/cluster/DiskUsageTests;testFillDiskUsage();                        null, null, null, null, null, new FsInfo(0, node3FSInfo), null, null, null, null);                        null,null,null,null,null, new FsInfo(0, node3FSInfo), null,null,null,null);                        null,null,null,null,null, new FsInfo(0, node3FSInfo), null,null,null,null,null)
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;readFrom(StreamInput);;;@Override
+    public void readFrom(StreamInput in) throws IOException {
+        super.readFrom(in);
+        shardInfo = ReplicationResponse.ShardInfo.readShardInfo(in);
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;writeTo(StreamOutput);;;@Override
+    public void writeTo(StreamOutput out) throws IOException {
+        super.writeTo(out);
+        shardInfo.writeTo(out);
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;getShardInfo();;;public ShardInfo getShardInfo() {
+        return shardInfo;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;setShardInfo(ShardInfo);;;public void setShardInfo(ShardInfo shardInfo) {
+        this.shardInfo = shardInfo;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;ShardInfo();;;public ShardInfo() {
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;ShardInfo(int,int,Failure);;;public ShardInfo(int total, int successful, Failure... failures) {
+            assert total >= 0 && successful >= 0;
+            this.total = total;
+            this.successful = successful;
+            this.failures = failures;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;getTotal();;;public int getTotal() {
+            return total;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;getSuccessful();;;public int getSuccessful() {
+            return successful;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;getFailed();;;public int getFailed() {
+            return failures.length;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;getFailures();;;public Failure[] getFailures() {
+            return failures;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;status();;;public RestStatus status() {
+            RestStatus status = RestStatus.OK;
+            for (Failure failure : failures) {
+                if (failure.primary() && failure.status().getStatus() > status.getStatus()) {
+                    status = failure.status();
+                }
+            }
+            return status;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;readFrom(StreamInput);;;@Override
+        public void readFrom(StreamInput in) throws IOException {
+            total = in.readVInt();
+            successful = in.readVInt();
+            int size = in.readVInt();
+            failures = new Failure[size];
+            for (int i = 0; i < size; i++) {
+                Failure failure = new Failure();
+                failure.readFrom(in);
+                failures[i] = failure;
+            }
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;writeTo(StreamOutput);;;@Override
+        public void writeTo(StreamOutput out) throws IOException {
+            out.writeVInt(total);
+            out.writeVInt(successful);
+            out.writeVInt(failures.length);
+            for (Failure failure : failures) {
+                failure.writeTo(out);
+            }
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;toXContent(XContentBuilder,Params);;;@Override
+        public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+            builder.startObject(Fields._SHARDS);
+            builder.field(Fields.TOTAL, total);
+            builder.field(Fields.SUCCESSFUL, successful);
+            builder.field(Fields.FAILED, getFailed());
+            if (failures.length > 0) {
+                builder.startArray(Fields.FAILURES);
+                for (Failure failure : failures) {
+                    failure.toXContent(builder, params);
+                }
+                builder.endArray();
+            }
+            builder.endObject();
+            return builder;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;toString();;;@Override
+        public String toString() {
+            return Strings.toString(this);
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;readShardInfo(StreamInput);;;public static ShardInfo readShardInfo(StreamInput in) throws IOException {
+            ShardInfo shardInfo = new ShardInfo();
+            shardInfo.readFrom(in);
+            return shardInfo;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;Failure(String,int,String,Throwable,RestStatus,boolean);;;public Failure(String index, int shardId, @Nullable String nodeId, Throwable cause, RestStatus status, boolean primary) {
+                this.index = index;
+                this.shardId = shardId;
+                this.nodeId = nodeId;
+                this.cause = cause;
+                this.status = status;
+                this.primary = primary;
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;Failure();;;Failure() {
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;index();;;@Override
+            public String index() {
+                return index;
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;shardId();;;@Override
+            public int shardId() {
+                return shardId;
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;nodeId();;;@Nullable
+            public String nodeId() {
+                return nodeId;
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;reason();;;@Override
+            public String reason() {
+                return ExceptionsHelper.detailedMessage(cause);
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;status();;;@Override
+            public RestStatus status() {
+                return status;
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;getCause();;;@Override
+            public Throwable getCause() {
+                return cause;
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;primary();;;public boolean primary() {
+                return primary;
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;readFrom(StreamInput);;;@Override
+            public void readFrom(StreamInput in) throws IOException {
+                index = in.readString();
+                shardId = in.readVInt();
+                nodeId = in.readOptionalString();
+                cause = in.readThrowable();
+                status = RestStatus.readFrom(in);
+                primary = in.readBoolean();
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;writeTo(StreamOutput);;;@Override
+            public void writeTo(StreamOutput out) throws IOException {
+                out.writeString(index);
+                out.writeVInt(shardId);
+                out.writeOptionalString(nodeId);
+                out.writeThrowable(cause);
+                RestStatus.writeTo(out, status);
+                out.writeBoolean(primary);
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/ReplicationResponse;toXContent(XContentBuilder,Params);;;@Override
+            public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+                builder.startObject();
+                builder.field(Fields._INDEX, index);
+                builder.field(Fields._SHARD, shardId);
+                builder.field(Fields._NODE, nodeId);
+                builder.field(Fields.REASON);
+                builder.startObject();
+                ElasticsearchException.toXContent(builder, params, cause);
+                builder.endObject();
+                builder.field(Fields.STATUS, status);
+                builder.field(Fields.PRIMARY, primary);
+                builder.endObject();
+                return builder;
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/DocWriteResponse;DocWriteResponse();;;protected DocWriteResponse() {
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/DocWriteResponse;getIndex();;;public String getIndex() {
+        return this.shardId.getIndex();
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/DocWriteResponse;getShardId();;;public ShardId getShardId() {
+        return this.shardId;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/DocWriteResponse;getType();;;public String getType() {
+        return this.type;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/DocWriteResponse;getId();;;public String getId() {
+        return this.id;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/DocWriteResponse;getVersion();;;public long getVersion() {
+        return this.version;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/bulk/BulkItemResponse;BulkItemResponse(int,String,DocWriteResponse);;;public BulkItemResponse(int id, String opType, DocWriteResponse response) {
+        this.id = id;
+        this.opType = opType;
+        this.response = response;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/index/IndexResponse;toXContent(XContentBuilder,Params);;;@Override
+    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+        super.toXContent(builder, params);
+        builder.field(Fields.CREATED, isCreated());
+        return builder;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/delete/DeleteResponse;toXContent(XContentBuilder,Params);;;@Override
+    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+        builder.field(Fields.FOUND, isFound());
+        super.toXContent(builder, params);
+        return builder;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/action/update/UpdateResponse;toXContent(XContentBuilder,Params);;;@Override
+    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+        super.toXContent(builder, params);
+        if (getGetResult() != null) {
+            builder.startObject(Fields.GET);
+            getGetResult().toXContentEmbedded(builder, params);
+            builder.endObject();
+        }
+        return builder;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/cluster/routing/ShardRouting;buildTargetRelocatingShard();        return new ShardRouting(index, shardId, relocatingNodeId, currentNodeId, restoreSource, primaryTerm, primary, ShardRoutingState.INITIALIZING, version, unassignedInfo,
+                AllocationId.newTargetRelocation(allocationId), true, expectedShardSize);;        return new ShardRouting(index, shardId, relocatingNodeId, currentNodeId, restoreSource, primary, ShardRoutingState.INITIALIZING, version, unassignedInfo,
+                AllocationId.newTargetRelocation(allocationId), true, expectedShardSize);;        return new ShardRouting(index, shardId, relocatingNodeId, currentNodeId, restoreSource, primary, ShardRoutingState.INITIALIZING, version, unassignedInfo,
+            AllocationId.newTargetRelocation(allocationId), true, expectedShardSize);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/cluster/routing/ShardRouting;isRelocationTarget();;;public boolean isRelocationTarget() {
+        return state == ShardRoutingState.INITIALIZING && relocatingNodeId != null;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/cluster/routing/ShardRouting;toXContent(XContentBuilder,Params);                .field("state", state())
+                .field("primary", primary())
+                .field("primary_term", primaryTerm())
+                .field("node", currentNodeId())
+                .field("relocating_node", relocatingNodeId())
+                .field("shard", shardId().id())
+                .field("index", shardId().index().name())
+                .field("version", version);
+        if (expectedShardSize != UNAVAILABLE_EXPECTED_SHARD_SIZE){;                .field("state", state())
+                .field("primary", primary())
+                .field("node", currentNodeId())
+                .field("relocating_node", relocatingNodeId())
+                .field("shard", shardId().id())
+                .field("index", shardId().index().name())
+                .field("version", version);
+        if (expectedShardSize != UNAVAILABLE_EXPECTED_SHARD_SIZE){;            .field("state", state())
+            .field("primary", primary())
+            .field("node", currentNodeId())
+            .field("relocating_node", relocatingNodeId())
+            .field("shard", shardId().id())
+            .field("index", shardId().index().name())
+            .field("version", version);
+        if (expectedShardSize != UNAVAILABLE_EXPECTED_SHARD_SIZE) {
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/test/java/org/elasticsearch/document/ShardInfoIT;assertShardInfo(ReplicationResponse);;;private void assertShardInfo(ReplicationResponse response) {
+        assertShardInfo(response, numCopies, numNodes);
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/test/java/org/elasticsearch/document/ShardInfoIT;assertShardInfo(ReplicationResponse,int,int);;;private void assertShardInfo(ReplicationResponse response, int expectedTotal, int expectedSuccessful) {
+        assertThat(response.getShardInfo().getTotal(), greaterThanOrEqualTo(expectedTotal));
+        assertThat(response.getShardInfo().getSuccessful(), greaterThanOrEqualTo(expectedSuccessful));
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests;testIsSourceTargetRelocation();;;        assertFalse(startedShard0.isRelocationTarget());
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests;testIsSourceTargetRelocation();;;        assertFalse(startedShard0.isRelocationTarget());
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests;testIsSourceTargetRelocation();;;        assertFalse(startedShard1.isRelocationTarget());
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests;testIsSourceTargetRelocation();;;        assertFalse(startedShard1.isRelocationTarget());
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests;testIsSourceTargetRelocation();;;        assertFalse(sourceShard0a.isRelocationTarget());
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests;testIsSourceTargetRelocation();;;        assertTrue(targetShard0a.isRelocationTarget());
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_04681ef_bbeb09e/rev_04681ef-bbeb09e;/core/src/main/java/org/elasticsearch/search/suggest/SuggestContextParser;parse(XContentParser,QueryShardContext);;;SuggestionSearchContext.SuggestionContext parse(XContentParser parser, QueryShardContext shardContext) throws IOException;
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_687aade_0b0a251/rev_687aade-0b0a251;/core/src/main/java/org/elasticsearch/common/cli/Terminal;getWriter();;;public abstract PrintWriter getWriter();
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_687aade_0b0a251/rev_687aade-0b0a251;/core/src/main/java/org/elasticsearch/common/cli/Terminal;getWriter();;;@Override
+        public PrintWriter getWriter() {
+            return console.writer();
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_687aade_0b0a251/rev_687aade-0b0a251;/core/src/main/java/org/elasticsearch/common/cli/Terminal;getWriter();;;@Override
+        public PrintWriter getWriter() {
+            return writer;
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ce6ec51_e4bed0c/rev_ce6ec51-e4bed0c;/core/src/main/java/org/elasticsearch/common/io/stream/Writeable;apply(T);;;R apply(T t) throws IOException;
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7;/core/src/main/java/org/elasticsearch/action/support/replication/ReplicationRequest;primaryTerm();;;public long primaryTerm() {
+        return primaryTerm;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7;/core/src/main/java/org/elasticsearch/action/support/replication/ReplicationRequest;primaryTerm(long);;;public void primaryTerm(long term) {
+        primaryTerm = term;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7;/core/src/main/java/org/elasticsearch/index/shard/IllegalIndexShardStateException;IllegalIndexShardStateException(ShardId,IndexShardState,String,Object);;;public IllegalIndexShardStateException(ShardId shardId, IndexShardState currentState, String msg, Object... args) {
+        this(shardId, currentState, msg, null, args);
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7;/core/src/main/java/org/elasticsearch/index/shard/IllegalIndexShardStateException;IllegalIndexShardStateException(ShardId,IndexShardState,String,Throwable,Object);;;public IllegalIndexShardStateException(ShardId shardId, IndexShardState currentState, String msg, Throwable ex, Object... args) {
+        super("CurrentState[" + currentState + "] " + msg, ex, args);
+        setShard(shardId);
+        this.currentState = currentState;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7;/core/src/test/java/org/elasticsearch/cluster/metadata/ToAndFromJsonMetaDataTests;testSimpleJsonFromAndTo();                        .put(IndexTemplateMetaData.builder("foo")
+                                .template("bar")
+                                .order(1)
+                                .settings(settingsBuilder()
+                                        .put("setting1", "value1")
+                                        .put("setting2", "value2"))
+                                .putAlias(newAliasMetaDataBuilder("alias-bar1"))
+                                .putAlias(newAliasMetaDataBuilder("alias-bar2").filter("{\"term\":{\"user\":\"kimchy\"}}"))
+                                .putAlias(newAliasMetaDataBuilder("alias-bar3").routing("routing-bar")));;                .put(IndexTemplateMetaData.builder("foo")
+                        .template("bar")
+                        .order(1)
+                        .settings(settingsBuilder()
+                                .put("setting1", "value1")
+                                .put("setting2", "value2"))
+                        .putAlias(newAliasMetaDataBuilder("alias-bar1"))
+                        .putAlias(newAliasMetaDataBuilder("alias-bar2").filter("{\"term\":{\"user\":\"kimchy\"}}"))
+                        .putAlias(newAliasMetaDataBuilder("alias-bar3").routing("routing-bar")))
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7;/core/src/test/java/org/elasticsearch/cluster/metadata/ToAndFromJsonMetaDataTests;testSimpleJsonFromAndTo();                        .put(IndexTemplateMetaData.builder("foo")
+                                .template("bar")
+                                .order(1)
+                                .settings(settingsBuilder()
+                                        .put("setting1", "value1")
+                                        .put("setting2", "value2"))
+                                .putAlias(newAliasMetaDataBuilder("alias-bar1"))
+                                .putAlias(newAliasMetaDataBuilder("alias-bar2").filter("{\"term\":{\"user\":\"kimchy\"}}"))
+                                .putAlias(newAliasMetaDataBuilder("alias-bar3").routing("routing-bar")));;                .put(IndexTemplateMetaData.builder("foo")
+                        .template("bar")
+                        .order(1)
+                        .settings(settingsBuilder()
+                                .put("setting1", "value1")
+                                .put("setting2", "value2"))
+                        .putAlias(newAliasMetaDataBuilder("alias-bar1"))
+                        .putAlias(newAliasMetaDataBuilder("alias-bar2").filter("{\"term\":{\"user\":\"kimchy\"}}"))
+                        .putAlias(newAliasMetaDataBuilder("alias-bar3").routing("routing-bar")))
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7;/core/src/test/java/org/elasticsearch/cluster/metadata/ToAndFromJsonMetaDataTests;testSimpleJsonFromAndTo();;;        assertThat(indexMetaData.primaryTerm(0), equalTo(1L));
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7;/core/src/test/java/org/elasticsearch/cluster/metadata/ToAndFromJsonMetaDataTests;testSimpleJsonFromAndTo();;;        assertThat(indexMetaData.primaryTerm(0), equalTo(2L));
+        assertThat(indexMetaData.primaryTerm(1), equalTo(2L));
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7;/core/src/test/java/org/elasticsearch/cluster/routing/allocation/PrimaryElectionRoutingTests;testBackupElectionToPrimaryWhenPrimaryCanBeAllocatedToAnotherNode();;;        routingTable = clusterState.routingTable();
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_5622e9c_ee6d29b/rev_5622e9c-ee6d29b;/modules/lang-painless/src/test/java/org/elasticsearch/painless/StringTests;testAppendMultiple();public void testAppendMultiple() {
+        assertEquals("cat" + true + "abc" + null, exec("String s = \"cat\"; return s + true + 'abc' + null;"));
+    };;public void testAppendMultiple() {
+      assertEquals("cat" + true + "abc" + null, exec("String s = \"cat\"; return s + true + 'abc' + null;"));
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SIfElse;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SCatch;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SDo;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SFor;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SWhile;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SIf;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/STry;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SDeclaration;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_90ef933_be168f5/rev_90ef933-be168f5;/core/src/main/java/org/elasticsearch/action/DocWriteResponse;toXContent(XContentBuilder,Params);                .field(Fields._TYPE, type)
+                .field(Fields._ID, id)
+                .field(Fields._VERSION, version);;            .field(Fields._TYPE, type)
+            .field(Fields._ID, id)
+            .field(Fields._VERSION, version);;            .field(Fields._TYPE, type)
+            .field(Fields._ID, id)
+            .field(Fields._VERSION, version)
+            .field("forced_refresh", forcedRefresh);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_96321d7_ccad99f/rev_96321d7-ccad99f;/test/framework/src/main/java/org/elasticsearch/script/MockScriptEngine;executable(CompiledScript,Map<String,Object>);        assert compiledScript.compiled() instanceof MockCompiledScript ;;        assert compiledScript.compiled() instanceof MockCompiledScript
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_5a66c08_a8020b1/rev_5a66c08-a8020b1;/core/src/main/java/org/elasticsearch/node/service/NodeService;NodeService(Settings,ThreadPool,MonitorService,Discovery,TransportService,IndicesService,PluginsService,CircuitBreakerService,HttpServer,ProcessorsRegistry.Builder,ClusterService,SettingsFilter);;@Inject
+    public NodeService(Settings settings, ThreadPool threadPool, MonitorService monitorService,
+                       Discovery discovery, TransportService transportService, IndicesService indicesService,
+                       PluginsService pluginService, CircuitBreakerService circuitBreakerService, @Nullable HttpServer httpServer,
+                       ProcessorsRegistry.Builder processorsRegistryBuilder, ClusterService clusterService, SettingsFilter settingsFilter) {
+        super(settings);
+        this.threadPool = threadPool;
+        this.monitorService = monitorService;
+        this.transportService = transportService;
+        this.indicesService = indicesService;
+        this.discovery = discovery;
+        this.pluginService = pluginService;
+        this.circuitBreakerService = circuitBreakerService;
+        this.httpServer = httpServer;
+        this.clusterService = clusterService;
+        this.ingestService = new IngestService(settings, threadPool, processorsRegistryBuilder);
+        this.settingsFilter = settingsFilter;
+        clusterService.add(ingestService.getPipelineStore());
+        clusterService.add(ingestService.getPipelineExecutionService());
+    };@Inject
+    public NodeService(Settings settings, ThreadPool threadPool, MonitorService monitorService, Discovery discovery,
+                       TransportService transportService, IndicesService indicesService, PluginsService pluginService,
+                       CircuitBreakerService circuitBreakerService, @Nullable HttpServer httpServer,
+                       ProcessorsRegistry.Builder processorsRegistryBuilder, ClusterService clusterService,
+                       SettingsFilter settingsFilter) {
+        super(settings);
+        this.threadPool = threadPool;
+        this.monitorService = monitorService;
+        this.transportService = transportService;
+        this.indicesService = indicesService;
+        this.discovery = discovery;
+        this.pluginService = pluginService;
+        this.circuitBreakerService = circuitBreakerService;
+        this.httpServer = httpServer;
+        this.clusterService = clusterService;
+        this.ingestService = new IngestService(settings, threadPool, processorsRegistryBuilder);
+        this.settingsFilter = settingsFilter;
+        clusterService.add(ingestService.getPipelineStore());
+        clusterService.add(ingestService.getPipelineExecutionService());
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_e556c28_e168b3b/rev_e556c28-e168b3b;/core/src/test/java/org/elasticsearch/indices/IndicesRequestCacheIT;testCanCache();;;        // If the request has an aggregation containng now we should not cache
+        final SearchResponse r4 = client().prepareSearch("index").setSearchType(SearchType.QUERY_THEN_FETCH).setSize(0)
+                .setRequestCache(true).setQuery(QueryBuilders.rangeQuery("s").gte("2016-03-20").lte("2016-03-26"))
+                .addAggregation(filter("foo", QueryBuilders.rangeQuery("s").from("now-10y").to("now"))).get();
+        assertSearchResponse(r4);
+        assertThat(r4.getHits().getTotalHits(), equalTo(7L));
+        assertThat(client().admin().indices().prepareStats("index").setRequestCache(true).get().getTotal().getRequestCache().getHitCount(),
+                equalTo(0L));
+        assertThat(client().admin().indices().prepareStats("index").setRequestCache(true).get().getTotal().getRequestCache().getMissCount(),
+                equalTo(0L));
+
+        // If the request has an aggregation containng now we should not cache
+        final SearchResponse r5 = client().prepareSearch("index").setSearchType(SearchType.QUERY_THEN_FETCH).setSize(0)
+                .setRequestCache(true).setQuery(QueryBuilders.rangeQuery("s").gte("2016-03-20").lte("2016-03-26"))
+                .addAggregation(dateRange("foo").field("s").addRange("now-10y", "now")).get();
+        assertSearchResponse(r5);
+        assertThat(r5.getHits().getTotalHits(), equalTo(7L));
+        assertThat(client().admin().indices().prepareStats("index").setRequestCache(true).get().getTotal().getRequestCache().getHitCount(),
+                equalTo(0L));
+        assertThat(client().admin().indices().prepareStats("index").setRequestCache(true).get().getTotal().getRequestCache().getMissCount(),
+                equalTo(0L));
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_e556c28_e168b3b/rev_e556c28-e168b3b;/core/src/main/java/org/elasticsearch/search/aggregations/bucket/range/RangeAggregatorFactory;RangeAggregatorFactory(String,Type,ValuesSourceConfig<Numeric>,Range[],boolean,Factory<?,?>,AggregationContext,AggregatorFactory<?>,AggregatorFactories.Builder,Map<String,Object>);;;public RangeAggregatorFactory(String name, Type type, ValuesSourceConfig<Numeric> config, Range[] ranges, boolean keyed,
+            Factory<?, ?> rangeFactory, AggregationContext context, AggregatorFactory<?> parent,
+            AggregatorFactories.Builder subFactoriesBuilder, Map<String, Object> metaData) throws IOException {
+        super(name, type, config, ranges, keyed, rangeFactory, context, parent, subFactoriesBuilder, metaData);
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_e556c28_e168b3b/rev_e556c28-e168b3b;/core/src/main/java/org/elasticsearch/search/aggregations/bucket/range/date/DateRangeAggregatorFactory;DateRangeAggregatorFactory(String,Type,ValuesSourceConfig<Numeric>,Range[],boolean,Factory<?,?>,AggregationContext,AggregatorFactory<?>,AggregatorFactories.Builder,Map<String,Object>);;;public DateRangeAggregatorFactory(String name, Type type, ValuesSourceConfig<Numeric> config, Range[] ranges, boolean keyed,
+            Factory<?, ?> rangeFactory, AggregationContext context, AggregatorFactory<?> parent,
+            AggregatorFactories.Builder subFactoriesBuilder, Map<String, Object> metaData) throws IOException {
+        super(name, type, config, ranges, keyed, rangeFactory, context, parent, subFactoriesBuilder, metaData);
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ce6f6d3_6174e21/rev_ce6f6d3-6174e21;/core/src/main/java/org/elasticsearch/search/aggregations/metrics/tophits/TopHitsAggregatorFactory;TopHitsAggregatorFactory(String,Type,int,int,boolean,boolean,boolean,List<SortBuilder<?>>,HighlightBuilder,StoredFieldsContext,List<String>,List<ScriptFieldsContext.ScriptField>,FetchSourceContext,AggregationContext,AggregatorFactory<?>,AggregatorFactories.Builder,Map<String,Object>);public TopHitsAggregatorFactory(String name, Type type, int from, int size, boolean explain, boolean version, boolean trackScores,
+            List<SortBuilder<?>> sorts, HighlightBuilder highlightBuilder, StoredFieldsContext storedFieldsContext,
+            List<String> docValueFields, List<ScriptFieldsContext.ScriptField> scriptFields, FetchSourceContext fetchSourceContext,
+            AggregationContext context, AggregatorFactory<?> parent, AggregatorFactories.Builder subFactories, Map<String, Object> metaData)
+            throws IOException {
+        super(name, type, context, parent, subFactories, metaData);
+        this.from = from;
+        this.size = size;
+        this.explain = explain;
+        this.version = version;
+        this.trackScores = trackScores;
+        this.sorts = sorts;
+        this.highlightBuilder = highlightBuilder;
+        this.storedFieldsContext = storedFieldsContext;
+        this.docValueFields = docValueFields;
+        this.scriptFields = scriptFields;
+        this.fetchSourceContext = fetchSourceContext;
+    };;public TopHitsAggregatorFactory(String name, Type type, int from, int size, boolean explain, boolean version, boolean trackScores,
+            List<SortBuilder<?>> sorts, HighlightBuilder highlightBuilder, StoredFieldsContext storedFieldsContext,
+            List<String> docValueFields, List<ScriptFieldsContext.ScriptField> scriptFields, FetchSourceContext fetchSourceContext,
+            AggregationContext context, AggregatorFactory<?> parent, AggregatorFactories.Builder subFactories,
+            Map<String, Object> metaData) throws IOException {
+        super(name, type, context, parent, subFactories, metaData);
+        this.from = from;
+        this.size = size;
+        this.explain = explain;
+        this.version = version;
+        this.trackScores = trackScores;
+        this.sorts = sorts;
+        this.highlightBuilder = highlightBuilder;
+        this.storedFieldsContext = storedFieldsContext;
+        this.docValueFields = docValueFields;
+        this.scriptFields = scriptFields;
+        this.fetchSourceContext = fetchSourceContext;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_210e101_8758c54/rev_210e101-8758c54;/core/src/main/java/org/elasticsearch/search/DocValueFormat;equals(Object);;;@Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Decimal that = (Decimal) o;
+            return Objects.equals(pattern, that.pattern);
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_210e101_8758c54/rev_210e101-8758c54;/core/src/main/java/org/elasticsearch/search/DocValueFormat;hashCode();;;@Override
+        public int hashCode() {
+            return Objects.hash(pattern);
+        }

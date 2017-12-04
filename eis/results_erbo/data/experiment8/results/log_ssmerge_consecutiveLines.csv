@@ -1,0 +1,60 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/experiment/projects/dropwizard-metrics/revisions/rev_954ccfa_ae0ee1d/rev_954ccfa-ae0ee1d;/metrics-spring/src/main/java/com/yammer/metrics/spring/ExceptionMeteredMethodInterceptor;doWith(Method);        final String meterName = metered.name().isEmpty() ?
+                methodName + ExceptionMetered.DEFAULT_NAME_SUFFIX :
+                metered.name();
+        final Meter meter = metrics.newMeter(targetClass,
+                                             meterName,
+                                             scope,
+                                             metered.eventType(),
+                                             metered.rateUnit());;        final String meterName = metered.name().isEmpty() ?
+                methodName + ExceptionMetered.DEFAULT_NAME_SUFFIX :
+                metered.name();
+        final Meter meter = metrics.newMeter(targetClass,
+                                             meterName,
+                                             metered.eventType(),
+                                             metered.rateUnit());;        final String group = MetricName.chooseGroup(metered.group(), targetClass);
+        final String type = MetricName.chooseType(metered.type(), targetClass);
+        final String name = metered.name() == null || metered.name().equals("") ? methodName + ExceptionMetered.DEFAULT_NAME_SUFFIX : metered.name();
+        final MetricName metricName = new MetricName(group, type, name);
+        final Meter meter = metrics.newMeter(metricName, metered.eventType(), metered.rateUnit());
+/experiment/projects/dropwizard-metrics/revisions/rev_954ccfa_ae0ee1d/rev_954ccfa-ae0ee1d;/metrics-spring/src/main/java/com/yammer/metrics/spring/MeteredMethodInterceptor;doWith(Method);        final String meterName = metered.name().isEmpty() ? methodName : metered.name();
+        final Meter meter = metrics.newMeter(targetClass,
+                                             meterName,
+                                             scope,
+                                             metered.eventType(),
+                                             metered.rateUnit());;        final String meterName = metered.name().isEmpty() ? methodName : metered.name();
+        final Meter meter = metrics.newMeter(targetClass,
+                                             meterName,
+                                             metered.eventType(),
+                                             metered.rateUnit());;        final String group = MetricName.chooseGroup(metered.group(), targetClass);
+        final String type = MetricName.chooseType(metered.type(), targetClass);
+        final String name = metered.name() == null || metered.name().equals("") ? methodName : metered.name();
+        final MetricName metricName = new MetricName(group, type, name);
+        final Meter meter = metrics.newMeter(metricName, metered.eventType(), metered.rateUnit());
+/experiment/projects/dropwizard-metrics/revisions/rev_954ccfa_ae0ee1d/rev_954ccfa-ae0ee1d;/metrics-spring/src/main/java/com/yammer/metrics/spring/TimedMethodInterceptor;doWith(Method);        final String timerName = timed.name().isEmpty() ? methodName : timed.name();
+        final Timer timer = metrics.newTimer(targetClass,
+                                             timerName,
+                                             scope,;        final String timerName = timed.name().isEmpty() ? methodName : timed.name();
+        final Timer timer = metrics.newTimer(targetClass,
+                                             timerName,;        final String group = MetricName.chooseGroup(timed.group(), targetClass);
+        final String type = MetricName.chooseType(timed.type(), targetClass);
+        final String name = timed.name() == null || timed.name().equals("") ? methodName : timed.name();
+        final MetricName metricName = new MetricName(group, type, name);
+
+        final Timer timer = metrics.newTimer(metricName,
+/experiment/projects/dropwizard-metrics/revisions/rev_954ccfa_ae0ee1d/rev_954ccfa-ae0ee1d;/metrics-spring/src/main/java/com/yammer/metrics/spring/GaugeAnnotationBeanPostProcessor;postProcessAfterInitialization(Object,String);                    metrics.newGauge(method.getDeclaringClass(),
+                                     name,
+                                     scope,
+                                     new GaugeMethod(bean, method));;                    metrics.newGauge(method.getDeclaringClass(),
+                                     name,
+                                     new GaugeMethod(bean, method));;                    final String group = MetricName.chooseGroup(gauge.group(), method.getDeclaringClass());
+                    final String type = MetricName.chooseType(gauge.type(), method.getDeclaringClass());
+                    final MetricName metricName = new MetricName(group, type, name);
+
+                    metrics.newGauge(metricName, new GaugeMethod(bean, method));
+/experiment/projects/dropwizard-metrics/revisions/rev_ce7cdff_48140b7/rev_ce7cdff-48140b7;/metrics-core/src/main/java/com/codahale/metrics/JmxReporter;build();            if (mBeanServer==null) {
+            	mBeanServer = ManagementFactory.getPlatformMBeanServer();
+            }
+            return new JmxReporter(mBeanServer, domain, registry, filter, timeUnits);;            return new JmxReporter(mBeanServer, domain, registry, filter, timeUnits);;            return new JmxReporter(mBeanServer, domain, registry, filter, timeUnits, objectNameFactory);
+/experiment/projects/dropwizard-metrics/revisions/rev_41ba6c3_d814f12/rev_41ba6c3-d814f12;/metrics-servlets/src/main/java/com/codahale/metrics/servlets/MetricsServlet;init(ServletConfig);        this.allowedOrigin = context.getInitParameter(ALLOWED_ORIGIN);;        this.allowedOrigin = config.getInitParameter(ALLOWED_ORIGIN);;        this.allowedOrigin = config.getInitParameter(ALLOWED_ORIGIN);
+		this.jsonpParamName = config.getInitParameter(CALLBACK_PARAM);

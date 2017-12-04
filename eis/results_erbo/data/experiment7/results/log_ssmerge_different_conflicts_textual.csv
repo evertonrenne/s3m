@@ -1,0 +1,2260 @@
+file;linedbasedConf
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;<<<<<<< MINE
+  private String runtimeName;
+  private Integer dagLevel;
+  private Double x, y;
+=======
+  private String runtime;
+  private Integer dagLevel;
+  private Double x, y;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;<<<<<<< MINE
+  public Integer getX() { return x; }
+  public void setX(Integer x) { this.x = x; }
+=======
+  public Double getX() { return x; }
+  public void setX(Double x) { this.x = x; }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;<<<<<<< MINE
+  public Integer getY() { return y; }
+  public void setY(Integer y) { this.y = y; }
+=======
+  public Double getY() { return y; }
+  public void setY(Double y) { this.y = y; }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;<<<<<<< MINE
+=======
+
+  private void setRuntime(String runtime) { this.runtime = runtime; }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_abe0afe_682cd4a/rev_abe0afe-682cd4a/pig/src/main/java/com/twitter/ambrose/service/impl/SugiyamaLayoutTransformer.java;<<<<<<< MINE
+=======
+/*
+Copyright 2012 Twitter, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+package com.twitter.ambrose.service.impl;
+
+import azkaban.common.utils.Props;
+import azkaban.workflow.Flow;
+import azkaban.workflow.flow.DagLayout;
+import azkaban.workflow.flow.FlowNode;
+import azkaban.workflow.flow.SugiyamaLayout;
+import com.twitter.ambrose.service.DAGNode;
+import com.twitter.ambrose.service.DAGTransformer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
+/**
+ * Transformer that wraps Azkaban's SugiyamaLayout to create level, X and Y values for the nodes in
+ * the DAG.
+ * @author billg
+ */
+public class SugiyamaLayoutTransformer implements DAGTransformer {
+
+  private boolean landscape;
+
+  /**
+   * Create an instance of this class to generate top-down coordinates
+   */
+  public SugiyamaLayoutTransformer() {
+    this(false);
+  }
+
+  /**
+   * Create an instance of this class to generate coordinates. If <pre>landscape=true</pre>, then
+   * the graph will layout from left to right. Otherwise it will layout from top to bottom.
+   */
+  public SugiyamaLayoutTransformer(boolean landscape) {
+    this.landscape = landscape;
+  }
+
+  @Override
+  public Collection<DAGNode> transform(Collection<DAGNode> nodes) {
+    Flow flow = new Flow("sample flow", new Props());
+
+    if(nodes.size() == 1) {
+      flow.addDependencies(nodes.iterator().next().getName(), new ArrayList<String>());
+    } else {
+      for(DAGNode node : nodes) {
+        for(String successor : node.getSuccessorNames()) {
+          flow.addDependencies(successor, Arrays.asList(node.getName()));
+        }
+      }
+    }
+
+    flow.validateFlow(); // this sets levels
+    flow.printFlow();
+    if (!flow.isLayedOut()) {
+      DagLayout layout = new SugiyamaLayout(flow);
+      layout.setLayout();
+    }
+
+    for(DAGNode node : nodes) {
+      FlowNode flowNode = flow.getFlowNode(node.getName());
+
+      // invert X/Y if we're rendering in landscape
+      if (landscape) {
+        node.setX(flowNode.getY());
+        node.setY(flowNode.getX());
+      }
+      else {
+        node.setX(flowNode.getX());
+        node.setY(flowNode.getY());
+      }
+
+      node.setDagLevel(flowNode.getLevel());
+    }
+
+    return nodes;
+  }
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_311fb3e_0974c60/rev_311fb3e-0974c60/common/src/test/java/com/twitter/ambrose/service/impl/InMemoryStatsServiceTest.java;<<<<<<< MINE
+=======
+import java.io.IOException;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.type.TypeReference;
+
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+=======
+import java.io.StringWriter;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+=======
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+=======
+   *
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+    ObjectMapper om = new ObjectMapper();
+    om.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
+    om.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+
+    writer.write(om.writeValueAsString(object));
+    writer.write("\n");
+    writer.flush();
+=======
+    mapper.writeValue(writer, object);
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+    JSONUtil.writeJson(new PrintWriter(fileName), object);
+=======
+    Writer writer = new PrintWriter(fileName);
+    try {
+      JSONUtil.writeJson(writer, object);
+    } finally {
+      writer.close();
+    }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+  public static Object readJson(String json, TypeReference<?> type) throws IOException {
+    ObjectMapper om = new ObjectMapper();
+    om.getDeserializationConfig().set(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+=======
+  /**
+   * Serializes object to JSON string.
+   *
+   * @param object object to serialize.
+   * @return json string.
+   * @throws IOException
+   */
+  public static String toJson(Object object) throws IOException {
+    StringWriter writer = new StringWriter();
+    writeJson(writer, object);
+    return writer.toString();
+  }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+    // not currently setting successors, only successorNames
+    return om.readValue(json, type);
+=======
+  /**
+   * Parse JSON string to object.
+   *
+   * @param json string containing JSON.
+   * @param type type reference describing type of object to parse from json.
+   * @param <T> type of object to parse from json.
+   * @return object parsed from json.
+   * @throws IOException
+   */
+  public static <T> T toObject(String json, TypeReference<T> type) throws IOException {
+    return mapper.readValue(json, type);
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+    }
+    finally {
+=======
+    } finally {
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+=======
+  private static final ObjectMapper mapper = new ObjectMapper();
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+  static {
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
+    mapper.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+    mapper.disable(SerializationFeature.CLOSE_CLOSEABLE);
+    mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  }
+=======
+  static {
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
+    mapper.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+    mapper.disable(SerializationFeature.CLOSE_CLOSEABLE);
+    mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  }
+
+  public static void mixinAnnotatons(Class<?> target, Class<?> mixinSource) {
+    mapper.addMixInAnnotations(target, mixinSource);
+  }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Event.java;<<<<<<< MINE
+import org.codehaus.jackson.type.TypeReference;
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Event.java;<<<<<<< MINE
+=======
+import com.fasterxml.jackson.core.type.TypeReference;
+
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Event.java;<<<<<<< MINE
+  @SuppressWarnings("unchecked")
+  public static void main(String[] args) throws IOException {
+    String json = JSONUtil.readFile("pig/src/main/resources/web/data/small-events.json");
+    List<Event> events = JSONUtil.toObject(json, new TypeReference<List<Event>>() { });
+    for (Event event : events) {
+      // useful if we need to read a file, add a field, output and re-generate
+    }
+    JSONUtil.writeJson("pig/src/main/resources/web/data/small-events.json2", events);
+=======
+  public String toJson() throws IOException {
+    return JSONUtil.toJson(this);
+  }
+
+  public static Event<?> fromJson(String json) throws IOException {
+    return JSONUtil.toObject(json, new TypeReference<Event<?>>() { });
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Job.java;<<<<<<< MINE
+=======
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "runtime")
+@JsonTypeName("default")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value=com.twitter.ambrose.model.Job.class, name="default"),
+})
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Workflow.java;<<<<<<< MINE
+import java.io.IOException;
+import java.util.List;
+
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+=======
+import java.io.IOException;
+import java.util.List;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Workflow.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;<<<<<<< MINE
+import java.util.HashMap;
+import java.util.Map;
+
+=======
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;<<<<<<< MINE
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;<<<<<<< MINE
+  @JsonSerialize(
+    include=JsonSerialize.Inclusion.NON_NULL
+  )
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/DAGNode.java;<<<<<<< MINE
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+=======
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/DAGNode.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/DAGNode.java;<<<<<<< MINE
+    List<DAGNode> nodes =
+      (List<DAGNode>)JSONUtil.readJson(json, new TypeReference<List<DAGNode>>() { });
+
+=======
+    List<DAGNode> nodes = JSONUtil.toObject(json, new TypeReference<List<DAGNode>>() { });
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+=======
+import com.google.common.collect.Maps;
+
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+  private Map<String, DAGNode<Job>> dagNodeNameMap = new HashMap<String, DAGNode<Job>>();
+  private SortedMap<Integer, Event> eventMap =
+    new ConcurrentSkipListMap<Integer, Event>();
+=======
+  private Map<String, DAGNode<Job>> dagNodeNameMap = Maps.newHashMap();
+  private SortedMap<Integer, Event> eventMap = new ConcurrentSkipListMap<Integer, Event>();
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+      Collection<DAGNode<Job>> nodes = dagNodeNameMap.values();
+      JSONUtil.writeJson(dagWriter, nodes.toArray(new DAGNode[dagNodeNameMap.size()]));
+=======
+      JSONUtil.writeJson(dagWriter, dagNodeNameMap.values());
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+      eventsWriter.append(!eventWritten ? "[ " : ", ");
+=======
+      eventsWriter.write(!eventWritten ? "[ " : ", ");
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+      if (eventWritten) { eventsWriter.append("]\n"); }
+=======
+      if (eventWritten) { eventsWriter.write(" ]\n"); }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/OutputInfo.java;<<<<<<< MINE
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/OutputInfo.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/PigJob.java;<<<<<<< MINE
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+=======
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import com.twitter.ambrose.util.JSONUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/PigJob.java;<<<<<<< MINE
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/PigJob.java;<<<<<<< MINE
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+=======
+import com.twitter.ambrose.model.Job;
+import com.twitter.ambrose.model.hadoop.CounterGroup;
+import com.twitter.ambrose.model.hadoop.MapReduceJobState;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/PigJob.java;<<<<<<< MINE
+=======
+@JsonTypeName("pig")
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/InputInfo.java;<<<<<<< MINE
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/InputInfo.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+  private Map<String, DAGNode<PigJob>> dagNodeNameMap = new TreeMap<String, DAGNode<PigJob>>();
+  private Map<String, DAGNode<PigJob>> dagNodeJobIdMap = new TreeMap<String, DAGNode<PigJob>>();
+=======
+  private Map<String, DAGNode<PigJob>> dagNodeNameMap = Maps.newTreeMap();
+  private Map<String, DAGNode<PigJob>> dagNodeJobIdMap = Maps.newTreeMap();
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+  private HashSet<String> completedJobIds = new HashSet<String>();
+=======
+  private HashSet<String> completedJobIds = Sets.newHashSet();
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+    Map<Event.WorkflowProgressField, String> eventData = new HashMap<Event.WorkflowProgressField, String>();
+=======
+    Map<Event.WorkflowProgressField, String> eventData = Maps.newHashMap();
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+  private void addMapReduceJobState(PigJob pigJob)  {
+=======
+  private void addMapReduceJobState(PigJob pigJob) {
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.conf.HiveConf;
+import org.apache.hadoop.hive.ql.session.SessionState;
+import org.apache.hadoop.hive.ql.stats.ClientStatsPublisher;
+import org.apache.hadoop.mapred.JobClient;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapred.JobID;
+import org.apache.hadoop.mapred.RunningJob;
+
+import com.twitter.ambrose.model.DAGNode;
+import com.twitter.ambrose.model.Event;
+import com.twitter.ambrose.model.Event.WorkflowProgressField;
+import com.twitter.ambrose.model.Job;
+import com.twitter.ambrose.model.hadoop.MapReduceJobState;
+
+/**
+ * Hook that is invoked every <tt>hive.exec.counters.pull.interval</tt> seconds
+ * to report a given job's status to {@link com.twitter.ambrose.hive.HiveProgressReporter HiveProgressReporter}
+ * <br>
+ * If <tt>hive.exec.parallel</tt> is set each thread obtain an instance from this class.
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ *
+ */
+public class AmbroseHiveStatPublisher implements ClientStatsPublisher {
+
+    private static final Log LOG = LogFactory.getLog(AmbroseHiveStatPublisher.class);
+    
+    /** Running job information */
+    private final JobClient jobClient;
+    private RunningJob rj;
+    private HiveMapReduceJobState jobProgress;
+
+    private String nodeId;
+    private JobID jobId;
+    
+    private int totalReduceTasks;
+    private int totalMapTasks;
+    
+    private final Map<WorkflowProgressField, String> eventData = 
+        new HashMap<WorkflowProgressField, String>(1);
+
+    private boolean init = true;
+
+    private static class HiveMapReduceJobState extends MapReduceJobState {
+        
+        public HiveMapReduceJobState(String jobIdStr, RunningJob rj, int totalMapTasks,
+                int totalReduceTasks) throws IOException {
+
+            setJobId(jobIdStr);
+            setJobName(rj.getJobName());
+            setTrackingURL(rj.getTrackingURL());
+            setComplete(rj.isComplete());
+            setSuccessful(rj.isSuccessful());
+            setMapProgress(rj.mapProgress());
+            setReduceProgress(rj.reduceProgress());
+            setTotalMappers(totalMapTasks);
+            setTotalReducers(totalReduceTasks);
+        }
+        
+        public boolean update(RunningJob rj) throws IOException {
+
+            boolean complete = rj.isComplete();
+            boolean successful = rj.isSuccessful();
+            float mapProgress = rj.mapProgress();
+            float reduceProgress = rj.reduceProgress();
+
+            boolean update = !(isComplete() == complete
+                    && isSuccessful() == successful
+                    && AmbroseHiveUtil.isEqual(getMapProgress(), mapProgress)
+                    && AmbroseHiveUtil.isEqual(getReduceProgress(), reduceProgress));
+            
+            if (update) {
+                setComplete(complete);
+                setSuccessful(successful);
+                setMapProgress(mapProgress);
+                setReduceProgress(reduceProgress);
+            }
+            return update;
+        }
+        
+        public int getProgress() {
+            float result =((getMapProgress() + getReduceProgress()) * 100) / 2;
+            return (int)result;
+        }
+        
+    }
+
+    public AmbroseHiveStatPublisher() throws IOException {
+        Configuration conf = SessionState.get().getConf();
+        this.jobClient = new JobClient(new JobConf(conf));
+    }
+
+    @Override
+    public void run(Map<String, Double> counterValues, String jobIdStr) {
+        if (init) {
+            init(jobIdStr);
+            init = false;
+        }
+        //send job statistics to the Ambrose server
+        send(jobIdStr, counterValues);
+    }
+
+    private void init(String jobIDStr) {
+        try {
+            jobId = JobID.forName(jobIDStr);
+            rj = jobClient.getJob(jobId);
+            nodeId = AmbroseHiveUtil.getNodeIdFromJob(SessionState.get().getConf(), rj);
+            totalMapTasks = jobClient.getMapTaskReports(jobId).length;
+            totalReduceTasks = jobClient.getReduceTaskReports(jobId).length;
+        }
+        catch (IOException e) {
+            LOG.error("Error getting running job for id : " + jobIDStr, e);
+        }
+    }
+    
+    private void send(String jobIDStr, Map<String, Double> counterValues) {
+       
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        Configuration conf = SessionState.get().getConf();
+        String queryId = AmbroseHiveUtil.getHiveQueryId(conf);
+        Map<String, DAGNode<Job>> nodeIdToDAGNode = reporter.getNodeIdToDAGNode();
+
+        DAGNode<Job> dagNode = nodeIdToDAGNode.get(nodeId);
+        if (dagNode == null) {
+            LOG.warn("jobStartedNotification - unrecorgnized operator name found for " + "jobId "
+                    + jobIDStr);
+            return;
+        }
+        HiveJob job = (HiveJob) dagNode.getJob();
+        //a job has been started
+        if (job.getId()== null) {
+            //job identifier on GUI
+            job.setId(AmbroseHiveUtil.asDisplayId(queryId, jobIDStr, nodeId));
+            reporter.addJobIdToNodeId(jobIDStr, nodeId);
+            reporter.pushEvent(queryId, new Event.JobStartedEvent(dagNode));
+        }
+        try {
+
+            boolean update = false;
+            if (jobProgress == null) {
+                jobProgress = new HiveMapReduceJobState(jobIDStr, rj, totalMapTasks, totalReduceTasks);
+                update = true;
+            }
+            else {
+                update = jobProgress.update(rj);
+            }
+            
+            if (update && !reporter.getCompletedJobIds().contains(jobIDStr)) {
+                reporter.addJobIdToProgress(jobIDStr, jobProgress.getProgress());
+                job.setMapReduceJobState(jobProgress);
+                pushWorkflowProgress(queryId, reporter);
+                reporter.pushEvent(queryId, new Event.JobProgressEvent(dagNode));
+                if (jobProgress.isComplete()) {
+                    reporter.addCompletedJobIds(jobIDStr);
+                    job.setJobStats(counterValues, jobProgress.getTotalMappers(),
+                            jobProgress.getTotalReducers());
+                    job.setConfiguration(((HiveConf) conf).getAllProperties());
+                    reporter.addJob(job);
+                    reporter.pushEvent(queryId, new Event.JobFinishedEvent(dagNode));
+                }
+            }
+        }
+        catch (IOException e) {
+            LOG.error("Error getting job info!", e);
+        }
+    }
+
+    private void pushWorkflowProgress(String queryId, HiveProgressReporter reporter) {
+        eventData.put(WorkflowProgressField.workflowProgress,
+                Integer.toString(reporter.getOverallProgress()));
+        reporter.pushEvent(queryId, new Event.WorkflowProgressEvent(eventData));
+    }
+    
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/HiveJob.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.twitter.ambrose.model.Job;
+import com.twitter.ambrose.model.hadoop.CounterGroup;
+import com.twitter.ambrose.model.hadoop.MapReduceJobState;
+import com.twitter.ambrose.util.JSONUtil;
+
+/**
+ * Subclass of Job used to hold initialization logic and Hive-specific bindings
+ * for a Job. Encapsulates all information related to a run of a Hive job. A job
+ * might have counters, job configuration and job metrics. Job metrics is
+ * metadata about the job run that isn't set in the job configuration.
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ * 
+ */
+@JsonTypeName("hive")
+public class HiveJob extends Job {
+    
+    private static final Log LOG = LogFactory.getLog(HiveJob.class);
+
+    private final String[] aliases;
+    private final String[] features;
+    private MapReduceJobState mapReduceJobState;
+
+    private Map<String, CounterGroup> counterGroupMap;
+
+    public HiveJob(String[] aliases, String[] features) {
+        super();
+        this.aliases = aliases;
+        this.features = features;
+        // TODO: inputInfoList and outputInfoList?
+    }
+
+    @JsonCreator
+    public HiveJob(@JsonProperty("id") String id, 
+            @JsonProperty("aliases") String[] aliases,
+            @JsonProperty("features") String[] features,
+            @JsonProperty("mapReduceJobState") MapReduceJobState mapReduceJobState,
+            @JsonProperty("counterGroupMap") Map<String, CounterGroup> counterGroupMap) {
+        this(aliases, features);
+        setId(id);
+        this.mapReduceJobState = mapReduceJobState;
+        this.counterGroupMap = counterGroupMap;
+    }
+    
+    public String[] getAliases() {
+        return aliases;
+    }
+
+    public String[] getFeatures() {
+        return features;
+    }
+
+    public MapReduceJobState getMapReduceJobState() {
+        return mapReduceJobState;
+    }
+
+    public void setMapReduceJobState(MapReduceJobState mapReduceJobState) {
+        this.mapReduceJobState = mapReduceJobState;
+    }
+
+    public CounterGroup getCounterGroupInfo(String name) {
+        return counterGroupMap == null ? null : counterGroupMap.get(name);
+    }
+
+    @JsonIgnore
+    public void setJobStats(Map<String, Double> counterNameToValue, int totalMappers,
+            int totalReducers) {
+        counterGroupMap = AmbroseHiveUtil.counterGroupInfoMap(counterNameToValue);
+
+        // job metrics
+        Map<String, Number> metrics = new HashMap<String, Number>();
+        metrics.put("numberMaps", totalMappers);
+        metrics.put("numberReduces", totalReducers);
+        metrics.put("avgMapTime",
+                getCounterValue(counterNameToValue, MetricsCounter.SLOTS_MILLIS_MAPS)
+                        / totalMappers);
+        metrics.put("avgMapTime",
+                getCounterValue(counterNameToValue, MetricsCounter.SLOTS_MILLIS_REDUCES)
+                        / totalReducers);
+        metrics.put("bytesWritten",
+                getCounterValue(counterNameToValue, MetricsCounter.FILE_BYTES_WRITTEN));
+        metrics.put("hdfsBytesWritten",
+                getCounterValue(counterNameToValue, MetricsCounter.HDFS_BYTES_WRITTEN));
+        metrics.put("mapInputRecords",
+                getCounterValue(counterNameToValue, MetricsCounter.MAP_INPUT_RECORDS));
+        metrics.put("mapOutputRecords",
+                getCounterValue(counterNameToValue, MetricsCounter.MAP_OUTPUT_RECORDS));
+        metrics.put("proactiveSpillCountRecs",
+                getCounterValue(counterNameToValue, MetricsCounter.SPILLED_RECORDS));
+        metrics.put("reduceInputRecords",
+                getCounterValue(counterNameToValue, MetricsCounter.REDUCE_INPUT_RECORDS));
+        metrics.put("reduceOutputRecords",
+                getCounterValue(counterNameToValue, MetricsCounter.REDUCE_OUTPUT_RECORDS));
+        setMetrics(metrics);
+    }
+
+    /**
+     * This is a hack to get around how the json library requires subtype info to be defined on the
+     * super-class, which doesn't always have access to the subclasses at compile time. Since the
+     * mixinAnnotations method replaces the existing annotation, this means that an action like this
+     * will need to be taken once upon app startup to register all known types. If this action
+     * happens multiple times, calls will override each other.
+     * @see com.twitter.ambrose.pig.HiveJob#mixinJsonAnnotations()
+     */
+    public static void mixinJsonAnnotations() {
+        LOG.info("Mixing in JSON annotations for HiveJob and Job into Job");
+        JSONUtil.mixinAnnotatons(Job.class, AnnotationMixinClass.class);
+    }
+
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = com.twitter.ambrose.model.Job.class, name = "default"),
+            @JsonSubTypes.Type(value = com.twitter.ambrose.hive.HiveJob.class, name = "hive") })
+    private static class AnnotationMixinClass {}
+    
+    
+    private Double getCounterValue(Map<String, Double> counterNameToValue, MetricsCounter hjc) {
+        String [] keys = MetricsCounter.get(hjc);
+        return (counterNameToValue.get(keys[0]) == null) ?
+                counterNameToValue.get(keys[1]) : counterNameToValue.get(keys[0]);
+    }
+
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHivePreHook.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.ql.hooks.ExecuteWithHookContext;
+import org.apache.hadoop.hive.ql.hooks.HookContext;
+
+import com.twitter.ambrose.model.DAGNode;
+import com.twitter.ambrose.model.Event;
+import com.twitter.ambrose.model.Event.WorkflowProgressField;
+import com.twitter.ambrose.model.Job;
+
+/**
+ * Hook invoked before running a workflow. <br>
+ * Constructs DAGNode representation and initializes
+ * {@link com.twitter.ambrose.hive.HiveProgressReporter HiveProgressReporter} <br>
+ * Called by the main thread
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ * 
+ */
+public class AmbroseHivePreHook implements ExecuteWithHookContext {
+
+    private static final Log LOG = LogFactory.getLog(AmbroseHivePreHook.class);
+
+    /** Timeout in seconds for waiting between two workflows */
+    private static final String WF_BETWEEN_SLEEP_SECS_PARAM = "ambrose.wf.between.sleep.seconds";
+    private static final String SCRIPT_STARTED_PARAM = "ambrose.script.started";
+
+    @Override
+    public void run(HookContext hookContext) throws Exception {
+
+        String queryId = AmbroseHiveUtil.getHiveQueryId(hookContext.getConf());
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        HiveDAGTransformer transformer = new HiveDAGTransformer(hookContext);
+       
+        //conditional tasks may be filtered out by Hive at runtime. We them as
+        //'complete'
+        Map<String, DAGNode<Job>> nodeIdToDAGNode = reporter.getNodeIdToDAGNode();
+        sendFilteredJobsStatus(queryId, nodeIdToDAGNode);
+        if (transformer.getTotalMRJobs() == 0) {
+            return;
+        }
+
+        waitBetween(hookContext, queryId);
+
+        nodeIdToDAGNode = transformer.getNodeIdToDAGNode();
+        reporter.setNodeIdToDAGNode(nodeIdToDAGNode);
+        reporter.setTotalMRJobs(transformer.getTotalMRJobs());
+        reporter.sendDagNodeNameMap(queryId, nodeIdToDAGNode);
+
+    }
+
+    /**
+     * Waiting <tt>ambrose.wf.between.sleep.seconds</tt> before processing the
+     * next statement (workflow) in the submitted script
+     * 
+     * @param hookContext
+     * @param queryId
+     */
+    private void waitBetween(HookContext hookContext, String queryId) {
+
+        Configuration conf = hookContext.getConf();
+        boolean justStarted = conf.getBoolean(SCRIPT_STARTED_PARAM, true);
+        if (justStarted) {
+            conf.setBoolean(SCRIPT_STARTED_PARAM, false);
+        }
+        else {
+            // sleeping between workflows
+            int sleepTimeMs = conf.getInt(WF_BETWEEN_SLEEP_SECS_PARAM, 10);
+            try {
+
+                LOG.info("One workflow complete, sleeping for " + sleepTimeMs
+                        + " sec(s) before moving to the next one if exists. Hit ctrl-c to exit.");
+                Thread.sleep(sleepTimeMs * 1000L);
+                HiveProgressReporter.get().saveEventStack();
+                HiveProgressReporter.reset();
+            }
+            catch (InterruptedException e) {
+                LOG.warn("Sleep interrupted", e);
+            }
+        }
+    }
+
+    private void sendFilteredJobsStatus(String queryId, Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        
+        if (nodeIdToDAGNode == null) {
+            return;
+        }
+        
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        Map<WorkflowProgressField, String> eventData = 
+            new HashMap<Event.WorkflowProgressField, String>(1);
+
+        int skipped = 0;
+        for (DAGNode<Job> dagNode : nodeIdToDAGNode.values()) {
+            Job job = dagNode.getJob();
+            // filtered jobs don't have assigned jobId
+            if (job.getId() != null) {
+                continue;
+            }
+            String nodeId = dagNode.getName();
+            job.setId(AmbroseHiveUtil.asDisplayId(queryId, "filtered out", nodeId));
+            reporter.addJobIdToProgress(nodeId, 100);
+            reporter.pushEvent(queryId, new Event.JobFinishedEvent(dagNode));
+            skipped++;
+        }
+        // sleep so that all these events will be visible on GUI before going on
+        try {
+            Thread.sleep(skipped * 1000L);
+        }
+        catch (InterruptedException e) {
+            LOG.warn("Sleep interrupted", e);
+        }
+
+        eventData.put(WorkflowProgressField.workflowProgress,
+                Integer.toString(reporter.getOverallProgress()));
+        reporter.pushEvent(queryId, new Event.WorkflowProgressEvent(eventData));
+
+    }
+
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFailHook.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.hive.conf.HiveConf;
+import org.apache.hadoop.hive.ql.exec.Task;
+import org.apache.hadoop.hive.ql.exec.TaskResult;
+import org.apache.hadoop.hive.ql.exec.TaskRunner;
+import org.apache.hadoop.hive.ql.hooks.ExecuteWithHookContext;
+import org.apache.hadoop.hive.ql.hooks.HookContext;
+
+import com.twitter.ambrose.model.DAGNode;
+import com.twitter.ambrose.model.Event;
+import com.twitter.ambrose.model.Job;
+import com.twitter.ambrose.model.hadoop.MapReduceJobState;
+
+/**
+ * Hook invoked when a job fails.
+ * Updates job event to 'FAILED' and waits for <code>{@value #POST_SCRIPT_SLEEP_SECS_PARAM}</code> seconds
+ * before exiting.
+ * <br>
+ * Called by the main thread
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ *
+ */
+public class AmbroseHiveFailHook implements ExecuteWithHookContext {
+    
+    private static final Log LOG = LogFactory.getLog(AmbroseHiveFailHook.class);
+    private static final String POST_SCRIPT_SLEEP_SECS_PARAM = "ambrose.post.script.sleep.seconds";
+
+    @Override
+    public void run(HookContext hookContext) throws Exception {
+
+        HiveConf conf = hookContext.getConf();
+        Properties allConfProps = conf.getAllProperties();
+        String queryId = AmbroseHiveUtil.getHiveQueryId(conf);
+
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+
+        List<TaskRunner> completeTaskList = hookContext.getCompleteTaskList();
+        Field _taskResultField = accessTaskResultField();
+        for (TaskRunner taskRunner : completeTaskList) {
+            TaskResult taskResult = (TaskResult) _taskResultField.get(taskRunner);
+            //get non-running, failed jobs
+            if (!taskResult.isRunning() && taskResult.getExitVal() != 0) {
+                Task<? extends Serializable> task = taskRunner.getTask();
+                String nodeId = AmbroseHiveUtil.getNodeIdFromNodeName(conf, task.getId());
+                DAGNode<Job> dagNode = reporter.getDAGNodeFromNodeId(nodeId);
+                HiveJob job = (HiveJob) dagNode.getJob();
+                job.setConfiguration(allConfProps);
+                MapReduceJobState mrJobState = getJobState(job);
+                mrJobState.setSuccessful(false);
+                reporter.addJob((Job) job);
+                reporter.pushEvent(queryId, new Event.JobFailedEvent(dagNode));
+            }
+        }
+        
+        reporter.restoreEventStack();
+        String sleepTime = System.getProperty(POST_SCRIPT_SLEEP_SECS_PARAM, "10");
+        try {
+            int sleepTimeSeconds = Integer.parseInt(sleepTime);
+
+            LOG.info("Script failed but sleeping for " + sleepTimeSeconds
+                    + " seconds to keep the HiveStats REST server running. Hit ctrl-c to exit.");
+            
+            Thread.sleep(sleepTimeSeconds * 1000L);
+            reporter.stopServer();
+
+        }
+        catch (NumberFormatException e) {
+            LOG.warn(POST_SCRIPT_SLEEP_SECS_PARAM + " param is not a valid number, not sleeping: "
+                    + sleepTime);
+        }
+        catch (InterruptedException e) {
+            LOG.warn("Sleep interrupted", e);
+        }
+    }
+    
+    /**
+     * Accessess the TaskResult of the completed task
+     * @return
+     */
+    private Field accessTaskResultField() {
+        Field field = null;
+        try {
+            field = TaskRunner.class.getDeclaredField("result");
+            field.setAccessible(true);
+        }
+        catch (Exception e) {
+            LOG.fatal("Can't access to TaskResult at " + TaskRunner.class.getName() + "!");
+            throw new RuntimeException("Incompatible Hive API found!", e);
+        }
+        return field;
+    }
+    
+    private MapReduceJobState getJobState(HiveJob job) {
+        MapReduceJobState jobState = job.getMapReduceJobState();
+        if (jobState != null) {
+            return jobState;
+        }
+        //if job fails immediately right after its submission 
+        jobState = new MapReduceJobState();
+        jobState.setJobId(job.getId());
+        return jobState;
+    }
+
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.twitter.ambrose.model.DAGNode;
+import com.twitter.ambrose.model.Event;
+import com.twitter.ambrose.model.Job;
+import com.twitter.ambrose.server.ScriptStatusServer;
+import com.twitter.ambrose.service.impl.InMemoryStatsService;
+
+/**
+ * Stateful singleton class which maintains a shared global state between hooks.
+ * It collects job information and job/workflow status reports from the hooks 
+ * and passes them to an Ambrose StatsWriteService object during the life cycle of 
+ * the running Hive script.
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ *
+ */
+public enum HiveProgressReporter {
+    
+    INSTANCE;
+
+    private static final Log LOG = LogFactory.getLog(HiveProgressReporter.class);
+   
+    private final InMemoryStatsService service;
+    private final ScriptStatusServer server;
+    
+    /** DAG and workflow progress shared between ClientStatsPublisher threads */
+    private Map<String, DAGNode<Job>> nodeIdToDAGNode;
+    private Map<String, Integer> jobIdToProgress;
+    private Map<String, String> jobIdToNodeId;
+    private List<Job> jobs;
+    private Set<String> completedJobIds;
+    
+    private int totalMRJobs;
+    private String workflowVersion;
+
+    /** holds all events within a script (for all workflows) */
+    private SortedMap<Integer, Event<?>> allEvents = new ConcurrentSkipListMap<Integer, Event<?>>();
+    
+    /** holds all dagNodes within a script (for all workflows) */
+    private SortedMap<String, DAGNode<Job>> allDagNodes = new ConcurrentSkipListMap<String, DAGNode<Job>>();
+    
+    /** internal eventMap field unfolded from from InMemoryStatsService */
+    private SortedMap<Integer, Event<?>> _eventMap;
+    
+    @SuppressWarnings("unchecked")
+    private HiveProgressReporter() {
+        service = new InMemoryStatsService();
+        server = new ScriptStatusServer(service, service);
+        init();
+        server.start();
+        initInternal();
+    }
+    
+    private void init() {
+        jobIdToProgress = new ConcurrentHashMap<String, Integer>();
+        jobIdToNodeId = new ConcurrentHashMap<String, String>();
+        jobs = new CopyOnWriteArrayList<Job>();
+        completedJobIds = new CopyOnWriteArraySet<String>();
+        totalMRJobs = 0;
+        workflowVersion = null;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void initInternal() {
+        try {
+            Field eventMapField = 
+                AmbroseHiveUtil.getInternalField(InMemoryStatsService.class, "eventMap");
+            _eventMap = (SortedMap<Integer, Event<?>>) eventMapField.get(service);
+        }
+        catch (Exception e) {
+            LOG.fatal("Can't access to eventMap/dagNodeNameMap fields at "
+                    + InMemoryStatsService.class.getName() + "!");
+            throw new RuntimeException("Incompatible Hive API found!", e);
+        }
+    }
+    
+    public static HiveProgressReporter get() {
+        return INSTANCE;
+    }
+    
+    public static void reset() {
+        INSTANCE.init();
+        INSTANCE._eventMap.clear();
+        INSTANCE.nodeIdToDAGNode= new ConcurrentSkipListMap<String, DAGNode<Job>>();
+        INSTANCE.sendDagNodeNameMap(null, INSTANCE.nodeIdToDAGNode);
+    }
+
+    public Map<String, DAGNode<Job>> getNodeIdToDAGNode() {
+        return nodeIdToDAGNode;
+    }
+
+    public void setNodeIdToDAGNode(Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        this.nodeIdToDAGNode = nodeIdToDAGNode;
+    }
+
+    public void addJobIdToProgress(String jobID, int progressUpdate) {
+        jobIdToProgress.put(jobID, progressUpdate);
+    }
+
+    public Map<String, String> getJobIdToNodeId() {
+        return jobIdToNodeId;
+    }
+
+    public void addJobIdToNodeId(String jobId, String nodeId) {
+        jobIdToNodeId.put(jobId, nodeId);
+    }
+    
+    public DAGNode<Job> getDAGNodeFromNodeId(String nodeId) {
+        return nodeIdToDAGNode.get(nodeId);
+    }
+    
+    /**
+     * Overall progress of the submitted script
+     * @return a number between 0 and 100
+     */
+    public synchronized int getOverallProgress() {
+        int sum = 0;
+        for (int progress : jobIdToProgress.values()) {
+            sum += progress;
+        }
+        return sum / totalMRJobs;
+    }
+
+    public void addJob(Job job) {
+        jobs.add(job);
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public String getWorkflowVersion() {
+        return workflowVersion;
+    }
+
+    public void setWorkflowVersion(String workflowVersion) {
+        this.workflowVersion = workflowVersion;
+    }
+
+    /**
+     * Forwards an event to the Ambrose server
+     * 
+     * @param queryId
+     * @param event
+     */
+    public void pushEvent(String queryId, Event<?> event) {
+        try {
+            service.pushEvent(queryId, event);
+        }
+        catch (IOException e) {
+            LOG.error("Couldn't send event to StatsWriteService!", e);
+        }
+    }
+    
+    /**
+     * Saves events and DAGNodes for a given workflow
+     */
+    public void saveEventStack() {
+        allEvents.putAll(_eventMap);
+        allDagNodes.putAll(service.getDagNodeNameMap(null));
+    }
+    
+    /**
+     * Restores events and DAGNodes of all workflows within a script
+     * This enables to replay all the workflows when the script finishes
+     */
+    public void restoreEventStack() {
+        _eventMap.putAll(allEvents);
+        service.getDagNodeNameMap(null).putAll(allDagNodes);
+    }
+    
+    public void sendDagNodeNameMap(String queryId, Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        try {
+            service.sendDagNodeNameMap(queryId, nodeIdToDAGNode);
+        }
+        catch (IOException e) {
+            LOG.error("Couldn't send DAGNode information to server!", e);
+        }
+    }
+    
+    public void flushJsonToDisk() {
+        try {
+            service.flushJsonToDisk();
+        }
+        catch (IOException e) {
+            LOG.warn("Couldn't write json to disk", e);
+        }
+    }
+
+    public void stopServer() {
+        LOG.info("Stopping Ambrose Server...");
+        server.stop();
+    }
+
+    public void setTotalMRJobs(int totalMRJobs) {
+        this.totalMRJobs = totalMRJobs;
+    }
+
+    public Set<String> getCompletedJobIds() {
+        return completedJobIds;
+    }
+
+    public void addCompletedJobIds(String jobID) {
+        completedJobIds.add(jobID);
+    }
+    
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.conf.HiveConf;
+import org.apache.hadoop.hive.conf.HiveConf.ConfVars;
+import org.apache.hadoop.mapred.Counters;
+import org.apache.hadoop.mapred.Counters.Counter;
+import org.apache.hadoop.mapred.RunningJob;
+
+import com.twitter.ambrose.model.hadoop.CounterGroup;
+
+/**
+ * Utility for Ambrose-Hive related operations
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ * 
+ */
+public class AmbroseHiveUtil {
+
+    private static final Pattern STAGEID_PATTERN = Pattern.compile("^.*\\((Stage\\-\\d+)\\)$",
+            Pattern.DOTALL);
+
+    private AmbroseHiveUtil() {
+        throw new AssertionError("shouldn't be instantiated!");
+    }
+
+    /**
+     * Constructs the jobTracker url based on the jobId.
+     * @param jobID
+     * @param conf
+     * @return
+     * @see org.apache.hadoop.hive.hwi#getJobTrackerURL(String)
+     */
+    public static String getJobTrackerURL(String jobID, HiveConf conf) {
+        String jt = conf.get("mapred.job.tracker");
+        String jth = conf.get("mapred.job.tracker.http.address");
+        String[] jtparts = null;
+        String[] jthttpParts = null;
+        if (jt.equalsIgnoreCase("local")) {
+            jtparts = new String[2];
+            jtparts[0] = "local";
+            jtparts[1] = "";
+        }
+        else {
+            jtparts = jt.split(":");
+        }
+        if (jth.contains(":")) {
+            jthttpParts = jth.split(":");
+        }
+        else {
+            jthttpParts = new String[2];
+            jthttpParts[0] = jth;
+            jthttpParts[1] = "";
+        }
+        return jtparts[0] + ":" + jthttpParts[1] + "/jobdetails.jsp?jobid=" + jobID + "&refresh=30";
+    }
+
+    /**
+     * Constructs Countergroups from job runtime statistics
+     * 
+     * @param counterNameToValue
+     * @return
+     */
+    public static Map<String, CounterGroup> counterGroupInfoMap(
+            Map<String, Double> counterNameToValue) {
+
+        Counters counters = new Counters();
+        for (Map.Entry<String, ? extends Number> entry : counterNameToValue.entrySet()) {
+
+            String[] cNames = entry.getKey().split("::");
+            String groupName = cNames[0];
+            String counterName = cNames[1];
+            Counter counter = counters.findCounter(groupName, counterName);
+            counter.setValue(entry.getValue().longValue());
+        }
+        return CounterGroup.counterGroupInfoMap(counters);
+    }
+
+    public static String asDisplayId(String queryId, String jobIDStr, String nodeId) {
+        String stageName = nodeId.substring(0, nodeId.indexOf('_'));
+        String wfIdLastPart = queryId.substring(queryId.lastIndexOf('-') + 1, queryId.length());
+        String displayJobId = String.format(jobIDStr + " (%s, query-id: ...%s)", 
+                stageName, wfIdLastPart);
+        return displayJobId;
+    }
+    
+    public static String getNodeIdFromNodeName(Configuration conf, String nodeName) {
+        return nodeName + "_" + getHiveQueryId(conf);
+    }
+    
+    /**
+     * Returns the nodeId of the given running job
+     * <br>
+     * E.g: Stage-1_[queryId]
+     * 
+     * @param conf
+     * @param runningJob
+     * @return
+     */
+    public static String getNodeIdFromJob(Configuration conf, RunningJob runningJob) {
+        return getNodeIdFromJobName(conf, runningJob.getJobName());
+    }
+
+    /**
+     * Retrieves the nodeId from the Hive SQL command
+     * <br>
+     * 
+     * @param conf
+     * @param jobName
+     * @return
+     */
+    private static String getNodeIdFromJobName(Configuration conf, String jobName) {
+        Matcher matcher = STAGEID_PATTERN.matcher(jobName);
+        if (matcher.find()) {
+            return getNodeIdFromNodeName(conf, matcher.group(1));
+        }
+        return null;
+    }
+
+    /**
+     * Returns the Hive query id which identifies the current workflow
+     * <br> 
+     * Format: hive_[queryId]
+     * 
+     * @param conf
+     * @return
+     */
+    public static String getHiveQueryId(Configuration conf) {
+        return HiveConf.getVar(conf, ConfVars.HIVEQUERYID);
+    }
+    
+    /**
+     * Gets the temporary directory of the given job
+     * 
+     * @param conf
+     * @return
+     */
+    public static String getJobTmpDir(Configuration conf) {
+        String fsNameVar = HiveConf.getVar(conf, ConfVars.HADOOPFS);
+        String fsName = fsNameVar.substring(0, fsNameVar.length() - 1);
+        return fsName + HiveConf.getVar(conf, ConfVars.SCRATCHDIR, "");
+    }
+    
+    /**
+     * Gets the temporary local directory of the given job
+     * 
+     * @param conf
+     * @return
+     */
+    public static String getJobTmpLocalDir(Configuration conf) {
+        String fsNameVar = HiveConf.getVar(conf, ConfVars.HADOOPFS);
+        String fsName = fsNameVar.substring(0, fsNameVar.length() - 1);
+        return fsName + HiveConf.getVar(conf, ConfVars.LOCALSCRATCHDIR, "");
+    }
+    
+    /**
+     * Gets (non-accessible) field of a class 
+     * 
+     * @param clazz
+     * @param fieldName
+     * @return
+     * @throws Exception
+     */
+    public static Field getInternalField(Class<?> clazz, String fieldName)
+            throws Exception {
+        Field field = clazz.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field;
+    }
+    
+    /**
+     * Compares two float values
+     * @param f1
+     * @param f2
+     * @return true if f1 and f2 are equal
+     */
+    public static boolean isEqual(float f1, float f2) {
+        final float delta = 0.001f;
+        return (Math.abs(f1 - f2) < delta) ? true : false;
+    }
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/MetricsCounter.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Lookup class that constructs Counter names to be retrieved from Hive published
+ * statistics. Supports (legacy) Hadoop 0.20.x.x/1.x.x and YARN counter names.
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ *
+ */
+public enum MetricsCounter {
+
+    // Task counters
+    SLOTS_MILLIS_MAPS(1), 
+    SLOTS_MILLIS_REDUCES(1),
+
+    // Filesystem counters
+    FILE_BYTES_WRITTEN(2), 
+    HDFS_BYTES_WRITTEN(2),
+
+    // Task counters
+    MAP_INPUT_RECORDS(3), 
+    MAP_OUTPUT_RECORDS(3), 
+    SPILLED_RECORDS(3), 
+    REDUCE_INPUT_RECORDS(3), 
+    REDUCE_OUTPUT_RECORDS(3);
+
+    private static final Map<MetricsCounter, String[]> lookup = new HashMap<MetricsCounter, String[]>();
+    static {
+        for (MetricsCounter hjc : MetricsCounter.values()) {
+            lookup.put(hjc, createLookupKeys(hjc));
+        }
+    }
+
+    private int type;
+    private MetricsCounter(int type) {
+        this.type = type;
+    }
+
+    private static final String JOB_COUNTER = "org.apache.hadoop.mapred.JobInProgress$Counter";
+    private static final String TASK_COUNTER = "org.apache.hadoop.mapred.Task$Counter";
+    private static final String FS_COUNTER = "FileSystemCounters";
+
+    private static final String JOB_COUNTER_YARN = "org.apache.hadoop.mapreduce.JobCounter";
+    private static final String TASK_COUNTER_YARN = "org.apache.hadoop.mapreduce.TaskCounter";
+    private static final String FS_COUNTER_YARN = "org.apache.hadoop.mapreduce.FileSystemCounter";
+
+    public static String[] get(MetricsCounter hjc) {
+        return lookup.get(hjc);
+    }
+
+    private static String[] createLookupKeys(MetricsCounter hjc) {
+        switch (hjc.type) {
+        //Job counter (type-1)
+        case 1 : return new String[]{
+                JOB_COUNTER + "::" + hjc.name(),
+                JOB_COUNTER_YARN + "::" + hjc.name()
+                };
+        //Task counter (type-2)
+        case 2 : return new String[]{
+                TASK_COUNTER + "::" + hjc.name(),
+                TASK_COUNTER_YARN + "::" + hjc.name()
+                };
+        //Filesystem counter (type-3)
+        case 3 : return new String[]{
+                FS_COUNTER + "::" + hjc.name(),
+                FS_COUNTER_YARN + "::" + hjc.name()
+                };
+        default : return null;
+        }
+    }
+
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.ql.QueryPlan;
+import org.apache.hadoop.hive.ql.exec.ExecDriver;
+import org.apache.hadoop.hive.ql.exec.Operator;
+import org.apache.hadoop.hive.ql.exec.Task;
+import org.apache.hadoop.hive.ql.exec.Utilities;
+import org.apache.hadoop.hive.ql.hooks.HookContext;
+import org.apache.hadoop.hive.ql.plan.MapredWork;
+import org.apache.hadoop.hive.ql.plan.api.Adjacency;
+import org.apache.hadoop.hive.ql.plan.api.Graph;
+import org.apache.hadoop.hive.ql.plan.api.OperatorType;
+
+import com.twitter.ambrose.model.DAGNode;
+import com.twitter.ambrose.model.Job;
+
+/**
+ * Creates a DAGNode representation from a Hive query plan
+ * 
+ * <pre>
+ * This involves:
+ * - collecting aliases, features for a given job
+ * - getting dependencies between jobs
+ * - creating DAGNodes for each job
+ * </pre>
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ * 
+ */
+public class HiveDAGTransformer {
+
+    private static final Log LOG = LogFactory.getLog(HiveDAGTransformer.class);
+    private static final Pattern SUBQUERY_ALIAS = Pattern.compile("-subquery\\d+\\:([^\\-]+)");
+    private static final String PENDING_JOB = "N/A";
+    private static final String TEMP_JOB_ID = "temp. intermediate data";
+    
+    private final String tmpDir;
+    private final String localTmpDir;
+    private final QueryPlan queryPlan;
+    private final List<ExecDriver> allTasks;
+    private Map<String, DAGNode<Job>> nodeIdToDAGNode;
+
+    private final Configuration conf;
+
+    private static final String[] EMPTY_ARR = {};
+    
+    public HiveDAGTransformer(HookContext hookContext) {
+
+        conf = hookContext.getConf();
+        tmpDir = AmbroseHiveUtil.getJobTmpDir(conf);
+        localTmpDir = AmbroseHiveUtil.getJobTmpLocalDir(conf);
+        queryPlan = hookContext.getQueryPlan();
+        allTasks = Utilities.getMRTasks(queryPlan.getRootTasks());
+        if (!allTasks.isEmpty()) {
+            createNodeIdToDAGNode();
+        }
+    }
+
+    /**
+     * Constructs DAGNodes for each Hive MR task
+     * 
+     * @return nodeId - DAGNode pairs
+     */
+    public Map<String, DAGNode<Job>> getNodeIdToDAGNode() {
+        return nodeIdToDAGNode;
+    }
+
+    public int getTotalMRJobs() {
+        return allTasks.size();
+    }
+    
+    /**
+     * Constructs DAGNodes for each Hive MR task
+     */
+    private void createNodeIdToDAGNode() {
+
+        // creates DAGNodes: each node represents a MR job
+        nodeIdToDAGNode = new ConcurrentSkipListMap<String, DAGNode<Job>>();
+        for (Task<? extends Serializable> task : allTasks) {
+            if (task.getWork() instanceof MapredWork) {
+                DAGNode<Job> dagNode = asDAGNode(task);
+                nodeIdToDAGNode.put(dagNode.getName(), dagNode);
+            }
+        }
+
+        // get job dependencies
+        Map<String, List<String>> nodeIdToDependencies = getNodeIdToDependencies();
+
+        // wire DAGNodes
+        for (Map.Entry<String, List<String>> entry : nodeIdToDependencies.entrySet()) {
+            String nodeId = entry.getKey();
+            List<String> successorIds = entry.getValue();
+            DAGNode<Job> dagNode = nodeIdToDAGNode.get(nodeId);
+            List<DAGNode<? extends Job>> dagSuccessors = new ArrayList<DAGNode<? extends Job>>(
+                    successorIds.size());
+
+            for (String sId : successorIds) {
+                DAGNode<Job> successor = nodeIdToDAGNode.get(sId);
+                dagSuccessors.add(successor);
+            }
+            dagNode.setSuccessors(dagSuccessors);
+        }
+    }
+
+    /**
+     * Converts job properties to a DAGNode representation
+     * 
+     * @param task
+     * @return
+     */
+    private DAGNode<Job> asDAGNode(Task<? extends Serializable> task) {
+
+        MapredWork mrWork = (MapredWork) task.getWork();
+        List<String> indexTableAliases = getAllJobAliases(mrWork.getPathToAliases());
+        String[] features = getFeatures(mrWork.getAllOperators(), task.getTaskTag());
+        String[] displayAliases = getDisplayAliases(indexTableAliases);
+
+        // DAGNode's name of a workflow is unique among all workflows in a
+        DAGNode<Job> dagNode = new DAGNode<Job>(
+                AmbroseHiveUtil.getNodeIdFromNodeName(conf, task.getId()),
+                new HiveJob(displayAliases, features));
+        // init empty successors
+        dagNode.setSuccessors(new ArrayList<DAGNode<? extends Job>>());
+        return dagNode;
+    }
+
+    /**
+     * Get all job aliases displayed on the GUI
+     * 
+     * @param indexTableAliases
+     * @return
+     */
+    private String[] getDisplayAliases(List<String> indexTableAliases) {
+        if (indexTableAliases.isEmpty()) {
+            return EMPTY_ARR;
+        }
+        Set<String> result = new HashSet<String>();
+        for (String alias : indexTableAliases) {
+            if (alias.startsWith(tmpDir) || alias.startsWith(localTmpDir)) {
+                result.add(TEMP_JOB_ID);
+            }
+            else if (alias.contains("subquery")) {
+                Matcher m = SUBQUERY_ALIAS.matcher(alias);
+                String dot = "";
+                StringBuilder sb = new StringBuilder();
+                while (m.find()) {
+                    sb.append(dot);
+                    dot = ".";
+                    sb.append(m.group(1));
+                }
+                result.add(sb.toString());
+            }
+            else if (!alias.contains(":")) {
+                result.add(alias);
+            }
+            else {
+                String[] parts = alias.split(":");
+                if (parts.length == 2) {
+                    result.add(parts[1]);
+                }
+                else {
+                    result.add(PENDING_JOB);
+                }
+            }
+        }
+        return result.toArray(new String[result.size()]);
+    }
+
+    /**
+     * Creates job feature list: consists of a tasktag and a set of operators
+     * 
+     * @param ops
+     * @param taskTagId
+     * @return
+     */
+    private String[] getFeatures(List<Operator<?>> ops, int taskTagId) {
+        if (ops == null) {
+            return EMPTY_ARR;
+        }
+        Set<String> features = new HashSet<String>();
+        for (Operator<?> op : ops) {
+            OperatorType opType = op.getType();
+            // some operators are discarded
+            if (!skipType(opType)) {
+                features.add(opType.toString());
+            }
+        }
+
+        // if taskTag is other than 'NO_TAG', include it in the feature list
+        if (taskTagId == Task.NO_TAG) {
+            return features.toArray(new String[features.size()]);
+        }
+        String[] result = features.toArray(new String[features.size() + 1]);
+        result[result.length - 1] = TaskTag.get(taskTagId);
+        return result;
+    }
+
+    private boolean skipType(OperatorType opType) {
+        return (opType == OperatorType.FILESINK || 
+                opType == OperatorType.REDUCESINK || 
+                opType == OperatorType.TABLESCAN);
+    }
+
+    /**
+     * Gets all job aliases
+     * 
+     * @param pathToAliases
+     * @return
+     */
+    private List<String> getAllJobAliases(LinkedHashMap<String, ArrayList<String>> pathToAliases) {
+        if (pathToAliases == null || pathToAliases.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<String> result = new ArrayList<String>();
+        for (List<String> aliases : pathToAliases.values()) {
+            if (aliases != null && !aliases.isEmpty()) {
+                result.addAll(aliases);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Collects dependencies for each node
+     * 
+     * @return
+     */
+    private Map<String, List<String>> getNodeIdToDependencies() {
+        Map<String, List<String>> result = new ConcurrentHashMap<String, List<String>>();
+        try {
+            Graph stageGraph = queryPlan.getQueryPlan().getStageGraph();
+            if (stageGraph == null) {
+                return result;
+            }
+            List<Adjacency> adjacencies = stageGraph.getAdjacencyList();
+            if (adjacencies == null) {
+                return result;
+            }
+            for (Adjacency adj : adjacencies) {
+                String nodeId = AmbroseHiveUtil.getNodeIdFromNodeName(conf, adj.getNode());
+                if (!nodeIdToDAGNode.containsKey(nodeId)) {
+                    continue;
+                }
+                List<String> children = adj.getChildren();
+                if (children == null || children.isEmpty()) {
+                    return result; // TODO check!
+                }
+                List<String> filteredAdjacencies = getMRAdjacencies(children, nodeIdToDAGNode);
+                result.put(nodeId, filteredAdjacencies);
+            }
+        }
+        catch (IOException e) {
+            LOG.error("Couldn't get queryPlan!", e);
+        }
+        return result;
+    }
+
+    /**
+     * Filters adjacency children not being MR jobs
+     * 
+     * @param adjChildren
+     * @param nodeIdToDAGNode
+     * @return list of nodeIds referring to MR jobs
+     */
+    private List<String> getMRAdjacencies(List<String> adjChildren,
+            Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        List<String> result = new ArrayList<String>();
+        for (String nodeName : adjChildren) {
+            String nodeId = AmbroseHiveUtil.getNodeIdFromNodeName(conf, nodeName);
+            if (nodeIdToDAGNode.containsKey(nodeId)) {
+                result.add(nodeId);
+            }
+        }
+        return result;
+    }
+
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/TaskTag.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Additional job properties
+ * 
+ * @see org.apache.hadoop.hive.ql.exec.Task
+ * @author Lorand Bendig <lbendig@gmail.com>
+ *
+ */
+public enum TaskTag {
+    
+    COMMON_JOIN(1), 
+    CONVERTED_MAPJOIN(2), 
+    CONVERTED_LOCAL_MAPJOIN(3), 
+    BACKUP_COMMON_JOIN(4), 
+    LOCAL_MAPJOIN(5), 
+    MAPJOIN_ONLY_NOBACKUP(6);
+
+    private static final Map<Integer, String> lookup = new HashMap<Integer, String>();
+
+    static {
+        for (TaskTag s : TaskTag.values()) {
+            lookup.put(s.getId(), s.toString());
+        }
+    }
+
+    private int id;
+
+    private TaskTag(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public static String get(int code) {
+        return lookup.get(code);
+    }
+
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFinishHook.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.cli.CliSessionState;
+import org.apache.hadoop.hive.ql.HiveDriverRunHook;
+import org.apache.hadoop.hive.ql.HiveDriverRunHookContext;
+import org.apache.hadoop.hive.ql.MapRedStats;
+import org.apache.hadoop.hive.ql.session.SessionState;
+
+import com.twitter.ambrose.model.Workflow;
+
+/**
+ * Hook invoked when a workflow succeeds.
+ * If the last statement (workflow) of the script was executed, it waits for 
+ * <code>{@value #POST_SCRIPT_SLEEP_SECS_PARAM}</code> seconds before exiting otherwise
+ * returns and the processing moves on to the next workflow.
+ * <br>
+ * Called by the main thread
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ * 
+ */
+public class AmbroseHiveFinishHook implements HiveDriverRunHook {
+
+    private static final Log LOG = LogFactory.getLog(AmbroseHiveFinishHook.class);
+    private static final String POST_SCRIPT_SLEEP_SECS_PARAM = "ambrose.post.script.sleep.seconds";
+
+    /** Last workflow in the script to be processed */
+    private final String lastCmd;
+
+    public AmbroseHiveFinishHook() {
+        lastCmd = getLastCmd();
+    }
+
+    @Override
+    public void preDriverRun(HiveDriverRunHookContext hookContext) throws Exception {}
+
+    @Override
+    public void postDriverRun(HiveDriverRunHookContext hookContext) {
+
+        Configuration conf = hookContext.getConf();
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        String workflowVersion = reporter.getWorkflowVersion();
+
+        String queryId = AmbroseHiveUtil.getHiveQueryId(conf);
+        if (workflowVersion == null) {
+            LOG.warn("ScriptFingerprint not set for this script - not saving stats.");
+        }
+        else {
+            Workflow workflow = new Workflow(queryId, workflowVersion, reporter.getJobs());
+            outputStatsData(workflow);
+            reporter.flushJsonToDisk();
+        }
+        displayStatistics();
+
+        if (!isLastCommandProcessed(hookContext)) {
+            return;
+        }
+        
+        reporter.restoreEventStack();
+        String sleepTime = System.getProperty(POST_SCRIPT_SLEEP_SECS_PARAM, "10");
+        try {
+            int sleepTimeSeconds = Integer.parseInt(sleepTime);
+
+            LOG.info("Script complete but sleeping for " + sleepTimeSeconds
+                    + " seconds to keep the HiveStats REST server running. Hit ctrl-c to exit.");
+            Thread.sleep(sleepTimeSeconds * 1000L);
+            reporter.stopServer();
+
+        }
+        catch (NumberFormatException e) {
+            LOG.warn(POST_SCRIPT_SLEEP_SECS_PARAM + " param is not a valid number, not sleeping: "
+                    + sleepTime);
+        }
+        catch (InterruptedException e) {
+            LOG.warn("Sleep interrupted", e);
+        }
+
+    }
+
+    private void outputStatsData(Workflow workflowInfo) {
+        try {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Collected stats for script:\n" + Workflow.toJSON(workflowInfo));
+            }
+        }
+        catch (IOException e) {
+            LOG.error("Error while outputting workflowInfo", e);
+        }
+    }
+
+    private void displayStatistics() {
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        Map<String, String> jobIdToNodeId = reporter.getJobIdToNodeId();
+        LOG.info("MapReduce Jobs Launched: ");
+        List<MapRedStats> lastMapRedStats = SessionState.get().getLastMapRedStatsList();
+        for (int i = 0; i < lastMapRedStats.size(); i++) {
+            MapRedStats mrStats = lastMapRedStats.get(i);
+            String jobId = mrStats.getJobId();
+            String nodeId = jobIdToNodeId.get(jobId);
+            StringBuilder sb = new StringBuilder();
+            sb.append("Job ").append(i)
+              .append(" (")
+              .append(jobId)
+              .append(", ")
+              .append(nodeId)
+              .append("): ")
+              .append(mrStats);
+            LOG.info(sb.toString());
+        }
+    }
+
+    private boolean isLastCommandProcessed(HiveDriverRunHookContext hookContext) {
+        String currentCmd = hookContext.getCommand();
+        currentCmd = StringUtils.trim(currentCmd.replaceAll("\\n", ""));
+        if (currentCmd.equals(lastCmd)) {
+            return true;
+        }
+        return false;
+    }
+
+    private String getLastCmd() {
+        CliSessionState cliss = (CliSessionState) SessionState.get();
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new File(cliss.fileName));
+        }
+        catch (FileNotFoundException e) {
+            LOG.error("Can't find Hive script", e);
+        }
+        if (scanner == null) {
+            return null;
+        }
+        Pattern delim = Pattern.compile(";");
+        scanner.useDelimiter(delim);
+        String lastLine = null;
+        while (scanner.hasNext()) {
+            String line = StringUtils.trim(scanner.next().replaceAll("\\n", ""));
+            if (line.length() != 0 && !line.startsWith("--")) {
+                lastLine = line;
+            }
+        }
+        return lastLine;
+    }
+
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/test/java/com/twitter/ambrose/model/HiveJobTest.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.model;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.twitter.ambrose.hive.HiveJob;
+
+/**
+ * Unit tests for {@link com.twitter.ambrose.model.HiveJobTest}.
+ */
+public class HiveJobTest {
+    static {
+        HiveJob.mixinJsonAnnotations();
+    }
+
+    private HiveJob hiveJob;
+
+    @Before
+    public void setUp() throws Exception {
+        Map<String, Number> metrics = new HashMap<String, Number>();
+        metrics.put("somemetric", 6);
+        Properties properties = new Properties();
+        properties.setProperty("someprop", "propvalue");
+        String[] aliases = new String[] { "alias1" };
+        String[] features = new String[] { "feature1" };
+        hiveJob = new HiveJob(aliases, features);
+    }
+
+    @Test
+    public void testHiveJobRoundTrip() throws IOException {
+        doTestRoundTrip(hiveJob);
+    }
+
+    private void doTestRoundTrip(HiveJob expected) throws IOException {
+        String asJson = expected.toJson();
+        Job asJobAgain = Job.fromJson(asJson);
+
+        // assert that if we get a HiveJob without having to ask for it
+        // explicitly
+        assertTrue(asJobAgain instanceof HiveJob);
+        assertJobEquals(expected, (HiveJob) asJobAgain);
+    }
+
+    @Test
+    public void testDAGNodeHiveJobRoundTrip() throws IOException {
+        DAGNode<HiveJob> node = new DAGNode<HiveJob>("dag name", hiveJob);
+        doTestRoundTrip(node);
+    }
+
+    @Test
+    public void testFromJson() throws IOException {
+        String json = 
+        "{" +
+        "  \"type\" : \"JOB_STARTED\"," +
+        "  \"payload\" : {" +
+        "    \"name\" : \"Stage-1_user_20130723105858_3f0d530c-34a6-4bb9-8964-22c4ea289895\"," +
+        "    \"job\" : {" +
+        "      \"runtime\" : \"hive\"," +
+        "      \"id\" : \"job_201307231015_0004 (Stage-1, query-id: ...22c4ea289895)\"," +
+        "      \"aliases\" : [ \"src\" ]," +
+        "      \"features\" : [ \"SELECT\", \"FILTER\" ]" +
+        "    }," +
+        "    \"successorNames\" : [ ]" +
+        "  }," +
+        "  \"id\" : 1," +
+        "  \"timestamp\" : 1374569908714" +
+        "}, {" +
+        "  \"type\" : \"WORKFLOW_PROGRESS\"," +
+        "  \"payload\" : {" +
+        "    \"workflowProgress\" : \"0\"" +
+        "  }," +
+        "  \"id\" : 2," +
+        "  \"timestamp\" : 1374569908754" +
+        "}";
+      
+        Event<?> event = Event.fromJson(json);
+        @SuppressWarnings("unchecked")
+        HiveJob job = ((DAGNode<HiveJob>) event.getPayload()).getJob();
+        assertEquals("job_201307231015_0004 (Stage-1, query-id: ...22c4ea289895)", job.getId());
+        assertArrayEquals(new String[] { "src" }, job.getAliases());
+        assertArrayEquals(new String[] { "SELECT", "FILTER" },
+                job.getFeatures());
+    }
+
+    private void doTestRoundTrip(DAGNode<HiveJob> expected) throws IOException {
+        String asJson = expected.toJson();
+        DAGNode<? extends Job> asDAGNodeAgain = DAGNode.fromJson(asJson);
+        assertEquals(expected.getName(), asDAGNodeAgain.getName());
+        assertNotNull(asDAGNodeAgain.getJob());
+
+        // assert that it's an instance of HiveJob
+        assertNotNull(asDAGNodeAgain.getJob() instanceof HiveJob);
+
+        assertJobEquals(expected.getJob(), (HiveJob) asDAGNodeAgain.getJob());
+    }
+
+    public static void assertJobEquals(HiveJob expected, HiveJob found) {
+        assertEquals(expected.getId(), found.getId());
+        assertArrayEquals(expected.getAliases(), found.getAliases());
+        assertArrayEquals(expected.getFeatures(), found.getFeatures());
+        assertEquals(expected.getMetrics(), found.getMetrics());
+        assertEquals(expected.getConfiguration(), found.getConfiguration());
+    }
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_104bf38_e5f05a2/rev_104bf38-e5f05a2/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+=======
+  private void pushEvent(String scriptId, Event event) {
+    try {
+      statsWriteService.pushEvent(scriptId, event);
+    } catch (IOException e) {
+      log.error("Couldn't send event to StatsWriteService", e);
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private void addMapReduceJobState(PigJob pigJob) {
+    JobClient jobClientLocal = getJobClient();
+
+    try {
+      String id = pigJob.getId();
+      RunningJob runningJob = null;
+      try {
+    	  runningJob = jobClientLocal.getJob(id);
+      } catch (Exception e) {
+    	  log.warn("Exception while querying job status for jobId=" + id +" message: " + e.getMessage());
+    	  log.debug(e);
+    	  return;
+      }
+      
+      if (runningJob == null) {
+          log.warn("Couldn't find job status for jobId=" + id);
+          return;
+      }
+      
+      Properties jobConfProperties = getJobConfFromFile(runningJob);
+
+      JobID jobID = null;
+      try {
+        jobID = runningJob.getID();
+      } catch (NullPointerException e) {
+        log.warn("Couldn't get jobID for runningJob.");
+        return;
+      }
+      
+      TaskReport[] mapTaskReport = jobClientLocal.getMapTaskReports(jobID);
+      TaskReport[] reduceTaskReport = jobClientLocal.getReduceTaskReports(jobID);
+      if (jobConfProperties != null && jobConfProperties.size() > 0) {
+        pigJob.setConfiguration(jobConfProperties);
+      }
+      pigJob.setMapReduceJobState(
+          new MapReduceJobState(runningJob, mapTaskReport, reduceTaskReport));
+    } catch (IOException e) {
+      log.warn("Error occurred when retrieving job progress info. ", e);
+    }
+  }
+
+  /**
+   * Get the configurations at the beginning of the job flow, it will contain information
+   * about the map/reduce plan and decoded pig script.
+   * @param runningJob
+   * @return Properties - configuration properties of the job
+   */
+  private Properties getJobConfFromFile(RunningJob runningJob) {
+    Properties jobConfProperties = new Properties();
+    try {
+      log.info("RunningJob Configuration File location: " + runningJob.getJobFile());
+      Path path = new Path(runningJob.getJobFile());
+      Configuration conf = new Configuration(false);
+      FileSystem fileSystem = FileSystem.get(new Configuration());
+      InputStream inputStream = fileSystem.open(path);
+      conf.addResource(inputStream);
+
+      for (Map.Entry<String, String> entry : conf) {
+        if (entry.getKey().equals("pig.mapPlan")
+            || entry.getKey().equals("pig.reducePlan")) {
+          jobConfProperties.setProperty(entry.getKey(),
+              ObjectSerializer.deserialize(entry.getValue()).toString());
+        } else {
+          jobConfProperties.setProperty(entry.getKey(), entry.getValue());
+        }
+      }
+    } catch (FileNotFoundException e) {
+      log.warn("Configuration file not found for old jobsflows.");
+    } catch (IOException e) {
+      log.warn("Error occurred when retrieving configuration info.", e);
+    }
+    return jobConfProperties;
+  }
+
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_24fc935_6383000/rev_24fc935-6383000/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+=======
+import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.plans.MROperPlan;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_24fc935_6383000/rev_24fc935-6383000/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+   * @param statsWriteService
+=======
+   * @param statsWriteService service to which stats collected from PPNL callbacks are written.
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_24fc935_6383000/rev_24fc935-6383000/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+=======
+   * Support Pig 12 PPNL API. Remove this once Pig 12 support is no longer needed.
+   *
+   * @param scriptId script identifier.
+   * @param plan MR operator plan.
+   */
+  public void initialPlanNotification(String scriptId, MROperPlan plan) {
+    initialPlanNotification(scriptId, (OperatorPlan<?>) plan);
+  }
+
+  /**
+>>>>>>> YOURS

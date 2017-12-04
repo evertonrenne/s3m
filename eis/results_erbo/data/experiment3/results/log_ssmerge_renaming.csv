@@ -1,0 +1,3 @@
+revision;file;methodSignature
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_a20aab8_5afcbce/rev_a20aab8-5afcbce;/src/main/java/com/netflix/astyanax/recipes/locks/ColumnPrefixDistributedRowLock;releaseWithMutation(MutationBatch,boolean);
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_183d714_75acddc/rev_183d714-75acddc;/astyanax-cassandra/src/test/java/com/netflix/astyanax/model/DynamicCompositeTest;testComposite();

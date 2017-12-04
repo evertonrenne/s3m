@@ -1,0 +1,256 @@
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleanerQueryHelper.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+  private BootstrapDBMetaDataDAO _bootstrapDao = null;
+  private final Map<Short, BootstrapLogInfo> _lastValidLogMap = new HashMap<Short, BootstrapLogInfo>();
+  private volatile boolean isCleaning = false;
+  private final DbusEventFactory _eventFactory;
+  private final BootstrapDBCleanerQueryHelper _bootstrapDBCleanerQueryHelper;
+  private final BootstrapDBCleanerQueryExecutor _bootstrapDBCleanerQueryExecutor;
+
+  public boolean isCleanerRunning()
+  {
+    return isCleaning;
+  }
+
+  public List<SourceStatusInfo> getSources()
+  {
+    return _sources;
+  }
+=======
+  private final Map<String, BootstrapDBSingleSourceCleaner> _cleaners;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/DatabusBootstrapProducer.java;<<<<<<< MINE
+=======
+
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/util/StringUtils.java;<<<<<<< MINE
+=======
+
+  /**
+   * Strip username/password information from the JDBC DB uri to be used for logging
+   * @param uri     the JDBC URI to sanitize
+   * @return the sanitized DB URI
+   */
+  public static String sanitizeDbUri(String uri)
+  {
+    String result = uri;
+    Matcher m = ORA_JDBC_URI_PATTERN.matcher(uri);
+    if (m.matches())
+    {
+      result = m.group(1) + "*/*" + m.group(4);
+    }
+    else if (uri.startsWith("jdbc:mysql:"))
+    {
+      Matcher m1 = MYSQL_JDBC_PATTERN1.matcher(result);
+      Matcher m2 = MYSQL_JDBC_PATTERN2.matcher(result);
+      if (m1.find())
+      {
+        result = m1.replaceAll("($1*)");
+      }
+      else if (m2.find())
+      {
+        result = m2.replaceAll("$1*");
+      }
+    }
+
+    return result;
+  }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/test/DbusEventAppender.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+  /**
+   * A checkpoint has the tuple (SCN, Timestamp-of-highest-scn) to indicate the point of successful
+   * consumption -- The SCN and timestamp being that of the EOW event consumed successfully.
+   * However, it is possible to create a checkpoint (e.g. by the operator as a run-book procedure) that
+   * has only a timestamp to indicate the last consumption point, but does not have the corresponding SCN.
+   * For now, we restrict these checkpoints to have an SCN of 0 (definitely not -1, since -1 will indicate
+   * a 'flexible checkpoint')
+   */
+  public static final long WINDOW_SCN_FOR_PURE_TIMEBASED_CKPT = 0;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+  /**
+   * Creates an online checkpoint with timestamp and SCN. See DDSDBUS-3332
+   * @param lastConsumedScn the sequence number of the last fully consumed window
+   * @param tsNanos the timestamp, if available, of the last fully consumed window.
+   */
+  public static Checkpoint createOnlineConsumptionCheckpoint(long lastConsumedScn, long tsNanos)
+  {
+    Checkpoint cp = createOnlineConsumptionCheckpoint(lastConsumedScn);
+    cp.setTsNsecs(tsNanos);
+    return cp;
+  }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/TestCheckpoint.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/TestCheckpoint.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/TestCheckpoint.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-container/src/main/java/com/linkedin/databus2/core/container/request/DatabusRequest.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-fwk-test/src/main/java/com/linkedin/databus2/test/ClassIntrospectionUtils.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/LoggingConsumer.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/LoggingConsumer.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/LoggingConsumer.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer.java;<<<<<<< MINE
+    
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+    public CheckpointRW(String cluster, String partitionId, long startScn)
+    {
+      _clusterName = cluster;
+      _partitionId = partitionId;
+      _startScn = startScn;
+    }
+
+    public boolean hasError()
+    {
+      return _hasError;
+    }
+
+    public String getClusterName()
+    {
+      return _clusterName;
+    }
+=======
+    public TestFrequencyCPP(String id, Config config)
+        throws InvalidConfigException, ClusterCheckpointException
+    {
+      super(id, config);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+  
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+      
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+      
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+	  
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+      
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+      
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+      
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+  
+=======
+
+>>>>>>> YOURS

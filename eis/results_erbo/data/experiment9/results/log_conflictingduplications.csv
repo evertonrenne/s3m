@@ -1,0 +1,1541 @@
+revision;file;nodeIdentifier1;;nodeIdentifier2;conflict
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1.revisions;/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;public boolean hasExpired();public boolean hasExpired();
+     * Is the Future still valid
+     */
+    public boolean hasExpired(){
+        return ((System.currentTimeMillis() - touch.get()) > responseTimeoutInMs );
+    }
+
+    /**
+=======
+     * Is the Future still valid
+     *
+     * @return <code>true</code> iff response has expired and should be terminated.
+     */
+    public boolean hasExpired(){
+        return responseTimeoutInMs != -1 && ((System.currentTimeMillis() - touch.get()) > responseTimeoutInMs);
+    }
+
+    /**
+
+
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1.revisions;/src/test/java/com/ning/http/client/async/PerRequestTimeoutTest.java;@Override    public AbstractHandler configureHandler() throws Exception ;@Override    public AbstractHandler configureHandler() throws Exception ;
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalDefaultPerRequestInfiniteTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(-1);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get();
+            assertNotNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1.revisions;/src/test/java/com/ning/http/client/async/PerRequestTimeoutTest.java;  private class SlowHandler extends AbstractHandler ;  private class SlowHandler extends AbstractHandler ;
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalDefaultPerRequestInfiniteTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(-1);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get();
+            assertNotNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1.revisions;/src/test/java/com/ning/http/client/async/PerRequestTimeoutTest.java;private static final String MSG ;private static final String MSG ;
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalDefaultPerRequestInfiniteTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(-1);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get();
+            assertNotNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1.revisions;/src/test/java/com/ning/http/client/async/PerRequestTimeoutTest.java;public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException ;public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException ;
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalDefaultPerRequestInfiniteTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(-1);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get();
+            assertNotNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1.revisions;/src/test/java/com/ning/http/client/async/PerRequestTimeoutTest.java;@Test(groups = "standalone")    public void testRequestTimeout() throws IOException ;@Test(groups = "standalone")    public void testRequestTimeout() throws IOException ;
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalDefaultPerRequestInfiniteTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(-1);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get();
+            assertNotNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1.revisions;/src/test/java/com/ning/http/client/async/PerRequestTimeoutTest.java;@Test(groups = "standalone")    public void testGlobalRequestTimeout() throws IOException ;@Test(groups = "standalone")    public void testGlobalRequestTimeout() throws IOException ;
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalDefaultPerRequestInfiniteTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(-1);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get();
+            assertNotNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+
+/experiment_results/projects/async-http-client/revisions/rev_c3651ee_4d2ab70/rev_c3651ee-4d2ab70.revisions;/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;protected String getBrokenTargetUrl() ;protected String getBrokenTargetUrl() ;
+
+    protected String getBrokenTargetUrl() {
+        return String.format("http:127.0.0.1:%d/foo/test", port1);
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void invalidUri() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(null);
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getBrokenTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+=======
+
+    protected String getBrokenTargetUrl() {
+        return String.format("http:127.0.0.1:%d/foo/test", port1);
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void invalidUri() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(null);
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getBrokenTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void asyncHttpClientConfigBeanTest() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(new AsyncHttpClientConfigBean().setUserAgent("test"));
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+
+    @Test(groups = {"default_provider", "async"})
+    public void bodyAsByteTest() throws Throwable {
+        final AsyncHttpClient client = getAsyncHttpClient(new Builder().build());
+        Response r = client.prepareGet(getTargetUrl()).execute().get();
+
+        assertEquals(r.getStatusCode(), 200);
+        assertEquals(r.getResponseBodyAsBytes(), new byte[]{});
+
+        client.close();
+    }
+
+    @Test(groups = {"default_provider", "async"})
+    public void mirrorByteTest() throws Throwable {
+        final AsyncHttpClient client = getAsyncHttpClient(new AsyncHttpClientConfig.Builder().build());
+        Response r = client.preparePost(getTargetUrl()).setBody("MIRROR").execute().get();
+
+        assertEquals(r.getStatusCode(), 200);
+        assertEquals(new String(r.getResponseBodyAsBytes(), "UTF-8"), "MIRROR");
+
+        client.close();
+    }
+
+
+/experiment_results/projects/async-http-client/revisions/rev_c3651ee_4d2ab70/rev_c3651ee-4d2ab70.revisions;/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;@Test(groups = ;@Test(groups = ;
+
+    protected String getBrokenTargetUrl() {
+        return String.format("http:127.0.0.1:%d/foo/test", port1);
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void invalidUri() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(null);
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getBrokenTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+=======
+
+    protected String getBrokenTargetUrl() {
+        return String.format("http:127.0.0.1:%d/foo/test", port1);
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void invalidUri() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(null);
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getBrokenTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void asyncHttpClientConfigBeanTest() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(new AsyncHttpClientConfigBean().setUserAgent("test"));
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+
+    @Test(groups = {"default_provider", "async"})
+    public void bodyAsByteTest() throws Throwable {
+        final AsyncHttpClient client = getAsyncHttpClient(new Builder().build());
+        Response r = client.prepareGet(getTargetUrl()).execute().get();
+
+        assertEquals(r.getStatusCode(), 200);
+        assertEquals(r.getResponseBodyAsBytes(), new byte[]{});
+
+        client.close();
+    }
+
+    @Test(groups = {"default_provider", "async"})
+    public void mirrorByteTest() throws Throwable {
+        final AsyncHttpClient client = getAsyncHttpClient(new AsyncHttpClientConfig.Builder().build());
+        Response r = client.preparePost(getTargetUrl()).setBody("MIRROR").execute().get();
+
+        assertEquals(r.getStatusCode(), 200);
+        assertEquals(new String(r.getResponseBodyAsBytes(), "UTF-8"), "MIRROR");
+
+        client.close();
+    }
+
+

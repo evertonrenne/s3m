@@ -1,0 +1,191 @@
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapConfig.java;<<<<<<< MINE
+    LOG.info("Bootstrap service DB username:" + _bootstrapDBUsername);
+    LOG.info("Bootstrap service DB password: ***");
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+
+    try
+    {
+      conn = _bootstrapDao.getBootstrapConn().getDBConn();
+    } catch (SQLException e)
+    {
+      LOG.fatal("Not able to open BootstrapDB Connection !!", e);
+      throw new RuntimeException(
+          "Got exception when getting bootstrap DB Connection.", e);
+    }
+    return conn;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+      _lastValidLogMap.put(srcId, lastValidLog);
+    }
+      break;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+    long scn = -1;
+
+    if (!candidateLogsInfo.isEmpty())
+      scn = _bootstrapDBCleanerQueryExecutor.getSCNOfLastEventinLog(candidateLogsInfo.get(0), _eventFactory);
+
+    return scn;
+  }
+
+  public synchronized void doClean()
+  {
+    DatabusThreadBase applier = null;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+ *
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+   * @param ckpt    the checkpoint to validate
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer.java;<<<<<<< MINE
+    	DatabusV2RegistrationImpl r = (DatabusV2RegistrationImpl)reg;
+    	r.getLoggingConsumer().enableEventFileTrace(_eventDumpFile);
+    } else {
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+  }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    // The file based logging already done in LoggingConsumer, this one just deserialize if needed
+    //_fileBasedCallback.onEvent(e);
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    //System.out.println(stage + ": " + info);
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+   *
+   * @author pganti
+   *
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  /**
+   *
+   * @author pganti
+   *
+   */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+   *
+   * @author pganti
+   *
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+            //check if lastSeenCheckpoint by consumer is same as bootstrapsinceScn
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+            Assert.assertTrue(cp.getSnapshotOffset() > 0);
+            Assert.assertEquals(cp.getBootstrapSinceScn().longValue(), sinceScn);
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+}
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+    
+    
+    if ((null == _sSources) || (_sSources.isEmpty()))
+    {
+    	_sSources = getSourceNames(cleaner.getBootstrapDao().getBootstrapConn().getDBConn());
+    	LOG.info("Going to run cleaner for all sources :" + _sSources);
+		try
+		{
+			cleaner.setSources(cleaner.getBootstrapDao().getSourceIdAndStatusFromName(_sSources,false));
+		} catch (BootstrapDatabaseTooOldException bto) {
+			LOG.error("Not expected to receive this exception as activeCheck is turned-off", bto);
+			throw new RuntimeException(bto);
+		}	
+    }
+   
+=======
+
+>>>>>>> YOURS

@@ -1,0 +1,13 @@
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/model/Query.java;ImportDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/model/Query.java;FieldDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/util/JmxUtils.java;FieldDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/util/JmxUtils.java;FieldDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_7bfd794_666efaf/rev_7bfd794-666efaf/src/com/googlecode/jmxtrans/model/output/KeyOutWriter.java;MethodDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;ImportDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;ImportDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;FieldDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;FieldDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/util/JmxUtilsTests.java;ImportDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/util/JmxUtilsTests.java;ImportDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b/src/com/googlecode/jmxtrans/model/output/LibratoWriter.java;ImportDeclaration
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b/src/com/googlecode/jmxtrans/model/output/LibratoWriter.java;FieldDeclaration

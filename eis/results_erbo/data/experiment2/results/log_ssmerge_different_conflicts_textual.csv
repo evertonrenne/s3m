@@ -1,0 +1,1974 @@
+file;linedbasedConf
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/model/Query.java;<<<<<<< MINE
+=======
+import java.util.Set;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/model/Query.java;<<<<<<< MINE
+@JsonPropertyOrder(value={"obj", "attr", "resultAlias", "keys", "outputWriters"})
+=======
+@JsonPropertyOrder(value={"obj", "attr", "typeNames", "resultAlias", "keys", "outputWriters"})
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/model/Query.java;<<<<<<< MINE
+=======
+    private Set<String> typeNames;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/model/Query.java;<<<<<<< MINE
+=======
+    public void setTypeNames(Set<String> typeNames) {
+        this.typeNames = typeNames;
+    }
+
+    /**
+     * The list of type names used in a JMX bean string when querying with a wildcard
+     * which is used to expose the actual type name value to the key string. e.g. for this JMX name
+     *
+     * typeName=name=PS Eden Space,type=MemoryPool
+     *
+     * If you add a typeName("name"), then it'll retrieve 'PS Eden Space' from the string
+     */
+    public Set<String> getTypeNames() {
+        return typeNames;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+		String typeName = cleanupStr(getConcatedTypeNameValues(typeNames, result.getTypeName()));
+=======
+		String typeName = cleanupStr(getConcatedTypeNameValues(query, typeNames, result.getTypeName()));
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+		String typeName = cleanupStr(getConcatedTypeNameValues(typeNames, result.getTypeName()));
+=======
+		String typeName = cleanupStr(getConcatedTypeNameValues(query, typeNames, result.getTypeName()));
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+
+    /**
+=======
+
+	/**
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+
+    /**
+   	 * Given a typeName string, get the first match from the typeNames setting.
+   	 * In other words, suppose you have:
+   	 *
+   	 * typeName=name=PS Eden Space,type=MemoryPool
+   	 *
+   	 * If you addTypeName("name"), then it'll retrieve 'PS Eden Space' from the string
+   	 */
+    public static String getConcatedTypeNameValues(Query query, List<String> typeNames, String typeName) {
+        Set<String> queryTypeNames = query.getTypeNames();
+        if (queryTypeNames != null && queryTypeNames.size() > 0) {
+            List<String> allNames = new ArrayList<String>(queryTypeNames);
+            for (String name : typeNames) {
+                if (!allNames.contains(name)) {
+                    allNames.add(name);
+                }
+            }
+            return getConcatedTypeNameValues(allNames, typeName);
+        } else {
+            return getConcatedTypeNameValues(typeNames, typeName);
+        }
+    }
+=======
+
+	/**
+	 * Given a typeName string, get the first match from the typeNames setting.
+	 * In other words, suppose you have:
+	 *
+	 * typeName=name=PS Eden Space,type=MemoryPool
+	 *
+	 * If you addTypeName("name"), then it'll retrieve 'PS Eden Space' from the
+	 * string
+	 */
+	public static String getConcatedTypeNameValues(Query query, List<String> typeNames, String typeName) {
+		Set<String> queryTypeNames = query.getTypeNames();
+		if (queryTypeNames != null && queryTypeNames.size() > 0) {
+			List<String> allNames = new ArrayList<String>(queryTypeNames);
+			for (String name : typeNames) {
+				if (!allNames.contains(name)) {
+					allNames.add(name);
+				}
+			}
+			return getConcatedTypeNameValues(allNames, typeName);
+		} else {
+			return getConcatedTypeNameValues(typeNames, typeName);
+		}
+	}
+
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_7bfd794_666efaf/rev_7bfd794-666efaf/src/com/googlecode/jmxtrans/model/output/KeyOutWriter.java;<<<<<<< MINE
+
+=======
+
+	private Logger getLogger(Query query) throws ValidationException {
+		String fileStr = (String) this.getSettings().get("outputFile");
+		if (fileStr == null) {
+			throw new ValidationException("You must specify an outputFile setting.", query);
+		}
+		// Check if we've already created a logger for this file. If so, use it.
+		if (loggers.containsKey(fileStr)) {
+			logger = loggers.get(fileStr);
+			return logger;
+		}
+		// need to create a logger
+		try {
+			logger = loggers.putIfAbsent(fileStr, initLogger(fileStr));
+		} catch (IOException e) {
+			throw new ValidationException("Failed to setup log4j", query);
+		}
+		return logger;
+	}
+
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/TCollectorUDPWriter.java;<<<<<<< MINE
+package com.googlecode.jmxtrans.model.output;
+
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.io.IOException;
+
+import com.googlecode.jmxtrans.util.LifecycleException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+/**
+ * {@link com.googlecode.jmxtrans.OutputWriter} for the <a href="https://github.com/OpenTSDB/tcollector/blob/master/collectors/0/udp_bridge.py">TCollector udp_bridge</a>.
+ * Largely based on StatsDWriter and OpenTSDBWriter
+ *
+ * @author kieren
+ */
+public class TCollectorUDPWriter extends OpenTSDBGenericWriter {
+    private static final Logger log = LoggerFactory.getLogger(TCollectorUDPWriter.class);
+
+    protected SocketAddress     address;
+    protected Socket            socket;
+    protected DataOutputStream  out;
+
+    protected DatagramChannel   channel;
+    protected ByteBuffer        sendBuffer;
+
+    /**
+     * Prepare for sending metrics.
+     */
+    @Override
+    protected void  prepareSender() throws LifecycleException {
+        try {
+            channel = DatagramChannel.open();
+            setBufferSize((short) 1500);
+
+            this.address = new InetSocketAddress(this.host, this.port);
+            tagName = this.getStringSetting("tagName", "");
+        } catch(IOException e) {
+            log.error("error opening socket to TCollector", e);
+            throw new LifecycleException(e);
+        }
+    }
+
+    /**
+     * Shutdown the sender as it will no longer be used to send metrics.
+     */
+    @Override
+    protected void  shutdownSender() throws LifecycleException {
+    }
+
+    /**
+     * Start the output for the results of a Query to OpenTSDB.
+     */
+    @Override
+    protected void  startOutput() throws IOException {
+        try {
+            this.out = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            log.error("error getting the output stream", e);
+            throw e;
+        }
+    }
+
+    /**
+     * Send a single metric to the server.
+     *
+     * @param   metricLine - the line containing the metric name, value, and tags for a single metric; excludes the
+     *          "put" keyword expected by OpenTSDB and the trailing newline character.
+     */
+    @Override
+    protected void  sendOutput(String metricLine) throws IOException {
+        try {
+            this.out.writeBytes("put " + metricLine + "\n"); 
+        } catch (IOException e) {
+            log.error("error writing result to the output stream", e);
+            throw e;
+        }
+    }
+
+    /**
+     * Finish the output for a single Query, flushing all data to the server and logging the server's response.
+     */
+    @Override
+    protected void  finishOutput() throws IOException {
+        try {
+            this.out.flush();
+        } catch (IOException e) {
+            log.error("flush failed");
+            throw e;
+        }
+
+            // Read and log the response from the server for diagnostic purposes.
+
+        InputStreamReader socketInputStream = new InputStreamReader(socket.getInputStream());
+        BufferedReader bufferedSocketInputStream = new BufferedReader(socketInputStream);
+        String line;
+        while (socketInputStream.ready() && (line = bufferedSocketInputStream.readLine()) != null) {
+            log.warn("OpenTSDB says: " + line); 
+        }
+    }
+
+    public synchronized void setBufferSize(short packetBufferSize) {
+        if(sendBuffer != null) {
+            flush();
+        }
+        sendBuffer = ByteBuffer.allocate(packetBufferSize);
+    }
+
+    protected void  doSend(String stat) {
+        try {
+            final byte[] data = stat.getBytes("utf-8");
+
+            // If we're going to go past the threshold of the buffer then flush.
+            // the +1 is for the potential '\n' in multi_metrics below
+            if (sendBuffer.remaining() < (data.length + 1)) {
+                flush();
+            }
+
+            if (sendBuffer.position() > 0) { // multiple metrics are separated by '\n'
+                sendBuffer.put((byte) '\n');
+            }
+
+            sendBuffer.put(data); // append the data
+
+            flush();
+        } catch (IOException e) {
+            log.error("failed to send metrics to TCollector", e);
+        }
+    }
+
+    public boolean  flush() {
+        try {
+            final int sizeOfBuffer = sendBuffer.position();
+
+            if (sizeOfBuffer <= 0) {
+                return false;
+            } // empty buffer
+
+            // send and reset the buffer
+            sendBuffer.flip();
+            final int nbSentBytes = channel.send(sendBuffer, this.address);
+            sendBuffer.limit(sendBuffer.capacity());
+            sendBuffer.rewind();
+
+            if (sizeOfBuffer == nbSentBytes) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}=======
+package com.googlecode.jmxtrans.model.output;
+
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.io.IOException;
+
+import com.googlecode.jmxtrans.util.LifecycleException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+/**
+ * {@link com.googlecode.jmxtrans.OutputWriter} for the <a href="https://github.com/OpenTSDB/tcollector/blob/master/collectors/0/udp_bridge.py">TCollector udp_bridge</a>.
+ * Largely based on StatsDWriter and OpenTSDBWriter
+ *
+ * @author Kieren Hynd
+ * @author Arthur Naseef
+ */
+public class TCollectorUDPWriter extends OpenTSDBGenericWriter {
+    private static final Logger log = LoggerFactory.getLogger(TCollectorUDPWriter.class);
+
+    protected SocketAddress     address;
+    protected DatagramSocket    dgSocket;
+    protected ByteBuffer        sendBuffer;
+
+    /**
+     * Do not add the hostname tag "host" with the name of the host by default since tcollector normally adds the
+     * hostname.
+     */
+    @Override
+    protected boolean   getAddHostnameTagDefault() {
+        return  false;
+    }
+
+    /**
+     * Setup at start of the writer.
+     */
+    @Override
+    public void start() throws LifecycleException {
+        super.start();
+
+        try {
+            this.dgSocket = new DatagramSocket();
+            this.address = new InetSocketAddress(this.host, this.port);
+        } catch ( SocketException sockExc ) {
+            log.error("failed to create a datagram socket", sockExc);
+            throw   new LifecycleException(sockExc);
+        }
+    }
+
+    /**
+     * Send a single metric to the server.
+     *
+     * @param   metricLine - the line containing the metric name, value, and tags for a single metric; excludes the
+     *          "put" keyword expected by OpenTSDB and the trailing newline character.
+     */
+    @Override
+    protected void  sendOutput (String metricLine) throws IOException {
+        DatagramPacket  packet;
+        byte[]          data;
+        String          formattedLine;
+
+        formattedLine = metricLine + "\n";
+
+        data = formattedLine.getBytes("UTF-8");
+        packet = new DatagramPacket(data, 0, data.length, this.address);
+
+        this.dgSocket.send(packet);
+    }
+
+    /**
+     * Finish the output for a single Query, flushing all data to the server and logging the server's response.
+     */
+    @Override
+    protected void  finishOutput() throws IOException {
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/GangliaWriter.java;<<<<<<< MINE
+                    log.debug("Sending Ganglia metric {}={}", name, value);
+=======
+                    GMetricType dataType = getType(resultValue.getValue());
+                    log.debug("Sending Ganglia metric {}={} [type={}]", new Object[]{name, value, dataType});
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/GangliaWriter.java;<<<<<<< MINE
+                            getType(resultValue.getValue()),
+=======
+                            dataType,
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+=======
+import com.googlecode.jmxtrans.util.JmxUtils;
+import com.googlecode.jmxtrans.util.LifecycleException;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+import com.googlecode.jmxtrans.util.LifecycleException;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+ * Created by Balazs Kossovics <bko@witbe.net>
+ * Date: 4/4/13
+ * Time: 6:00 PM
+=======
+ * OpenTSDBWriter which directly sends
+ *
+ * Created from sources originally written by Balazs Kossovics <bko@witbe.net>
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+public class OpenTSDBWriter extends BaseOutputWriter {
+=======
+
+public class OpenTSDBWriter extends OpenTSDBGenericWriter {
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+    private String host;
+    private Integer port;
+    private Map<String, String> tags;
+    private String tagName;
+    private Socket socket;
+
+    String addTags(String resultString) throws UnknownHostException {
+        resultString = addTag(resultString, "host", java.net.InetAddress.getLocalHost().getHostName());
+        if (tags != null)
+            for (Map.Entry<String, String> tagEntry : tags.entrySet()) {
+                resultString = addTag(resultString, tagEntry.getKey(), tagEntry.getValue());
+            }
+        return resultString;
+    }
+
+    String addTag(String resultString, String tagName, String tagValue) {
+        String tagFormat = " %s=%s";
+        resultString += String.format(tagFormat, tagName, tagValue);
+        return resultString;
+    }
+
+    String getResultString(String className, String attributeName, long epoch, Object value) {
+        String resultStringFormat = "put %s.%s %d %s";
+        return String.format(resultStringFormat, className, attributeName, epoch, value);
+    }
+
+    String getResultString(String className, String attributeName, long epoch, Object value, String tagName, String tagValue) {
+        String taggedResultStringFormat = "put %s.%s %d %s %s=%s";
+        return String.format(taggedResultStringFormat, className, attributeName, epoch, value, tagName, tagValue);
+    }
+
+    List<String> resultParser(Result result) throws UnknownHostException {
+        List<String> resultStrings = new LinkedList<String>();
+        Map<String, Object> values = result.getValues();
+        if (values == null)
+            return resultStrings;
+
+        String attributeName = result.getAttributeName();
+        String className = result.getClassNameAlias() == null ? result.getClassName() : result.getClassNameAlias();
+        if (values.containsKey(attributeName) && values.size() == 1) {
+            String resultString = getResultString(className, attributeName, (long)(result.getEpoch()/1000L), values.get(attributeName));
+            resultString = addTags(resultString);
+            if (getTypeNames().size() > 0) {
+                resultString = addTag(resultString, StringUtils.join(getTypeNames(), ""), getConcatedTypeNameValues(result.getTypeName()));
+            }
+            resultStrings.add(resultString);
+        } else {
+            for (Map.Entry<String, Object> valueEntry: values.entrySet() ) {
+                String resultString = getResultString(className, attributeName, (long)(result.getEpoch()/1000L), valueEntry.getValue(), tagName, valueEntry.getKey());
+                resultString = addTags(resultString);
+                if (getTypeNames().size() > 0) {
+                    resultString = addTag(resultString, StringUtils.join(getTypeNames(), ""), getConcatedTypeNameValues(result.getTypeName()));
+                }
+                resultStrings.add(resultString);
+            }
+        }
+        return resultStrings;
+    }
+
+    @Override
+    public void doWrite(Query query) throws Exception {
+        DataOutputStream out;
+        try {
+            out = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            log.error("error getting the output stream", e);
+            throw e;
+        }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+        for (Result result : query.getResults()) {
+            for(String resultString: resultParser(result)) {
+                if (isDebugEnabled())
+                    System.out.println(resultString);
+                try {
+                    out.writeBytes(resultString + "\n"); 
+                } catch (IOException e) {
+                    log.error("error writing result to the output stream", e);
+                    throw e;
+                }
+            }
+        }
+        try {
+            out.flush();
+        } catch (IOException e) {
+            log.error("flush failed");
+            throw e;
+        }
+        InputStreamReader socketInputStream = new InputStreamReader(socket.getInputStream());
+        BufferedReader bufferedSocketInputStream = new BufferedReader(socketInputStream);
+        String line;
+        while (socketInputStream.ready() && (line = bufferedSocketInputStream.readLine()) != null) {
+            log.warn("OpenTSDB says: " + line); 
+        }
+    }
+=======
+    protected Socket            socket;
+    protected DataOutputStream  out;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+=======
+    /**
+     * Add the hostname tag "host" with the name of the host by default since OpenTSDB otherwise does not have this
+     * information.
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+    public void validateSetup(Query query) throws ValidationException {
+=======
+    protected boolean   getAddHostnameTagDefault() {
+        return  true;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+=======
+    /**
+     * Prepare for sending metrics.
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+    public void start() throws LifecycleException {
+        host = (String) this.getSettings().get(HOST);
+        port = (Integer) this.getSettings().get(PORT);
+        tags = (Map<String, String>) this.getSettings().get("tags");
+        tagName = this.getStringSetting("tagName", "type");
+=======
+    protected void  prepareSender() throws LifecycleException {
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+=======
+    /**
+     * Shutdown the sender as it will no longer be used to send metrics.
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+    public void stop() throws LifecycleException {
+=======
+    protected void  shutdownSender() throws LifecycleException {
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+=======
+
+    /**
+     * Start the output for the results of a Query to OpenTSDB.
+     */
+    @Override
+    protected void  startOutput() throws IOException {
+        try {
+            this.out = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            log.error("error getting the output stream", e);
+            throw e;
+        }
+    }
+
+    /**
+     * Send a single metric to the server.
+     *
+     * @param   metricLine - the line containing the metric name, value, and tags for a single metric; excludes the
+     *          "put" keyword expected by OpenTSDB and the trailing newline character.
+     */
+    @Override
+    protected void  sendOutput (String metricLine) throws IOException {
+        try {
+            this.out.writeBytes("put " + metricLine + "\n"); 
+        } catch (IOException e) {
+            log.error("error writing result to the output stream", e);
+            throw e;
+        }
+    }
+
+    /**
+     * Finish the output for a single Query, flushing all data to the server and logging the server's response.
+     */
+    @Override
+    protected void  finishOutput () throws IOException {
+        try {
+            this.out.flush();
+        } catch (IOException e) {
+            log.error("flush failed");
+            throw e;
+        }
+
+            // Read and log the response from the server for diagnostic purposes.
+
+        InputStreamReader socketInputStream = new InputStreamReader(socket.getInputStream());
+        BufferedReader bufferedSocketInputStream = new BufferedReader(socketInputStream);
+        String line;
+        while (socketInputStream.ready() && (line = bufferedSocketInputStream.readLine()) != null) {
+            log.warn("OpenTSDB says: " + line); 
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter.java;<<<<<<< MINE
+package com.googlecode.jmxtrans.model.output;
+
+import com.googlecode.jmxtrans.model.Query;
+import com.googlecode.jmxtrans.model.Result;
+import com.googlecode.jmxtrans.util.BaseOutputWriter;
+import com.googlecode.jmxtrans.util.ValidationException;
+import com.googlecode.jmxtrans.util.JmxUtils;
+import com.googlecode.jmxtrans.util.LifecycleException;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.io.IOException;
+
+/**
+ * Originally written by Balazs Kossovics <bko@witbe.net>.  Common base class for OpenTSDBWriter and TCollectorWriter.
+ * Date: 4/4/13
+ * Time: 6:00 PM
+ */
+public abstract class OpenTSDBGenericWriter extends BaseOutputWriter {
+    private static final Logger log = LoggerFactory.getLogger(OpenTSDBGenericWriter.class);
+
+    protected String host;
+    protected Integer port;
+    protected Map<String, String> tags;
+    protected String tagName;
+
+    /**
+     * Prepare for sending metrics.
+     */
+    protected abstract void prepareSender() throws LifecycleException;
+
+    /**
+     * Shutdown the sender.
+     */
+    protected abstract void shutdownSender() throws LifecycleException;
+
+    /**
+     * Subcall responsibility: called at the start of a set of results to send.
+     */
+    protected abstract void startOutput() throws IOException;
+
+    /**
+     * Subcall responsibility: method to perform the actual output for the given metric line.
+     *
+     * @param   metricLine - the line containing the metric name, value, and tags for a single metric; excludes the
+     *          "put" keyword expected by OpenTSDB and the trailing newline character.
+     */
+    protected abstract void sendOutput(String metricLine) throws IOException;
+
+    /**
+     * Subcall responsibility: called at the start of a set of results to send.
+     */
+    protected abstract void finishOutput() throws IOException;
+
+
+    /**
+     * Add tags to the given result string, including a "host" tag with the name of the server and all of the tags
+     * defined in the "settings" entry in the configuration file within the "tag" element.
+     *
+     * @param   resultString - the string containing the metric name, timestamp, value, and possibly other content.
+     */
+    String addTags(String resultString) throws UnknownHostException {
+        resultString = addTag(resultString, "host", java.net.InetAddress.getLocalHost().getHostName());
+        if (tags != null)
+            for (Map.Entry<String, String> tagEntry : tags.entrySet()) {
+                resultString = addTag(resultString, tagEntry.getKey(), tagEntry.getValue());
+            }
+        return resultString;
+    }
+
+    /**
+     * Add one tag, with the provided name and value, to the given result string.
+     *
+     * @param   resultString - the string containing the metric name, timestamp, value, and possibly other content.
+     * @return  String - the new result string with the tag appended.
+     */
+    String addTag(String resultString, String tagName, String tagValue) {
+
+        String tagFormat = " %s=%s";
+        resultString += String.format(tagFormat, JmxUtils.cleanupStr(tagName), JmxUtils.cleanupStr(tagValue));
+        return resultString;
+    }
+
+    /**
+     * Format the result string given the class name and attribute name of the source value, the timestamp, and the
+     * value.
+     *
+     * @param   className - the name of the class of the MBean from which the value was sourced.
+     * @param   attributeName - the name of the attribute of the MBean from which the value was sourced.  For complex
+     *                          types (such as CompositeData), the attribute name may describe a hierarchy.
+     * @param   epoch - the timestamp of the metric.
+     * @param   value - value of the attribute to use as the metric value.
+     * @return  String - the formatted result string.
+     */
+    String getResultString(String className, String attributeName, long epoch, Object value) {
+        String resultStringFormat = "%s.%s %d %s";
+        return String.format(resultStringFormat, className, attributeName, epoch, value);
+    }
+
+    /**
+     * Format the result string given the class name and attribute name of the source value, the timestamp, the value,
+     * a tagname, and a tag value.
+     *
+     * @param   className - the name of the class of the MBean from which the value was sourced.
+     * @param   attributeName - the name of the attribute of the MBean from which the value was sourced.  For complex
+     *                          types (such as CompositeData), the attribute name may describe a hierarchy.
+     * @param   epoch - the timestamp of the metric.
+     * @param   value - value of the attribute to use as the metric value.
+     * @param   tagName - name of the tag to include.
+     * @param   tagValue - value of the tag to include.
+     * @return  String - the formatted result string.
+     */
+    String getResultString(String className, String attributeName, long epoch, Object value, String tagName, String tagValue) {
+        String taggedResultStringFormat = "%s.%s %d %s %s=%s";
+        return String.format(taggedResultStringFormat, className, attributeName, epoch, value, tagName, tagValue);
+    }
+
+    /**
+     * Parse one of the results of a Query and return a list of strings containing metric details ready for sending to
+     * OpenTSDB.
+     *
+     * @param   result - one results from the Query.
+     * @return  List<String> - the list of strings containing metric details ready for sending to OpenTSDB.
+     */
+    List<String> resultParser(Result result) throws UnknownHostException {
+        List<String> resultStrings = new LinkedList<String>();
+        Map<String, Object> values = result.getValues();
+        if (values == null)
+            return resultStrings;
+
+        String attributeName = result.getAttributeName();
+        String className = result.getClassNameAlias() == null ? result.getClassName() : result.getClassNameAlias();
+        if (values.containsKey(attributeName) && values.size() == 1) {
+            if ( JmxUtils.isNumeric(values.get(attributeName)) ) {
+                String resultString = getResultString(className, attributeName, (long)(result.getEpoch()/1000L), values.get(attributeName));
+                resultString = addTags(resultString);
+                if (getTypeNames().size() > 0) {
+                    resultString = addTag(resultString, StringUtils.join(getTypeNames(), ""), getConcatedTypeNameValues(result.getTypeName()));
+                }
+                resultStrings.add(resultString);
+            }
+            else {
+                log.debug("discarding non-numeric value for attribute {}; value={}", attributeName,
+                          values.get(attributeName));
+            }
+        } else {
+            for (Map.Entry<String, Object> valueEntry: values.entrySet() ) {
+                if ( JmxUtils.isNumeric(valueEntry.getValue()) ) {
+                    String resultString = getResultString(className, attributeName, (long)(result.getEpoch()/1000L), valueEntry.getValue(), tagName, valueEntry.getKey());
+                    resultString = addTags(resultString);
+                    if (getTypeNames().size() > 0) {
+                        resultString = addTag(resultString, StringUtils.join(getTypeNames(), ""), getConcatedTypeNameValues(result.getTypeName()));
+                    }
+                    resultStrings.add(resultString);
+                }
+                else {
+                    log.debug("discarding non-numeric value for attribute {}; value={}", attributeName,
+                              valueEntry.getValue());
+                }
+            }
+        }
+        return resultStrings;
+    }
+
+    /**
+     * Write the results of the query.
+     *
+     * @param   query - the query and its results.
+     */
+    @Override
+    public void doWrite(Query query) throws Exception {
+        this.startOutput();
+        for (Result result : query.getResults()) {
+            for(String resultString: resultParser(result)) {
+                if (isDebugEnabled())
+                    System.out.println(resultString);
+
+                this.sendOutput(resultString);
+            }
+        }
+        this.finishOutput();
+    }
+
+    @Override
+    public void validateSetup(Query query) throws ValidationException {
+        if (host == null || port == null) {
+            throw new ValidationException("Host and port can't be null", query);
+        }
+    }
+
+    /** 
+     * Start the output writer.  At this time, the settings are read from the configuration file and saved for later
+     * use.
+     */
+    @Override
+    public void start() throws LifecycleException {
+        host = (String) this.getSettings().get(HOST);
+        port = (Integer) this.getSettings().get(PORT);
+        tags = (Map<String, String>) this.getSettings().get("tags");
+        tagName = this.getStringSetting("tagName", "type");
+
+        this.prepareSender();
+    }
+
+    @Override
+    public void stop() throws LifecycleException {
+        this.shutdownSender();
+    }
+}=======
+package com.googlecode.jmxtrans.model.output;
+
+import com.googlecode.jmxtrans.model.NamingStrategy;
+import com.googlecode.jmxtrans.model.Query;
+import com.googlecode.jmxtrans.model.Result;
+import com.googlecode.jmxtrans.model.naming.ClassAttributeNamingStrategy;
+import com.googlecode.jmxtrans.model.naming.JexlNamingStrategy;
+import com.googlecode.jmxtrans.util.BaseOutputWriter;
+import com.googlecode.jmxtrans.util.ValidationException;
+import com.googlecode.jmxtrans.util.JmxUtils;
+import com.googlecode.jmxtrans.util.LifecycleException;
+import org.apache.commons.jexl2.JexlException;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.io.IOException;
+
+/**
+ * Originally written by Balazs Kossovics <bko@witbe.net>.  Common base class for OpenTSDBWriter and TCollectorWriter.
+ * Date: 4/4/13
+ * Time: 6:00 PM
+ *
+ * Updates by Arthur Naseef
+ */
+public abstract class OpenTSDBGenericWriter extends BaseOutputWriter {
+    public static final boolean DEFAULT_MERGE_TYPE_NAMES_TAGS = true;
+
+    private static final Logger log = LoggerFactory.getLogger(OpenTSDBGenericWriter.class);
+
+    protected String host;
+    protected Integer port;
+    protected Map<String, String> tags;
+    protected String tagName;
+    protected NamingStrategy metricNameStrategy;
+
+    protected boolean mergeTypeNamesTags = DEFAULT_MERGE_TYPE_NAMES_TAGS;
+    protected boolean addHostnameTag     = getAddHostnameTagDefault();
+
+    /**
+     * Prepare for sending metrics, if needed.  For use by subclasses.
+     */
+    protected void  prepareSender() throws LifecycleException {
+    }
+
+    /**
+     * Shutdown the sender, if needed.  For use by subclasses.
+     */
+    protected void  shutdownSender() throws LifecycleException {
+    }
+
+    /**
+     * Prepare a batch of results output, if needed.  For use by subclasses.
+     */
+    protected void  startOutput() throws IOException {
+    }
+
+    /**
+     * Subclass responsibility: specify the default value for the "addHostnameTag" setting.
+     */
+    protected abstract boolean  getAddHostnameTagDefault();
+
+    /**
+     * Subcall responsibility: method to perform the actual output for the given metric line.  Every subclass
+     * <b>must</b> implement this method.
+     *
+     * @param   metricLine - the line containing the metric name, value, and tags for a single metric; excludes the
+     *          "put" keyword expected by OpenTSDB and the trailing newline character.
+     */
+    protected abstract void sendOutput(String metricLine) throws IOException;
+
+    /**
+     * Complete a batch of results output, if needed.  For use by subclasses.
+     */
+    protected void  finishOutput() throws IOException {
+    }
+
+    /**
+     * Add tags to the given result string, including a "host" tag with the name of the server and all of the tags
+     * defined in the "settings" entry in the configuration file within the "tag" element.
+     *
+     * @param   resultString - the string containing the metric name, timestamp, value, and possibly other content.
+     */
+    String addTags(String resultString) throws UnknownHostException {
+        if ( addHostnameTag ) {
+            resultString = addTag(resultString, "host", java.net.InetAddress.getLocalHost().getHostName());
+        }
+
+        if (tags != null) {
+            // Add the constant tag names and values.
+            for (Map.Entry<String, String> tagEntry : tags.entrySet()) {
+                resultString = addTag(resultString, tagEntry.getKey(), tagEntry.getValue());
+            }
+        }
+
+        return resultString;
+    }
+
+    /**
+     * Add one tag, with the provided name and value, to the given result string.
+     *
+     * @param   resultString - the string containing the metric name, timestamp, value, and possibly other content.
+     * @return  String - the new result string with the tag appended.
+     */
+    String addTag(String resultString, String tagName, String tagValue) {
+
+        String tagFormat = " %s=%s";
+        resultString += String.format(tagFormat, sanitizeString(tagName), sanitizeString(tagValue));
+        return resultString;
+    }
+
+    /**
+     * Format the result string given the class name and attribute name of the source value, the timestamp, and the
+     * value.
+     *
+     * @param   className - the name of the class of the MBean from which the value was sourced.
+     * @param   attributeName - the name of the attribute of the MBean from which the value was sourced.  For complex
+     *                          types (such as CompositeData), the attribute name may describe a hierarchy.
+     * @param   epoch - the timestamp of the metric.
+     * @param   value - value of the attribute to use as the metric value.
+     * @return  String - the formatted result string.
+     */
+    String getResultString(String metricName, long epoch, Object value) {
+        String resultStringFormat = "%s %d %s";
+        return String.format(resultStringFormat, sanitizeString(metricName), epoch, sanitizeString(value.toString()));
+    }
+
+    /**
+     * Parse one of the results of a Query and return a list of strings containing metric details ready for sending to
+     * OpenTSDB.
+     *
+     * @param   result - one results from the Query.
+     * @return  List<String> - the list of strings containing metric details ready for sending to OpenTSDB.
+     */
+    List<String> resultParser(Result result) throws UnknownHostException {
+        List<String> resultStrings = new LinkedList<String>();
+        Map<String, Object> values = result.getValues();
+        if (values == null)
+            return resultStrings;
+
+        String attributeName = result.getAttributeName();
+        String className = result.getClassNameAlias() == null ? result.getClassName() : result.getClassNameAlias();
+        if (values.containsKey(attributeName) && values.size() == 1) {
+            if ( JmxUtils.isNumeric(values.get(attributeName)) ) {
+                String metricName = this.metricNameStrategy.formatName(result);
+                String resultString = getResultString(metricName, (long)(result.getEpoch()/1000L), values.get(attributeName));
+                resultString = addTags(resultString);
+                if (getTypeNames().size() > 0) {
+                    resultString = this.addTypeNamesTags(result, resultString);
+                }
+                resultStrings.add(resultString);
+            }
+            else {
+                log.debug("discarding non-numeric value for attribute {}; value={}", attributeName,
+                          values.get(attributeName));
+            }
+        } else {
+            for (Map.Entry<String, Object> valueEntry: values.entrySet() ) {
+                if ( JmxUtils.isNumeric(valueEntry.getValue()) ) {
+                    String metricName = this.metricNameStrategy.formatName(result);
+                    String resultString = getResultString(metricName, (long)(result.getEpoch()/1000L), valueEntry.getValue());
+                    resultString = addTag(resultString, tagName, valueEntry.getKey());
+                    resultString = addTags(resultString);
+
+                    if (getTypeNames().size() > 0) {
+                        resultString = this.addTypeNamesTags(result, resultString);
+                    }
+                    resultStrings.add(resultString);
+                }
+                else {
+                    log.debug("discarding non-numeric value for attribute {}; value={}", attributeName,
+                              valueEntry.getValue());
+                }
+            }
+        }
+        return resultStrings;
+    }
+
+    /**
+     * Add the tag(s) for typeNames.
+     *
+     * @param	result - the result of the JMX query.
+     * @param	resultString - current form of the metric string.
+     * @return	String - the updated metric string with the necessary tag(s) added.
+     */
+    protected String    addTypeNamesTags (Result result, String resultString) {
+        String  retVal = resultString;
+        if ( mergeTypeNamesTags ) {
+            // Produce a single tag with all the TypeName keys concatenated and all the values joined with '_'.
+            retVal = addTag(retVal, StringUtils.join(getTypeNames(), ""), getConcatedTypeNameValues(result.getTypeName()));
+        }
+        else {
+            Map<String, String> typeNameMap = JmxUtils.getTypeNameValueMap(result.getTypeName());
+            for ( String oneTypeName : getTypeNames() ) {
+                String value = typeNameMap.get(oneTypeName);
+                if ( value == null )
+                    value = "";
+                retVal = addTag(retVal, oneTypeName, value);
+            }
+        }
+
+        return  retVal;
+    }
+
+    /**
+     * Write the results of the query.
+     *
+     * @param   query - the query and its results.
+     */
+    @Override
+    public void doWrite(Query query) throws Exception {
+        this.startOutput();
+        for (Result result : query.getResults()) {
+            for(String resultString: resultParser(result)) {
+                if (isDebugEnabled())
+                    System.out.println(resultString);
+
+                this.sendOutput(resultString);
+            }
+        }
+        this.finishOutput();
+    }
+
+    @Override
+    public void validateSetup(Query query) throws ValidationException {
+        if (host == null || port == null) {
+            throw new ValidationException("Host and port can't be null", query);
+        }
+    }
+
+    /** 
+     * Start the output writer.  At this time, the settings are read from the configuration file and saved for later
+     * use.
+     */
+    @Override
+    public void start() throws LifecycleException {
+        host = (String) this.getSettings().get(HOST);
+        port = (Integer) this.getSettings().get(PORT);
+        tags = (Map<String, String>) this.getSettings().get("tags");
+
+        tagName            = this.getStringSetting("tagName", "type");
+        mergeTypeNamesTags = this.getBooleanSetting("mergeTypeNamesTags", DEFAULT_MERGE_TYPE_NAMES_TAGS);
+        addHostnameTag     = this.getBooleanSetting("addHostnameTag", this.getAddHostnameTagDefault());
+
+        this.setupNamingStrategies();
+        this.prepareSender();
+    }
+
+    @Override
+    public void stop() throws LifecycleException {
+        this.shutdownSender();
+    }
+
+    /**
+     * Set the naming strategies based on the configuration.
+     */
+    protected void  setupNamingStrategies () throws LifecycleException {
+        try {
+            String jexlExpr = this.getStringSetting("metricNamingExpression", null);
+            if ( jexlExpr != null ) {
+                this.metricNameStrategy = new JexlNamingStrategy(jexlExpr);
+            }
+            else {
+                this.metricNameStrategy = new ClassAttributeNamingStrategy();
+            }
+        }
+        catch ( JexlException jexlExc ) {
+            throw   new LifecycleException("failed to setup naming strategy", jexlExc);
+        }
+
+    }
+
+    /**
+     * VALID CHARACTERS:
+     *      METRIC, TAGNAME, AND TAG-VALUE:
+     *          [-_./a-zA-Z0-9]+
+     *
+     *
+     * SANITIZATION:
+     *      - Discard Quotes.
+     *      - Replace all other invalid characters with '_'.
+     */
+    protected String    sanitizeString (String unsanitized) {
+        String  sanitized;
+
+        sanitized =
+            unsanitized.
+                    replaceAll("[\"']", "").
+                    replaceAll("[^-_./a-zA-Z0-9]", "_");
+
+        return  sanitized;
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/naming/ClassAttributeNamingStrategy.java;<<<<<<< MINE
+=======
+package com.googlecode.jmxtrans.model.naming;
+
+import com.googlecode.jmxtrans.model.NamingStrategy;
+import com.googlecode.jmxtrans.model.Result;
+
+/**
+ * Strategy for naming metrics, tags, and the like given a result.
+ */
+public class ClassAttributeNamingStrategy implements NamingStrategy {
+    protected String    delimiter = ".";
+
+    public void setDelimiter (String delim) {
+        this.delimiter = delim;
+    }
+
+    public String   getDelimiter () {
+        return  this.delimiter;
+    }
+
+    @Override
+    public String   formatName (Result result) {
+        StringBuilder   formatted = new StringBuilder();
+        String          attName   = result.getAttributeName();
+        String          className = result.getClassNameAlias();
+
+        if ( className == null )
+            className = result.getClassName();
+
+        formatted.append(className);
+        formatted.append(delimiter);
+        formatted.append(attName);
+
+        return  formatted.toString();
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/naming/JexlNamingStrategy.java;<<<<<<< MINE
+=======
+package com.googlecode.jmxtrans.model.naming;
+
+import com.googlecode.jmxtrans.model.NamingStrategy;
+import com.googlecode.jmxtrans.model.Result;
+
+import org.apache.commons.jexl2.Expression;
+import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.JexlException;
+import org.apache.commons.jexl2.MapContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Naming strategy which uses an JEXL expression to format the name from the result, its class name, attribute name,
+ * and more.  Note the resulting name can be used for any of a number of purposes.  For example, with OpenTSDB it could
+ * be the metric name or a tag name.
+ *
+ * In the expression, all of the following may be used:
+ *      Variables
+ *      alias - the classname alias of the MBean.
+ *      attribute - the name of the attribute of the MBean queried.
+ *      class - the effective classname of the MBean (uses #alias is not null, otherwise uses #realclass).
+ *      realclass - the class name of the MBean.
+ *      result - the full Result object.
+ */
+public class JexlNamingStrategy implements NamingStrategy{
+    private static final Logger LOG = LoggerFactory.getLogger(JexlNamingStrategy.class);
+
+    public static final String  DEFAULT_EXPRESSION = "class + \".\" + attribute";
+    public static final String  VAR__CLASSNAME = "realclass";
+    public static final String  VAR__ATTRIBUTE_NAME = "attribute";
+    public static final String  VAR__CLASSNAME_ALIAS = "alias";
+    public static final String  VAR__EFFECTIVE_CLASSNAME = "class";
+    public static final String  VAR__RESULT = "result";
+
+    protected JexlEngine    jexl;
+    protected Expression    parsedExpr;
+
+
+    /**
+     * Create a new naming strategy using an JEXL expression and the default expression.
+     */
+    public  JexlNamingStrategy () throws JexlException {
+        jexl = new JexlEngine();
+        this.parsedExpr = jexl.createExpression(DEFAULT_EXPRESSION);
+    }
+
+    /**
+     * Create a new naming strategy using an JEXL expression and the given expression.
+     *
+     * @param expr - the JEXL expression to use to create names.
+     */
+    public  JexlNamingStrategy (String expr) throws JexlException {
+        jexl = new JexlEngine();
+        this.parsedExpr = jexl.createExpression(expr);
+    }
+
+    /**
+     * Format the name for the given result.
+     *
+     * @param result - the result of a JMX query.
+     * @return String - the formatted string resulting from the expression, or null if the formatting fails.
+     */
+    @Override
+    public String formatName (Result result) {
+        String      formatted;
+        JexlContext context = new MapContext();
+
+        this.populateContext(context, result);
+        try {
+            formatted = (String) this.parsedExpr.evaluate(context);
+        } catch ( JexlException jexlExc ) {
+            LOG.error("error applying JEXL expression to query results", jexlExc);
+            formatted = null;
+        }
+
+        return formatted;
+    }
+
+    public void setExpression (String expr) throws JexlException {
+        this.parsedExpr = this.jexl.createExpression(expr);
+    }
+
+    /**
+     * Populate the context with values from the result.
+     *
+     * @param context - the expression context used when evaluating JEXL expressions.
+     * @param result - the result of a JMX query.
+     */
+    protected void  populateContext (JexlContext context, Result result) {
+        context.set(VAR__CLASSNAME, result.getClassName());
+        context.set(VAR__ATTRIBUTE_NAME, result.getAttributeName());
+        context.set(VAR__CLASSNAME_ALIAS, result.getClassNameAlias());
+
+        String effectiveClassname = result.getClassNameAlias();
+        if ( effectiveClassname == null ) {
+            effectiveClassname = result.getClassName();
+        }
+        context.set(VAR__EFFECTIVE_CLASSNAME, effectiveClassname);
+
+        context.set(VAR__RESULT, result);
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/NamingStrategy.java;<<<<<<< MINE
+=======
+package com.googlecode.jmxtrans.model;
+
+/**
+ * Strategy for naming metrics, tags, and the like given a result.
+ */
+public interface NamingStrategy {
+    String  formatName (Result result);
+}>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+	 * Replaces all . with _ and removes all spaces and double/single quotes.
+=======
+	 * Replaces all . and / with _ and removes all spaces and double/single quotes.
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+=======
+		clean = clean.replace("/", "_");
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+		String[] tokens = typeNameStr.split(",");
+=======
+		Map<String, String> typeNameValueMap = getTypeNameValueMap(typeNameStr);
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+			String result = getTypeNameValue(key, tokens);
+=======
+			String result = typeNameValueMap.get(key);
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+=======
+	 * Given a typeName string, create a Map with every key and value in the typeName.
+	 * For example:
+	 *
+	 * typeName=name=PS Eden Space,type=MemoryPool
+	 *
+	 * Returns a Map with the following key/value pairs (excluding the quotes):
+	 *
+	 *  "name"  =>  "PS Eden Space"
+	 *  "type"  =>  "MemoryPool"
+	 *
+	 * @param typeNameStr
+	 *            the type name str
+	 * @return Map<String, String> of type-name-key / value pairs.
+	 */
+	public static Map<String, String>   getTypeNameValueMap (String typeNameStr) {
+		if ( typeNameStr == null ) {
+			return  java.util.Collections.EMPTY_MAP;
+		}
+
+		HashMap result = new HashMap();
+		String[] tokens = typeNameStr.split(",");
+
+		for (String oneToken : tokens) {
+			if ( oneToken.length() > 0 ) {
+				String[] keyValue = splitTypeNameValue(oneToken);
+				result.put(keyValue[0], keyValue[1]);
+			}
+		}
+		return result;
+	}
+
+	/**
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+	/** */
+	private static String getTypeNameValue(String typeName, String[] tokens) {
+		boolean foundIt = false;
+		for (String token : tokens) {
+			String[] keys = token.split("=");
+			for (String key : keys) {
+				// we want the next item in the array.
+				if (foundIt) {
+					return key;
+				}
+				if (typeName.equals(key)) {
+					foundIt = true;
+				}
+			}
+=======
+	/**
+	 * Given a single type-name-key and value from a typename strig (e.g. "type=MemoryPool"), extract the key and
+	 * the value and return both.
+	 *
+	 * @param   typeNameToken - the string containing the pair.
+	 * @return  String[2] where String[0] = the key and String[1] = the value.  If the given string is not in the
+	 *          format "key=value" then String[0] = the original string and String[1] = "".
+	 */
+	private static String[] splitTypeNameValue (String typeNameToken) {
+		String[]	result;
+		String[]	keys = typeNameToken.split("=", 2);
+
+		if ( keys.length == 2 ) {
+			result = keys;
+		}
+		else {
+			result = new String[2];
+			result[0] = keys[0];
+			result[1] = "";
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+		return null;
+=======
+
+		return  result;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxConnectionFactory.java;<<<<<<< MINE
+=======
+            conn.getMBeanServerConnection().getMBeanCount();
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/util/JmxUtilsTests.java;<<<<<<< MINE
+=======
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/util/JmxUtilsTests.java;<<<<<<< MINE
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+=======
+import static org.junit.Assert.*;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/util/JmxUtilsTests.java;<<<<<<< MINE
+=======
+ * @author Arthur Naseef Date: 02/23/2014
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/util/JmxUtilsTests.java;<<<<<<< MINE
+=======
+
+	@Test
+	public void testGetTypeNameValueMap () {
+		assertEquals(java.util.Collections.EMPTY_MAP, JmxUtils.getTypeNameValueMap(null));
+		assertEquals(java.util.Collections.EMPTY_MAP, JmxUtils.getTypeNameValueMap(""));
+		assertEquals(makeMap("x-key1-x", ""), JmxUtils.getTypeNameValueMap("x-key1-x"));
+		assertEquals(makeMap("x-key1-x", "", "x-key2-x", ""),
+		             JmxUtils.getTypeNameValueMap("x-key1-x,x-key2-x"));
+		assertEquals(makeMap("x-key1-x", "x-value1-x"),
+		             JmxUtils.getTypeNameValueMap("x-key1-x=x-value1-x"));
+		assertEquals(makeMap("x-key1-x", "x-value1-x", "y-key2-y", "y-value2-y"),
+		             JmxUtils.getTypeNameValueMap("x-key1-x=x-value1-x,y-key2-y=y-value2-y"));
+		assertEquals(
+			makeMap("x-key1-x", "x-value1-x", "y-key2-y", "y-value2-y", "z-key3-z", "z-value3-z"),
+			JmxUtils.getTypeNameValueMap("x-key1-x=x-value1-x,y-key2-y=y-value2-y,z-key3-z=z-value3-z"));
+		assertEquals(
+			makeMap("x-key1-x", "x-value1-x", "y-key2-y", "", "yy-key2.5-yy", "a=1",
+			        "z-key3-z", "z-value3-z"),
+			JmxUtils.getTypeNameValueMap(
+				"x-key1-x=x-value1-x,y-key2-y,yy-key2.5-yy=a=1,z-key3-z=z-value3-z"));
+	}
+
+
+	@Test
+	public void testGetConcatenatedTypeNameValues () {
+		assertNull(JmxUtils.getConcatedTypeNameValues(null, "a=1"));
+		assertNull(JmxUtils.getConcatedTypeNameValues(Collections.EMPTY_LIST, "a=1"));
+		assertEquals("", JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x"), ""));
+		assertEquals("", JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x", "y-key2-y"), ""));
+		assertEquals("x-value1-x",
+		             JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x"), "x-key1-x=x-value1-x"));
+		assertEquals("", JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x"), "y-key2-y=y-value2-y"));
+		assertEquals("x-value1-x_y-value2-y",
+		             JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x", "y-key2-y"),
+		                                                "x-key1-x=x-value1-x,y-key2-y=y-value2-y"));
+	}
+
+	/**
+	 * Convenience method for creating a Map for comparison.
+	 */
+	protected Map<String, String>   makeMap (String... keysAndValues) {
+		Map<String, String> result;
+		int                 cur;
+
+		result = new HashMap<String, String>();
+
+		cur = 0;
+		while ( cur < keysAndValues.length ) {
+			if ( cur < keysAndValues.length - 1 ) {
+				result.put(keysAndValues[cur], keysAndValues[cur + 1]);
+				cur += 2;
+			}
+			else {
+				result.put(keysAndValues[cur], "");
+				cur++;
+			}
+		}
+
+		return	result;
+	}
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests.java;<<<<<<< MINE
+package com.googlecode.jmxtrans.model.output;
+
+import static org.junit.Assert.*;
+import static org.junit.matchers.JUnitMatchers.containsString;
+import static org.mockito.Mockito.*;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import com.googlecode.jmxtrans.model.Query;
+import com.googlecode.jmxtrans.model.Result;
+
+import org.junit.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+/**
+ * Tests for {@link OpenTSDBWriter}.
+ *
+ * TODO:
+ *	- Stop using a real socket for testing purposes.  Some machines may not allow for the socket creation.
+ */
+public class OpenTSDBWriterTests {
+	private static final Logger	LOG = LoggerFactory.getLogger(OpenTSDBWriterTests.class);
+
+	protected OpenTSDBWriter	writer;
+	protected Query			mockQuery;
+	protected Result		mockResult;
+	protected ServerSocket		loopbackSocket;
+
+	@Before
+	public void	setupTest () {
+		this.mockQuery = mock(Query.class);
+		this.mockResult = mock(Result.class);
+
+		this.writer = new OpenTSDBWriter();
+
+		this.startLoopbackSocket();
+
+			//
+			// Setup common mock interactions.
+			//
+
+		when(this.mockResult.getValues()).thenReturn(createValueMap("x-att1-x", "120021"));
+		when(this.mockResult.getAttributeName()).thenReturn("X-ATT-X");
+		when(this.mockResult.getClassName()).thenReturn("X-DOMAIN.PKG.CLASS-X");
+		when(this.mockResult.getTypeName()).thenReturn("Type=x-type-x,Group=x-group-x,Other=x-other-x,Name=x-name-x");
+
+		this.writer.addSetting("typeNames", Arrays.asList(new String[] { "Type", "Group", "Name", "Missing" }));
+		this.writer.addSetting("host", "localhost");
+		this.writer.addSetting("port", Integer.valueOf(4242));
+	}
+
+	@After
+	public void	cleanupTest () {
+		this.stopLoopbackSocket();
+	}
+
+	@Test
+	public void	testMergedTypeNameValues1 () throws Exception {
+		List<String>	result;
+
+		// Verify the default is the same as the TRUE path.
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		validateMergedTypeNameValues(result, true);
+	}
+
+	@Test
+	public void	testMergedTypeNameValues2 () throws Exception {
+		List<String>	result;
+
+		this.writer.addSetting("mergeTypeNamesTags", Boolean.TRUE);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		validateMergedTypeNameValues(result, true);
+	}
+
+	@Test
+	public void	testMergedTypeNameValues3 () throws Exception {
+		List<String>	result;
+
+		// Verify the FALSE path.
+		this.writer.addSetting("mergeTypeNamesTags", Boolean.FALSE);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		validateMergedTypeNameValues(result, false);
+	}
+
+	@Test
+	public void	testTagSetting () throws Exception {
+		List<String>		result;
+		Map<String, String>	tagMap;
+
+		when(this.mockResult.getValues()).thenReturn(createValueMap("X-ATT-X", "120021"));
+
+		// Verify empty tag map.
+		tagMap = new HashMap<String, String>();
+		this.writer.addSetting("tags", tagMap);
+		this.writer.setTypeNames(new LinkedList());
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021 host=[^ ]*$"));
+
+
+		// Verify tag map with multiple values.
+		tagMap = new HashMap<String, String>();
+		tagMap.put("x-tag1-x", "x-tag1val-x");
+		tagMap.put("x-tag2-x", "x-tag2val-x");
+		tagMap.put("x-tag3-x", "x-tag3val-x");
+		this.writer.addSetting("tags", tagMap);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+		assertTrue(result.get(0).matches(".*host=.*"));
+		assertTrue(result.get(0).matches(".*\\bx-tag1-x=x-tag1val-x\\b.*"));
+		assertTrue(result.get(0).matches(".*\\bx-tag2-x=x-tag2val-x\\b.*"));
+		assertTrue(result.get(0).matches(".*\\bx-tag3-x=x-tag3val-x\\b.*"));
+	}
+
+	@Test
+	public void	testEmptyResultValues () throws Exception {
+		List<String>		result;
+
+		when(this.mockResult.getValues()).thenReturn(null);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		assertEquals(0, result.size());
+	}
+
+	protected void	startLoopbackSocket() {
+		try {
+			this.loopbackSocket = new ServerSocket(4242);
+		}
+		catch ( IOException io_exc ) {
+			LOG.warn("Failed to setup test server socket on port 4242", io_exc);
+		}
+	}
+
+	protected void	stopLoopbackSocket() {
+		try {
+			if ( this.loopbackSocket != null ) {
+				this.loopbackSocket.close();
+				this.loopbackSocket = null;
+			}
+		}
+		catch ( IOException io_exc ) {
+			LOG.warn("Failed to close test server socket on port 4242", io_exc);
+		}
+	}
+
+	protected void	validateMergedTypeNameValues (List<String> result, boolean mergedInd) {
+		if ( mergedInd ) {
+			assertEquals(1, result.size());
+			assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+			assertTrue(result.get(0).matches(".*\\btype=x-att1-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bTypeGroupNameMissing=x-type-x_x-group-x_x-name-x\\b.*"));
+		}
+		else {
+			assertEquals(1, result.size());
+			assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+			assertTrue(result.get(0).matches(".*\\btype=x-att1-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bType=x-type-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bGroup=x-group-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bName=x-name-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bMissing=(\\s.*|$)"));
+		}
+	}
+
+	protected Map<String, Object>	createValueMap (Object... keysAndValues) {
+		Map<String, Object>	result;
+		int			iter;
+
+		result = new HashMap<String, Object>();
+		iter = 0;
+		while ( iter < keysAndValues.length ) {
+			if ( iter < ( keysAndValues.length - 1 ) ) {
+				result.put(keysAndValues[iter].toString(), keysAndValues[iter + 1]);
+				iter += 2;
+			}
+			else {
+				result.put(keysAndValues[iter].toString(), null);
+				iter++;
+			}
+		}
+
+		return	result;
+	}
+}=======
+package com.googlecode.jmxtrans.model.output;
+
+import static org.junit.Assert.*;
+import static org.junit.matchers.JUnitMatchers.containsString;
+import static org.mockito.Mockito.*;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import com.googlecode.jmxtrans.model.Query;
+import com.googlecode.jmxtrans.model.Result;
+
+import org.junit.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+/**
+ * Tests for {@link OpenTSDBWriter}.
+ *
+ * TODO:
+ *	- Stop using a real socket for testing purposes.  Some machines may not allow for the socket creation.
+ */
+public class OpenTSDBWriterTests {
+	private static final Logger	LOG = LoggerFactory.getLogger(OpenTSDBWriterTests.class);
+
+	protected OpenTSDBWriter	writer;
+	protected Query			mockQuery;
+	protected Result		mockResult;
+	protected ServerSocket		loopbackSocket;
+
+	@Before
+	public void	setupTest () {
+		this.mockQuery = mock(Query.class);
+		this.mockResult = mock(Result.class);
+
+		this.writer = new OpenTSDBWriter();
+
+		this.startLoopbackSocket();
+
+			//
+			// Setup common mock interactions.
+			//
+
+		when(this.mockResult.getValues()).thenReturn(createValueMap("x-att1-x", "120021"));
+		when(this.mockResult.getAttributeName()).thenReturn("X-ATT-X");
+		when(this.mockResult.getClassName()).thenReturn("X-DOMAIN.PKG.CLASS-X");
+		when(this.mockResult.getTypeName()).thenReturn("Type=x-type-x,Group=x-group-x,Other=x-other-x,Name=x-name-x");
+
+		this.writer.addSetting("typeNames", Arrays.asList(new String[] { "Type", "Group", "Name", "Missing" }));
+		this.writer.addSetting("host", "localhost");
+		this.writer.addSetting("port", Integer.valueOf(4242));
+	}
+
+	@After
+	public void	cleanupTest () {
+		this.stopLoopbackSocket();
+	}
+
+	@Test
+	public void	testMergedTypeNameValues1 () throws Exception {
+		List<String>	result;
+
+		// Verify the default is the same as the TRUE path.
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		validateMergedTypeNameValues(result, true);
+	}
+
+	@Test
+	public void	testMergedTypeNameValues2 () throws Exception {
+		List<String>	result;
+
+		this.writer.addSetting("mergeTypeNamesTags", Boolean.TRUE);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		validateMergedTypeNameValues(result, true);
+	}
+
+	@Test
+	public void	testMergedTypeNameValues3 () throws Exception {
+		List<String>	result;
+
+		// Verify the FALSE path.
+		this.writer.addSetting("mergeTypeNamesTags", Boolean.FALSE);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		validateMergedTypeNameValues(result, false);
+	}
+
+	@Test
+	public void	testTagSetting () throws Exception {
+		List<String>		result;
+		Map<String, String>	tagMap;
+
+		when(this.mockResult.getValues()).thenReturn(createValueMap("X-ATT-X", "120021"));
+
+		// Verify empty tag map.
+		tagMap = new HashMap<String, String>();
+		this.writer.addSetting("tags", tagMap);
+		this.writer.setTypeNames(new LinkedList());
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021 host=[^ ]*$"));
+
+
+		// Verify tag map with multiple values.
+		tagMap = new HashMap<String, String>();
+		tagMap.put("x-tag1-x", "x-tag1val-x");
+		tagMap.put("x-tag2-x", "x-tag2val-x");
+		tagMap.put("x-tag3-x", "x-tag3val-x");
+		this.writer.addSetting("tags", tagMap);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+		assertTrue(result.get(0).matches(".*host=.*"));
+		assertTrue(result.get(0).matches(".*\\bx-tag1-x=x-tag1val-x\\b.*"));
+		assertTrue(result.get(0).matches(".*\\bx-tag2-x=x-tag2val-x\\b.*"));
+		assertTrue(result.get(0).matches(".*\\bx-tag3-x=x-tag3val-x\\b.*"));
+	}
+
+	@Test
+	public void	testEmptyResultValues () throws Exception {
+		List<String>		result;
+
+		when(this.mockResult.getValues()).thenReturn(null);
+
+		this.writer.start();
+		result = this.writer.resultParser(this.mockResult);
+		this.writer.stop();
+
+		assertEquals(0, result.size());
+	}
+
+	protected void	startLoopbackSocket() {
+		try {
+			this.loopbackSocket = new ServerSocket(4242);
+		}
+		catch ( IOException io_exc ) {
+			LOG.warn("Failed to setup test server socket on port 4242", io_exc);
+		}
+	}
+
+	protected void	stopLoopbackSocket() {
+		try {
+			if ( this.loopbackSocket != null ) {
+				this.loopbackSocket.close();
+				this.loopbackSocket = null;
+			}
+		}
+		catch ( IOException io_exc ) {
+			LOG.warn("Failed to close test server socket on port 4242", io_exc);
+		}
+	}
+
+	protected void	validateMergedTypeNameValues (List<String> result, boolean mergedInd) {
+		LOG.info("result string = {}", result.get(0));
+		if ( mergedInd ) {
+			assertEquals(1, result.size());
+			assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+			assertTrue(result.get(0).matches(".*\\btype=x-att1-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bTypeGroupNameMissing=x-type-x_x-group-x_x-name-x\\b.*"));
+		}
+		else {
+			assertEquals(1, result.size());
+			assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+			assertTrue(result.get(0).matches(".*\\btype=x-att1-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bType=x-type-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bGroup=x-group-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bName=x-name-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bMissing=(\\s.*|$)"));
+		}
+	}
+
+	protected Map<String, Object>	createValueMap (Object... keysAndValues) {
+		Map<String, Object>	result;
+		int			iter;
+
+		result = new HashMap<String, Object>();
+		iter = 0;
+		while ( iter < keysAndValues.length ) {
+			if ( iter < ( keysAndValues.length - 1 ) ) {
+				result.put(keysAndValues[iter].toString(), keysAndValues[iter + 1]);
+				iter += 2;
+			}
+			else {
+				result.put(keysAndValues[iter].toString(), null);
+				iter++;
+			}
+		}
+
+		return	result;
+	}
+}>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b/test/com/googlecode/jmxtrans/model/output/LibratoWriterTest.java;<<<<<<< MINE
+=======
+package com.googlecode.jmxtrans.model.output;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import org.junit.Test;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class LibratoWriterTest {
+
+	@Test
+	public void httpUserAgentContainsAppropriateInformation() throws MalformedURLException {
+		LibratoWriter writer = new LibratoWriter(
+				ImmutableList.<String>of(),
+				false,
+				false,
+				new URL(LibratoWriter.DEFAULT_LIBRATO_API_URL),
+				1000,
+				"username",
+				"token",
+				null,
+				null,
+				ImmutableMap.<String, Object>of()
+		);
+
+		assertThat(writer.httpUserAgent)
+				.startsWith("jmxtrans-standalone/")
+				.contains(System.getProperty("os.name"))
+				.contains(System.getProperty("os.arch"))
+				.contains(System.getProperty("os.version"))
+				.contains(System.getProperty("java.vm.name"))
+				.contains(System.getProperty("java.version"));
+	}
+	
+
+}>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b/src/com/googlecode/jmxtrans/model/output/LibratoWriter.java;<<<<<<< MINE
+=======
+import com.google.common.annotations.VisibleForTesting;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b/src/com/googlecode/jmxtrans/model/output/LibratoWriter.java;<<<<<<< MINE
+=======
+	
+	@VisibleForTesting
+	final String httpUserAgent;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b/src/com/googlecode/jmxtrans/model/output/LibratoWriter.java;<<<<<<< MINE
+=======
+		this.httpUserAgent =
+				"jmxtrans-standalone/1 " + "(" +
+						System.getProperty("java.vm.name") + "/" + System.getProperty("java.version") + "; " +
+						System.getProperty("os.name") + "-" + System.getProperty("os.arch") + "/" + System.getProperty("os.version")
+						+ ")";
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b/src/com/googlecode/jmxtrans/model/output/LibratoWriter.java;<<<<<<< MINE
+=======
+			urlConnection.setRequestProperty("User-Agent", httpUserAgent);
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_a0fcb00_86b58a8/rev_a0fcb00-86b58a8/jmxtrans-core/src/test/java/com/googlecode/jmxtrans/JmxTransformerIT.java;<<<<<<< MINE
+		jmxTransDummyApp = new JmxTransDummyApp("integration-test.json");
+		jmxTransDummyApp.start();
+=======
+		JmxTransConfiguration configuration = new JmxTransConfiguration();
+		configuration.setRunPeriod(1);
+		configuration.setProcessConfigFile(file("integration-test.json"));
+		Injector injector = JmxTransModule.createInjector(configuration);
+		jmxTransformer = injector.getInstance(JmxTransformer.class);
+		jmxTransformer.start();
+	}
+
+	private File file(String filename) throws URISyntaxException {
+		return new File(getClass().getClassLoader().getResource(filename).toURI());
+>>>>>>> YOURS

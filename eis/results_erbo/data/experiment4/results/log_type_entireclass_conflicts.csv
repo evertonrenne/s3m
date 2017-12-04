@@ -1,0 +1,3800 @@
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_413c3a2_6244128/rev_413c3a2-6244128/src/main/test/cucumber/internal/StepMotherTest.java;<<<<<<< MINE
+=======
+package cucumber.internal;
+
+import org.junit.Test;
+
+public class StepMotherTest {
+    @Test
+    public void shouldInvokeSuccessfully() throws Throwable {
+        StepMother mother = new StepMother();
+        mother.add(FooSteps.class);
+        mother.newWorld();
+
+        StepDefinition given = mother.getStepDefinitions().get(0);
+        StepDefinition then = mother.getStepDefinitions().get(1);
+
+        given.invokeOnTarget(new Object[]{"56", "green"});
+        then.invokeOnTarget(new Object[]{"56", "green"});
+    }
+
+    @Test(expected=RuntimeException.class) 
+    public void shouldInvokeWithFailure() throws Throwable {
+        StepMother mother = new StepMother();
+        mother.add(FooSteps.class);
+        mother.newWorld();
+
+        StepDefinition given = mother.getStepDefinitions().get(0);
+        StepDefinition then = mother.getStepDefinitions().get(1);
+
+        given.invokeOnTarget(new Object[]{"56", "green"});
+        then.invokeOnTarget(new Object[]{"99", "green"});
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_db70ab6_e189683/rev_db70ab6-e189683/cucumber-maven-plugin/src/main/java/cucumber/mojo/AbstractJRubyMojo.java;<<<<<<< MINE
+package cucumber.mojo;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.Path;
+import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Base for all JRuby mojos.
+ *
+ * @requiresDependencyResolution compile
+ */
+public abstract class AbstractJRubyMojo extends AbstractMojo {
+
+    protected boolean shouldFork = true;
+
+    /**
+     * @parameter expression="${project}"
+     */
+    protected MavenProject mavenProject;
+
+    /**
+     * @parameter expression="${project.basedir}"
+     * @required
+     */
+    protected File launchDirectory;
+
+    /**
+     * @parameter expression="${jruby.home}"
+     */
+    protected String jrubyHome;
+
+    /**
+     * The amount of memory to use when forking JRuby. Default is "384m".
+     *
+     * @parameter expression="${jruby.launch.memory}"
+     */
+    protected String jrubyLaunchMemory = "384m";
+
+    /**
+     * The project compile classpath.
+     *
+     * @parameter default-value="${project.compileClasspathElements}"
+     * @required
+     * @readonly
+     */
+    private List compileClasspathElements;
+
+    /**
+     * The plugin dependencies.
+     *
+     * @parameter expression="${plugin.artifacts}"
+     * @required
+     * @readonly
+     */
+    private List pluginArtifacts;
+
+    /**
+     * The project test classpath
+     *
+     * @parameter expression="${project.testClasspathElements}"
+     * @required
+     * @readonly
+     */
+    private List testClasspathElements;
+
+    protected Java jruby(List<String> args) throws MojoExecutionException {
+        launchDirectory.mkdirs();
+        Project project = null;
+        try {
+            project = getProject();
+        } catch (DependencyResolutionRequiredException e) {
+            throw new MojoExecutionException("error resolving dependencies", e);
+        }
+
+        Java java = new Java();
+        java.setProject(project);
+        java.setClassname("org.jruby.Main");
+        java.setFailonerror(true);
+
+        Commandline.Argument arg;
+
+        if (shouldFork) {
+            java.setFork(true);
+            java.setDir(launchDirectory);
+
+            arg = java.createJvmarg();
+            arg.setValue("-Xmx" + jrubyLaunchMemory);
+            Environment.Variable classpath = new Environment.Variable();
+
+            Path p = new Path(java.getProject());
+            p.add((Path) project.getReference("maven.plugin.classpath"));
+            p.add((Path) project.getReference("maven.compile.classpath"));
+            p.add((Path) project.getReference("maven.test.classpath"));
+            classpath.setKey("JRUBY_PARENT_CLASSPATH");
+            classpath.setValue(p.toString());
+
+            java.addEnv(classpath);
+        }
+
+        if (jrubyHome != null) {
+            Environment.Variable v = new Environment.Variable();
+            v.setKey("jruby.home");
+            v.setValue(jrubyHome);
+            java.addSysproperty(v);
+        }
+
+        Path p = java.createClasspath();
+        p.add((Path) project.getReference("maven.plugin.classpath"));
+        p.add((Path) project.getReference("maven.compile.classpath"));
+        p.add((Path) project.getReference("maven.test.classpath"));
+        getLog().debug("java classpath: " + p.toString());
+
+        for (String s : args) {
+            arg = java.createArg();
+            arg.setValue(s);
+        }
+
+        return java;
+    }
+
+    @SuppressWarnings({"unchecked"})
+    protected void installGem(List<String> gem) throws MojoExecutionException {
+        List args = new ArrayList();
+        args.add("-S");
+        // maybe_install_gems only takes a list of gems, no versions or sources
+        if (gem.size() > 1) {
+            args.add("gem");
+            args.add("install");
+        } else {
+            args.add("maybe_install_gems");
+        }
+        args.addAll(gem);
+
+        Java jruby = jruby(args);
+        jruby.execute();
+    }
+
+    protected Project getProject() throws DependencyResolutionRequiredException {
+        Project project = new Project();
+        project.setBaseDir(mavenProject.getBasedir());
+        project.addBuildListener(new LogAdapter());
+        addReference(project, "maven.compile.classpath", compileClasspathElements);
+        addReference(project, "maven.plugin.classpath", pluginArtifacts);
+        addReference(project, "maven.test.classpath", testClasspathElements);
+        return project;
+    }
+
+    @SuppressWarnings({"unchecked"})
+    protected void addReference(Project project, String reference, List artifacts)
+            throws DependencyResolutionRequiredException {
+        List list = new ArrayList(artifacts.size());
+
+        for (Object elem : artifacts) {
+            String path;
+            if (elem instanceof Artifact) {
+                Artifact a = (Artifact) elem;
+                File file = a.getFile();
+                if (file == null) {
+                    throw new DependencyResolutionRequiredException(a);
+                }
+                path = file.getPath();
+            } else {
+                path = elem.toString();
+            }
+            list.add(path);
+        }
+
+        Path p = new Path(project);
+        p.setPath(StringUtils.join(list.iterator(), File.pathSeparator));
+        project.addReference(reference, p);
+    }
+
+    public static <T> List<T> listify(T... objects) {
+        List<T> res = new ArrayList<T>();
+        res.addAll(Arrays.asList(objects));
+        return res;
+    }
+
+    public class LogAdapter implements BuildListener {
+        public void buildStarted(BuildEvent event) {
+            log(event);
+        }
+
+        public void buildFinished(BuildEvent event) {
+            log(event);
+        }
+
+        public void targetStarted(BuildEvent event) {
+            log(event);
+        }
+
+        public void targetFinished(BuildEvent event) {
+            log(event);
+        }
+
+        public void taskStarted(BuildEvent event) {
+            log(event);
+        }
+
+        public void taskFinished(BuildEvent event) {
+            log(event);
+        }
+
+        public void messageLogged(BuildEvent event) {
+            log(event);
+        }
+
+        private void log(BuildEvent event) {
+            int priority = event.getPriority();
+            Log log = getLog();
+            String message = event.getMessage();
+            if (message.contains("nbb")) return;
+			switch (priority) {
+                case Project.MSG_ERR:
+                    log.error(message);
+                    break;
+
+                case Project.MSG_WARN:
+                    log.warn(message);
+                    break;
+
+                case Project.MSG_INFO:
+                    log.info(message);
+                    break;
+
+                case Project.MSG_VERBOSE:
+                    log.debug(message);
+                    break;
+
+                case Project.MSG_DEBUG:
+                    log.debug(message);
+                    break;
+
+                default:
+                    log.info(message);
+                    break;
+            }
+        }
+    }
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9c52824_64123b2/rev_9c52824-64123b2/examples/java/src/test/java/simple/SuperSteps.java;<<<<<<< MINE
+=======
+package simple;
+
+import cuke4duke.Before;
+
+public abstract class SuperSteps {
+    protected String b4;
+
+    @Before("@b4,@whatever")
+    public void setB4(Object scenario) {
+        b4 = "b4 was here";
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9c52824_64123b2/rev_9c52824-64123b2/examples/java/src/test/java/simple/HookSteps.java;<<<<<<< MINE
+=======
+package simple;
+
+import cuke4duke.After;
+import cuke4duke.Before;
+import cuke4duke.Then;
+import cuke4duke.When;
+
+import static org.junit.Assert.assertEquals;
+
+public class HookSteps extends SuperSteps {
+    private String b4WithoutArgs;
+    private static String myStatic = "clean";
+
+    @Before
+    public void setB4WithoutArgs() {
+        b4WithoutArgs = "b4WithoutArgs was here";
+    }
+
+    @Then("^b4 should have the value \"([^\"]*)\"$")
+    public void thenB4(String b4Value) {
+        assertEquals(b4Value, b4);
+    }
+
+    @When("^I set static value to \"([^\"]*)\"$")
+    public void setStatic(String newValue) {
+        myStatic = newValue;
+    }
+
+    @Then("^static value should be \"([^\"]*)\"$")
+    public void staticShouldBe(String expected) {
+        assertEquals(expected, myStatic);
+    }
+
+    @After("")
+    public void setAfter(Object scenario) {
+        myStatic = "clean";
+        assertEquals("b4WithoutArgs was here", b4WithoutArgs);
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9c52824_64123b2/rev_9c52824-64123b2/examples/java/src/test/java/simple/StuffSteps.java;<<<<<<< MINE
+=======
+package simple;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import cuke4duke.Given;
+import cuke4duke.Pending;
+import cuke4duke.Table;
+import cuke4duke.Then;
+import cuke4duke.When;
+
+// TODO: This is just testing a Map. We should have some own code to test!!
+public class StuffSteps {
+    private final Map<String,Integer> cukes = new HashMap<String,Integer>();
+
+    @Pending("Let's procrastinate")
+    @Given("a pending step")
+    public void intentionallyPending() {
+        throw new RuntimeException("We shouldn't get here because we are @Pending");
+    }
+
+    @Given("a failing step that is preceded by a pending")
+    public void intentionallyFailing() {
+        throw new RuntimeException("We shouldn't get here either because the previous one is pending");
+    }
+
+    @Given("I have (\\d+) (.*) cukes")
+    public void iHaveNCukes(int n, String color) {
+        this.cukes.put(color, n);
+    }
+
+    @When("I add a table")
+    public void iAddATable(Table table) {
+    	List<List<String>> diffList = new ArrayList<List<String>>();
+    	diffList.add(Arrays.asList("a", "b"));
+    	diffList.add(Arrays.asList("1", "2"));
+        table.diffLists(diffList);
+
+        List<Map<String, String>> hashes = new ArrayList<Map<String, String>>();
+        hashes.add(hash("a", "1", "b", "2"));
+        hashes.add(hash("a", "1", "b", "2"));
+
+        Map<String, Boolean> options = new HashMap<String, Boolean>();
+        options.put("surplus_row", false);
+        table.diffHashes(hashes, options);
+    }
+
+    @When("^I add a string$") 
+    public void iAddAString(String s) {
+        assertEquals("Hello\nWorld", s);
+    } 
+
+    @Then("I should have (\\d+) (.*) cukes")
+    public void iShouldHaveNCukes(int n, String color) {
+        int number = cukes.get(color) != null ? cukes.get(color) : 0;
+		assertEquals(n, number);
+    }
+
+    public void thisIsNotAStep() {}
+
+    private Map<String, String> hash(String...values) {
+        Map<String, String> hash = new HashMap<String, String>();
+
+        for(int i = 0; i < values.length; i += 2) {
+            hash.put(values[i], values[i + 1]);
+        }
+
+        return hash;
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_857f0c4_5bdbeb1/rev_857f0c4-5bdbeb1/cuke4duke/src/main/java/cuke4duke/internal/language/ProgrammingLanguage.java;<<<<<<< MINE
+=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class ProgrammingLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public ProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/language/ProgrammignLanguage.java;<<<<<<< MINE
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name);
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+}=======
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable;
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;<<<<<<< MINE
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/clj/CljLanguage.java;<<<<<<< MINE
+public class CljLanguage extends ProgrammingLanguage {
+=======
+public class CljLanguage extends AbstractProgrammingLanguage {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/jvmclass/ClassLanguage.java;<<<<<<< MINE
+public class ClassLanguage extends ProgrammingLanguage {
+=======
+public class ClassLanguage extends AbstractProgrammingLanguage {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/groovy/GroovyLanguage.java;<<<<<<< MINE
+public class GroovyLanguage extends ProgrammingLanguage {
+=======
+public class GroovyLanguage extends AbstractProgrammingLanguage {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/js/JsLanguage.java;<<<<<<< MINE
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class JsLanguage extends AbstractProgrammingLanguage {
+=======
+public class JsLanguage extends AbstractProgrammingLanguage {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_aa47ccb_e344d6b/rev_aa47ccb-e344d6b/cuke4duke/src/main/java/cuke4duke/internal/clj/CljHook.java;<<<<<<< MINE
+import java.util.List;
+
+public class CljHook extends AbstractHook {
+=======
+@SuppressWarnings("serial")
+public class CljHook extends AFunction implements Hook {
+    @SuppressWarnings("unused")
+    private final CljLanguage instance;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_77ec863_34f31fb/rev_77ec863-34f31fb/core/src/main/java/cucumber/Table.java;<<<<<<< MINE
+=======
+package cucumber;
+
+public class Table {
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/core/src/main/java/cucumber/runtime/TableArgumentProcessor.java;<<<<<<< MINE
+=======
+package cucumber.runtime;
+
+import cucumber.table.Table;
+
+/**
+ * 
+ * Implementations of this interface are responsible to process a table, for
+ * instance to transform it to a list of objects
+ * 
+ */
+public interface TableArgumentProcessor {
+    Object process(Table table);
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/java/src/main/java/cucumber/runtime/java/JavaBeanTableProcessor.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java;
+
+import cucumber.runtime.TableArgumentProcessor;
+import cucumber.table.Table;
+import cucumber.table.java.JavaBeanTableTransformer;
+
+public class JavaBeanTableProcessor implements TableArgumentProcessor {
+    
+    private final Class<?> beanClass;
+    
+    public JavaBeanTableProcessor(Class<?> javaBeanClass) {
+        this.beanClass = javaBeanClass;
+    }
+    @Override
+    public Object process(Table table) {
+        return new JavaBeanTableTransformer(this.beanClass).transformTable(table);
+    }
+    public Class<?> getBeanClass() {
+        return this.beanClass;
+    }
+
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/java/src/test/java/cucumber/runtime/java/JavaBeanTableProcessorTest.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java;
+
+import gherkin.formatter.Argument;
+import gherkin.formatter.model.Comment;
+import gherkin.formatter.model.Row;
+import gherkin.formatter.model.Step;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
+
+import org.junit.Test;
+
+import static org.mockito.Mockito.when;
+
+import static org.mockito.Mockito.mock;
+
+import cucumber.annotation.JavaBeanClass;
+import cucumber.runtime.StepDefinition;
+import cucumber.runtime.StepDefinitionMatch;
+import cucumber.runtime.TableArgumentProcessor;
+import cucumber.runtime.transformers.Transformers;
+import cucumber.table.java.User;
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+public class JavaBeanTableProcessorTest {
+
+    @Test
+    public void shouldReturnAJavaBeanProcessorWithUser() throws Throwable {
+        StepDefinition stepDefinition = new JavaStepDefinition(Pattern.compile("^.*$"), stepMethodWithList(),
+                mock(ObjectFactory.class));
+        TableArgumentProcessor tableProcessor = stepDefinition.getTableProcessor(0);
+        assertNotNull("TableArgumentProcessor is null", tableProcessor);
+        assertTrue("TableArgumentProcessor is not a JavaBeanTableProcessor",
+                tableProcessor instanceof JavaBeanTableProcessor);
+        assertEquals("JavaBeanTableProcessor wasn't initialized with User class", User.class,
+                ((JavaBeanTableProcessor) tableProcessor).getBeanClass());
+    }
+
+    @Test
+    public void shouldExecuteWithAListOfUsers() throws Throwable {
+        List<Argument> arguments = Arrays.asList(new Argument(0, ""));
+        StepDefinition stepDefinition = mock(JavaStepDefinition.class);
+        when(stepDefinition.getParameterTypes()).thenReturn(new Class<?>[] { List.class });
+        when(stepDefinition.getTableProcessor(0)).thenReturn(new JavaBeanTableProcessor(User.class));
+        Step stepWithRows = mock(Step.class);
+        when(stepWithRows.getDocString()).thenReturn(null);
+        when(stepWithRows.getRows()).thenReturn(rowsList());
+        StepDefinitionMatch stepDefinitionMatch = new StepDefinitionMatch(arguments, stepDefinition, stepWithRows,
+                new Transformers());
+        stepDefinitionMatch.runStep(stepWithRows, "step-definition-match-test", Locale.ENGLISH);
+        Object[] args = { Arrays.asList(new User("Sid Vicious", sidsBirthday(), 1000)) };
+        verify(stepDefinition).execute(args);
+    }
+
+    private Method stepMethodWithList() throws SecurityException, NoSuchMethodException {
+        return getClass().getMethod("stepMethodWithList", List.class);
+    }
+
+    private List<Row> rowsList() {
+        List<Row> rows = new ArrayList<Row>();
+        rows.add(new Row(new ArrayList<Comment>(), Arrays.asList("name", "birth date", "credits"), 1));
+        rows.add(new Row(new ArrayList<Comment>(), Arrays.asList("Sid Vicious", "5/10/1957", "1000"), 2));
+        return rows;
+    }
+
+    private Date sidsBirthday() {
+        Calendar sidsBirthDay = Calendar.getInstance();
+        sidsBirthDay.set(1957, 4, 10, 0, 0, 0);
+        sidsBirthDay.set(Calendar.MILLISECOND, 0);
+        return sidsBirthDay.getTime();
+    }
+
+    public void stepMethodWithList(@JavaBeanClass(User.class) List<User> users) {
+        //
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_6b11cde_59b5d96/rev_6b11cde-59b5d96/core/src/main/java/cucumber/formatter/NullReporter.java;<<<<<<< MINE
+=======
+package cucumber.formatter;
+
+import gherkin.formatter.Formatter;
+import gherkin.formatter.Reporter;
+import gherkin.formatter.model.*;
+
+import java.util.List;
+
+public class NullReporter implements Reporter, Formatter {
+    @Override
+    public void uri(String s) {
+    }
+
+    @Override
+    public void feature(Feature feature) {
+    }
+
+    @Override
+    public void background(Background background) {
+    }
+
+    @Override
+    public void scenario(Scenario scenario) {
+    }
+
+    @Override
+    public void scenarioOutline(ScenarioOutline scenarioOutline) {
+    }
+
+    @Override
+    public void examples(Examples examples) {
+    }
+
+    @Override
+    public void step(Step step) {
+    }
+
+    @Override
+    public void eof() {
+    }
+
+    @Override
+    public void syntaxError(String s, String s1, List<String> strings, String s2, int i) {
+    }
+
+    @Override
+    public void result(Result result) {
+    }
+
+    @Override
+    public void match(Match match) {
+    }
+
+    @Override
+    public void embedding(String s, byte[] bytes) {
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_ed96fe1_0fac5b8/rev_ed96fe1-0fac5b8/spring/src/main/java/cucumber/runtime/java/spring/hooks/SpringTransactionHooks.java;<<<<<<< MINE
+public class SpringTransactionHooks {
+=======
+import cucumber.annotation.After;
+import cucumber.annotation.Before;
+
+/**
+ * This class defines before and afrer hooks which provide automatic spring rollback capabilities.
+ * These hooks will apply to any element(s) within a <code>.feature</code> file tagged with <code>@txn</code>.
+ * 
+ * Clients wishing to leverage these hooks should include this class' package in the <code>packages</code> property of the 
+ * Test class' <code>Feature</code> annotation.
+ * 
+ * The BEFORE and AFTER hooks both rely on being able to obtain a <code>PlatformTransactionManager</code> by type, or
+ * by an optionally specified bean name, from the runtime <code>BeanFactory</code>.
+ * 
+ *  NOTE: This class is NOT threadsafe!  It relies on the fact that cucumber-jvm will instantiate an instance of any 
+ *        applicable hookdef class per scenario run.
+ * 
+ * @author patrickmcmichael
+ */
+public class SpringTransactionHooks implements BeanFactoryAware {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/loadguicemodule/FirstSteps.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice.loadguicemodule;
+
+import cucumber.annotation.en.And;
+import cucumber.annotation.en.When;
+
+import javax.inject.Inject;
+
+public class FirstSteps {
+
+    private final SharedBetweenSteps shared;
+
+    @Inject
+    public FirstSteps(SharedBetweenSteps shared) {
+        this.shared = shared;
+    }
+
+    @And("^the class SharedBetweenSteps is bound to a single instance$")
+    public void the_class_SharedBetweenSteps_is_bound_to_a_single_instance() {
+        //have a look at the module class
+    }
+
+    @When("^the first step class visits the instance of SharedBetweenSteps$")
+    public void the_first_step_class_visits_the_instance_of_SharedBetweenSteps() {
+        shared.visit();
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/loadguicemodule/SharedBetweenSteps.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice.loadguicemodule;
+
+public class SharedBetweenSteps {
+    public boolean visited = false;
+
+    public void visit() {
+        visited = true;
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/loadguicemodule/YourModuleClass.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice.loadguicemodule;
+
+import com.google.inject.AbstractModule;
+
+public class YourModuleClass extends AbstractModule{
+
+    @Override
+    protected void configure() {
+        bind(SharedBetweenSteps.class).toInstance(new SharedBetweenSteps());
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/loadguicemodule/SecondSteps.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice.loadguicemodule;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import javax.inject.Inject;
+
+
+import cucumber.annotation.en.Then;
+
+public class SecondSteps {
+    
+    private final SharedBetweenSteps shared;
+
+    @Inject
+    public SecondSteps(SharedBetweenSteps shared) {
+        this.shared = shared;
+    }
+
+    @Then("^the instance passed to the second step class is still visited$")
+    public void the_instance_passed_to_the_second_step_class_is_still_visited() {
+        assertThat(shared.visited, is(true));
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/loadguicemodule/loadguicemodule.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice.loadguicemodule;
+
+import org.junit.runner.RunWith;
+
+import cucumber.junit.Cucumber;
+
+@RunWith(Cucumber.class )
+public class loadguicemodule {
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/PrivateConstructor.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice;
+
+import com.google.inject.AbstractModule;
+
+public class PrivateConstructor extends AbstractModule {
+    private PrivateConstructor() {
+
+    }
+
+    @Override
+    protected void configure() {
+
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/ModuleInstantiator_Test.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
+
+import com.google.inject.Module;
+
+import cucumber.runtime.java.guice.loadguicemodule.YourModuleClass;
+
+public class ModuleInstantiator_Test {
+    private final ModuleInstantiator instantiator = new ModuleInstantiator();
+    
+    @Test
+    public void instantiatesModuleByFullQualifiedName() throws Exception {
+        assertThat(instantiate(YourModuleClass.class), is(instanceOf(YourModuleClass.class)));
+    }
+
+    @Test(expected=GuiceModuleInstantiationFailed.class)
+    public void fails_to_instantiate_non_existant_class() throws Exception {
+        instantiator.instantiate("some.bogus.Class");
+    }
+    
+    @Test(expected=GuiceModuleInstantiationFailed.class)
+    public void fails_to_instantiate_class_not_implementing_module() throws Exception {
+        instantiate(String.class);
+    }
+    
+    @Test(expected=GuiceModuleInstantiationFailed.class)
+    public void fails_to_instantiate_class_with_private_constructor() throws Exception {
+        instantiate(PrivateConstructor.class);
+    }
+
+    private Module instantiate(Class<?> moduleClass) {
+        String moduleClassName = moduleClass.getCanonicalName();
+        return instantiator.instantiate(moduleClassName).get(0);
+    }    
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/main/java/cucumber/runtime/java/guice/ModuleInstantiator.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice;
+
+import static java.text.MessageFormat.format;
+
+import java.util.Collections;
+import java.util.List;
+
+import com.google.inject.Module;
+
+public class ModuleInstantiator {
+    public List<Module> instantiate(String moduleClassName) {
+        try {
+            Module module = (Module) Class.forName(moduleClassName).newInstance();
+            return Collections.singletonList(module);
+        } catch (Exception e) {
+            String message = format("Instantiation of ''{0}'' failed", moduleClassName);
+            throw new GuiceModuleInstantiationFailed(message, e);
+        }
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/main/java/cucumber/runtime/java/guice/GuiceModuleInstantiationFailed.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice;
+
+public class GuiceModuleInstantiationFailed extends RuntimeException{
+    
+    public GuiceModuleInstantiationFailed(String message, Throwable cause) {
+        super(message, cause);
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/main/java/cucumber/runtime/java/guice/LoadingPropertiesFileFailed.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.guice;
+
+public class LoadingPropertiesFileFailed extends RuntimeException {
+
+    public LoadingPropertiesFileFailed(String message, Throwable cause) {
+        super(message, cause);
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7d3b639_f6064ca/rev_7d3b639-f6064ca/examples/java-calculator/src/test/java/cucumber/examples/java/calculator/RpnCalculatorStepdefs.java;<<<<<<< MINE
+	@Given("^a calculator I just turned on$")
+	public void a_calculator_I_just_turned_on() {
+		calc = new RpnCalculator();
+	}
+
+	@When("^I add (\\d+) and (\\d+)$")
+	public void adding(int arg1, int arg2) {
+		calc.push(arg1);
+		calc.push(arg2);
+		calc.push("+");
+	}
+
+	@Then("^the result is (\\d+)$")
+	public void the_result_is(double expected) {
+		assertEquals(expected, calc.value());
+	}
+
+	@Before({ "~@foo" })
+	public void before() {
+		System.out.println("Runs before scenarios *not* tagged with @foo");
+	}
+
+	@After
+	public void after() {
+
+	}
+
+	/**
+	 * Shows you can use the @Given annotation even inside a scenario outline,
+	 * having a List<SomeObject> as the argument
+	 * @param additions
+	 */
+	@Given("^the previous additions:$")
+	public void thePreviousAdditions(List<PreviousAddition> additions) {
+		calc = new RpnCalculator();		
+		for (Iterator<PreviousAddition> iterator = additions.iterator(); iterator
+				.hasNext();) {
+			PreviousAddition operation = iterator.next();
+			calc.push(operation.getFirst());
+			calc.push(operation.getSecond());
+			calc.push("+");
+		}
+	}
+
+	public class PreviousAddition {
+		Integer first;
+		Integer second;
+		String operation;
+		
+		public PreviousAddition(Integer first, Integer second, String operation) {
+			super();
+			this.first = first;
+			this.second = second;
+			this.operation = operation;
+		}
+
+		public Integer getFirst() {
+			return first;
+		}
+
+		public void setFirst(Integer first) {
+			this.first = first;
+		}
+
+		public Integer getSecond() {
+			return second;
+		}
+
+		public void setSecond(Integer second) {
+			this.second = second;
+		}
+
+		public String getOperation() {
+			return operation;
+		}
+
+		public void setOperation(String operation) {
+			this.operation = operation;
+		}
+	}
+=======
+    }
+    
+	@Given("^the following movements:$")
+	public void theFollowingMovements(List<ScenarioMovement> movements) {
+		calc = new RpnCalculator();
+		stepDefmovements = new ArrayList<RpnCalculatorStepdefs.ScenarioMovement>();
+	    for (Iterator<ScenarioMovement> iterator = movements.iterator(); iterator.hasNext();) {
+	    	
+	    	stepDefmovements.add(iterator.next());	
+		}
+	}
+	
+	public class ScenarioMovement {
+		String code;
+		String from;
+		String to;
+		
+		public ScenarioMovement(String code, String from, String to) {
+			super();
+			this.code = code;
+			this.from = from;
+			this.to = to;
+		}
+		public String getCode() {
+			return code;
+		}
+		public void setCode(String code) {
+			this.code = code;
+		}
+		public String getFrom() {
+			return from;
+		}
+		public void setFrom(String from) {
+			this.from = from;
+		}
+		public String getTo() {
+			return to;
+		}
+		public void setTo(String to) {
+			this.to = to;
+		}
+		
+	}
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;<<<<<<< MINE
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;<<<<<<< MINE
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05/examples/java-calculator/src/test/java/cucumber/examples/java/calculator/date_calculator_Test.java;<<<<<<< MINE
+=======
+package cucumber.examples.java.calculator;
+
+import org.junit.runner.RunWith;
+
+import cucumber.junit.Cucumber;
+import cucumber.junit.Feature;
+
+@RunWith(Cucumber.class)
+@Feature(value = "date_calculator.feature")
+public class date_calculator_Test {
+
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05/examples/java-calculator/src/test/java/cucumber/examples/java/calculator/DateStepdefs.java;<<<<<<< MINE
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+import cucumber.annotation.DateFormat;
+import cucumber.annotation.en.Given;
+import cucumber.annotation.en.Then;
+import cucumber.annotation.en.When;
+import static org.junit.Assert.*;
+
+public class DateStepdefs {
+
+    String result;
+    private DateCalculator calculator;
+
+    @Given("^today is (.+)$")
+    public void today_is_(@DateFormat("yyyy-MM-dd") Date date) {
+        calculator = new DateCalculator(date);
+    }
+
+    @Then("^the result should be (.+)$")
+    public void the_result_should_be_(String expectedResult) {
+        assertEquals(expectedResult, result);
+    }
+
+    @When("^I ask if (.+) in in the past$")
+    public void I_ask_how_many_days_ago_was(Date date) {
+        result = calculator.isDateInThePast(date);
+    }
+}=======
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+import cucumber.annotation.DateFormat;
+import cucumber.annotation.en.Given;
+import cucumber.annotation.en.Then;
+import cucumber.annotation.en.When;
+import static org.junit.Assert.*;
+
+public class DateStepdefs {
+
+    private String result;
+    private DateCalculator calculator;
+
+    @Given("^today is (.+)$")
+    public void today_is(@DateFormat("yyyy-MM-dd") Date date) {
+        calculator = new DateCalculator(date);
+    }
+
+    @When("^I ask if (.+) is in the past$")
+    public void I_ask_if_date_is_in_the_past(Date date) {
+        result = calculator.isDateInThePast(date);
+    }
+
+    @Then("^the result should be (.+)$")
+    public void the_result_should_be(String expectedResult) {
+        assertEquals(expectedResult, result);
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05/examples/java-calculator/src/main/java/cucumber/examples/java/calculator/DateCalculator.java;<<<<<<< MINE
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+public class DateCalculator {
+	
+	private Date now;
+
+	public DateCalculator(Date now) {
+		super();
+		this.now = now;
+	}
+
+	public String isDateInThePast(Date date) {
+		if(date.before(now))
+			return "yes";
+		else
+			return "no";
+	}
+	
+	
+
+}=======
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+public class DateCalculator {
+    private Date now;
+
+    public DateCalculator(Date now) {
+        this.now = now;
+    }
+
+    public String isDateInThePast(Date date) {
+        return (date.before(now)) ? "yes" : "no";
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a/core/src/main/java/cucumber/runtime/World.java;<<<<<<< MINE
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8a45465_f711375/rev_8a45465-f711375/clojure/src/main/java/cucumber/runtime/clojure/ClojureHookDefinition.java;<<<<<<< MINE
+=======
+package cucumber.runtime.clojure;
+
+import clojure.lang.IFn;
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import cucumber.runtime.Utils;
+import gherkin.TagExpression;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class ClojureHookDefinition implements HookDefinition {
+
+    private final TagExpression tagExpression;
+    private final IFn closure;
+
+    public ClojureHookDefinition(String[] tagExpressions, IFn closure) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.closure = closure;
+    }
+
+    // Clojure's AFunction.invokeWithArgs doesn't take varargs :-/
+    private Method lookupInvokeMethod(Object[] args) throws NoSuchMethodException {
+        return IFn.class.getMethod("invoke", (Class<?>[]) Utils.listOf(args.length, String.class).toArray());
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        Object[] args = new Object[0];
+        Method functionInvoke = lookupInvokeMethod(args);
+        try {
+            functionInvoke.invoke(closure, args);
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
+        }
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
+    }
+
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8a45465_f711375/rev_8a45465-f711375/clojure/src/main/java/cucumber/runtime/clojure/ClojureStepDefinition.java;<<<<<<< MINE
+=======
+package cucumber.runtime.clojure;
+
+import clojure.lang.IFn;
+import cucumber.runtime.JdkPatternArgumentMatcher;
+import cucumber.runtime.ParameterType;
+import cucumber.runtime.StepDefinition;
+import cucumber.runtime.Utils;
+import gherkin.formatter.Argument;
+import gherkin.formatter.model.Step;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
+
+public class ClojureStepDefinition implements StepDefinition {
+    private final Pattern pattern;
+    private final IFn closure;
+    private StackTraceElement location;
+
+    public ClojureStepDefinition(Pattern pattern, IFn closure, StackTraceElement location) {
+        this.pattern = pattern;
+        this.closure = closure;
+        this.location = location;
+    }
+
+    // Clojure's IFn.invoke doesn't take varargs :-/
+    private Method lookupInvokeMethod(Object[] args) throws NoSuchMethodException {
+        List<Class<Object>> classes = Utils.listOf(args.length, Object.class);
+        Class<?>[] params = classes.toArray(new Class<?>[classes.size()]);
+        return IFn.class.getMethod("invoke", params);
+    }
+
+    public List<Argument> matchedArguments(Step step) {
+        return new JdkPatternArgumentMatcher(pattern).argumentsFrom(step.getName());
+    }
+
+    public String getLocation() {
+        return location.getFileName() + ":" + location.getLineNumber();
+    }
+
+    public List<ParameterType> getParameterTypes() {
+        return null;
+    }
+
+    public void execute(Locale locale, Object[] args) throws Throwable {
+        Method functionInvoke = lookupInvokeMethod(args);
+        try {
+            functionInvoke.invoke(closure, args);
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
+        }
+    }
+
+    public boolean isDefinedAt(StackTraceElement stackTraceElement) {
+        return location.getFileName().equals(stackTraceElement.getFileName());
+    }
+
+    @Override
+    public String getPattern() {
+        return pattern.pattern();
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8a45465_f711375/rev_8a45465-f711375/clojure/src/main/java/cucumber/runtime/clojure/ClojureBackend.java;<<<<<<< MINE
+=======
+package cucumber.runtime.clojure;
+
+import clojure.lang.IFn;
+import clojure.lang.RT;
+import clojure.lang.Compiler;
+import cucumber.io.Resource;
+import cucumber.io.ResourceLoader;
+import cucumber.runtime.Backend;
+import cucumber.runtime.CucumberException;
+import cucumber.runtime.World;
+import gherkin.formatter.model.Step;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.regex.Pattern;
+
+public class ClojureBackend implements Backend {
+    private static ClojureBackend instance;
+    private final ResourceLoader resourceLoader;
+    private World world;
+
+    public ClojureBackend(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+        instance = this;
+        loadScript("cucumber/runtime/clojure/dsl");
+    }
+
+    @Override
+    public void buildWorld(List<String> gluePaths, World world) {
+        this.world = world;
+        for (String gluePath : gluePaths) {
+            for (Resource resource : resourceLoader.resources(gluePath, ".clj")) {
+                loadScript(resource);
+            }
+        }
+    }
+
+    private void loadScript(String path) {
+        try {
+            RT.load(path.replaceAll(".clj$", ""), true);
+        } catch (IOException e) {
+            throw new CucumberException(e);
+        } catch (ClassNotFoundException e) {
+            throw new CucumberException(e);
+        }
+    }
+
+    private void loadScript(Resource resource) {
+        try {
+            Compiler.load(new InputStreamReader(resource.getInputStream(), "UTF-8"), resource.getPath(), resource.getPath());
+        } catch (IOException e) {
+            throw new CucumberException(e);
+        }
+    }
+
+    @Override
+    public void disposeWorld() {
+    }
+
+    @Override
+    public String getSnippet(Step step) {
+        return new ClojureSnippetGenerator(step).getSnippet();
+    }
+
+    private StackTraceElement stepDefLocation(String interpreterClassName, String interpreterMethodName) {
+        Throwable t = new Throwable();
+        StackTraceElement[] stackTraceElements = t.getStackTrace();
+        for (int i = 0; i < stackTraceElements.length; i++) {
+            StackTraceElement element = stackTraceElements[i];
+            if (element.getClassName().equals(interpreterClassName) && element.getMethodName().equals(interpreterMethodName)) {
+                return stackTraceElements[i - 1];
+            }
+        }
+        throw new CucumberException("Couldn't find location for step definition");
+    }
+
+    public static void addStepDefinition(Pattern regexp, IFn body) {
+        StackTraceElement location = instance.stepDefLocation("clojure.lang.Compiler", "eval");
+        instance.world.addStepDefinition(new ClojureStepDefinition(regexp, body, location));
+    }
+
+    public static void addBeforeHook(IFn body) {
+        instance.world.addBeforeHook(new ClojureHookDefinition(new String[0], body));
+    }
+
+    public static void addAfterHook(IFn body) {
+        instance.world.addAfterHook(new ClojureHookDefinition(new String[0], body));
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8a45465_f711375/rev_8a45465-f711375/clojure/src/main/java/cucumber/runtime/clojure/ClojureHook.java;<<<<<<< MINE
+=======
+package cucumber.runtime.clojure;
+
+import clojure.lang.IFn;
+
+import java.util.List;
+
+public class ClojureHook {
+    private final IFn closure;
+
+    public ClojureHook(List<String> tagExpressions, IFn closure) {
+        //super(tagExpressions);
+        this.closure = closure;
+    }
+
+    public void invoke(String location, Object scenario) throws Throwable {
+        closure.call();
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/io/OneTimeResourceLoader.java;<<<<<<< MINE
+=======
+package cucumber.io;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * A wrapper for the existing resource loaders to ensure that
+ * they're only loaded one time.
+ * This allows the other resource loaders to still be used, for whatever purpose they've got
+ * whilst in special cases preventing things from being loaded multiple times.
+ */
+public class OneTimeResourceLoader implements ResourceLoader {
+
+    private Set<String> loadedResourcePaths = new HashSet<String>();
+    private ResourceLoader nestedLoader;
+
+    public OneTimeResourceLoader(ResourceLoader loader) {
+        this.nestedLoader = loader;
+    }
+
+    @Override
+    public Iterable<Resource> resources(String path, String suffix) {
+        Set<Resource> resourcesToLoad = new HashSet<Resource>();
+
+        for (Resource resource : nestedLoader.resources(path, suffix)) {
+            if (loadedResourcePaths.add(resource.getPath())) {
+                resourcesToLoad.add(resource);
+            }
+        }
+
+        return resourcesToLoad;
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_beb39a9_6c0dccd/rev_beb39a9-6c0dccd/core/src/main/java/cucumber/runtime/World.java;<<<<<<< MINE
+package cucumber.runtime;
+
+import gherkin.formatter.Reporter;
+import gherkin.formatter.model.DataTableRow;
+import gherkin.formatter.model.DocString;
+import gherkin.formatter.model.Step;
+import java.util.Locale;
+import java.util.List;
+
+
+public interface World {
+    void buildBackendWorldsAndRunBeforeHooks(Reporter reporter);
+
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void runUnreportedStep(String file, Locale locale, String stepKeyword, String stepName, int line, List<DataTableRow> dataTableRows, DocString docString) throws Throwable;
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_beb39a9_6c0dccd/rev_beb39a9-6c0dccd/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+package cucumber.runtime;
+
+import cucumber.runtime.converters.LocalizedXStreams;
+import gherkin.formatter.Argument;
+import gherkin.formatter.Reporter;
+import gherkin.formatter.model.*;
+
+import java.util.*;
+
+public class RuntimeWorld implements World {
+    private static final Object DUMMY_ARG = new Object();
+
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public RuntimeWorld(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    @Override
+    public void buildBackendWorldsAndRunBeforeHooks(Reporter reporter) {
+        runtime.buildBackendWorlds(this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    @Override
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    @Override
+    public void runUnreportedStep(String uri, Locale locale, String stepKeyword, String stepName, int line, List<DataTableRow> dataTableRows, DocString docString) throws Throwable {
+        Step step = new Step(Collections.<Comment>emptyList(), stepKeyword, stepName, line, dataTableRows, docString);
+
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            UndefinedStepException error = new UndefinedStepException(step);
+
+            StackTraceElement[] originalTrace = error.getStackTrace();
+            StackTraceElement[] newTrace = new StackTraceElement[originalTrace.length + 1];
+            newTrace[0] = new StackTraceElement("â½", "StepDefinition", uri, line);
+            System.arraycopy(originalTrace, 0, newTrace, 1, originalTrace.length);
+            error.setStackTrace(newTrace);
+
+            throw error;
+        }
+        match.runStep(locale);
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    @Override
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    @Override
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    @Override
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    @Override
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    @Override
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    @Override
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/clojure/src/main/java/cucumber/runtime/clojure/ClojureHookDefinition.java;<<<<<<< MINE
+package cucumber.runtime.clojure;
+
+import clojure.lang.IFn;
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import cucumber.runtime.Utils;
+import gherkin.TagExpression;
+import gherkin.formatter.model.Tag;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+
+public class ClojureHookDefinition implements HookDefinition {
+
+    private final TagExpression tagExpression;
+    private final IFn closure;
+
+    public ClojureHookDefinition(String[] tagExpressions, IFn closure) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.closure = closure;
+    }
+
+    // Clojure's AFunction.invokeWithArgs doesn't take varargs :-/
+    private Method lookupInvokeMethod(Object[] args) throws NoSuchMethodException {
+        List<Class<Object>> classes = Utils.listOf(args.length, Object.class);
+        Class<?>[] params = classes.toArray(new Class<?>[classes.size()]);
+        return IFn.class.getMethod("invoke", params);
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        Object[] args = new Object[0];
+        Method functionInvoke = lookupInvokeMethod(args);
+        try {
+            functionInvoke.invoke(closure, args);
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
+        }
+    }
+
+    @Override
+    public boolean matches(Collection<Tag> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
+    }
+
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/clojure/src/main/java/cucumber/runtime/clojure/ClojureStepDefinition.java;<<<<<<< MINE
+package cucumber.runtime.clojure;
+
+import clojure.lang.IFn;
+import cucumber.runtime.JdkPatternArgumentMatcher;
+import cucumber.runtime.ParameterType;
+import cucumber.runtime.StepDefinition;
+import cucumber.runtime.Utils;
+import gherkin.I18n;
+import gherkin.formatter.Argument;
+import gherkin.formatter.model.Step;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.regex.Pattern;
+
+public class ClojureStepDefinition implements StepDefinition {
+    private final Pattern pattern;
+    private final IFn closure;
+    private StackTraceElement location;
+
+    public ClojureStepDefinition(Pattern pattern, IFn closure, StackTraceElement location) {
+        this.pattern = pattern;
+        this.closure = closure;
+        this.location = location;
+    }
+
+    // Clojure's IFn.invoke doesn't take varargs :-/
+    private Method lookupInvokeMethod(Object[] args) throws NoSuchMethodException {
+        List<Class<Object>> classes = Utils.listOf(args.length, Object.class);
+        Class<?>[] params = classes.toArray(new Class<?>[classes.size()]);
+        return IFn.class.getMethod("invoke", params);
+    }
+
+    public List<Argument> matchedArguments(Step step) {
+        return new JdkPatternArgumentMatcher(pattern).argumentsFrom(step.getName());
+    }
+
+    public String getLocation() {
+        return location.getFileName() + ":" + location.getLineNumber();
+    }
+
+    public List<ParameterType> getParameterTypes() {
+        return null;
+    }
+
+    public void execute(I18n i18n, Object[] args) throws Throwable {
+        Method functionInvoke = lookupInvokeMethod(args);
+        try {
+            functionInvoke.invoke(closure, args);
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
+        }
+    }
+
+    public boolean isDefinedAt(StackTraceElement stackTraceElement) {
+        return location.getFileName().equals(stackTraceElement.getFileName());
+    }
+
+    @Override
+    public String getPattern() {
+        return pattern.pattern();
+    }
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/clojure/src/main/java/cucumber/runtime/clojure/ClojureBackend.java;<<<<<<< MINE
+package cucumber.runtime.clojure;
+
+import clojure.lang.Compiler;
+import clojure.lang.IFn;
+import clojure.lang.RT;
+import cucumber.io.Resource;
+import cucumber.io.ResourceLoader;
+import cucumber.runtime.Backend;
+import cucumber.runtime.CucumberException;
+import cucumber.runtime.Glue;
+import cucumber.runtime.UnreportedStepExecutor;
+import cucumber.runtime.snippets.SnippetGenerator;
+import gherkin.formatter.model.Step;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.regex.Pattern;
+
+public class ClojureBackend implements Backend {
+    private static ClojureBackend instance;
+    private final SnippetGenerator snippetGenerator = new SnippetGenerator(new ClojureSnippet());
+    private final ResourceLoader resourceLoader;
+    private Glue glue;
+
+    public ClojureBackend(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+        instance = this;
+        loadScript("cucumber/runtime/clojure/dsl");
+    }
+
+    @Override
+    public void loadGlue(Glue glue, List<String> gluePaths) {
+        this.glue = glue;
+        for (String gluePath : gluePaths) {
+            for (Resource resource : resourceLoader.resources(gluePath, ".clj")) {
+                loadScript(resource);
+            }
+        }
+
+    }
+
+    @Override
+    public void setUnreportedStepExecutor(UnreportedStepExecutor executor) {
+        //Not used yet
+    }
+
+    @Override
+    public void buildWorld() {
+    }
+
+    private void loadScript(String path) {
+        try {
+            RT.load(path.replaceAll(".clj$", ""), true);
+        } catch (IOException e) {
+            throw new CucumberException(e);
+        } catch (ClassNotFoundException e) {
+            throw new CucumberException(e);
+        }
+    }
+
+    private void loadScript(Resource resource) {
+        try {
+            Compiler.load(new InputStreamReader(resource.getInputStream(), "UTF-8"), resource.getPath(), resource.getPath());
+        } catch (IOException e) {
+            throw new CucumberException(e);
+        }
+    }
+
+    @Override
+    public void disposeWorld() {
+    }
+
+    @Override
+    public String getSnippet(Step step) {
+        return snippetGenerator.getSnippet(step);
+    }
+
+    private StackTraceElement stepDefLocation(String interpreterClassName, String interpreterMethodName) {
+        Throwable t = new Throwable();
+        StackTraceElement[] stackTraceElements = t.getStackTrace();
+        for (int i = 0; i < stackTraceElements.length; i++) {
+            StackTraceElement element = stackTraceElements[i];
+            if (element.getClassName().equals(interpreterClassName) && element.getMethodName().equals(interpreterMethodName)) {
+                return stackTraceElements[i - 1];
+            }
+        }
+        throw new CucumberException("Couldn't find location for step definition");
+    }
+
+    public static void addStepDefinition(Pattern regexp, IFn body) {
+        StackTraceElement location = instance.stepDefLocation("clojure.lang.Compiler", "eval");
+        instance.glue.addStepDefinition(new ClojureStepDefinition(regexp, body, location));
+    }
+
+    public static void addBeforeHook(IFn body) {
+        instance.glue.addBeforeHook(new ClojureHookDefinition(new String[0], body));
+    }
+
+    public static void addAfterHook(IFn body) {
+        instance.glue.addAfterHook(new ClojureHookDefinition(new String[0], body));
+    }
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a865428_dcec2a1/rev_a865428-dcec2a1/core/src/main/java/cucumber/formatter/FormatterFactory.java;<<<<<<< MINE
+package cucumber.formatter;
+
+import cucumber.formatter.usage.AverageUsageStatisticStrategy;
+import cucumber.formatter.usage.MedianUsageStatisticStrategy;
+import cucumber.runtime.CucumberException;
+import gherkin.formatter.Formatter;
+import gherkin.formatter.JSONFormatter;
+import gherkin.formatter.JSONPrettyFormatter;
+import gherkin.formatter.PrettyFormatter;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class FormatterFactory {
+
+    private final ClassLoader classLoader;
+
+    private static final Map<String, String> BUILTIN_FORMATTERS = new HashMap<String, String>() {{
+        put("progress", ProgressFormatter.class.getName());
+        put("html", HTMLFormatter.class.getName());
+        put("json", JSONFormatter.class.getName());
+        put("json-pretty", JSONPrettyFormatter.class.getName());
+        put("pretty", PrettyFormatter.class.getName());
+        put("usage", UsageFormatter.class.getName());
+    }};
+
+    public FormatterFactory(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
+
+    public Formatter createFormatter(String formatterName, Object out) {
+        String className = BUILTIN_FORMATTERS.containsKey(formatterName) ? BUILTIN_FORMATTERS.get(formatterName) : formatterName;
+        return createFormatterFromClassName(className, out);
+    }
+
+    private Formatter createFormatterFromClassName(String className, Object out) {
+        try {
+            Class ctorArgClass = Appendable.class;
+            if (out instanceof File) {
+                File file = (File) out;
+                if (file.isDirectory()) {
+                    out = file;
+                    ctorArgClass = File.class;
+                } else {
+                    out = new FileWriter(file);
+                }
+            }
+            Class<Formatter> formatterClass = getFormatterClass(className);
+            // TODO: Remove these if statements. We should fix PrettyFormatter and ProgressFormatter to only take a single Appendable arg.
+            // Whether or not to use Monochrome is tricky. Maybe always enforce another 2nd argument for that
+            if (PrettyFormatter.class.isAssignableFrom(formatterClass)) {
+                return formatterClass.getConstructor(ctorArgClass, Boolean.TYPE, Boolean.TYPE).newInstance(out, false, true);
+            } else if (ProgressFormatter.class.isAssignableFrom(formatterClass)) {
+                return formatterClass.getConstructor(ctorArgClass, Boolean.TYPE).newInstance(out, false);
+            } else if (UsageFormatter.class.isAssignableFrom(formatterClass)) {
+                return createUsageFormatter(out, ctorArgClass, formatterClass);
+            } else {
+                return formatterClass.getConstructor(ctorArgClass).newInstance(out);
+            }
+        } catch (Exception e) {
+            throw new CucumberException(String.format("Error creating instance of: %s outputting to %s", className, out), e);
+        }
+    }
+
+    private Class<Formatter> getFormatterClass(String className) {
+        try {
+            return (Class<Formatter>) classLoader.loadClass(className);
+        } catch (ClassNotFoundException e) {
+            throw new CucumberException("Formatter class not found: " + className, e);
+        }
+    }
+
+    private UsageFormatter createUsageFormatter(Object out, Class ctorArgClass, Class<Formatter> formatterClass) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+    {
+        UsageFormatter formatter = (UsageFormatter)formatterClass.getConstructor(ctorArgClass).newInstance(out);
+        formatter.addUsageStatisticStrategy("average", new AverageUsageStatisticStrategy());
+        formatter.addUsageStatisticStrategy("median", new MedianUsageStatisticStrategy());
+        return formatter;
+    }
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a865428_dcec2a1/rev_a865428-dcec2a1/core/src/test/java/cucumber/formatter/FormatterFactoryTest.java;<<<<<<< MINE
+package cucumber.formatter;
+
+import cucumber.formatter.usage.AverageUsageStatisticStrategy;
+import cucumber.formatter.usage.MedianUsageStatisticStrategy;
+import cucumber.formatter.usage.UsageStatisticStrategy;
+import gherkin.formatter.Formatter;
+import gherkin.formatter.JSONFormatter;
+import gherkin.formatter.JSONPrettyFormatter;
+import gherkin.formatter.PrettyFormatter;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.StringWriter;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+
+public class FormatterFactoryTest {
+
+    private final FormatterFactory formatterFactory = new FormatterFactory(Thread.currentThread().getContextClassLoader());
+
+    @Test
+    public void shouldInstantiateJsonFormatter() {
+        assertThat(formatterFactory.createFormatter("json", System.out), is(JSONFormatter.class));
+    }
+
+    @Test
+    public void shouldInstantiateJsonPrettyFormatter() {
+        assertThat(formatterFactory.createFormatter("json-pretty", System.out), is(JSONPrettyFormatter.class));
+    }
+
+    @Test
+    public void shouldInstantiatePrettyFormatter() {
+        assertThat(formatterFactory.createFormatter("pretty", System.out), is(PrettyFormatter.class));
+    }
+
+    @Test
+    public void shouldInstantiateProgressFormatter() {
+        assertThat(formatterFactory.createFormatter("progress", System.out), is(ProgressFormatter.class));
+    }
+
+    @Test
+    public void shouldInstantiateHtmlFormatter() {
+        assertThat(formatterFactory.createFormatter("html", new File(System.getProperty("user.dir"))), is(HTMLFormatter.class));
+    }
+
+
+    @Test
+    public void shouldInstantiateUsageFormatter() {
+        Formatter formatter = formatterFactory.createFormatter("usage", mock(Appendable.class));
+        
+        assertThat(formatter, is(UsageFormatter.class));
+        Map<String,UsageStatisticStrategy> statisticStrategies = ((UsageFormatter) formatter).statisticStrategies;
+        assertEquals(statisticStrategies.size(), 2);
+        assertThat(statisticStrategies.get("average"), is(AverageUsageStatisticStrategy.class));
+        assertThat(statisticStrategies.get("median"), is(MedianUsageStatisticStrategy.class));
+    }
+
+    @Test
+    public void shouldInstantiateCustomFormatterFromClassNameWithAppender() {
+        StringWriter writer = new StringWriter();
+        Formatter formatter = formatterFactory.createFormatter(TestFormatter.class.getName(), writer);
+        assertThat(formatter, is(TestFormatter.class));
+        assertSame(writer, ((TestFormatter) formatter).appendable);
+    }
+
+    @Test
+    public void shouldInstantiateCustomFormatterFromClassNameWithDirFile() {
+        File dir = new File(System.getProperty("user.dir"));
+        Formatter formatter = formatterFactory.createFormatter(TestFormatter.class.getName(), dir);
+        assertThat(formatter, is(TestFormatter.class));
+        assertSame(dir, ((TestFormatter) formatter).dir);
+    }
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_132254f_0d63c1f/rev_132254f-0d63c1f/core/src/test/java/cucumber/table/FromDataTableTest.java;<<<<<<< MINE
+    private class DirectStepDef implements StepDefinition {
+        private final Object target;
+        private final Method method;
+
+        public DirectStepDef(Object target, Method method) {
+            this.target = target;
+            this.method = method;
+        }
+
+        @Override
+        public List<Argument> matchedArguments(Step step) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String getLocation(boolean detail) {
+            return getClass().getName();
+        }
+
+        @Override
+        public List<ParameterType> getParameterTypes() {
+            return ParameterType.fromMethod(method);
+        }
+
+        @Override
+        public void execute(I18n i18n, Object[] args) throws Throwable {
+            method.invoke(target, args);
+        }
+
+        @Override
+        public boolean isDefinedAt(StackTraceElement stackTraceElement) {
+            return false;
+        }
+
+        @Override
+        public String getPattern() {
+            throw new UnsupportedOperationException();
+        }
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/formatter/TestFormatter.java;<<<<<<< MINE
+package cucumber.formatter;
+
+import gherkin.formatter.Formatter;
+import gherkin.formatter.model.Background;
+import gherkin.formatter.model.Examples;
+import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.Scenario;
+import gherkin.formatter.model.ScenarioOutline;
+import gherkin.formatter.model.Step;
+import org.junit.Ignore;
+
+import java.io.File;
+import java.util.List;
+
+@Ignore
+public class TestFormatter implements Formatter {
+    public Appendable appendable;
+    public File dir;
+
+    public TestFormatter(Appendable appendable) {
+        this.appendable = appendable;
+    }
+
+    public TestFormatter(File dir) {
+        this.dir = dir;
+    }
+
+    @Override
+    public void uri(String uri) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void feature(Feature feature) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void background(Background background) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void scenario(Scenario scenario) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void scenarioOutline(ScenarioOutline scenarioOutline) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void examples(Examples examples) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void step(Step step) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void eof() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void done() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void close() {
+        throw new UnsupportedOperationException();
+    }
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/converters/ClassWithStringConstructorConverter.java;<<<<<<< MINE
+=======
+package cucumber.runtime.converters;
+
+import cucumber.runtime.CucumberException;
+import cucumber.runtime.xstream.converters.SingleValueConverter;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+public class ClassWithStringConstructorConverter implements SingleValueConverter {
+    private Constructor ctor;
+
+    @Override
+    public String toString(Object obj) {
+        return obj.toString();
+    }
+
+    @Override
+    public Object fromString(String str) {
+        try {
+            return ctor.newInstance(str);
+        } catch (InstantiationException e) {
+            throw new CucumberException(e);
+        } catch (IllegalAccessException e) {
+            throw new CucumberException(e);
+        } catch (InvocationTargetException e) {
+            throw new CucumberException(e.getTargetException());
+        }
+    }
+
+    @Override
+    public boolean canConvert(Class type) {
+        try {
+            ctor = type.getConstructor(String.class);
+            return true;
+        } catch (NoSuchMethodException e) {
+            ctor = null;
+            return false;
+        }
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/api/Transformer.java;<<<<<<< MINE
+=======
+package cucumber.api;
+
+import cucumber.runtime.xstream.converters.SingleValueConverter;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+/**
+ * Allows transformation of a step definition argument to a custom type, giving you full control
+ * over how that type is instantiated. Consider the following Gherkin step:
+ * <p/>
+ * <pre>Given I did my laundry 3 days ago</pre>
+ * <p/>
+ * Now, let's assume we want Cucumber to transform the substring "3 days ago" into an instance of our custom
+ * <code>HumanTime</code> class:
+ * <p/>
+ * <pre>
+ *     &#064;Given("I did my laundry (.*)")
+ *     public void iDidMyLaundry(HumanTime t) {
+ *     }
+ * </pre>
+ * <p/>
+ * If the <code>HumanTime</code> class has a constructor with a single <code>String</code> argument, then
+ * no explicit transformation is needed. If that's not the case you can annotate the class with your own converter:
+ * <p/>
+ * <pre>
+ *     &#064;XStreamConverter(HumanTimeConverter.class)
+ *     public class HumanTime {
+ *     }
+ * </pre>
+ * And then a <code>HumanTimeConverter</code> class:
+ * <p/>
+ * <pre>{@code
+ *     public static class HumanTimeConverter extends Transformer<HumanTime> {
+ *         &#064;Override
+ *         public HumanTime transform(String value) {
+ *             // Parse the value here, and create a new instance.
+ *             return new HumanTime(...);
+ *         }
+ *     }
+ * }</pre>
+ *
+ * @param <T>
+ */
+public abstract class Transformer<T> implements SingleValueConverter {
+    private final Type type;
+
+    public Transformer() {
+        ParameterizedType ptype = (ParameterizedType) getClass().getGenericSuperclass();
+        this.type = ptype.getActualTypeArguments()[0];
+    }
+
+    @Override
+    public String toString(Object o) {
+        return o.toString();
+    }
+
+    @Override
+    public Object fromString(String s) {
+        return transform(s);
+    }
+
+    @Override
+    public boolean canConvert(Class type) {
+        return type.equals(this.type);
+    }
+
+    public abstract T transform(String value);
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/runtime/converters/ConvertersTest.java;<<<<<<< MINE
+=======
+
+    @Test
+    public void shouldTransformToTypeWithStringCtor() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        LocalizedXStreams transformers = new LocalizedXStreams(classLoader);
+        ConverterLookup en = transformers.get(Locale.US).getConverterLookup();
+        SingleValueConverter c = (SingleValueConverter) en.lookupConverterForType(MyClass.class);
+        assertEquals("X", ((MyClass)c.fromString("X")).s);
+    }
+
+    public static class MyClass {
+        public final String s;
+
+        public MyClass(String s) {
+            this.s = s;
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/runtime/ParameterTypeTest.java;<<<<<<< MINE
+=======
+package cucumber.runtime;
+
+import cucumber.api.Transform;
+import cucumber.api.Transformer;
+import cucumber.runtime.converters.LocalizedXStreams;
+import org.junit.Test;
+
+import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
+
+public class ParameterTypeTest {
+
+    private static final Locale LOCALE = Locale.US;
+    private static final LocalizedXStreams.LocalizedXStream X = new LocalizedXStreams(Thread.currentThread().getContextClassLoader()).get(LOCALE);
+
+    public void withInt(int i) {
+    }
+
+    @Test
+    public void converts_with_built_in_converter() throws NoSuchMethodException {
+        ParameterType pt = ParameterType.fromMethod(getClass().getMethod("withInt", Integer.TYPE)).get(0);
+        assertEquals(23, pt.convert("23", X, LOCALE));
+    }
+
+    public void withCustomTransform(@Transform(UppercasedTransformer.class) Uppercased uppercased) {
+    }
+
+    public static class Uppercased {
+        public String value;
+
+        public Uppercased(String value) {
+
+            this.value = value;
+        }
+    }
+
+    public static class UppercasedTransformer extends Transformer<Uppercased> {
+        @Override
+        public Uppercased transform(String value) {
+            return new Uppercased(value.toUpperCase());
+        }
+    }
+
+    @Test
+    public void converts_with_custom_transform() throws NoSuchMethodException {
+        ParameterType pt = ParameterType.fromMethod(getClass().getMethod("withCustomTransform", Uppercased.class)).get(0);
+        assertEquals("HELLO", ((Uppercased) pt.convert("hello", X, LOCALE)).value);
+    }
+
+    public static class FortyTwoTransformer extends Transformer<Integer> {
+        @Override
+        public Integer transform(String value) {
+            return 42;
+        }
+    }
+
+    public void intWithCustomTransform(@Transform(FortyTwoTransformer.class) int n) {
+    }
+
+    @Test
+    public void converts_int_with_custom_transform() throws NoSuchMethodException {
+        ParameterType pt = ParameterType.fromMethod(getClass().getMethod("intWithCustomTransform", Integer.TYPE)).get(0);
+        assertEquals(42, pt.convert("hello", X, LOCALE));
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/table/FromDataTableTest.java;<<<<<<< MINE
+    public static class NameConverter implements Converter {
+=======
+    public static class NameConverter extends Transformer<Name> {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/examples/java-helloworld/src/test/java/cucumber/examples/java/helloworld/TimeStepdefs.java;<<<<<<< MINE
+=======
+package cucumber.examples.java.helloworld;
+
+import cucumber.annotation.en.Given;
+import cucumber.runtime.xstream.converters.Converter;
+import cucumber.runtime.xstream.converters.MarshallingContext;
+import cucumber.runtime.xstream.converters.UnmarshallingContext;
+import cucumber.runtime.xstream.io.HierarchicalStreamReader;
+import cucumber.runtime.xstream.io.HierarchicalStreamWriter;
+
+public class TimeStepdefs {
+    @Given("^I did laundry (.*) ago$")
+    public void I_did_laundry_time_ago(HumanTime time) throws Throwable {
+    }
+
+    @cucumber.runtime.xstream.annotations.XStreamConverter(HumanTimeConverter.class)
+    public static class HumanTime {
+    }
+
+    public static class HumanTimeConverter implements Converter {
+        @Override
+        public boolean canConvert(Class aClass) {
+            return aClass.equals(HumanTime.class);
+        }
+
+        @Override
+        public void marshal(Object o, HierarchicalStreamWriter hierarchicalStreamWriter, MarshallingContext marshallingContext) {
+
+        }
+
+        @Override
+        public Object unmarshal(HierarchicalStreamReader hierarchicalStreamReader, UnmarshallingContext unmarshallingContext) {
+            return null;
+        }
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_842ecca_16cb45d/rev_842ecca-16cb45d/junit/src/main/java/cucumber/runtime/junit/DescriptionFactory.java;<<<<<<< MINE
+=======
+package cucumber.runtime.junit;
+
+import cucumber.runtime.CucumberException;
+import cucumber.runtime.Utils;
+import org.junit.runner.Description;
+
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+
+/**
+ * This class attempts to create descriptions with unique ids, if the method is available.
+ * Falls back to not using uniqueId if not.
+ * <p/>
+ * See <a href="https://github.com/cucumber/cucumber-jvm/issues/225">#225</a> for details.
+ */
+public class DescriptionFactory {
+    private static Method CREATE_SUITE_DESCRIPTION;
+    private static boolean USE_UNIQUE_ID = false;
+    private static String UNIQUE_HACK = "";
+
+    static {
+        try {
+            CREATE_SUITE_DESCRIPTION = Description.class.getMethod("createSuiteDescription", String.class, Serializable.class, Array.newInstance(Annotation.class, 0).getClass());
+            USE_UNIQUE_ID = true;
+        } catch (NoSuchMethodException e) {
+            try {
+                CREATE_SUITE_DESCRIPTION = Description.class.getMethod("createSuiteDescription", String.class, Array.newInstance(Annotation.class, 0).getClass());
+                USE_UNIQUE_ID = false;
+            } catch (NoSuchMethodException e1) {
+                throw new CucumberException("You need JUnit 4.10 or newer");
+            }
+        }
+    }
+
+    public static Description createDescription(String name, Serializable uniqueId) {
+        if (USE_UNIQUE_ID) {
+            try {
+                return (Description) Utils.invoke(null, CREATE_SUITE_DESCRIPTION, 0, name, uniqueId, Array.newInstance(Annotation.class, 0));
+            } catch (Throwable t) {
+                throw new CucumberException(t);
+            }
+        } else {
+            UNIQUE_HACK += " ";
+            try {
+                return (Description) Utils.invoke(null, CREATE_SUITE_DESCRIPTION, 0, name + UNIQUE_HACK, Array.newInstance(Annotation.class, 0));
+            } catch (Throwable t) {
+                throw new CucumberException(t);
+            }
+        }
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_829c41d_2fe7fba/rev_829c41d-2fe7fba/examples/spring-txn/src/main/java/cucumber/examples/spring/txn/MessageRepository.java;<<<<<<< MINE
+public interface MessageRepository {
+    void save(Message message);
+=======
+import org.springframework.data.repository.CrudRepository;
+
+public interface MessageRepository extends CrudRepository<Message, Long> {
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_829c41d_2fe7fba/rev_829c41d-2fe7fba/examples/spring-txn/src/main/java/cucumber/examples/spring/txn/UserRepository.java;<<<<<<< MINE
+public interface UserRepository {
+    void save(User user);
+=======
+public interface UserRepository extends CrudRepository<User, Long> {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_39e2432_6045294/rev_39e2432-6045294/core/src/test/java/cucumber/runtime/formatter/StepMatcher.java;<<<<<<< MINE
+=======
+package cucumber.runtime.formatter;
+
+import gherkin.formatter.model.Step;
+
+import org.mockito.ArgumentMatcher;
+
+public class StepMatcher extends ArgumentMatcher<Step> {
+    private final String nameToMatch;
+
+    public StepMatcher(String name) {
+        this.nameToMatch = name;
+    }
+
+    @Override
+    public boolean matches(Object argument) {
+        return argument instanceof Step && nameToMatch.endsWith(((Step)argument).getName());
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_35438bf_e073420/rev_35438bf-e073420/core/src/test/java/cucumber/runtime/formatter/FormatterFactoryTest.java;<<<<<<< MINE
+=======
+package cucumber.runtime.formatter;
+
+import cucumber.runtime.CucumberException;
+import cucumber.runtime.Utils;
+import cucumber.runtime.io.UTF8OutputStreamWriter;
+import gherkin.formatter.Formatter;
+import gherkin.formatter.model.Result;
+
+import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.URL;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
+public class FormatterFactoryTest {
+    private FormatterFactory fc = new FormatterFactory();
+
+    @Test
+    public void instantiates_null_formatter() {
+        Formatter formatter = fc.create("null");
+        assertEquals(NullFormatter.class, formatter.getClass());
+    }
+
+    @Test
+    public void instantiates_junit_formatter_with_file_arg() throws IOException {
+        Formatter formatter = fc.create("junit:" + File.createTempFile("cucumber", "xml"));
+        assertEquals(JUnitFormatter.class, formatter.getClass());
+    }
+
+    @Test
+    public void instantiates_html_formatter_with_dir_arg() throws IOException {
+        Formatter formatter = fc.create("html:" + TempDir.createTempDirectory().getAbsolutePath());
+        assertEquals(HTMLFormatter.class, formatter.getClass());
+    }
+
+    @Test
+    public void fails_to_instantiate_html_formatter_without_dir_arg() throws IOException {
+        try {
+            fc.create("html");
+            fail();
+        } catch (CucumberException e) {
+            assertEquals("You must supply an output argument to html. Like so: html:output", e.getMessage());
+        }
+    }
+
+    @Test
+    public void instantiates_pretty_formatter_with_file_arg() throws IOException {
+        Formatter formatter = fc.create("pretty:" + Utils.toURL(TempDir.createTempFile().getAbsolutePath()));
+        assertEquals(CucumberPrettyFormatter.class, formatter.getClass());
+    }
+
+    @Test
+    public void instantiates_pretty_formatter_without_file_arg() {
+        Formatter formatter = fc.create("pretty");
+        assertEquals(CucumberPrettyFormatter.class, formatter.getClass());
+    }
+
+    @Test
+    public void instantiates_usage_formatter_without_file_arg() {
+        Formatter formatter = fc.create("usage");
+        assertEquals(UsageFormatter.class, formatter.getClass());
+    }
+
+    @Test
+    public void instantiates_usage_formatter_with_file_arg() throws IOException {
+        Formatter formatter = fc.create("usage:" + TempDir.createTempFile().getAbsolutePath());
+        assertEquals(UsageFormatter.class, formatter.getClass());
+    }
+    
+    @Test
+    public void formatter_does_not_buffer_its_output() throws IOException {
+        PrintStream previousSystemOut = System.out;
+        OutputStream mockSystemOut = new ByteArrayOutputStream();
+        
+        try {
+            System.setOut(new PrintStream(mockSystemOut));
+            
+            // Need to create a new formatter factory here since we need it to pick up the new value of System.out
+            fc = new FormatterFactory();
+            
+            ProgressFormatter formatter = (ProgressFormatter) fc.create("progress");
+            
+            formatter.result(new Result("passed", null, null));
+            
+            assertThat(mockSystemOut.toString(), is(not("")));
+        } finally {
+            System.setOut(previousSystemOut);
+        }
+    }
+
+    @Test
+    public void instantiates_single_custom_appendable_formatter_with_stdout() {
+        WantsAppendable formatter = (WantsAppendable) fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable");
+        assertThat(formatter.out, is(instanceOf(PrintStream.class)));
+        try {
+            fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable");
+            fail();
+        } catch (CucumberException expected) {
+            assertEquals("Only one formatter can use STDOUT, now both cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable " +
+                         "and cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable use it. " +
+                         "If you use more than one formatter you must specify output path with FORMAT:PATH_OR_URL", expected.getMessage());
+        }
+    }
+
+    @Test
+    public void instantiates_custom_appendable_formatter_with_stdout_and_file() throws IOException {
+        WantsAppendable formatter = (WantsAppendable) fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable");
+        assertThat(formatter.out, is(instanceOf(PrintStream.class)));
+
+        WantsAppendable formatter2 = (WantsAppendable) fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable:" + TempDir.createTempFile().getAbsolutePath());
+        assertEquals(UTF8OutputStreamWriter.class, formatter2.out.getClass());
+    }
+
+    @Test
+    public void instantiates_custom_url_formatter() throws IOException {
+        WantsUrl formatter = (WantsUrl) fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsUrl:halp");
+        assertEquals(new URL("file:halp/"), formatter.out);
+    }
+
+    @Test
+    public void instantiates_custom_url_formatter_with_http() throws IOException {
+        WantsUrl formatter = (WantsUrl) fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsUrl:http://halp/");
+        assertEquals(new URL("http://halp/"), formatter.out);
+    }
+
+    @Test
+    public void instantiates_custom_uri_formatter_with_ws() throws IOException, URISyntaxException {
+        WantsUri formatter = (WantsUri) fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsUri:ws://halp/");
+        assertEquals(new URI("ws://halp/"), formatter.out);
+    }
+
+    @Test
+    public void instantiates_custom_file_formatter() throws IOException {
+        WantsFile formatter = (WantsFile) fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsFile:halp.txt");
+        assertEquals(new File("halp.txt"), formatter.out);
+    }
+
+    public static class WantsAppendable extends StubFormatter {
+        public final Appendable out;
+
+        public WantsAppendable(Appendable out) {
+            this.out = out;
+        }
+    }
+
+    public static class WantsUrl extends StubFormatter {
+        public final URL out;
+
+        public WantsUrl(URL out) {
+            this.out = out;
+        }
+    }
+
+    public static class WantsUri extends StubFormatter {
+        public final URI out;
+
+        public WantsUri(URI out) {
+            this.out = out;
+        }
+    }
+
+    public static class WantsFile extends StubFormatter {
+        public final File out;
+
+        public WantsFile(File out) {
+            this.out = out;
+        }
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_35438bf_e073420/rev_35438bf-e073420/core/src/main/java/cucumber/runtime/formatter/FormatterFactory.java;<<<<<<< MINE
+=======
+package cucumber.runtime.formatter;
+
+import cucumber.runtime.CucumberException;
+import cucumber.runtime.io.URLOutputStream;
+import cucumber.runtime.io.UTF8OutputStreamWriter;
+import gherkin.formatter.Formatter;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static cucumber.runtime.Utils.toURL;
+import static java.util.Arrays.asList;
+
+/**
+ * This class creates {@link Formatter} instances (that may also implement {@link gherkin.formatter.Reporter} from
+ * a String.
+ * <p/>
+ * The String is of the form name[:output] where name is either a fully qualified class name or one of the built-in short names.
+ * output is optional for some formatters (and mandatory for some) and must refer to a path on the file system.
+ * <p/>
+ * The formatter class must have a constructor that is either empty or takes a single argument of one of the following types:
+ * <ul>
+ * <li>{@link Appendable}</li>
+ * <li>{@link File}</li>
+ * <li>{@link URL}</li>
+ * <li>{@link URI}</li>
+ * </ul>
+ */
+public class FormatterFactory {
+    private final Class[] CTOR_ARGS = new Class[]{null, Appendable.class, URI.class, URL.class, File.class};
+
+    private static final Map<String, Class<? extends Formatter>> FORMATTER_CLASSES = new HashMap<String, Class<? extends Formatter>>() {{
+        put("null", NullFormatter.class);
+        put("junit", JUnitFormatter.class);
+        put("html", HTMLFormatter.class);
+        put("pretty", CucumberPrettyFormatter.class);
+        put("progress", ProgressFormatter.class);
+        put("json", CucumberJSONFormatter.class);
+        put("usage", UsageFormatter.class);
+        put("rerun", RerunFormatter.class);
+    }};
+    private static final Pattern FORMATTER_WITH_FILE_PATTERN = Pattern.compile("([^:]+):(.*)");
+    private String defaultOutFormatter = null;
+    private Appendable defaultOut = new PrintStream(System.out) {
+        @Override
+        public void close() {
+            // We have no intention to close System.out
+        }
+    };
+
+    public Formatter create(String formatterString) {
+        Matcher formatterWithFile = FORMATTER_WITH_FILE_PATTERN.matcher(formatterString);
+        String formatterName;
+        String path = null;
+        if (formatterWithFile.matches()) {
+            formatterName = formatterWithFile.group(1);
+            path = formatterWithFile.group(2);
+        } else {
+            formatterName = formatterString;
+        }
+        Class<? extends Formatter> formatterClass = formatterClass(formatterName);
+        try {
+            return instantiate(formatterString, formatterClass, path);
+        } catch (IOException e) {
+            throw new CucumberException(e);
+        } catch (URISyntaxException e) {
+            throw new CucumberException(e);
+        }
+    }
+
+    private Formatter instantiate(String formatterString, Class<? extends Formatter> formatterClass, String pathOrUrl) throws IOException, URISyntaxException {
+        for (Class ctorArgClass : CTOR_ARGS) {
+            Constructor<? extends Formatter> constructor = findConstructor(formatterClass, ctorArgClass);
+            if (constructor != null) {
+                Object ctorArg = convertOrNull(pathOrUrl, ctorArgClass, formatterString);
+                try {
+                    if (ctorArgClass == null) {
+                        return constructor.newInstance();
+                    } else {
+                        if (ctorArg == null) {
+                            throw new CucumberException(String.format("You must supply an output argument to %s. Like so: %s:output", formatterString, formatterString));
+                        }
+                        return constructor.newInstance(ctorArg);
+                    }
+                } catch (InstantiationException e) {
+                    throw new CucumberException(e);
+                } catch (IllegalAccessException e) {
+                    throw new CucumberException(e);
+                } catch (InvocationTargetException e) {
+                    throw new CucumberException(e.getTargetException());
+                }
+            }
+        }
+        throw new CucumberException(String.format("%s must have a constructor that is either empty or a single arg of one of: %s", formatterClass, asList(CTOR_ARGS)));
+    }
+
+    private Object convertOrNull(String pathOrUrl, Class ctorArgClass, String formatterString) throws IOException, URISyntaxException {
+        if (ctorArgClass == null) {
+            return null;
+        }
+        if (ctorArgClass.equals(URI.class)) {
+            if (pathOrUrl != null) {
+                return new URI(pathOrUrl);
+            }
+        }
+        if (ctorArgClass.equals(URL.class)) {
+            if (pathOrUrl != null) {
+                return toURL(pathOrUrl);
+            }
+        }
+        if (ctorArgClass.equals(File.class)) {
+            if (pathOrUrl != null) {
+                return new File(pathOrUrl);
+            }
+        }
+        if (ctorArgClass.equals(Appendable.class)) {
+            if (pathOrUrl != null) {
+                return new UTF8OutputStreamWriter(new URLOutputStream(toURL(pathOrUrl)));
+            } else {
+                return defaultOutOrFailIfAlreadyUsed(formatterString);
+            }
+        }
+        return null;
+    }
+
+    private Constructor<? extends Formatter> findConstructor(Class<? extends Formatter> formatterClass, Class<?> ctorArgClass) {
+        try {
+            if (ctorArgClass == null) {
+                return formatterClass.getConstructor();
+            } else {
+                return formatterClass.getConstructor(ctorArgClass);
+            }
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    private Class<? extends Formatter> formatterClass(String formatterName) {
+        Class<? extends Formatter> formatterClass = FORMATTER_CLASSES.get(formatterName);
+        if (formatterClass == null) {
+            formatterClass = loadClass(formatterName);
+        }
+        return formatterClass;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<? extends Formatter> loadClass(String className) {
+        try {
+            return (Class<? extends Formatter>) Thread.currentThread().getContextClassLoader().loadClass(className);
+        } catch (ClassNotFoundException e) {
+            throw new CucumberException("Couldn't load formatter class: " + className, e);
+        }
+    }
+
+    private Appendable defaultOutOrFailIfAlreadyUsed(String formatterString) {
+        try {
+            if (defaultOut != null) {
+                defaultOutFormatter = formatterString;
+                return defaultOut;
+            } else {
+                throw new CucumberException("Only one formatter can use STDOUT, now both " +
+                        defaultOutFormatter + " and " + formatterString + " use it. " +
+                        "If you use more than one formatter you must specify output path with FORMAT:PATH_OR_URL");
+            }
+        } finally {
+            defaultOut = null;
+        }
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/main/java/cucumber/runtime/groovy/GroovyWorld.java;<<<<<<< MINE
+=======
+package cucumber.runtime.groovy;
+
+import groovy.lang.GroovyObject;
+import groovy.lang.GroovyObjectSupport;
+import groovy.lang.MissingMethodException;
+import groovy.lang.MissingPropertyException;
+import groovy.lang.Tuple;
+import org.codehaus.groovy.runtime.MetaClassHelper;
+
+import java.util.LinkedList;
+import java.util.List;
+
+class GroovyWorld extends GroovyObjectSupport {
+    private final List<GroovyObject> worlds;
+
+    public GroovyWorld() {
+        super();
+        worlds = new LinkedList<GroovyObject>();
+    }
+
+    public void registerWorld(Object world) {
+        if (world instanceof GroovyObject) {
+            worlds.add((GroovyObject) world);
+        } else {
+            throw new RuntimeException("Only GroovyObject supported");
+        }
+    }
+
+    public Object getProperty(String property) {
+        return findWorldWithProperty(property).getProperty(property);
+    }
+
+    public void setProperty(String property, Object newValue) {
+        findWorldWithProperty(property).setProperty(property, newValue);
+    }
+
+    public Object invokeMethod(String name, Object args) {
+        return findWorldWithMethod(name, args).invokeMethod(name, args);
+    }
+
+    int worldsCount() {
+        return worlds.size();
+    }
+
+    private GroovyObject findWorldWithProperty(String property) {
+        if (worlds.isEmpty()) {
+            throw new MissingPropertyException(property, GroovyWorld.class);
+        }
+
+        if (worlds.size() == 1) {
+            return worlds.get(0);
+        }
+
+        GroovyObject worldWithProperty = null;
+
+        for (GroovyObject world : worlds) {
+            if (world.getMetaClass().hasProperty(this, property) != null) {
+                if (worldWithProperty == null) {
+                    worldWithProperty = world;
+                } else {
+                    throw new RuntimeException("Multiple property call: " + property);
+                }
+            }
+        }
+
+        if (worldWithProperty == null) {
+            throw new MissingPropertyException(property, GroovyWorld.class);
+        }
+
+        return worldWithProperty;
+    }
+
+    private GroovyObject findWorldWithMethod(String methodName, Object arguments) {
+        Object[] args = unwrapMethodArguments(arguments);
+
+        if (worlds.isEmpty()) {
+            throw new MissingMethodException(methodName, this.getClass(), args);
+        }
+        if (worlds.size() == 1) {
+            return worlds.get(0);
+        }
+
+        GroovyObject worldWithMethod = null;
+        for (GroovyObject world : worlds) {
+            if (world.getMetaClass().getMetaMethod(methodName, args) != null) {
+                if (worldWithMethod == null) {
+                    worldWithMethod = world;
+                } else {
+                    throw new RuntimeException("Multiple method call: " + methodName);
+                }
+            }
+        }
+        if (worldWithMethod == null) {
+            throw new MissingMethodException(methodName, this.getClass(), args);
+        }
+        return worldWithMethod;
+    }
+
+    private Object[] unwrapMethodArguments(Object arguments) {
+        if (arguments == null) {
+            return MetaClassHelper.EMPTY_ARRAY;
+        }
+        if (arguments instanceof Tuple) {
+            Tuple tuple = (Tuple) arguments;
+            return tuple.toArray();
+        }
+        if (arguments instanceof Object[]) {
+            return (Object[]) arguments;
+        } else {
+            return new Object[]{arguments};
+        }
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/test/java/cucumber/runtime/groovy/GroovyWorldTest.java;<<<<<<< MINE
+=======
+package cucumber.runtime.groovy;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
+public class GroovyWorldTest  {
+    GroovyWorld world;
+
+    @Before
+    public void setUp() {
+       world = new GroovyWorld();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void should_not_register_pure_java_object() {
+        world.registerWorld("JAVA");
+    }
+
+    @Test
+    public void should_support_more_then_one_World() {
+        world.registerWorld(new CustomWorld());
+        world.registerWorld(new AnotherCustomWorld());
+
+        world.setProperty("lastAte", "groovy");
+        assertEquals("groovy", world.getProperty("lastAte"));
+
+        world.setProperty("aProperty", 1);
+        assertEquals(1, world.getProperty("aProperty"));
+
+        List<Integer> intArgs = Arrays.asList(1,2);
+        world.invokeMethod("aMethod", intArgs);
+        assertEquals(intArgs, world.getProperty("methodArgs"));
+
+        world.invokeMethod("aMethod", null);
+        assertEquals("no args", world.getProperty("methodArgs"));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void should_detect_double_property_definition() {
+        world.registerWorld(new WorldWithPropertyAndMethod());
+        world.registerWorld(new AnotherCustomWorld());
+
+        world.getProperty("aProperty");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void should_detect_double_method_definition() {
+        world.registerWorld(new WorldWithPropertyAndMethod());
+        world.registerWorld(new AnotherCustomWorld());
+
+        world.invokeMethod("aMethod", new Integer[]{1,2});
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_1ed7dab_a53cde8/rev_1ed7dab-a53cde8/spring/src/test/java/cucumber/runtime/java/spring/BellyStepdefs.java;<<<<<<< MINE
+=======
+package cucumber.runtime.java.spring;
+
+import cucumber.api.java.en.Then;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+
+import static org.junit.Assert.assertNotNull;
+
+@ContextConfiguration("classpath:cucumber.xml")
+public class BellyStepdefs {
+
+    @Autowired
+    private Belly belly;
+
+    @Autowired
+    private BellyBean bellyBean;
+
+    public BellyBean getBellyBean() {
+        return bellyBean;
+    }
+
+    @Then("^I have belly$")
+    public void I_have_belly() throws Throwable {
+        assertNotNull(belly);
+    }
+
+    @Then("^I have belly bean$")
+    public void I_have_belly_bean() throws Throwable {
+        assertNotNull(bellyBean);
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_950172a_fd317c3/rev_950172a-fd317c3/core/src/test/java/cucumber/runtime/RuntimeOptionsTest.java;<<<<<<< MINE
+}
+
+class FormatterMissingLifecycleMethods implements Formatter, Reporter {
+    @Override
+    public void startOfScenarioLifeCycle(gherkin.formatter.model.Scenario arg0) {
+        throw new NoSuchMethodError(); // simulate that this method is not implemented
+    }
+
+    @Override
+    public void endOfScenarioLifeCycle(gherkin.formatter.model.Scenario arg0) {
+        throw new NoSuchMethodError(); // simulate that this method is not implemented
+    }
+
+    @Override
+    public void after(Match arg0, Result arg1) {
+    }
+
+    @Override
+    public void before(Match arg0, Result arg1) {
+    }
+
+    @Override
+    public void embedding(String arg0, byte[] arg1) {
+    }
+
+    @Override
+    public void match(Match arg0) {
+    }
+
+    @Override
+    public void result(Result arg0) {
+    }
+
+    @Override
+    public void write(String arg0) {
+    }
+
+    @Override
+    public void background(Background arg0) {
+    }
+
+    @Override
+    public void close() {
+    }
+
+    @Override
+    public void done() {
+    }
+
+    @Override
+    public void eof() {
+    }
+
+    @Override
+    public void examples(Examples arg0) {
+    }
+
+    @Override
+    public void feature(Feature arg0) {
+
+    }
+
+    @Override
+    public void scenario(gherkin.formatter.model.Scenario arg0) {
+
+    }
+
+    @Override
+    public void scenarioOutline(ScenarioOutline arg0) {
+    }
+
+    @Override
+    public void step(Step arg0) {
+    }
+
+    @Override
+    public void syntaxError(String arg0, String arg1, List<String> arg2, String arg3, Integer arg4) {
+    }
+
+    @Override
+    public void uri(String arg0) {
+    }
+
+=======
+
+    private void assertPluginExists(List<Object> plugins, String pluginName) {
+        assertTrue(pluginName + " not found among the plugins", pluginExists(plugins, pluginName));
+    }
+
+    private void assertPluginNotExists(List<Object> plugins, String pluginName) {
+        assertFalse(pluginName + " found among the plugins", pluginExists(plugins, pluginName));
+    }
+
+    private boolean pluginExists(List<Object> plugins, String pluginName) {
+        boolean found = false;
+        for (Object plugin : plugins) {
+            if (plugin.getClass().getName() == pluginName) {
+                found = true;
+            }
+        }
+        return found;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b66c765_0ac2df0/rev_b66c765-0ac2df0/core/src/main/java/cucumber/runtime/RuntimeOptions.java;<<<<<<< MINE
+
+    public List<String> getJunitOptions() {
+        return junitOptions;
+    }
+=======
+}
+
+class ParsedPluginData {
+    ParsedOptionNames formatterNames = new ParsedOptionNames();
+    ParsedOptionNames stepDefinitionReporterNames = new ParsedOptionNames();
+    ParsedOptionNames summaryPrinterNames = new ParsedOptionNames();
+
+    public void addPluginName(String name, boolean isAddPlugin) {
+        if (PluginFactory.isFormatterName(name)) {
+            formatterNames.addName(name, isAddPlugin);
+        } else if (PluginFactory.isStepDefinitionResporterName(name)) {
+            stepDefinitionReporterNames.addName(name, isAddPlugin);
+        } else if (PluginFactory.isSummaryPrinterName(name)) {
+            summaryPrinterNames.addName(name, isAddPlugin);
+        } else {
+            throw new CucumberException("Unrecognized plugin: " + name);
+        }
+    }
+
+    public void updatePluginFormatterNames(List<String> pluginFormatterNames) {
+        formatterNames.updateNameList(pluginFormatterNames);
+    }
+
+    public void updatePluginStepDefinitionReporterNames(List<String> pluginStepDefinitionReporterNames) {
+        stepDefinitionReporterNames.updateNameList(pluginStepDefinitionReporterNames);
+    }
+
+    public void updatePluginSummaryPrinterNames(List<String> pluginSummaryPrinterNames) {
+        summaryPrinterNames.updateNameList(pluginSummaryPrinterNames);
+    }
+}
+
+class ParsedOptionNames {
+    private List<String> names = new ArrayList<String>();
+    private boolean clobber = false;
+
+    public void addName(String name, boolean isAddOption) {
+        names.add(name);
+        if (!isAddOption) {
+            clobber = true;
+        }
+    }
+
+    public void updateNameList(List<String> nameList) {
+        if (!names.isEmpty()) {
+            if (clobber) {
+                nameList.clear();
+            }
+            nameList.addAll(names);
+        }
+    }
+>>>>>>> YOURS

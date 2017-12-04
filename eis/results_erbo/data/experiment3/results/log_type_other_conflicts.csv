@@ -1,0 +1,229 @@
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_10859c3_8c71eab/rev_10859c3-8c71eab/src/main/java/com/netflix/astyanax/connectionpool/ConnectionPoolConfiguration.java;<<<<<<< MINE
+
+    // ssl values
+
+    /**
+     * Declares if connections should be made using SSL.
+     */
+    boolean isUsingSsl();
+
+    /**
+     * SSL protocol (typically, TLS)
+     */
+    String getSslProtocol();
+
+    /**
+     * The SSL ciphers to use. Common examples, often default, are
+     * TLS_RSA_WITH_AES_128_CBC_SHA and TLS_RSA_WITH_AES_256_CBC_SHA
+     */
+    List<String> getSslCipherSuites();
+
+    /**
+     * path to SSL truststore
+     */
+    String getSslTruststore();
+
+    /**
+     * password to SSL truststore
+     */
+    String getSslTruststorePassword();
+=======
+    
+    /**
+     * Return executor service used for maintenance tasks.  This pool is used for internal
+     * operations that update stats such as token aware scores.  Threads in this pool 
+     * and not expected to block on I/O and the pool can therefore be very small
+     * @return
+     */
+    ScheduledExecutorService getMaintainanceScheduler();
+
+    /**
+     * Return executor service used to reconnect hosts.  Keep in mind that the threads 
+     * may be blocked for an extended duration while trying to reconnect to a downed host
+     * @return
+     */
+    ScheduledExecutorService getHostReconnectExecutor();
+
+    /**
+     * Initialization prior to starting the connection pool 
+     */
+    void initialize();
+
+    /**
+     * Shutdown after stopping the connection pool
+     */
+    void shutdown();
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/shallows/EmptyColumn.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/Mapping.java;<<<<<<< MINE
+=======
+    public Mapping(Class<T> clazz, AnnotationSet<?, ?> annotationSet) {
+		this(clazz, annotationSet, false);
+	}
+
+	private List<Field> getFields(Class clazz, boolean recursuvely) {
+		List<Field> allFields = new ArrayList<Field>();
+		if (clazz.getDeclaredFields() != null && clazz.getDeclaredFields().length > 0) {
+			for (Field field : clazz.getDeclaredFields()) {
+				allFields.add(field);
+			}
+			if (recursuvely && clazz.getSuperclass() != null) {
+				allFields.addAll(getFields(clazz.getSuperclass(), true));
+			}
+		}
+		return allFields;
+	}
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                                        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                                        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                                            
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                                            
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+            
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                                    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                                    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_d37b242_448ab28/rev_d37b242-448ab28/src/main/java/com/netflix/astyanax/thrift/ThriftColumnFamilyQueryImpl.java;<<<<<<< MINE
+                            
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/serializers/CompositeRangeBuilder.java;<<<<<<< MINE
+    abstract protected void nextComponent();
+=======
+    private List<RangeQueryRecord> records = new ArrayList<RangeQueryRecord>();
+    
+    protected void nextComponent() {
+    	getNextComponent();
+    	// flip to a new record, which is for a new component
+    	records.add(new RangeQueryRecord());
+    }
+
+    abstract protected void getNextComponent();
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/serializers/CompositeRangeBuilder.java;<<<<<<< MINE
+=======
+        
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/query/ColumnFamilyQuery.java;<<<<<<< MINE
+
+=======
+    
+    /**
+     * Enable/disable prepared statement caching for the query. Note that this interface is not applicable to the 
+     * thrift implementation. It is mainly meant for driver impls that make use of PreparedStatements
+     * @param condition
+     * @return
+     */
+    ColumnFamilyQuery<K, C> withCaching(boolean condition);
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/model/ColumnFamily.java;<<<<<<< MINE
+
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/MutationBatch.java;<<<<<<< MINE
+=======
+    
+    /**
+     * Turn statement caching ON/OFF
+     * This is to be used specifically with the CQL3 driver which uses PreparedStatment(s)
+     * @param condition
+     * @return MutationBatch
+     */
+    MutationBatch withCaching(boolean condition);
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/AstyanaxContext.java;<<<<<<< MINE
+=======
+            	
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-recipes/src/main/java/com/netflix/astyanax/recipes/storage/ObjectReader.java;<<<<<<< MINE
+
+=======
+            
+>>>>>>> YOURS

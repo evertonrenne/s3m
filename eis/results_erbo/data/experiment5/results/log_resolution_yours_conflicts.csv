@@ -1,0 +1,218 @@
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_cbb4edf_eb28985/rev_cbb4edf-eb28985/src/test/java/org/elasticsearch/plugin/PluginManagerTests.java;<<<<<<< MINE
+    @LuceneTestCase.AwaitsFix(bugUrl = "@uboness works on this")
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be93884_a608db1/rev_be93884-a608db1/src/main/java/org/elasticsearch/search/SearchModule.java;<<<<<<< MINE
+        bind(SearchService.class).asEagerSingleton();
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ed094aa_a536bd5/rev_ed094aa-a536bd5/src/main/java/org/elasticsearch/index/query/TermQueryParser.java;<<<<<<< MINE
+            parser.nextToken();
+        } else {
+            value = parser.objectText();
+            // move to the next token
+            parser.nextToken();
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_25b9b73_33fd250/rev_25b9b73-33fd250/src/main/java/org/elasticsearch/index/query/MatchAllQueryBuilder.java;<<<<<<< MINE
+ *
+ *
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_25b9b73_33fd250/rev_25b9b73-33fd250/src/main/java/org/elasticsearch/index/query/TermQueryBuilder.java;<<<<<<< MINE
+ *
+ *
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9210aea_9e19090/rev_9210aea-9e19090/core/src/main/java/org/elasticsearch/index/shard/IndexShardModule.java;<<<<<<< MINE
+        bind(ShardGetService.class).asEagerSingleton();
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_3843ae4_501a199/rev_3843ae4-501a199/core/src/main/java/org/elasticsearch/index/query/NotQueryParser.java;<<<<<<< MINE
+            } else if (token == XContentParser.Token.START_ARRAY) {
+                queryFound = true;
+                // its the filter, and the name is the field
+                query = parseContext.parseInnerFilterToQueryBuilder(currentFieldName);
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/main/java/org/elasticsearch/action/update/UpdateResponse.java;<<<<<<< MINE
+        this.index = index;
+        this.id = id;
+        this.type = type;
+        this.version = version;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/main/java/org/elasticsearch/action/update/UpdateResponse.java;<<<<<<< MINE
+        index = in.readString();
+        type = in.readString();
+        id = in.readString();
+        version = in.readLong();
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/main/java/org/elasticsearch/action/update/UpdateResponse.java;<<<<<<< MINE
+        out.writeString(index);
+        out.writeString(type);
+        out.writeString(id);
+        out.writeLong(version);
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/main/java/org/elasticsearch/action/delete/DeleteResponse.java;<<<<<<< MINE
+        index = in.readString();
+        type = in.readString();
+        id = in.readString();
+        version = in.readLong();
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/main/java/org/elasticsearch/action/delete/DeleteResponse.java;<<<<<<< MINE
+        out.writeString(index);
+        out.writeString(type);
+        out.writeString(id);
+        out.writeLong(version);
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/main/java/org/elasticsearch/action/index/IndexResponse.java;<<<<<<< MINE
+     * The index the document was indexed into.
+     */
+    public String getIndex() {
+        return this.index;
+    }
+
+    /**
+     * The type of the document indexed.
+     */
+    public String getType() {
+        return this.type;
+    }
+
+    /**
+     * The id of the document indexed.
+     */
+    public String getId() {
+        return this.id;
+    }
+
+    /**
+     * Returns the current version of the doc indexed.
+     */
+    public long getVersion() {
+        return this.version;
+    }
+
+    /**
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/main/java/org/elasticsearch/action/index/IndexResponse.java;<<<<<<< MINE
+        index = in.readString();
+        type = in.readString();
+        id = in.readString();
+        version = in.readLong();
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/main/java/org/elasticsearch/action/index/IndexResponse.java;<<<<<<< MINE
+        out.writeString(index);
+        out.writeString(type);
+        out.writeString(id);
+        out.writeLong(version);
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_5f4afe8_7e3ccf2/rev_5f4afe8-7e3ccf2/core/src/main/java/org/elasticsearch/index/translog/TranslogConfig.java;<<<<<<< MINE
+        this.type = TranslogWriter.Type.fromString(indexSettings.getSettings().get(INDEX_TRANSLOG_FS_TYPE, TranslogWriter.Type.BUFFERED.name()));
+        this.bufferSizeBytes = (int) IndexingMemoryController.SHARD_TRANSLOG_BUFFER.bytes();
+
+        syncInterval = indexSettings.getSettings().getAsTime(INDEX_TRANSLOG_SYNC_INTERVAL, TimeValue.timeValueSeconds(5));
+        if (syncInterval.millis() > 0 && threadPool != null) {
+            syncOnEachOperation = false;
+        } else if (syncInterval.millis() == 0) {
+            syncOnEachOperation = true;
+        } else {
+            syncOnEachOperation = false;
+        }
+    }
+
+    /**
+     * Returns a {@link ThreadPool} to schedule async durability operations
+     */
+    public ThreadPool getThreadPool() {
+        return threadPool;
+    }
+
+    /**
+     * Returns the current durability mode of this translog.
+     */
+    public Translog.Durabilty getDurabilty() {
+        return durabilty;
+    }
+
+    /**
+     * Sets the current durability mode for the translog.
+     */
+    public void setDurabilty(Translog.Durabilty durabilty) {
+        this.durabilty = durabilty;
+    }
+
+    /**
+     * Returns the translog type
+     */
+    public TranslogWriter.Type getType() {
+        return type;
+    }
+
+    /**
+     * Sets the TranslogType for this Translog. The change will affect all subsequent translog files.
+     */
+    public void setType(TranslogWriter.Type type) {
+        this.type = type;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_4d0feff_b5aee20/rev_4d0feff-b5aee20/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests.java;<<<<<<< MINE
+                // change version
+                otherRouting = new ShardRouting(otherRouting, otherRouting.version() + 1, otherRouting.primaryTerm());
+            }
+            if (randomBoolean()) {
+                // increase term
+                otherRouting = new ShardRouting(otherRouting, otherRouting.version(), otherRouting.primaryTerm() + 1);
+            }
+
+            if (randomBoolean()) {
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_4bb5b41_1fb1ffb/rev_4bb5b41-1fb1ffb/core/src/main/java/org/elasticsearch/action/support/replication/ReplicationRequest.java;<<<<<<< MINE
+     * Copy constructor that creates a new request that is a copy of the one provided as an argument.
+     * The new request will inherit though headers and context from the original request that caused it.
+     */
+    protected ReplicationRequest(Request request) {
+        this.timeout = request.timeout();
+        this.index = request.index();
+        this.consistencyLevel = request.consistencyLevel();
+        this.shardId = request.shardId();
+        this.seqNo = request.seqNo();
+        this.primaryTerm = request.primaryTerm();
+    }
+
+    /**
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_14908f8_80bae21/rev_14908f8-80bae21/core/src/main/java/org/elasticsearch/action/index/IndexRequestBuilder.java;<<<<<<< MINE
+     * Sets a string representation of the {@link #setOpType(DocumentRequest.OpType)}. Can
+     * be either "index" or "create".
+     */
+    public IndexRequestBuilder setOpType(String opType) {
+        request.opType(opType);
+        return this;
+    }
+
+    /**
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9ceb0f2_179dd88/rev_9ceb0f2-179dd88/core/src/main/java/org/elasticsearch/action/admin/indices/stats/IndexShardStats.java;<<<<<<< MINE
+/**
+ */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_4d14143_ad3c042/rev_4d14143-ad3c042/core/src/main/java/org/elasticsearch/search/aggregations/metrics/geocentroid/InternalGeoCentroid.java;<<<<<<< MINE
+        return renderXContent(builder, params, centroid, count);
+    }
+
+    static XContentBuilder renderXContent(XContentBuilder builder, Params params, GeoPoint centroid, long count) throws IOException {
+=======
+>>>>>>> YOURS

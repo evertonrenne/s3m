@@ -1,0 +1,114 @@
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/model/Query.java;<<<<<<< MINE
+@JsonPropertyOrder(value={"obj", "attr", "resultAlias", "keys", "outputWriters"})
+=======
+@JsonPropertyOrder(value={"obj", "attr", "typeNames", "resultAlias", "keys", "outputWriters"})
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+
+    /**
+=======
+
+	/**
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/GangliaWriter.java;<<<<<<< MINE
+                    log.debug("Sending Ganglia metric {}={}", name, value);
+=======
+                    GMetricType dataType = getType(resultValue.getValue());
+                    log.debug("Sending Ganglia metric {}={} [type={}]", new Object[]{name, value, dataType});
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/GangliaWriter.java;<<<<<<< MINE
+                            getType(resultValue.getValue()),
+=======
+                            dataType,
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+ * Created by Balazs Kossovics <bko@witbe.net>
+ * Date: 4/4/13
+ * Time: 6:00 PM
+=======
+ * OpenTSDBWriter which directly sends
+ *
+ * Created from sources originally written by Balazs Kossovics <bko@witbe.net>
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+    public void validateSetup(Query query) throws ValidationException {
+=======
+    protected boolean   getAddHostnameTagDefault() {
+        return  true;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+    public void start() throws LifecycleException {
+        host = (String) this.getSettings().get(HOST);
+        port = (Integer) this.getSettings().get(PORT);
+        tags = (Map<String, String>) this.getSettings().get("tags");
+        tagName = this.getStringSetting("tagName", "type");
+=======
+    protected void  prepareSender() throws LifecycleException {
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+    public void stop() throws LifecycleException {
+=======
+    protected void  shutdownSender() throws LifecycleException {
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+	 * Replaces all . with _ and removes all spaces and double/single quotes.
+=======
+	 * Replaces all . and / with _ and removes all spaces and double/single quotes.
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+	/** */
+	private static String getTypeNameValue(String typeName, String[] tokens) {
+		boolean foundIt = false;
+		for (String token : tokens) {
+			String[] keys = token.split("=");
+			for (String key : keys) {
+				// we want the next item in the array.
+				if (foundIt) {
+					return key;
+				}
+				if (typeName.equals(key)) {
+					foundIt = true;
+				}
+			}
+=======
+	/**
+	 * Given a single type-name-key and value from a typename strig (e.g. "type=MemoryPool"), extract the key and
+	 * the value and return both.
+	 *
+	 * @param   typeNameToken - the string containing the pair.
+	 * @return  String[2] where String[0] = the key and String[1] = the value.  If the given string is not in the
+	 *          format "key=value" then String[0] = the original string and String[1] = "".
+	 */
+	private static String[] splitTypeNameValue (String typeNameToken) {
+		String[]	result;
+		String[]	keys = typeNameToken.split("=", 2);
+
+		if ( keys.length == 2 ) {
+			result = keys;
+		}
+		else {
+			result = new String[2];
+			result[0] = keys[0];
+			result[1] = "";
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+		return null;
+=======
+
+		return  result;
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_a0fcb00_86b58a8/rev_a0fcb00-86b58a8/jmxtrans-core/src/test/java/com/googlecode/jmxtrans/JmxTransformerIT.java;<<<<<<< MINE
+		jmxTransDummyApp = new JmxTransDummyApp("integration-test.json");
+		jmxTransDummyApp.start();
+=======
+		JmxTransConfiguration configuration = new JmxTransConfiguration();
+		configuration.setRunPeriod(1);
+		configuration.setProcessConfigFile(file("integration-test.json"));
+		Injector injector = JmxTransModule.createInjector(configuration);
+		jmxTransformer = injector.getInstance(JmxTransformer.class);
+		jmxTransformer.start();
+	}
+
+	private File file(String filename) throws URISyntaxException {
+		return new File(getClass().getClassLoader().getResource(filename).toURI());
+>>>>>>> YOURS

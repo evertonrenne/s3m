@@ -1,0 +1,60 @@
+file;ssmergeConf
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_a20aab8_5afcbce/rev_a20aab8-5afcbce/src/main/java/com/netflix/astyanax/recipes/locks/ColumnPrefixDistributedRowLock.java;<<<<<<< MINE
+=======
+@Override
+    public void acquire() throws Exception {
+        
+        Preconditions.checkArgument(ttl == null || TimeUnit.SECONDS.convert(timeout, timeoutUnits) < ttl, "Timeout " + timeout + " must be less than TTL " + ttl);
+        
+        RetryPolicy retry = backoffPolicy.duplicate();
+        retryCount = 0;
+        while (true) {
+            try {
+                long curTimeMicros = getCurrentTimeMicros();
+                
+                MutationBatch m = keyspace.prepareMutationBatch().setConsistencyLevel(consistencyLevel);
+                fillLockMutation(m, curTimeMicros, ttl);
+                m.execute();
+                
+                verifyLock(curTimeMicros);
+                acquireTime = System.nanoTime();
+                return;
+            }
+            catch (BusyLockException e) {
+                release();
+                if(!retry.allowRetry())
+                    throw e;
+                retryCount++;
+            }
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_a20aab8_5afcbce/rev_a20aab8-5afcbce/src/main/java/com/netflix/astyanax/recipes/locks/ColumnPrefixDistributedRowLock.java;<<<<<<< MINE
+=======
+public boolean releaseWithMutation(MutationBatch m, boolean force) throws Exception {
+        long elapsed = TimeUnit.MILLISECONDS.convert(System.nanoTime() - acquireTime, TimeUnit.NANOSECONDS);
+        boolean isStale = false;
+        if (timeout > 0 && elapsed > TimeUnit.MILLISECONDS.convert(timeout, this.timeoutUnits)) {
+            isStale = true;
+            if (!force) {
+                throw new StaleLockException("Lock for '" + getKey() + "' became stale");
+            }
+        }
+        
+        m.setConsistencyLevel(consistencyLevel);
+        fillReleaseMutation(m, false);
+        m.execute();
+        
+        return isStale;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_183d714_75acddc/rev_183d714-75acddc/astyanax-cassandra/src/test/java/com/netflix/astyanax/model/DynamicCompositeTest.java;<<<<<<< MINE
+=======
+@Test
+    public void testComposite() {
+        DynamicComposite dc = new DynamicComposite();
+        for ( char ch = 'A'; ch < 'Z'; ch++ ) {
+            dc.addComponent( Character.toString( ch ), StringSerializer.get() );
+        }
+    }
+>>>>>>> YOURS

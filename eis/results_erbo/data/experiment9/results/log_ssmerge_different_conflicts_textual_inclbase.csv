@@ -1,0 +1,841 @@
+file;linedbasedConf
+/experiment_results/projects/async-http-client/revisions/rev_93cb819_31e901c/rev_93cb819-31e901c/src/main/java/com/ning/http/client/AsyncHttpClient.java;<<<<<<< MINE
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+||||||| BASE
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+=======
+import java.util.concurrent.Executors;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_2834878_62be117/rev_2834878-62be117/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_2834878_62be117/rev_2834878-62be117/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_2834878_62be117/rev_2834878-62be117/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_2834878_62be117/rev_2834878-62be117/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_12fb5f5_d53a698/rev_12fb5f5-d53a698/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_1b2aa0f_9f3b7a4/rev_1b2aa0f-9f3b7a4/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+import java.nio.charset.Charset;
+||||||| BASE
+=======
+import java.security.NoSuchAlgorithmException;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_50d4966_0f933aa/rev_50d4966-0f933aa/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_50d4966_0f933aa/rev_50d4966-0f933aa/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_50d4966_0f933aa/rev_50d4966-0f933aa/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/util/AuthenticatorUtils.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/util/AuthenticatorUtils.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/util/SslUtils.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/Response.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestType.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/Request.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/Request.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncCompletionHandlerBase.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/PerRequestConfig.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncHttpClient.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/HttpResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/HttpResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncHandler.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestBuilderBase.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestBuilderBase.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestBuilderBase.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestBuilderBase.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncCompletionHandler.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+     * Is the Future still valid
+     */
+    public boolean hasExpired(){
+        return ((System.currentTimeMillis() - touch.get()) > responseTimeoutInMs );
+    }
+
+    /**
+||||||| BASE
+=======
+     * Is the Future still valid
+     *
+     * @return <code>true</code> iff response has expired and should be terminated.
+     */
+    public boolean hasExpired(){
+        return responseTimeoutInMs != -1 && ((System.currentTimeMillis() - touch.get()) > responseTimeoutInMs);
+    }
+
+    /**
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+
+                    //Cache our current connection so we don't have to re-open it.
+                    markAsDoneAndCacheConnection(future, ctx.getChannel(), false);
+                    RequestBuilder builder = new RequestBuilder(future.getRequest());
+
+                    execute(builder.setRealm(realm).build(), future);
+                    return;
+                }
+
+                String proxyAuth = response.getHeader(HttpHeaders.Names.PROXY_AUTHENTICATE);
+                if (statusCode == 407
+                        && proxyAuth != null
+                        && future.getRequest().getRealm() != null
+                        && !future.getAndSetAuth(true)) {
+
+                    log.debug("Sending proxy authentication to %s", request.getUrl());
+
+                    //Cache our current connection so we don't have to re-open it.
+                    markAsDoneAndCacheConnection(future, ctx.getChannel(), false);
+                    execute(future.getRequest(), future);
+                    return;
+                }
+
+                if (future.getNettyRequest().getMethod().equals(HttpMethod.CONNECT)
+                        && statusCode == 200) {
+
+                    log.debug("Connected to %s", request.getUrl());
+
+||||||| BASE
+                    
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    execute(builder.build(), future);
+||||||| BASE
+                    execute(builder.setRealm(realm).build(),future);
+=======
+                    execute(builder.setRealm(realm).build(), future);
+                    return;
+                }
+
+                String proxyAuth = response.getHeader(HttpHeaders.Names.PROXY_AUTHENTICATE);
+                if (statusCode == 407
+                        && proxyAuth != null
+                        && future.getRequest().getRealm() != null
+                        && !future.getAndSetAuth(true)) {
+
+                    log.debug("Sending proxy authentication to %s", request.getUrl());
+
+                    //Cache our current connection so we don't have to re-open it.
+                    markAsDoneAndCacheConnection(future, ctx.getChannel(), false);
+                    execute(future.getRequest(), future);
+                    return;
+                }
+
+                if (future.getNettyRequest().getMethod().equals(HttpMethod.CONNECT)
+                        && statusCode == 200) {
+
+                    log.debug("Connected to %s", request.getUrl());
+
+                    //Cache our current connection so we don't have to re-open it.
+                    markAsDoneAndCacheConnection(future, ctx.getChannel(), false);
+                    RequestBuilder builder = new RequestBuilder(future.getRequest());
+                    try {
+                        ChannelPipeline p = ctx.getChannel().getPipeline();
+                        if (p.get(HTTP_HANDLER) != null) {
+                            p.remove(HTTP_HANDLER);
+                        }
+
+                        if (request.getUrl().startsWith("https")) {
+
+                            SSLEngine sslEngine = config.getSSLEngine();
+                            if (sslEngine == null) {
+                                sslEngine = SslUtils.getSSLEngine();
+                            }
+
+                            if (p.get(SSL_HANDLER) == null) {
+                                p.addFirst(HTTP_HANDLER, new HttpClientCodec());
+                                p.addFirst(SSL_HANDLER, new SslHandler(sslEngine));
+                            } else {
+                                p.addAfter(SSL_HANDLER, HTTP_HANDLER, new HttpClientCodec());
+                            }
+
+                        } else {
+                            p.addFirst(HTTP_HANDLER, new HttpClientCodec());
+                        }
+
+                    } catch (Throwable ex) {
+                        future.abort(ex);
+                    }
+
+                    execute(builder.build(), future);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/BasicHttpsTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/PerRequestTimeoutTest.java;<<<<<<< MINE
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}||||||| BASE
+=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalDefaultPerRequestInfiniteTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(-1);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get();
+            assertNotNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ProxyTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ProxyTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ProxyTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_0efa8eb_777802b/rev_0efa8eb-777802b/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;<<<<<<< MINE
+import com.ning.http.client.providers.netty.NettyAsyncHttpProviderConfig;
+||||||| BASE
+import com.ning.http.client.providers.NettyAsyncHttpProvider;
+import com.ning.http.client.providers.NettyAsyncHttpProviderConfig;
+import com.ning.http.client.providers.NettyResponseFuture;
+=======
+import com.ning.http.client.providers.netty.NettyAsyncHttpProvider;
+import com.ning.http.client.providers.netty.NettyAsyncHttpProviderConfig;
+import com.ning.http.client.providers.netty.NettyResponseFuture;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0efa8eb_777802b/rev_0efa8eb-777802b/src/test/java/com/ning/http/client/async/RemoteSiteTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_8a125e0_5d41e01/rev_8a125e0-5d41e01/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+     * Because some implementation of the ThreadSchedulingService do not clean up cancel task until it runs
+     * them, we wrap the task with the future so when the NettyResponseFuture cancels the reaper future
+||||||| BASE
+     * Because some implementation of the ThreadSchedulingService do not clean up cancel task until the try to run
+     * them, we wrap the task with the future so the when the NettyResponseFuture cancel the reaper future
+=======
+     * Because some implementation of the ThreadSchedulingService do not clean up cancel task until they try to run
+     * them, we wrap the task with the future so the when the NettyResponseFuture cancel the reaper future
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_8a125e0_5d41e01/rev_8a125e0-5d41e01/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+     * the memory will only be released after the request timeout period which can be arbitrary long.
+||||||| BASE
+     * the memory referenced this way will only be released after the request timeout period which can be arbitrary long.
+     *
+=======
+     * the memory referenced this way will only be released after the request timeout period which can be arbitrary long.
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_bb61cd4_be7ae9a/rev_bb61cd4-be7ae9a/src/main/java/com/ning/http/client/RequestBuilderBase.java;null
+/experiment_results/projects/async-http-client/revisions/rev_bb61cd4_be7ae9a/rev_bb61cd4-be7ae9a/src/main/java/com/ning/http/client/RequestBuilder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+    private final HostnameVerifier hostnameVerifier;
+||||||| BASE
+=======
+    private final int ioThreadMultiplier;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+                                  boolean removeQueryParamOnRedirect,
+                                  HostnameVerifier hostnameVerifier) {
+||||||| BASE
+                                  boolean removeQueryParamOnRedirect) {
+=======
+                                  boolean removeQueryParamOnRedirect,
+                                  int ioThreadMultiplier) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+        this.hostnameVerifier = hostnameVerifier;
+||||||| BASE
+=======
+        this.ioThreadMultiplier = ioThreadMultiplier;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+    /**
+     * Return true if one of the {@link java.util.concurrent.ExecutorService} has been shutdown.
+     * @return true if one of the {@link java.util.concurrent.ExecutorService} has been shutdown.
+     */
+    public boolean isClosed(){
+        return applicationThreadPool.isShutdown() || reaper.isShutdown();
+    }
+
+    /**
+     * Return the {@link HostnameVerifier}
+     * @return the {@link HostnameVerifier}
+     */
+    public HostnameVerifier getHostnameVerifier() {
+        return hostnameVerifier;
+    }
+||||||| BASE
+=======
+    /***
+     *
+     * @return number to multiply by availableProcessors() that will determine # of NioWorkers to use
+     */
+    public int getIoThreadMultiplier() {
+        return ioThreadMultiplier;
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+        private HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+
+            public boolean verify( String s, SSLSession sslSession ) {
+                return true;
+            }
+        };
+||||||| BASE
+=======
+        private int ioThreadMultiplier = 2;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_c3651ee_4d2ab70/rev_c3651ee-4d2ab70/src/main/java/com/ning/http/client/RequestBuilderBase.java;null
+/experiment_results/projects/async-http-client/revisions/rev_c3651ee_4d2ab70/rev_c3651ee-4d2ab70/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;<<<<<<< MINE
+
+    protected String getBrokenTargetUrl() {
+        return String.format("http:127.0.0.1:%d/foo/test", port1);
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void invalidUri() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(null);
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getBrokenTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+||||||| BASE
+=======
+
+    protected String getBrokenTargetUrl() {
+        return String.format("http:127.0.0.1:%d/foo/test", port1);
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void invalidUri() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(null);
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getBrokenTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void asyncHttpClientConfigBeanTest() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(new AsyncHttpClientConfigBean().setUserAgent("test"));
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+
+    @Test(groups = {"default_provider", "async"})
+    public void bodyAsByteTest() throws Throwable {
+        final AsyncHttpClient client = getAsyncHttpClient(new Builder().build());
+        Response r = client.prepareGet(getTargetUrl()).execute().get();
+
+        assertEquals(r.getStatusCode(), 200);
+        assertEquals(r.getResponseBodyAsBytes(), new byte[]{});
+
+        client.close();
+    }
+
+    @Test(groups = {"default_provider", "async"})
+    public void mirrorByteTest() throws Throwable {
+        final AsyncHttpClient client = getAsyncHttpClient(new AsyncHttpClientConfig.Builder().build());
+        Response r = client.preparePost(getTargetUrl()).setBody("MIRROR").execute().get();
+
+        assertEquals(r.getStatusCode(), 200);
+        assertEquals(new String(r.getResponseBodyAsBytes(), "UTF-8"), "MIRROR");
+
+        client.close();
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_230933c_49c29c4/rev_230933c-49c29c4/src/main/java/com/ning/http/client/AsyncHandler.java;<<<<<<< MINE
+     * Invoked as soon as the HTTP headers has been received. Can potentially be invoked more than once if a broken server
+     * sent trailing headers.
+||||||| BASE
+     * Invoked as soon as the HTTP headers has been received. Can potentially be invoked morethan once if a broken server
+     * sent trailling headers.
+=======
+     * Invoked as soon as the HTTP headers has been received. Can potentially be invoked morethan once if a broken server
+     * sent trailling headers.
+     *
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyResponseFuture.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/jdk/JDKAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/jdk/JDKAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/test/java/com/ning/http/client/async/grizzly/GrizzlyByteBufferCapacityTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/test/java/com/ning/http/client/async/grizzly/GrizzlyByteBufferCapacityTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d81c72d_ed2cd62/rev_d81c72d-ed2cd62/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+        protected void onHttpHeaderError(final HttpHeader httpHeader,
+                                         final FilterChainContext ctx,
+                                         final Throwable t) throws IOException {
+||||||| BASE
+        protected void onHttpError(final HttpHeader httpHeader,
+                                   final FilterChainContext ctx,
+                                   final Throwable t) throws IOException {
+=======
+        protected void onHttpHeaderError(final HttpHeader httpHeader,
+                                   final FilterChainContext ctx,
+                                   final Throwable t) throws IOException {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/util/AuthenticatorUtils.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/websocket/DefaultWebSocketListener.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/websocket/WebSocket.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyWebSocket.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/netty/NettyByteMessageTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/netty/NettyTextMessageTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/TextMessageTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/AbstractBasicTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/AbstractBasicTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/grizzly/GrizzlyByteMessageTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/grizzly/GrizzlyTextMessageTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/util/AsyncHttpProviderUtils.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/util/AsyncHttpProviderUtils.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/netty/NettyRedirectTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/TextMessageTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/RedirectTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/grizzly/GrizzlyRedirectTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_d677d01_7ac0ecd/rev_d677d01-7ac0ecd/api/src/main/java/org/asynchttpclient/AsyncHttpClientConfigDefaults.java;<<<<<<< MINE
+
+||||||| BASE
+=======
+    
+    public static boolean defaultAcceptAnyCertificate() {
+        return getBoolean(ASYNC_CLIENT + "acceptAnyCertificate", false);
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d677d01_7ac0ecd/rev_d677d01-7ac0ecd/api/src/main/java/org/asynchttpclient/util/MiscUtil.java;<<<<<<< MINE
+
+||||||| BASE
+=======
+
+    public static <T> T withDefault(T value, T defaults) {
+        return value != null? value : value;
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_cdd9574_b175f06/rev_cdd9574-b175f06/api/src/main/java/org/asynchttpclient/PerHostConnectionPoolPartitioning.java;null
+/experiment_results/projects/async-http-client/revisions/rev_cdd9574_b175f06/rev_cdd9574-b175f06/api/src/main/java/org/asynchttpclient/RequestBuilderBase.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieUtil.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/providers/netty3/src/test/java/org/asynchttpclient/providers/netty3/NettyAsyncResponseTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/providers/netty4/src/test/java/org/asynchttpclient/providers/netty4/NettyAsyncResponseTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/providers/netty4/src/test/java/org/asynchttpclient/providers/netty4/NettyAsyncResponseTest.java;null
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/providers/netty4/src/test/java/org/asynchttpclient/providers/netty4/NettyAsyncResponseTest.java;null

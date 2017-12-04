@@ -1,0 +1,2 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/experiment_jeromq/projects/jeromq/revisions/rev_422e861_d89fa27/rev_422e861-d89fa27;/src/test/java/org/jeromq/TestZLoop;testZLoop();;;        loop.pollerEnd(poll_input);

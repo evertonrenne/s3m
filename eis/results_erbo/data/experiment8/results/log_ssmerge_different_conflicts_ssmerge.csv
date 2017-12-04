@@ -1,0 +1,213 @@
+file;ssmergeConf
+/experiment/projects/dropwizard-metrics/revisions/rev_542d40d_6be9a7c/rev_542d40d-6be9a7c/metrics-ganglia/src/main/java/com/yammer/metrics/reporting/GangliaReporter.java;<<<<<<< MINE
+=======
+protected String sanitizeName(String metricName) {
+        if (metricName == null || metricName.equals("")) {
+            return metricName;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < metricName.length(); i++) {
+            char p = metricName.charAt(i);
+            if (!(p >= 'A' && p <= 'Z')
+                    && !(p >= 'a' && p <= 'z')
+                    && !(p >= '0' && p <= '9')
+                    && (p != '_')
+                    && (p != '-')
+                    && (p != '.')
+                    && (p != '\0')) {
+                sb.append('_');
+            } else {
+                sb.append(p);
+            }
+        }
+        return compressPackageName(sb.toString());
+    }
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;<<<<<<< MINE
+public InstrumentedClientConnManager(MetricsRegistry metricsRegistry,
+                                         SchemeRegistry registry,
+                                         long connTTL,
+                                         TimeUnit connTTLTimeUnit) {
+        super(registry, connTTL, connTTLTimeUnit);
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "available-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer getValue() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getAvailable();
+                                     }
+                                 });
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "leased-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer getValue() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getLeased();
+                                     }
+                                 });
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "max-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer getValue() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getMax();
+                                     }
+                                 });
+        metricsRegistry.newGauge(ClientConnectionManager.class,
+                                 "pending-connections",
+                                 new Gauge<Integer>() {
+                                     @Override
+                                     public Integer getValue() {
+                                         // this acquires a lock on the connection pool; remove if contention sucks
+                                         return getTotalStats().getPending();
+                                     }
+                                 });
+    }
+=======
+public InstrumentedClientConnManager(MetricsRegistry metricsRegistry,
+                                         SchemeRegistry registry,
+                                         long connTTL,
+                                         TimeUnit connTTLTimeUnit) {
+        this(metricsRegistry, registry, connTTL, connTTLTimeUnit, new SystemDefaultDnsResolver());
+    }
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;<<<<<<< MINE
+private void rescaleIfNeeded() {
+        final long now = clock.getTick();
+        final long next = nextScaleTime.get();
+        if (now >= next) {
+            rescale(now, next);
+        }
+    }
+=======
+private void rescaleIfNeeded() {
+        final long now = clock.tick();
+        final long next = nextScaleTime.get();
+        if (now >= next) {
+            rescale(now, next);
+        }
+    }
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;<<<<<<< MINE
+private long currentTimeInSeconds() {
+        return TimeUnit.MILLISECONDS.toSeconds(clock.getTime());
+    }
+=======
+private long currentTimeInSeconds() {
+        return TimeUnit.MILLISECONDS.toSeconds(clock.time());
+    }
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_3bb71a7_2ca845b/rev_3bb71a7-2ca845b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;<<<<<<< MINE
+private Timer timer(HttpRequest request) {
+        return registry.timer(metricNameStrategy.getNameFor(name, request));
+    }
+=======
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_3bb71a7_2ca845b/rev_3bb71a7-2ca845b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;<<<<<<< MINE
+public InstrumentedHttpClient(MetricRegistry registry,
+                                  InstrumentedClientConnManager manager,
+                                  HttpParams params,
+                                  String name) {
+        this(registry, manager, params, name, METHOD_ONLY);
+    }
+=======
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_3bb71a7_2ca845b/rev_3bb71a7-2ca845b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;<<<<<<< MINE
+@Override
+    protected RequestDirector createClientRequestDirector(HttpRequestExecutor requestExec,
+                                                          ClientConnectionManager conman,
+                                                          ConnectionReuseStrategy reustrat,
+                                                          ConnectionKeepAliveStrategy kastrat,
+                                                          HttpRoutePlanner rouplan,
+                                                          HttpProcessor httpProcessor,
+                                                          HttpRequestRetryHandler retryHandler,
+                                                          RedirectStrategy redirectStrategy,
+                                                          AuthenticationStrategy targetAuthStrategy,
+                                                          AuthenticationStrategy proxyAuthStrategy,
+                                                          UserTokenHandler userTokenHandler,
+                                                          HttpParams params) {
+        return new InstrumentedRequestDirector(
+                registry,
+                name,
+                metricNameStrategy,
+                log,
+                requestExec,
+                conman,
+                reustrat,
+                kastrat,
+                rouplan,
+                httpProcessor,
+                retryHandler,
+                redirectStrategy,
+                targetAuthStrategy,
+                proxyAuthStrategy,
+                userTokenHandler,
+                params);
+    }
+=======
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8bdd210_4ff25d5/rev_8bdd210-4ff25d5/metrics-httpclient/src/main/java/com/codahale/metrics/httpclient/InstrumentedRequestDirector.java;<<<<<<< MINE
+=======
+public InstrumentedRequestDirector(MetricRegistry registry,
+                                       String name,
+                                       Log log,
+                                       HttpRequestExecutor requestExec,
+                                       ClientConnectionManager conman,
+                                       ConnectionReuseStrategy reustrat,
+                                       ConnectionKeepAliveStrategy kastrat,
+                                       HttpRoutePlanner rouplan,
+                                       HttpProcessor httpProcessor,
+                                       HttpRequestRetryHandler retryHandler,
+                                       RedirectStrategy redirectStrategy,
+                                       AuthenticationStrategy targetAuthStrategy,
+                                       AuthenticationStrategy proxyAuthStrategy,
+                                       UserTokenHandler userTokenHandler,
+                                       HttpParams params) {
+        super(log,
+              requestExec,
+              conman,
+              reustrat,
+              kastrat,
+              rouplan,
+              httpProcessor,
+              retryHandler,
+              redirectStrategy,
+              targetAuthStrategy,
+              proxyAuthStrategy,
+              userTokenHandler,
+              params);
+        getTimer = registry.timer(name(HttpClient.class, name, "get-requests"));
+        postTimer = registry.timer(name(HttpClient.class, name, "post-requests"));
+        headTimer = registry.timer(name(HttpClient.class, name, "head-requests"));
+        putTimer = registry.timer(name(HttpClient.class, name, "put-requests"));
+        deleteTimer = registry.timer(name(HttpClient.class, name, "delete-requests"));
+        optionsTimer = registry.timer(name(HttpClient.class, name, "options-requests"));
+        traceTimer = registry.timer(name(HttpClient.class, name, "trace-requests"));
+        connectTimer = registry.timer(name(HttpClient.class, name, "connect-requests"));
+        moveTimer = registry.timer(name(HttpClient.class, name, "move-requests"));
+        patchTimer = registry.timer(name(HttpClient.class, name, "patch-requests"));
+        otherTimer = registry.timer(name(HttpClient.class, name, "other-requests"));
+    }
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8bdd210_4ff25d5/rev_8bdd210-4ff25d5/metrics-httpclient/src/main/java/com/codahale/metrics/httpclient/InstrumentedHttpClient.java;<<<<<<< MINE
+public InstrumentedHttpClient(MetricRegistry registry,
+                                  InstrumentedClientConnManager manager,
+                                  HttpParams params,
+                                  String name) {
+        this(registry, manager, params, name, METHOD_ONLY);
+    }
+=======
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_ce7cdff_48140b7/rev_ce7cdff-48140b7/metrics-core/src/main/java/com/codahale/metrics/JmxReporter.java;<<<<<<< MINE
+private JmxListener(MBeanServer mBeanServer, String name, MetricFilter filter, MetricTimeUnits timeUnits) {
+            this.mBeanServer = mBeanServer;
+            this.name = name;
+            this.filter = filter;
+            this.timeUnits = timeUnits;
+            this.registered = new ConcurrentHashMap<ObjectName, ObjectName>();
+        }
+=======
+>>>>>>> YOURS

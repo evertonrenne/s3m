@@ -1,0 +1,223 @@
+file;ssmergeConf;linedbasedConf
+/experiment/projects/dropwizard-metrics/revisions/rev_954ccfa_ae0ee1d/rev_954ccfa-ae0ee1d/metrics-spring/src/main/java/com/yammer/metrics/spring/ExceptionMeteredMethodInterceptor.java;<<<<<<< MINE
+        final String meterName = metered.name().isEmpty() ?
+                methodName + ExceptionMetered.DEFAULT_NAME_SUFFIX :
+                metered.name();
+        final Meter meter = metrics.newMeter(targetClass,
+                                             meterName,
+                                             scope,
+                                             metered.eventType(),
+                                             metered.rateUnit());
+=======
+        final String group = MetricName.chooseGroup(metered.group(), targetClass);
+        final String type = MetricName.chooseType(metered.type(), targetClass);
+        final String name = metered.name() == null || metered.name().equals("") ? methodName + ExceptionMetered.DEFAULT_NAME_SUFFIX : metered.name();
+        final MetricName metricName = new MetricName(group, type, name);
+        final Meter meter = metrics.newMeter(metricName, metered.eventType(), metered.rateUnit());
+
+>>>>>>> YOURS;<<<<<<< MINE
+        final String meterName = metered.name().isEmpty() ?
+                methodName + ExceptionMetered.DEFAULT_NAME_SUFFIX :
+                metered.name();
+        final Meter meter = metrics.newMeter(targetClass,
+                                             meterName,
+                                             scope,
+                                             metered.eventType(),
+                                             metered.rateUnit());
+=======
+        final String group = MetricName.chooseGroup(metered.group(), targetClass);
+        final String type = MetricName.chooseType(metered.type(), targetClass);
+        final String name = metered.name() == null || metered.name().equals("") ? methodName + ExceptionMetered.DEFAULT_NAME_SUFFIX : metered.name();
+        final MetricName metricName = new MetricName(group, type, name);
+        final Meter meter = metrics.newMeter(metricName, metered.eventType(), metered.rateUnit());
+
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_954ccfa_ae0ee1d/rev_954ccfa-ae0ee1d/metrics-spring/src/main/java/com/yammer/metrics/spring/MeteredMethodInterceptor.java;<<<<<<< MINE
+        final String meterName = metered.name().isEmpty() ? methodName : metered.name();
+        final Meter meter = metrics.newMeter(targetClass,
+                                             meterName,
+                                             scope,
+                                             metered.eventType(),
+                                             metered.rateUnit());
+=======
+        final String group = MetricName.chooseGroup(metered.group(), targetClass);
+        final String type = MetricName.chooseType(metered.type(), targetClass);
+        final String name = metered.name() == null || metered.name().equals("") ? methodName : metered.name();
+        final MetricName metricName = new MetricName(group, type, name);
+        final Meter meter = metrics.newMeter(metricName, metered.eventType(), metered.rateUnit());
+
+>>>>>>> YOURS;<<<<<<< MINE
+        final String meterName = metered.name().isEmpty() ? methodName : metered.name();
+        final Meter meter = metrics.newMeter(targetClass,
+                                             meterName,
+                                             scope,
+                                             metered.eventType(),
+                                             metered.rateUnit());
+=======
+        final String group = MetricName.chooseGroup(metered.group(), targetClass);
+        final String type = MetricName.chooseType(metered.type(), targetClass);
+        final String name = metered.name() == null || metered.name().equals("") ? methodName : metered.name();
+        final MetricName metricName = new MetricName(group, type, name);
+        final Meter meter = metrics.newMeter(metricName, metered.eventType(), metered.rateUnit());
+
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_954ccfa_ae0ee1d/rev_954ccfa-ae0ee1d/metrics-spring/src/main/java/com/yammer/metrics/spring/TimedMethodInterceptor.java;<<<<<<< MINE
+        final String timerName = timed.name().isEmpty() ? methodName : timed.name();
+        final Timer timer = metrics.newTimer(targetClass,
+                                             timerName,
+                                             scope,
+=======
+        final String group = MetricName.chooseGroup(timed.group(), targetClass);
+        final String type = MetricName.chooseType(timed.type(), targetClass);
+        final String name = timed.name() == null || timed.name().equals("") ? methodName : timed.name();
+        final MetricName metricName = new MetricName(group, type, name);
+
+        final Timer timer = metrics.newTimer(metricName,
+>>>>>>> YOURS;<<<<<<< MINE
+        final String timerName = timed.name().isEmpty() ? methodName : timed.name();
+        final Timer timer = metrics.newTimer(targetClass,
+                                             timerName,
+                                             scope,
+=======
+        final String group = MetricName.chooseGroup(timed.group(), targetClass);
+        final String type = MetricName.chooseType(timed.type(), targetClass);
+        final String name = timed.name() == null || timed.name().equals("") ? methodName : timed.name();
+        final MetricName metricName = new MetricName(group, type, name);
+
+        final Timer timer = metrics.newTimer(metricName,
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_954ccfa_ae0ee1d/rev_954ccfa-ae0ee1d/metrics-spring/src/main/java/com/yammer/metrics/spring/GaugeAnnotationBeanPostProcessor.java;<<<<<<< MINE
+                    metrics.newGauge(method.getDeclaringClass(),
+                                     name,
+                                     scope,
+                                     new GaugeMethod(bean, method));
+=======
+                    final String group = MetricName.chooseGroup(gauge.group(), method.getDeclaringClass());
+                    final String type = MetricName.chooseType(gauge.type(), method.getDeclaringClass());
+                    final MetricName metricName = new MetricName(group, type, name);
+
+                    metrics.newGauge(metricName, new GaugeMethod(bean, method));
+>>>>>>> YOURS;<<<<<<< MINE
+                    metrics.newGauge(method.getDeclaringClass(),
+                                     name,
+                                     scope,
+                                     new GaugeMethod(bean, method));
+=======
+                    final String group = MetricName.chooseGroup(gauge.group(), method.getDeclaringClass());
+                    final String type = MetricName.chooseType(gauge.type(), method.getDeclaringClass());
+                    final MetricName metricName = new MetricName(group, type, name);
+
+                    metrics.newGauge(metricName, new GaugeMethod(bean, method));
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;<<<<<<< MINE
+            this.startTime = currentTimeInSeconds();
+            nextScaleTime.set(clock.getTick() + RESCALE_THRESHOLD);
+=======
+            this.startTime = currentTimeInSeconds();
+            nextScaleTime.set(clock.tick() + RESCALE_THRESHOLD);
+>>>>>>> YOURS;<<<<<<< MINE
+            this.startTime = currentTimeInSeconds();
+            nextScaleTime.set(clock.getTick() + RESCALE_THRESHOLD);
+=======
+            this.startTime = currentTimeInSeconds();
+            nextScaleTime.set(clock.tick() + RESCALE_THRESHOLD);
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_a29c81a_c3041c6/rev_a29c81a-c3041c6/metrics-servlets/src/main/java/com/codahale/metrics/servlets/MetricsServlet.java;<<<<<<< MINE
+        if (null == registry) {
+            final Object registryAttr = config.getServletContext().getAttribute(METRICS_REGISTRY);
+            if (registryAttr instanceof MetricRegistry) {
+                this.registry = (MetricRegistry) registryAttr;
+            } else {
+                throw new ServletException("Couldn't find a MetricRegistry instance.");
+            }
+=======
+        final ServletContext context = config.getServletContext();
+
+        final Object registryAttr = context.getAttribute(METRICS_REGISTRY);
+        if (registryAttr instanceof MetricRegistry) {
+            this.registry = (MetricRegistry) registryAttr;
+        } else {
+            throw new ServletException("Couldn't find a MetricRegistry instance.");
+>>>>>>> YOURS;<<<<<<< MINE
+        if (null == registry) {
+            final Object registryAttr = config.getServletContext().getAttribute(METRICS_REGISTRY);
+            if (registryAttr instanceof MetricRegistry) {
+                this.registry = (MetricRegistry) registryAttr;
+            } else {
+                throw new ServletException("Couldn't find a MetricRegistry instance.");
+            }
+=======
+        final ServletContext context = config.getServletContext();
+
+        final Object registryAttr = context.getAttribute(METRICS_REGISTRY);
+        if (registryAttr instanceof MetricRegistry) {
+            this.registry = (MetricRegistry) registryAttr;
+        } else {
+            throw new ServletException("Couldn't find a MetricRegistry instance.");
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_ce7cdff_48140b7/rev_ce7cdff-48140b7/metrics-core/src/main/java/com/codahale/metrics/JmxReporter.java;<<<<<<< MINE
+            if (mBeanServer==null) {
+            	mBeanServer = ManagementFactory.getPlatformMBeanServer();
+            }
+            return new JmxReporter(mBeanServer, domain, registry, filter, timeUnits);
+=======
+            return new JmxReporter(mBeanServer, domain, registry, filter, timeUnits, objectNameFactory);
+>>>>>>> YOURS;<<<<<<< MINE
+            if (mBeanServer==null) {
+            	mBeanServer = ManagementFactory.getPlatformMBeanServer();
+            }
+            return new JmxReporter(mBeanServer, domain, registry, filter, timeUnits);
+=======
+            return new JmxReporter(mBeanServer, domain, registry, filter, timeUnits, objectNameFactory);
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_41ba6c3_d814f12/rev_41ba6c3-d814f12/metrics-servlets/src/main/java/com/codahale/metrics/servlets/MetricsServlet.java;<<<<<<< MINE
+            if (getDurationUnit() != null) {
+                context.setInitParameter(MetricsServlet.DURATION_UNIT, getDurationUnit().toString());
+            }
+            if (getRateUnit() != null) {
+                context.setInitParameter(MetricsServlet.RATE_UNIT, getRateUnit().toString());
+            }
+            if (getAllowedOrigin() != null) {
+                context.setInitParameter(MetricsServlet.ALLOWED_ORIGIN, getAllowedOrigin());
+            }
+=======
+            context.setAttribute(CALLBACK_PARAM, getJsonpCallbackParameter());
+>>>>>>> YOURS;<<<<<<< MINE
+            if (getDurationUnit() != null) {
+                context.setInitParameter(MetricsServlet.DURATION_UNIT, getDurationUnit().toString());
+            }
+            if (getRateUnit() != null) {
+                context.setInitParameter(MetricsServlet.RATE_UNIT, getRateUnit().toString());
+            }
+            if (getAllowedOrigin() != null) {
+                context.setInitParameter(MetricsServlet.ALLOWED_ORIGIN, getAllowedOrigin());
+            }
+=======
+            context.setAttribute(CALLBACK_PARAM, getJsonpCallbackParameter());
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_41ba6c3_d814f12/rev_41ba6c3-d814f12/metrics-servlets/src/main/java/com/codahale/metrics/servlets/MetricsServlet.java;<<<<<<< MINE
+        this.allowedOrigin = context.getInitParameter(ALLOWED_ORIGIN);
+=======
+        this.allowedOrigin = config.getInitParameter(ALLOWED_ORIGIN);
+		this.jsonpParamName = config.getInitParameter(CALLBACK_PARAM);
+>>>>>>> YOURS;<<<<<<< MINE
+        this.allowedOrigin = context.getInitParameter(ALLOWED_ORIGIN);
+=======
+        this.allowedOrigin = config.getInitParameter(ALLOWED_ORIGIN);
+		this.jsonpParamName = config.getInitParameter(CALLBACK_PARAM);
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_41ba6c3_d814f12/rev_41ba6c3-d814f12/metrics-servlets/src/test/java/com/codahale/metrics/servlets/MetricsServletTest.java;<<<<<<< MINE
+        tester.addServlet(MetricsServlet.class, "/metrics");
+        tester.getContext().setInitParameter("com.codahale.metrics.servlets.MetricsServlet.allowedOrigin", "*");
+=======
+        metricsServlet = tester.addServlet(MetricsServlet.class, "/metrics");
+        metricsServlet
+                    .setInitParameter("com.codahale.metrics.servlets.MetricsServlet.allowedOrigin", "*");
+>>>>>>> YOURS;<<<<<<< MINE
+        tester.addServlet(MetricsServlet.class, "/metrics");
+        tester.getContext().setInitParameter("com.codahale.metrics.servlets.MetricsServlet.allowedOrigin", "*");
+=======
+        metricsServlet = tester.addServlet(MetricsServlet.class, "/metrics");
+        metricsServlet
+                    .setInitParameter("com.codahale.metrics.servlets.MetricsServlet.allowedOrigin", "*");
+>>>>>>> YOURS

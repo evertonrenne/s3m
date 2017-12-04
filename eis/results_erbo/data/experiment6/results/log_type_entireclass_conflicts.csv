@@ -1,0 +1,1621 @@
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBSingleSourceCleaner.java;<<<<<<< MINE
+=======
+package com.linkedin.databus.bootstrap.common;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+
+
+
+import org.apache.log4j.Logger;
+
+import com.linkedin.databus.bootstrap.common.BootstrapCleanerStaticConfig.BootstrapDBType;
+import com.linkedin.databus.bootstrap.common.BootstrapCleanerStaticConfig.RetentionStaticConfig;
+import com.linkedin.databus.bootstrap.common.BootstrapDBMetaDataDAO.SourceStatusInfo;
+import com.linkedin.databus.core.DatabusThreadBase;
+import com.linkedin.databus.core.DbusConstants;
+import com.linkedin.databus.core.DbusEventFactory;
+import com.linkedin.databus.core.DbusEventV1Factory;
+import com.linkedin.databus2.core.container.request.BootstrapDatabaseTooOldException;
+
+/*
+*
+* Copyright 2013 LinkedIn Corp. All rights reserved
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*   http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied.  See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*
+*/
+
+public class BootstrapDBSingleSourceCleaner implements Runnable
+{
+  public static final String MODULE = BootstrapDBSingleSourceCleaner.class.getName();
+  public final Logger LOG;
+
+  private final String _name;
+  private final String _source;
+  private final DatabusThreadBase _applier;
+  private final BootstrapCleanerStaticConfig _bootstrapCleanerStaticConfig;
+  private final BootstrapReadOnlyConfig _bootstrapReadOnlyConfig;
+
+  private BootstrapDBMetaDataDAO _bootstrapDao = null;
+  private SourceStatusInfo _sourceStatusInfo = null;
+  private final BootstrapDBCleanerQueryHelper _bootstrapDBCleanerQueryHelper;
+  private final BootstrapDBCleanerQueryExecutor _bootstrapDBCleanerQueryExecutor;
+  private final DbusEventFactory _eventFactory;
+  private BootstrapLogInfo _lastValidLog;
+  private volatile boolean _isCleaning = false;
+
+  private static final AtomicInteger _numCleanersRunning = new AtomicInteger(0);
+  private static final AtomicInteger _numCleanersRunningHWM = new AtomicInteger(0);
+
+  public BootstrapDBSingleSourceCleaner(String name,
+                                        String source,
+                                        DatabusThreadBase applier,
+                                        BootstrapCleanerStaticConfig bootstrapCleanerStaticConfig,
+                                        BootstrapReadOnlyConfig bootstrapReadOnlyConfig)
+  throws SQLException
+  {
+    _name = name;
+    _source = source;
+    _applier = applier;
+    _bootstrapCleanerStaticConfig = bootstrapCleanerStaticConfig;
+    _bootstrapReadOnlyConfig = bootstrapReadOnlyConfig;
+    LOG = Logger.getLogger(name);
+
+    Connection conn = getOrCreateConnection();
+    if (null != source)
+    {
+      try
+      {
+        List<SourceStatusInfo> ssil = _bootstrapDao.getSourceIdAndStatusFromName(Arrays.asList(source), false);
+        assert(ssil.size() == 1);
+        _sourceStatusInfo = ssil.get(0);
+      } catch (BootstrapDatabaseTooOldException bto)
+      {
+        LOG.error(
+            "Not expected to receive this exception as activeCheck is turned-off",
+            bto);
+        throw new RuntimeException(bto);
+      }
+    }
+    _bootstrapDBCleanerQueryHelper = BootstrapDBCleanerQueryHelper.getInstance();
+    _bootstrapDBCleanerQueryExecutor = new BootstrapDBCleanerQueryExecutor(_name, conn, _bootstrapDBCleanerQueryHelper);
+    _eventFactory = new DbusEventV1Factory();
+  }
+
+  /*
+   * @return a bootstrapDB connection object. Note: The connection object is
+   * still owned by BootstrapConn. SO dont close it
+   */
+  private Connection getOrCreateConnection() throws SQLException
+  {
+    Connection conn = null;
+
+    if (_bootstrapDao == null)
+    {
+      LOG.info("<<<< Creating Bootstrap Connection!! >>>>");
+      BootstrapConn dbConn = new BootstrapConn();
+      final boolean autoCommit = true;
+      _bootstrapDao = new BootstrapDBMetaDataDAO(dbConn,
+          _bootstrapReadOnlyConfig.getBootstrapDBHostname(),
+          _bootstrapReadOnlyConfig.getBootstrapDBUsername(),
+          _bootstrapReadOnlyConfig.getBootstrapDBPassword(),
+          _bootstrapReadOnlyConfig.getBootstrapDBName(), autoCommit);
+      try
+      {
+        dbConn.initBootstrapConn(autoCommit,
+            _bootstrapReadOnlyConfig.getBootstrapDBUsername(),
+            _bootstrapReadOnlyConfig.getBootstrapDBPassword(),
+            _bootstrapReadOnlyConfig.getBootstrapDBHostname(),
+            _bootstrapReadOnlyConfig.getBootstrapDBName());
+      } catch (Exception e)
+      {
+        LOG.fatal("Unable to open BootstrapDB Connection !!", e);
+        throw new RuntimeException(
+            "Got exception when getting bootstrap DB Connection.", e);
+      }
+    }
+
+    try
+    {
+      conn = _bootstrapDao.getBootstrapConn().getDBConn();
+    } catch (SQLException e)
+    {
+      LOG.fatal("Not able to open BootstrapDB Connection !!", e);
+      throw new RuntimeException(
+          "Got exception when getting bootstrap DB Connection.", e);
+    }
+    return conn;
+  }
+
+  @Override
+  public void run()
+  {
+    doClean();
+  }
+
+  private void doClean()
+  {
+    try
+    {
+      incCleanerStats();
+
+      SourceStatusInfo s = _sourceStatusInfo;
+      {
+        assert(s.getSrcName().equals(_source));
+        BootstrapDBType type = _bootstrapCleanerStaticConfig.getBootstrapType(s.getSrcName());
+
+        LOG.info("Cleaner running for source :" + s.getSrcName() + "("
+            + s.getSrcId() + ") with bootstrapDB type :" + type);
+
+        BootstrapLogInfo logInfo = _bootstrapDBCleanerQueryExecutor.getThresholdWindowSCN(type, s.getSrcId());
+
+        if (null == logInfo)
+        {
+          LOG.info("No WindowSCN. Nothing to cleanup for source : "
+              + s.getSrcName());
+          return;
+        }
+
+        LOG.info("LOG info with lowest windowSCN :" + logInfo);
+
+        LOG.info("Begin phase 1 : Gather candidate loginfo :");
+        List<BootstrapLogInfo> candidateLogsInfo = _bootstrapDBCleanerQueryExecutor.getCandidateLogsInfo(
+            logInfo.getMinWindowSCN(), (short) (s.getSrcId()));
+        if ((null == candidateLogsInfo) || (candidateLogsInfo.isEmpty()))
+        {
+          LOG.info("No logs to cleanup for source :" + s.getSrcName() + "("
+              + s.getSrcId() + ")");
+          return;
+        }
+        LOG.info("End phase 1 : Gather candidate loginfo :");
+
+        LOG.info("Initial Candidate Set for Source :" + s.getSrcName()
+            + " is :" + candidateLogsInfo);
+        RetentionStaticConfig rConf = _bootstrapCleanerStaticConfig.getRetentionConfig(s
+            .getSrcName());
+        LOG.info("Retention Config for source :" + s.getSrcName() + " is :"
+            + rConf);
+
+        LOG.info("Begin phase 2 : Filter based on retention config :");
+        long scn = filterCandidateLogInfo((short) s.getSrcId(),
+            candidateLogsInfo,
+            _bootstrapCleanerStaticConfig.getRetentionConfig(s.getSrcName()));
+
+        LOG.info("Log tables to be deleted for source :" + s.getSrcName() + "("
+            + s.getSrcId() + ") are :" + candidateLogsInfo
+            + ", Max SCN of deleted logs:" + scn);
+        LOG.info("End phase 2 : Filter based on retention config :");
+
+        if ((scn <= 0) || (candidateLogsInfo.isEmpty()))
+        {
+          LOG.info("Source :" + s.getSrcName() + "(" + s.getSrcId()
+              + ") No log tables to be deleted !! MaxSCN : " + scn
+              + ", candidateLogs :" + candidateLogsInfo);
+          return;
+        }
+
+        LOG.info("Begin phase 3 : Updating Meta Info :");
+        BootstrapLogInfo firstValidLog = _bootstrapDBCleanerQueryExecutor.getFirstLogTableWithGreaterSCN(
+            (short) s.getSrcId(), scn);
+        _bootstrapDBCleanerQueryExecutor.updateSource(firstValidLog);
+        LOG.info("End phase 3 : Updating Meta Info :");
+
+        LOG.info("Begin phase 4 : Deleting Log tables :");
+        // marking logs as done; if any failures; there is a chance that the
+        // logs have to be cleaned up later
+        _bootstrapDBCleanerQueryExecutor.markDeleted(candidateLogsInfo);
+        _bootstrapDBCleanerQueryExecutor.dropTables(candidateLogsInfo);
+        LOG.info("End phase 4 : Deleting Log tables :");
+
+        if ((_bootstrapCleanerStaticConfig.getBootstrapType(s.getSrcName()) == BootstrapDBType.BOOTSTRAP_CATCHUP_APPLIER_RUNNING)
+            && ((_applier != null) || _bootstrapCleanerStaticConfig.forceTabTableCleanup(s
+                .getSrcName())))
+        {
+          LOG.info("Source :" + s.getSrcName() + "(" + s.getSrcId()
+              + ") is running in catchup_applier_running mode. "
+              + "Will delete all rows whose scn is less than or equal to "
+              + scn);
+          if ((null != _applier) && (_applier.isAlive()))
+          {
+            LOG.info("Begin phase 5 : Pausing Applier and deleting Rows from tab table :");
+
+            LOG.info("Requesting applier to pause !!");
+            _applier.pause();
+            LOG.info("Applier paused !!");
+          }
+
+          try
+          {
+            // mark ahead of time; if this doesn't work this time; it will next
+            // cycle
+            _bootstrapDao.updateMinScnOfSnapshot(s.getSrcId(), scn);
+            String srcTable = _bootstrapDBCleanerQueryHelper.getSrcTable(s.getSrcId());
+            int numRowsDeleted = _bootstrapDBCleanerQueryExecutor.deleteTable(srcTable, scn);
+            LOG.info("Number of Rows deleted for source  :" + s.getSrcName()
+                + "(" + s.getSrcId() + ") :" + numRowsDeleted);
+            if (numRowsDeleted > 0
+                && _bootstrapCleanerStaticConfig.isOptimizeTableEnabled(s.getSrcName()))
+            {
+              LOG.info("Optimizing table to reclaim space for source :"
+                  + s.getSrcName() + "(" + s.getSrcId() + ")");
+              _bootstrapDBCleanerQueryExecutor.optimizeTable(srcTable);
+            }
+          } finally
+          {
+            if ((null != _applier) && (_applier.isAlive()))
+            {
+              LOG.info("Requesting applier to resume !!");
+              _applier.unpause();
+              LOG.info("Applier resumed !!");
+            }
+          }
+
+          LOG.info("End phase 5 : Deleting Rows from tab table :");
+        }
+
+        LOG.info("Cleaner done for source :" + s.getSrcName() + "("
+            + s.getSrcId() + ")");
+      }
+    } catch (SQLException ex)
+    {
+      LOG.error("Got SQL exception while cleaning bootstrapDB !!", ex);
+    } catch (InterruptedException ie)
+    {
+      LOG.error("Got interrupted exception while cleaning bootstrapDB !!", ie);
+    } finally
+    {
+      decCleanerStats();
+    }
+  }
+
+  public BootstrapDBMetaDataDAO getBootstrapDao()
+  {
+    return _bootstrapDao;
+  }
+
+  public boolean isCleanerRunning()
+  {
+    return _isCleaning;
+  }
+
+  public String getName()
+  {
+    return _name;
+  }
+
+  public void close()
+  {
+    if (_bootstrapDao != null)
+    {
+      _bootstrapDao.close();
+      _bootstrapDao = null;
+    }
+  }
+
+  /**
+   * A diagnotic to expose the number of cleaners running at a given moment
+   */
+  public static int getNumCleanersRunningHWM()
+  {
+    return _numCleanersRunningHWM.get();
+  }
+
+  /**
+   * Return the milli-second threshold for delete criteria.
+   *
+   * @param config
+   *          RetentionConfig
+   * @return milliSecThreshold
+   */
+  private long getMilliSecTime(RetentionStaticConfig config)
+  {
+    long qty = config.getRetentionQuantity();
+    long milliSecQty = -1;
+
+    switch (config.getRetentiontype())
+    {
+    case RETENTION_SECONDS:
+      milliSecQty = qty * DbusConstants.NUM_MSECS_IN_SEC;
+      break;
+
+    default:
+      throw new RuntimeException("Retention Config (" + config
+          + ") expected to be time based but is not !!");
+
+    }
+    return milliSecQty;
+  }
+
+  private long filterCandidateLogInfo(short srcId,
+      List<BootstrapLogInfo> candidateLogsInfo, RetentionStaticConfig config)
+      throws SQLException
+  {
+    switch (config.getRetentiontype())
+    {
+    case NO_CLEANUP:
+      return -1;
+    case RETENTION_LOGS:
+    {
+      Iterator<BootstrapLogInfo> itr = candidateLogsInfo.iterator();
+      BootstrapLogInfo lastValidLog = null;
+      int i = 0;
+      while (i < config.getRetentionQuantity() && itr.hasNext())
+      {
+        BootstrapLogInfo log = itr.next();
+        LOG.info("Removing the log table :" + log.getLogTable()
+            + " from the delete List as it is too recent. Retaining :"
+            + config.getRetentionQuantity() + " logs");
+        itr.remove();
+        lastValidLog = log;
+        i++;
+      }
+      _lastValidLog = lastValidLog;
+      break;
+    }
+
+    case RETENTION_SECONDS:
+    {
+      long quantity = config.getRetentionQuantity();
+      LOG.info("Retaining tables which could contain events which is less than "
+          + quantity + " seconds old !!");
+      long currTs = System.currentTimeMillis() * DbusConstants.NUM_NSECS_IN_MSEC;
+      long nanoSecQty = getMilliSecTime(config) * DbusConstants.NUM_NSECS_IN_MSEC;
+      long threshold = (currTs - nanoSecQty);
+
+      LOG.info("Removing tables from the delete-list whose last row has timestamp newer than :"
+          + threshold + " nanosecs");
+
+      Iterator<BootstrapLogInfo> itr = candidateLogsInfo.iterator();
+      BootstrapLogInfo lastValidLog = null;
+      LOG.info("Timestamp Threshold for src id :" + srcId + " is :" + threshold
+          + ", Retention Config " + config + "(" + nanoSecQty + " nanosecs)");
+
+      while (itr.hasNext())
+      {
+        BootstrapLogInfo log = itr.next();
+
+        long timestamp = _bootstrapDBCleanerQueryExecutor.getNanoTimestampOfLastEventinLog(log, _eventFactory);
+
+        if (timestamp < threshold)
+        {
+          LOG.info("Reached the log table whose timestamp (" + timestamp
+              + ") is less than the threshold (" + threshold + ").");
+          break;
+        }
+        else
+        {
+          LOG.info("Removing the log table :"
+              + log.getLogTable()
+              + " from the delete List as it is too recent. Last Event Timestamp :"
+              + timestamp + ", threshold :" + threshold);
+          lastValidLog = log;
+          itr.remove();
+        }
+      }
+      _lastValidLog = lastValidLog;
+    }
+      break;
+    }
+
+    long scn = -1;
+
+    if (!candidateLogsInfo.isEmpty())
+      scn = _bootstrapDBCleanerQueryExecutor.getSCNOfLastEventinLog(candidateLogsInfo.get(0), _eventFactory);
+
+    return scn;
+  }
+
+  private void incCleanerStats()
+  {
+    _isCleaning = true;
+
+    // Update HWM
+    int curCleanersHwm = _numCleanersRunningHWM.get();
+    // Increment internal metrics used for measuring parallelism
+    int curCleaners = _numCleanersRunning.incrementAndGet();
+    if (curCleanersHwm < curCleaners)
+    {
+      _numCleanersRunningHWM.set(curCleaners);
+    }
+  }
+
+  private void decCleanerStats()
+  {
+    _isCleaning = false;
+
+    // Decrement internal metrics used for measuring parallelism
+    _numCleanersRunning.decrementAndGet();
+  }
+}>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/util/TestStringUtils.java;<<<<<<< MINE
+=======
+/*
+ *
+ * Copyright 2013 LinkedIn Corp. All rights reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+*/
+package com.linkedin.databus.core.util;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+/**
+ * Unit tests for {@link StringUtils}
+ */
+public class TestStringUtils
+{
+
+ @Test
+ public void testSanitizeDbUri()
+ {
+   String s = StringUtils.sanitizeDbUri("jdbc:oracle:thin:uSeR/p4ssw0rd@db.company.com:1521/SCHEMA");
+   Assert.assertEquals(s, "jdbc:oracle:thin:*/*@db.company.com:1521/SCHEMA");
+
+   s = StringUtils.sanitizeDbUri("jdbc:oracle:thick:uSeR/p4ssw0rd@db.company.com:1521/SCHEMA");
+   Assert.assertEquals(s, "jdbc:oracle:thick:uSeR/p4ssw0rd@db.company.com:1521/SCHEMA");
+
+   s = StringUtils.sanitizeDbUri("jdbc:oracle:thin:fancy-uri/v1/v2(123,456,789)@(DESCRIPTION=(LOAD_BALANCE=on)(FAILOVER=on)(ADDRESS=(PROTOCOL=TCP)(HOST=db1.host.com)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=db2.host.com)(PORT=1521))(CONNECT_DATA=(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))");
+   Assert.assertEquals(s, "jdbc:oracle:thin:*/*@(DESCRIPTION=(LOAD_BALANCE=on)(FAILOVER=on)(ADDRESS=(PROTOCOL=TCP)(HOST=db1.host.com)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=db2.host.com)(PORT=1521))(CONNECT_DATA=(FAILOVER_MODE=(TYPE=SELECT)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))");
+
+   s = StringUtils.sanitizeDbUri("jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=3306)(password=p4ssw0rd)(user=uSeR)/db");
+   Assert.assertEquals(s, "jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=3306)(password=*)(user=*)/db");
+
+   s = StringUtils.sanitizeDbUri("jdbc:mysql://localhost:3306/DB?profileSQL=true&user=Godzilla&password=KingKong");
+   Assert.assertEquals(s, "jdbc:mysql://localhost:3306/DB?profileSQL=true&user=*&password=*");
+
+   s = StringUtils.sanitizeDbUri("jdbc:MySqL://localhost:3306/DB?profileSQL=true&user=Godzilla&password=KingKong");
+   Assert.assertEquals(s, "jdbc:MySqL://localhost:3306/DB?profileSQL=true&user=Godzilla&password=KingKong");
+ }
+
+}>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;<<<<<<< MINE
+	private RegistrationState _state;
+	protected RegistrationId _id;
+    private final Logger _log;
+	private final CheckpointPersistenceProvider _checkpointPersistenceProvider;
+    protected DbusEventsStatisticsCollector _inboundEventsStatsCollector;
+    protected DbusEventsStatisticsCollector _bootstrapEventsStatsCollector;
+    protected ConsumerCallbackStats _relayConsumerStats;
+    protected ConsumerCallbackStats _bootstrapConsumerStats;
+	private final List<DatabusCombinedConsumer> _consumers;
+	private final List<String> _sources;
+	private DatabusSourcesConnection _sourcesConnection;
+	private DatabusRegistration _parent = null;
+    protected final DatabusHttpClientImpl _client;
+	private Status _status = null;
+	private DbusKeyCompositeFilterConfig _filterConfig = null;
+
+	private List<DatabusV2ConsumerRegistration> _streamConsumerRawRegistrations;
+	private List<DatabusV2ConsumerRegistration> _bootstrapConsumerRawRegistrations;
+
+	/** Suffix Names for Stats Collectors **/
+	public static final String STREAM_EVENT_STATS_SUFFIX_NAME = ".inbound";
+	public static final String BOOTSTRAP_EVENT_STATS_SUFFIX_NAME = ".inbound.bs";
+	public static final String RELAY_CONSUMER_STATS_SUFFIX_NAME = ".callback.relay";
+	public static final String BOOTSTRAP_CONSUMER_STATS_SUFFIX_NAME = ".callback.bootstrap";
+
+    public class Status extends DatabusComponentStatus
+	{
+      public Status()
+=======
+  private RegistrationState _state;
+  protected RegistrationId _id;
+  private final Logger _log;
+  private final CheckpointPersistenceProvider _checkpointPersistenceProvider;
+  protected DbusEventsStatisticsCollector _inboundEventsStatsCollector;
+  protected DbusEventsStatisticsCollector _bootstrapEventsStatsCollector;
+  protected ConsumerCallbackStats _relayConsumerStats;
+  protected ConsumerCallbackStats _bootstrapConsumerStats;
+  protected UnifiedClientStats _unifiedClientStats;
+  private final List<DatabusCombinedConsumer> _consumers;
+  private final List<String> _sources;
+  private DatabusSourcesConnection _sourcesConnection;
+  private DatabusRegistration _parent = null;
+  protected final DatabusHttpClientImpl _client;
+  private Status _status = null;
+  private DbusKeyCompositeFilterConfig _filterConfig = null;
+
+  private List<DatabusV2ConsumerRegistration> _streamConsumerRawRegistrations;
+  private List<DatabusV2ConsumerRegistration> _bootstrapConsumerRawRegistrations;
+
+  /** Suffix Names for Stats Collectors **/
+  public static final String STREAM_EVENT_STATS_SUFFIX_NAME = ".inbound";
+  public static final String BOOTSTRAP_EVENT_STATS_SUFFIX_NAME = ".inbound.bs";
+  public static final String RELAY_CONSUMER_STATS_SUFFIX_NAME = ".callback.relay";
+  public static final String BOOTSTRAP_CONSUMER_STATS_SUFFIX_NAME = ".callback.bootstrap";
+  public static final String UNIFIED_CLIENT_STATS_SUFFIX_NAME = ".callback.unified";
+
+  public class Status extends DatabusComponentStatus
+  {
+    public Status()
+    {
+      super(getStatusName());
+    }
+  }
+
+  // TODO:  nuke?  no Databus callers at all; is this a public (external) API?
+  public DatabusV2RegistrationImpl(RegistrationId id,
+                                   DatabusHttpClientImpl client)
+  {
+    this(id, client, client.getCheckpointPersistenceProvider(), null, null);
+  }
+
+  public DatabusV2RegistrationImpl(RegistrationId id,
+                                   DatabusHttpClientImpl client,
+                                   CheckpointPersistenceProvider ckptProvider)
+  {
+    this(id, client, ckptProvider, null, null);
+  }
+
+
+  // TODO:  make private?  no other Databus callers except two ctors above; is this a public (external) API?
+  public DatabusV2RegistrationImpl(RegistrationId id,
+                                   DatabusHttpClientImpl client,
+                                   CheckpointPersistenceProvider ckptProvider,
+                                   String[] sources,
+                                   AbstractDatabusCombinedConsumer[] consumers)
+  {
+    _id = id;
+    _status = new Status();
+    _client = client;
+    _checkpointPersistenceProvider = ckptProvider;
+    _state = RegistrationState.INIT;
+    _sources = new ArrayList<String>();
+    _consumers = new ArrayList<DatabusCombinedConsumer>();
+    _log = Logger.getLogger(getClass().getName() + (null  == _id ? "" : "." + _id.getId()));
+    if ( null != sources)
+      _sources.addAll(Arrays.asList(sources));
+    if ( null != consumers)
+      _consumers.addAll(Arrays.asList(consumers));
+  }
+
+  /**
+   * Add sources to a given registration object
+   * Adding an already existent subscription, will be a no-op.
+   *
+   * This does not create any new the DatabusRegistration object ( only modifies the current one ).
+   * Hence the id of the registration remains the same
+   *
+   * @throws IllegalStateException if this registration has already been started.
+   */
+  public synchronized void addSubscriptions(String ... sources)
+          throws IllegalStateException
+  {
+    if ( ! _state.isPreStartState())
+      throw new IllegalStateException("Cannot add sources when state is running or shut down. Current State :" + _state);
+
+    for (String s : sources)
+      if (! _sources.contains(s))
+        _sources.add(s);
+  }
+
+  /**
+   * Remove subscriptions from a given registration object
+   * Removing a non-existent subscription, will be a no-op.
+   *
+   * @throws IllegalStateException if this registration has already been started
+   */
+  public synchronized void removeSubscriptions(String ... sources)
+          throws IllegalStateException
+  {
+       if ( ! _state.isRunning())
+         throw new IllegalStateException("Cannot remove sources when state is running. Current State :" + _state);
+
+       for (String s : sources)
+         _sources.remove(s);
+  }
+
+  /**
+   * Adds the specified consumers associated with this registration.
+   * The added consumers will have the same subscription(s) and filter parameters as the other consumers
+   * associated with this registration.
+   */
+  public synchronized void addDatabusConsumers(Collection<DatabusCombinedConsumer> consumers)
+      throws IllegalStateException
+  {
+    if (! _state.isPreStartState())
+      throw new IllegalStateException("Cannot add consumers when state is running/shutdown. Current State :" + _state);
+
+    for (DatabusCombinedConsumer c : consumers)
+      if (! _consumers.contains(c))
+        _consumers.add(c);
+  }
+
+  /**
+   * Removes the specified consumers associated with this registration.
+   */
+  public synchronized void removeDatabusConsumers(Collection<AbstractDatabusCombinedConsumer> consumers)
+  {
+    if (!_state.isRunning())
+      throw new IllegalStateException("Cannot remove consumers when state is running. Current State :" + _state);
+
+    _consumers.removeAll(consumers);
+  }
+
+  /**
+   * Callback when registration is added to client Registration Set.
+   * @param state
+   */
+  public synchronized void onRegister()
+  {
+    _state = RegistrationState.REGISTERED;
+  }
+
+  /**
+   * Initialize Statistics Collectors
+   */
+  protected synchronized void initializeStatsCollectors()
+  {
+    MBeanServer mbeanServer =  null;
+
+    if ( null != _client )
+    {
+      mbeanServer = _client.getMbeanServer();
+    }
+
+    int ownerId = null == _client ? -1 : _client.getContainerStaticConfig().getId();
+    String regId = null != _id ? _id.getId() : "unknownReg";
+
+    initializeStatsCollectors(regId, ownerId, mbeanServer);
+
+    if (null != _client)
+    {
+      _client.getBootstrapEventsStats().addStatsCollector(regId, _bootstrapEventsStatsCollector );
+      _client.getInBoundStatsCollectors().addStatsCollector(regId, _inboundEventsStatsCollector);
+      _client.getRelayConsumerStatsCollectors().addStatsCollector(regId, _relayConsumerStats);
+      _client.getBootstrapConsumerStatsCollectors().addStatsCollector(regId, _bootstrapConsumerStats);
+      _client.getUnifiedClientStatsCollectors().addStatsCollector(regId, _unifiedClientStats);
+    }
+  }
+
+  /**
+   * Initialize Statistics Collectors
+   */
+  protected void initializeStatsCollectors(String regId, int ownerId, MBeanServer mbeanServer)
+  {
+    _inboundEventsStatsCollector =
+        new DbusEventsStatisticsCollector(ownerId,
+                                          regId + STREAM_EVENT_STATS_SUFFIX_NAME,
+                                          true,
+                                          false,
+                                          mbeanServer);
+    _bootstrapEventsStatsCollector =
+        new DbusEventsStatisticsCollector(ownerId,
+                                          regId + BOOTSTRAP_EVENT_STATS_SUFFIX_NAME,
+                                          true,
+                                          false,
+                                          mbeanServer);
+    _relayConsumerStats =
+        new ConsumerCallbackStats(ownerId, regId + RELAY_CONSUMER_STATS_SUFFIX_NAME,
+                                  regId, true, false, new ConsumerCallbackStatsEvent());
+    _bootstrapConsumerStats =
+        new ConsumerCallbackStats(ownerId, regId + BOOTSTRAP_CONSUMER_STATS_SUFFIX_NAME,
+                                  regId, true, false, new ConsumerCallbackStatsEvent());
+    _unifiedClientStats =
+        new UnifiedClientStats(ownerId, regId + UNIFIED_CLIENT_STATS_SUFFIX_NAME,
+                               regId, true, false,
+                               _client.getClientStaticConfig().getPullerThreadDeadnessThresholdMs(),
+                               new UnifiedClientStatsEvent());
+  }
+
+  @Override
+  public synchronized boolean start()
+       throws IllegalStateException, DatabusClientException
+  {
+    _log.info("Starting registration (" + toString() + ") !!");
+
+    if (_state.isRunning())
+    {
+      _log.info("Registration (" + _id + ") already started !!");
+      return false;
+    }
+
+
+    if ( _state != RegistrationState.REGISTERED)
+      throw new IllegalStateException("Registration (" + _id + ") not in startable state !! Current State is :" + _state);
+
+    if ( (null == _sources) || (_sources.isEmpty()))
+      throw new DatabusClientException("Registration (" + _id + ") does not have any sources to start !!");
+
+    if ( (null == _consumers) || (_consumers.isEmpty()))
+      throw new DatabusClientException("Registration (" + _id + ") does not have any consumers to start !!");
+
+    List<ServerInfo> relays = _client.getRelays();
+    List<ServerInfo> bootstrapServers = _client.getBootstrapServices();
+
+    List<DatabusCombinedConsumer> streamConsumers = new ArrayList<DatabusCombinedConsumer>();
+    List<DatabusCombinedConsumer> bootstrapConsumers = new ArrayList<DatabusCombinedConsumer>();
+
+    if ( (null == relays) || ( relays.isEmpty()))
+      throw new DatabusClientException("No configured relays in the client to start");
+
+    Set<ServerInfo> candidateRelays = new HashSet<ServerInfo>();
+
+    for (ServerInfo s : relays)
+    {
+      if (canServe(s, _sources))
+        candidateRelays.add(s);
+    }
+
+    if (candidateRelays.isEmpty())
+      throw new DatabusClientException("No candidate relays for source : " + _sources);
+
+    streamConsumers.addAll(_consumers);
+
+    boolean canConsumerBootstrap = false;
+    _streamConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();
+    _streamConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(streamConsumers, _sources, _filterConfig));
+
+    for (DatabusCombinedConsumer c : _consumers)
+    {
+      if ( c.canBootstrap())
+      {
+        canConsumerBootstrap = true;
+        bootstrapConsumers.add(c);
+      }
+    }
+
+    boolean enableBootstrap = _client.getClientStaticConfig().getRuntime().getBootstrap().isEnabled();
+    Set<ServerInfo> candidateBootstrapServers = new HashSet<ServerInfo>();
+
+    if (enableBootstrap && canConsumerBootstrap)
+    {
+      if ( (null == bootstrapServers) || ( bootstrapServers.isEmpty()))
+        throw new DatabusClientException("No configured bootstrap servers in the client to start");
+
+      for (ServerInfo s : bootstrapServers)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusSourcesConnection.java;<<<<<<< MINE
+public class DatabusSourcesConnection {
+	public static final int MAX_QUEUED_MESSAGES = 10;
+	public static final long MESSAGE_QUEUE_POLL_TIMEOUT_MS = 100;
+	public static final int MAX_CONNECT_RETRY_NUM = 3;
+	public static final long CONNECT_TIMEOUT_MS = 100;
+	public static final long REGISTER_TIMEOUT_MS = 1000;
+
+	public final Logger _log;
+	private final String _name;
+	private final DatabusSourcesConnection.StaticConfig _connectionConfig;
+	private final List<DatabusSubscription> _subscriptions;
+	private final RelayPullThread _relayPuller;
+	private final GenericDispatcher<DatabusCombinedConsumer> _relayDispatcher;
+	private final BootstrapPullThread _bootstrapPuller;
+	private final GenericDispatcher<DatabusCombinedConsumer> _bootstrapDispatcher;
+	private final DbusEventBuffer _dataEventsBuffer;
+	private final DbusEventBuffer _bootstrapEventsBuffer;
+	private final ExecutorService _ioThreadPool;
+	private final CheckpointPersistenceProvider _checkpointPersistenceProvider;
+	private final ContainerStatisticsCollector _containerStatisticsCollector;
+	/** Statistics collector about databus events */
+	private final DbusEventsStatisticsCollector _inboundEventsStatsCollector;
+	private final DbusEventsStatisticsCollector _bootstrapEventsStatsCollector;
+
+	private final HttpStatisticsCollector _relayCallsStatsCollector;
+	private final HttpStatisticsCollector _localRelayCallsStatsCollector;
+	private final DatabusRelayConnectionFactory _relayConnFactory;
+	private final DatabusBootstrapConnectionFactory _bootstrapConnFactory;
+	private final List<DatabusV2ConsumerRegistration> _relayRegistrations;
+	private final ConsumerCallbackStats _relayConsumerStats;
+	private final ConsumerCallbackStats _bootstrapConsumerStats;
+	private final NannyRunnable _nannyRunnable;
+	private final DbusEventFactory _eventFactory;
+	private final ConnectionStateFactory _connStateFactory;
+
+	private final List<DatabusV2ConsumerRegistration> _bootstrapRegistrations;
+	private final SourcesConnectionStatus _connectionStatus;
+
+	private UncaughtExceptionTrackingThread _relayPullerThread;
+	private UncaughtExceptionTrackingThread _relayDispatcherThread;
+	private UncaughtExceptionTrackingThread _bootstrapPullerThread;
+	private UncaughtExceptionTrackingThread _bootstrapDispatcherThread;
+	private final Thread _messageQueuesMonitorThread;
+	private Thread _nannyThread;
+	private ExecutorService _consumerCallbackExecutor;
+
+	private final boolean _isBootstrapEnabled;
+	private final RegistrationId _registrationId;
+	private ReentrantLock _v3BootstrapLock = null;
+
+	public ExecutorService getIoThreadPool() {
+		return _ioThreadPool;
+	}
+
+    public DatabusSourcesConnection(StaticConfig connConfig,
+       List<DatabusSubscription> subscriptions,
+       Set<ServerInfo> relays,
+       Set<ServerInfo> bootstrapServices,
+       List<DatabusV2ConsumerRegistration> registrations,
+       List<DatabusV2ConsumerRegistration> bootstrapRegistrations,
+       DbusEventBuffer dataEventsBuffer,
+       DbusEventBuffer bootstrapEventsBuffer,
+       ExecutorService ioThreadPool,
+       ContainerStatisticsCollector containerStatsCollector,
+       DbusEventsStatisticsCollector inboundEventsStatsCollector,
+       DbusEventsStatisticsCollector bootstrapEventsStatsCollector,
+       ConsumerCallbackStats relayCallbackStats,
+       ConsumerCallbackStats bootstrapCallbackStats,
+       CheckpointPersistenceProvider checkpointPersistenceProvider,
+       DatabusRelayConnectionFactory relayConnFactory,
+       DatabusBootstrapConnectionFactory bootstrapConnFactory,
+       HttpStatisticsCollector relayCallsStatsCollector,
+       RegistrationId registrationId,
+       DatabusHttpClientImpl serverHandle,
+       DbusEventFactory eventFactory)
+    {
+      this(connConfig,
+          subscriptions,
+          relays,
+          bootstrapServices,
+          registrations,
+          bootstrapRegistrations,
+          dataEventsBuffer,
+          bootstrapEventsBuffer,
+          ioThreadPool,
+          containerStatsCollector,
+          inboundEventsStatsCollector,
+          bootstrapEventsStatsCollector,
+          relayCallbackStats,
+          bootstrapCallbackStats,
+          checkpointPersistenceProvider,
+          relayConnFactory,
+          bootstrapConnFactory,
+          relayCallsStatsCollector,
+          registrationId,
+          serverHandle,
+          registrationId != null ? registrationId.toString() : null,
+          eventFactory,
+          null,
+    null);
+    }
+
+	public DatabusSourcesConnection(StaticConfig connConfig,
+					List<DatabusSubscription> subscriptions,
+					Set<ServerInfo> relays,
+					Set<ServerInfo> bootstrapServices,
+					List<DatabusV2ConsumerRegistration> registrations,
+					List<DatabusV2ConsumerRegistration> bootstrapRegistrations,
+					DbusEventBuffer dataEventsBuffer,
+					DbusEventBuffer bootstrapEventsBuffer,
+					ExecutorService ioThreadPool,
+					ContainerStatisticsCollector containerStatsCollector,
+					DbusEventsStatisticsCollector inboundEventsStatsCollector,
+					DbusEventsStatisticsCollector bootstrapEventsStatsCollector,
+					ConsumerCallbackStats relayCallbackStats,
+					ConsumerCallbackStats bootstrapCallbackStats,
+					CheckpointPersistenceProvider checkpointPersistenceProvider,
+					DatabusRelayConnectionFactory relayConnFactory,
+					DatabusBootstrapConnectionFactory bootstrapConnFactory,
+					HttpStatisticsCollector relayCallsStatsCollector,
+					RegistrationId registrationId,
+					DatabusHttpClientImpl serverHandle,
+					DbusEventFactory eventFactory,
+					ConnectionStateFactory connStateFactory)
+	{
+		this(connConfig,
+			subscriptions,
+			relays,
+			bootstrapServices,
+			registrations,
+			bootstrapRegistrations,
+			dataEventsBuffer,
+			bootstrapEventsBuffer,
+			ioThreadPool,
+			containerStatsCollector,
+			inboundEventsStatsCollector,
+			bootstrapEventsStatsCollector,
+			relayCallbackStats,
+			bootstrapCallbackStats,
+			checkpointPersistenceProvider,
+			relayConnFactory,
+			bootstrapConnFactory,
+			relayCallsStatsCollector,
+			registrationId,
+			serverHandle,
+			registrationId != null ? registrationId.toString() : null,
+			eventFactory,
+			null,
+			connStateFactory);
+	}
+
+	public DatabusSourcesConnection(
+			DatabusSourcesConnection.StaticConfig connConfig,
+			List<DatabusSubscription> subscriptions, Set<ServerInfo> relays,
+			Set<ServerInfo> bootstrapServices,
+			List<DatabusV2ConsumerRegistration> registrations,
+			List<DatabusV2ConsumerRegistration> bootstrapRegistrations,
+			DbusEventBuffer dataEventsBuffer,
+			DbusEventBuffer bootstrapEventsBuffer,
+			ExecutorService ioThreadPool,
+			ContainerStatisticsCollector containerStatsCollector,
+			DbusEventsStatisticsCollector inboundEventsStatsCollector,
+			DbusEventsStatisticsCollector bootstrapEventsStatsCollector,
+			ConsumerCallbackStats relayCallbackStats,
+			ConsumerCallbackStats bootstrapCallbackStats,
+			CheckpointPersistenceProvider checkpointPersistenceProvider,
+			DatabusRelayConnectionFactory relayConnFactory,
+			DatabusBootstrapConnectionFactory bootstrapConnFactory,
+			HttpStatisticsCollector relayCallsStatsCollector,
+			RegistrationId registrationId, DatabusHttpClientImpl serverHandle,
+			String connRawId, // Unique Name to be used for generating mbean and logger names.
+			DbusEventFactory eventFactory,
+            ReentrantLock v3BootstrapLock,
+			ConnectionStateFactory connStateFactory
+			)
+	{
+		_eventFactory = eventFactory;
+		_connectionConfig = connConfig;
+		_dataEventsBuffer = dataEventsBuffer;
+		_bootstrapEventsBuffer = bootstrapEventsBuffer;
+		_subscriptions = subscriptions;
+		_ioThreadPool = ioThreadPool;
+		_checkpointPersistenceProvider = checkpointPersistenceProvider;
+		_containerStatisticsCollector = containerStatsCollector;
+		_inboundEventsStatsCollector = inboundEventsStatsCollector;
+		_bootstrapEventsStatsCollector = bootstrapEventsStatsCollector;
+		_relayConsumerStats = relayCallbackStats;
+		_bootstrapConsumerStats = bootstrapCallbackStats;
+		_relayConnFactory = relayConnFactory;
+		_bootstrapConnFactory = bootstrapConnFactory;
+		_relayRegistrations = registrations;
+		_bootstrapRegistrations = bootstrapRegistrations;
+		_relayCallsStatsCollector = relayCallsStatsCollector;
+		_localRelayCallsStatsCollector = null != relayCallsStatsCollector ? relayCallsStatsCollector
+				.createForClientConnection(toString()) : null;
+		_registrationId = registrationId;
+		_name = composeName(connRawId); // will be used as MBean name for
+											// example
+		_log = Logger.getLogger(DatabusSourcesConnection.class.getName()
+				+ ".srcconn-" + _name);
+		_connectionStatus = new SourcesConnectionStatus();
+		_v3BootstrapLock = v3BootstrapLock;
+		_connStateFactory = connStateFactory;
+
+		List<DbusKeyCompositeFilterConfig> relayFilterConfigs = new ArrayList<DbusKeyCompositeFilterConfig>();
+		List<DbusKeyCompositeFilterConfig> bootstrapFilterConfigs = new ArrayList<DbusKeyCompositeFilterConfig>();
+
+		if (null != registrations) {
+			for (DatabusV2ConsumerRegistration reg : registrations) {
+				DbusKeyCompositeFilterConfig conf = reg.getFilterConfig();
+
+				if (null != conf)
+					relayFilterConfigs.add(conf);
+			}
+		}
+
+		if (null != bootstrapRegistrations) {
+			for (DatabusV2ConsumerRegistration reg : bootstrapRegistrations) {
+				DbusKeyCompositeFilterConfig conf = reg.getFilterConfig();
+
+				if (null != conf)
+					bootstrapFilterConfigs.add(conf);
+			}
+		}
+
+		int consumerParallelism = connConfig.getConsumerParallelism();
+		if (1 == consumerParallelism) {
+			_consumerCallbackExecutor = Executors
+					.newSingleThreadExecutor(new NamedThreadFactory("callback"));
+		} else {
+			_consumerCallbackExecutor = Executors.newFixedThreadPool(
+					consumerParallelism, new NamedThreadFactory("callback"));
+		}
+
+		LoggingConsumer loggingConsumer = null;
+		if (serverHandle != null)
+		{
+		  try
+		  {
+		    // we intentionally don't use serverHandle.getLoggingListener(); LoggingConsumer
+		    // isn't thread-safe, so we need one instance per connection
+		    loggingConsumer = new LoggingConsumer(serverHandle.getClientStaticConfig().getLoggingListener());
+		  }
+		  catch (InvalidConfigException e)
+		  {
+		    throw new DatabusRuntimeException(e);  // alternatively, declare config exception and let it go
+		  }
+		}
+
+		MultiConsumerCallback relayAsyncCallback = new MultiConsumerCallback(
+				(null != _relayRegistrations ? _relayRegistrations
+						: new ArrayList<DatabusV2ConsumerRegistration>()),
+				_consumerCallbackExecutor,
+				connConfig.getConsumerTimeBudgetMs(),
+				new StreamConsumerCallbackFactory(), _relayConsumerStats,
+				loggingConsumer);
+
+		MultiConsumerCallback bootstrapAsyncCallback = new MultiConsumerCallback(
+				(null != _bootstrapRegistrations ? _bootstrapRegistrations
+						: new ArrayList<DatabusV2ConsumerRegistration>()),
+				_consumerCallbackExecutor,
+				connConfig.getBstConsumerTimeBudgetMs(),
+				new BootstrapConsumerCallbackFactory(), _bootstrapConsumerStats,
+				loggingConsumer);
+
+		if (_bootstrapEventsBuffer != null) {
+			_bootstrapPuller = new BootstrapPullThread(_name
+					+ "-BootstrapPuller", this, _bootstrapEventsBuffer, _connStateFactory,
+					bootstrapServices, bootstrapFilterConfigs,
+					connConfig.getPullerUtilizationPct(),
+					ManagementFactory.getPlatformMBeanServer(),
+					_eventFactory, _v3BootstrapLock);
+		} else {
+			_bootstrapPuller = null;
+		}
+
+		_relayDispatcher = new RelayDispatcher(_name + "-RelayDispatcher",
+				connConfig, getSubscriptions(), checkpointPersistenceProvider,
+				dataEventsBuffer, relayAsyncCallback, _bootstrapPuller,
+				ManagementFactory.getPlatformMBeanServer(), serverHandle,
+				_registrationId);
+
+		_relayPuller = new RelayPullThread(_name + "-RelayPuller", this,
+				_dataEventsBuffer, _connStateFactory, relays, relayFilterConfigs,
+				connConfig.getConsumeCurrent(),
+				connConfig.isReadLatestScnOnErrorEnabled(),
+				connConfig.getPullerUtilizationPct(),
+				connConfig.getNoEventsConnectionResetTimeSec(),
+				ManagementFactory.getPlatformMBeanServer(),
+ 				_eventFactory);
+
+		_relayPuller.enqueueMessage(LifecycleMessage.createStartMessage());
+
+		if (_bootstrapEventsBuffer != null) {
+			_bootstrapDispatcher = new BootstrapDispatcher(_name
+					+ "-BootstrapDispatcher", connConfig, getSubscriptions(),
+					checkpointPersistenceProvider, bootstrapEventsBuffer,
+					bootstrapAsyncCallback, _relayPuller,
+					ManagementFactory.getPlatformMBeanServer(), serverHandle,
+					_registrationId);
+		} else {
+			_bootstrapDispatcher = null;
+		}
+
+		_messageQueuesMonitorThread = new Thread(new MessageQueuesMonitor());
+		_messageQueuesMonitorThread.setDaemon(true);
+
+		_isBootstrapEnabled = !(null == getBootstrapServices()
+				|| getBootstrapServices().isEmpty()
+				|| null == getBootstrapRegistrations()
+				|| 0 == getBootstrapRegistrations().size() || _bootstrapEventsBuffer == null);
+
+		_log.info(" Is Service Empty : "
+				+ (null == getBootstrapServices() || getBootstrapServices()
+						.isEmpty()));
+		_log.info(" Is Consumers Empty : "
+				+ (null == getBootstrapRegistrations() || 0 == getBootstrapRegistrations()
+						.size()));
+
+		_nannyRunnable = new NannyRunnable();
+	}
+
+	// figure out name for the connection - to be used in mbean
+	private String composeName(String id) {
+		StringBuilder shortSourcesListBuilder = new StringBuilder();
+		String separatorChar = "[";
+		for (DatabusSubscription sub : getSubscriptions()) {
+			shortSourcesListBuilder.append(separatorChar);
+			PhysicalPartition p = sub.getPhysicalPartition();
+			String sourceName = "AnySource";
+			LogicalSource source = sub.getLogicalPartition().getSource();
+			if (!source.isAllSourcesWildcard()) {
+				sourceName = source.getName();
+				int lastDotIdx = sourceName.lastIndexOf('.');
+				if (lastDotIdx >= 0)
+					sourceName = sourceName.substring(lastDotIdx + 1);
+			}
+			String partString = "AnyPPart_";
+			if (!p.isAnyPartitionWildcard()) {
+				partString = p.getId() + "_";
+			}
+			shortSourcesListBuilder.append(partString + sourceName);
+			separatorChar = "_";
+		}
+		shortSourcesListBuilder.append(']');
+		String shortSourcesList = shortSourcesListBuilder.toString();
+
+		return "conn" + shortSourcesList
+				+ (id == null ? "" : "_" + id);
+	}
+
+	public boolean isBootstrapEnabled() {
+		return _isBootstrapEnabled;
+	}
+
+	public void start() {
+		_log.info("Starting http relay connection for sources:"
+				+ _subscriptions);
+		_nannyThread = new Thread(_nannyRunnable, _name + ".Nanny");
+		_nannyThread.setDaemon(true);
+
+		_connectionStatus.start();
+		_messageQueuesMonitorThread.start();
+		_nannyThread.start();
+	}
+
+	public boolean isRunning() {
+		boolean pullThreadRunning = _relayPullerThread.isAlive();
+		boolean dispatcherThreadRunning = _relayDispatcherThread.isAlive();
+
+		if (!pullThreadRunning)
+			_log.info("Pull thread is DEAD!");
+		if (null != _relayPullerThread.getLastException()) {
+			_log.error(" Reason: "
+					+ _relayPullerThread.getLastException().getMessage(),
+					_relayPullerThread.getLastException());
+		}
+
+		if (!dispatcherThreadRunning)
+			_log.info("Dispatch thread is DEAD!");
+		if (null != _relayDispatcherThread.getLastException()) {
+			_log.error(" Reason: "
+					+ _relayDispatcherThread.getLastException().getMessage(),
+					_relayDispatcherThread.getLastException());
+		}
+
+		return pullThreadRunning && dispatcherThreadRunning;
+	}
+
+	public void await() {
+		boolean running = isRunning();
+		_log.info("waiting for shutdown: " + running);
+		while (running) {
+			_relayPuller.awaitShutdown();
+			_relayDispatcher.awaitShutdown();
+
+			running = isRunning();
+			_log.info("waiting for shutdown: " + running);
+		}
+	}
+
+	public void stop() {
+		_log.info("Stopping ... :" + isRunning());
+
+		if (null != _relayConsumerStats)
+			_relayConsumerStats.unregisterAsMbean();
+		if (null != _bootstrapConsumerStats)
+			_bootstrapConsumerStats.unregisterAsMbean();
+		_connectionStatus.shutdown();
+
+	    if (_relayPullerThread.isAlive())
+	    {
+	      _log.info("shutting down relay puller ...");
+	      _relayPuller.awaitShutdown();
+	    }
+	    if (_relayDispatcherThread.isAlive())
+	    {
+=======
+public class DatabusSourcesConnection
+{
+  public static final int MAX_QUEUED_MESSAGES = 10;
+  public static final long MESSAGE_QUEUE_POLL_TIMEOUT_MS = 100;
+  public static final int MAX_CONNECT_RETRY_NUM = 3;
+  public static final long CONNECT_TIMEOUT_MS = 100;
+  public static final long REGISTER_TIMEOUT_MS = 1000;
+
+  public final Logger _log;
+  private final String _name;
+  private final DatabusSourcesConnection.StaticConfig _connectionConfig;
+  private final List<DatabusSubscription> _subscriptions;
+  private final RelayPullThread _relayPuller;
+  private final GenericDispatcher<DatabusCombinedConsumer> _relayDispatcher;
+  private final BootstrapPullThread _bootstrapPuller;
+  private final GenericDispatcher<DatabusCombinedConsumer> _bootstrapDispatcher;
+  private final DbusEventBuffer _dataEventsBuffer;
+  private final DbusEventBuffer _bootstrapEventsBuffer;
+  private final ExecutorService _ioThreadPool;
+  private final CheckpointPersistenceProvider _checkpointPersistenceProvider;
+  private final ContainerStatisticsCollector _containerStatisticsCollector;
+  /** Statistics collector about databus events */
+  private final DbusEventsStatisticsCollector _inboundEventsStatsCollector;
+  private final DbusEventsStatisticsCollector _bootstrapEventsStatsCollector;
+
+  private final HttpStatisticsCollector _relayCallsStatsCollector;
+  private final HttpStatisticsCollector _localRelayCallsStatsCollector;
+  private final DatabusRelayConnectionFactory _relayConnFactory;
+  private final DatabusBootstrapConnectionFactory _bootstrapConnFactory;
+  private final List<DatabusV2ConsumerRegistration> _relayRegistrations;
+  private final ConsumerCallbackStats _relayConsumerStats;
+  private final ConsumerCallbackStats _bootstrapConsumerStats;
+  private final UnifiedClientStats _unifiedClientStats;
+  private final NannyRunnable _nannyRunnable;
+  private final DbusEventFactory _eventFactory;
+  private final ConnectionStateFactory _connStateFactory;
+
+  private final List<DatabusV2ConsumerRegistration> _bootstrapRegistrations;
+  private final SourcesConnectionStatus _connectionStatus;
+
+  private UncaughtExceptionTrackingThread _relayPullerThread;
+  private UncaughtExceptionTrackingThread _relayDispatcherThread;
+  private UncaughtExceptionTrackingThread _bootstrapPullerThread;
+  private UncaughtExceptionTrackingThread _bootstrapDispatcherThread;
+  private final Thread _messageQueuesMonitorThread;
+  private Thread _nannyThread;
+  private ExecutorService _consumerCallbackExecutor;
+
+  private final boolean _isBootstrapEnabled;
+  private final RegistrationId _registrationId;
+  private ReentrantLock _v3BootstrapLock = null;
+
+  public ExecutorService getIoThreadPool()
+  {
+    return _ioThreadPool;
+  }
+
+  public DatabusSourcesConnection(StaticConfig connConfig,
+                                  List<DatabusSubscription> subscriptions,
+                                  Set<ServerInfo> relays,
+                                  Set<ServerInfo> bootstrapServices,
+                                  List<DatabusV2ConsumerRegistration> registrations,
+                                  List<DatabusV2ConsumerRegistration> bootstrapRegistrations,
+                                  DbusEventBuffer dataEventsBuffer,
+                                  DbusEventBuffer bootstrapEventsBuffer,
+                                  ExecutorService ioThreadPool,
+                                  ContainerStatisticsCollector containerStatsCollector,
+                                  DbusEventsStatisticsCollector inboundEventsStatsCollector,
+                                  DbusEventsStatisticsCollector bootstrapEventsStatsCollector,
+                                  ConsumerCallbackStats relayCallbackStats,
+                                  ConsumerCallbackStats bootstrapCallbackStats,
+                                  UnifiedClientStats unifiedClientStats,
+                                  CheckpointPersistenceProvider checkpointPersistenceProvider,
+                                  DatabusRelayConnectionFactory relayConnFactory,
+                                  DatabusBootstrapConnectionFactory bootstrapConnFactory,
+                                  HttpStatisticsCollector relayCallsStatsCollector,
+                                  RegistrationId registrationId,
+                                  DatabusHttpClientImpl serverHandle,
+                                  DbusEventFactory eventFactory,
+                                  ConnectionStateFactory connStateFactory)
+  {
+    this(connConfig,
+         subscriptions,
+         relays,
+         bootstrapServices,
+         registrations,
+         bootstrapRegistrations,
+         dataEventsBuffer,
+         bootstrapEventsBuffer,
+         ioThreadPool,
+         containerStatsCollector,
+         inboundEventsStatsCollector,
+         bootstrapEventsStatsCollector,
+         relayCallbackStats,
+         bootstrapCallbackStats,
+         unifiedClientStats,
+         checkpointPersistenceProvider,
+         relayConnFactory,
+         bootstrapConnFactory,
+         relayCallsStatsCollector,
+         registrationId,
+         serverHandle,
+         registrationId != null ? registrationId.toString() : null,
+         eventFactory,
+         null,
+         connStateFactory);
+  }
+
+  public DatabusSourcesConnection(DatabusSourcesConnection.StaticConfig connConfig,
+                                  List<DatabusSubscription> subscriptions,
+                                  Set<ServerInfo> relays,
+                                  Set<ServerInfo> bootstrapServices,
+                                  List<DatabusV2ConsumerRegistration> registrations,
+                                  List<DatabusV2ConsumerRegistration> bootstrapRegistrations,
+                                  DbusEventBuffer dataEventsBuffer,
+                                  DbusEventBuffer bootstrapEventsBuffer,
+                                  ExecutorService ioThreadPool,
+                                  ContainerStatisticsCollector containerStatsCollector,
+                                  DbusEventsStatisticsCollector inboundEventsStatsCollector,
+                                  DbusEventsStatisticsCollector bootstrapEventsStatsCollector,
+                                  ConsumerCallbackStats relayCallbackStats,
+                                  ConsumerCallbackStats bootstrapCallbackStats,
+                                  UnifiedClientStats unifiedClientStats,
+                                  CheckpointPersistenceProvider checkpointPersistenceProvider,
+                                  DatabusRelayConnectionFactory relayConnFactory,
+                                  DatabusBootstrapConnectionFactory bootstrapConnFactory,
+                                  HttpStatisticsCollector relayCallsStatsCollector,
+                                  RegistrationId registrationId, DatabusHttpClientImpl serverHandle,
+                                  String connRawId, // Unique Name to be used for generating mbean and logger names.
+                                  DbusEventFactory eventFactory,
+                                  ReentrantLock v3BootstrapLock,
+                                  ConnectionStateFactory connStateFactory)
+  {
+    _eventFactory = eventFactory;
+    _connectionConfig = connConfig;
+    _dataEventsBuffer = dataEventsBuffer;
+    _bootstrapEventsBuffer = bootstrapEventsBuffer;
+    _subscriptions = subscriptions;
+    _ioThreadPool = ioThreadPool;
+    _checkpointPersistenceProvider = checkpointPersistenceProvider;
+    _containerStatisticsCollector = containerStatsCollector;
+    _inboundEventsStatsCollector = inboundEventsStatsCollector;
+    _bootstrapEventsStatsCollector = bootstrapEventsStatsCollector;
+    _relayConsumerStats = relayCallbackStats;
+    _bootstrapConsumerStats = bootstrapCallbackStats;
+    _unifiedClientStats = unifiedClientStats;
+    _relayConnFactory = relayConnFactory;
+    _bootstrapConnFactory = bootstrapConnFactory;
+    _relayRegistrations = registrations;
+    _bootstrapRegistrations = bootstrapRegistrations;
+    _relayCallsStatsCollector = relayCallsStatsCollector;
+    _localRelayCallsStatsCollector = null != relayCallsStatsCollector ?
+        relayCallsStatsCollector.createForClientConnection(toString()) : null;
+    _registrationId = registrationId;
+    _name = composeName(connRawId); // will be used as MBean name for
+                      // example
+    _log = Logger.getLogger(DatabusSourcesConnection.class.getName() + ".srcconn-" + _name);
+    _connectionStatus = new SourcesConnectionStatus();
+    _v3BootstrapLock = v3BootstrapLock;
+    _connStateFactory = connStateFactory;
+
+    List<DbusKeyCompositeFilterConfig> relayFilterConfigs = new ArrayList<DbusKeyCompositeFilterConfig>();
+    List<DbusKeyCompositeFilterConfig> bootstrapFilterConfigs = new ArrayList<DbusKeyCompositeFilterConfig>();
+
+    if (null != registrations) {
+      for (DatabusV2ConsumerRegistration reg : registrations) {
+        DbusKeyCompositeFilterConfig conf = reg.getFilterConfig();
+
+        if (null != conf)
+          relayFilterConfigs.add(conf);
+      }
+    }
+
+    if (null != bootstrapRegistrations) {
+      for (DatabusV2ConsumerRegistration reg : bootstrapRegistrations) {
+        DbusKeyCompositeFilterConfig conf = reg.getFilterConfig();
+
+        if (null != conf)
+          bootstrapFilterConfigs.add(conf);
+      }
+    }
+
+    int consumerParallelism = connConfig.getConsumerParallelism();
+    if (1 == consumerParallelism) {
+      _consumerCallbackExecutor = Executors
+          .newSingleThreadExecutor(new NamedThreadFactory("callback"));
+    } else {
+      _consumerCallbackExecutor = Executors.newFixedThreadPool(
+          consumerParallelism, new NamedThreadFactory("callback"));
+    }
+
+    LoggingConsumer loggingConsumer = null;
+    if (serverHandle != null)
+    {
+      try
+      {
+        // we intentionally don't use serverHandle.getLoggingListener(); LoggingConsumer
+        // isn't thread-safe, so we need one instance per connection
+        loggingConsumer = new LoggingConsumer(serverHandle.getClientStaticConfig().getLoggingListener());
+      }
+      catch (InvalidConfigException e)
+      {
+        throw new DatabusRuntimeException(e);  // alternatively:  declare InvalidConfigException, let it go
+      }
+    }
+
+    MultiConsumerCallback relayAsyncCallback =
+        new MultiConsumerCallback((null != _relayRegistrations) ?
+                                      _relayRegistrations :
+                                      new ArrayList<DatabusV2ConsumerRegistration>(),
+                                  _consumerCallbackExecutor,
+                                  connConfig.getConsumerTimeBudgetMs(),
+                                  new StreamConsumerCallbackFactory(_relayConsumerStats,
+                                                                    _unifiedClientStats),
+                                  _relayConsumerStats,
+                                  _unifiedClientStats,
+                                  loggingConsumer);
+
+    MultiConsumerCallback bootstrapAsyncCallback =
+        new MultiConsumerCallback((null != _bootstrapRegistrations) ?
+                                      _bootstrapRegistrations :
+                                      new ArrayList<DatabusV2ConsumerRegistration>(),
+                                  _consumerCallbackExecutor,
+                                  connConfig.getBstConsumerTimeBudgetMs(),
+                                  new BootstrapConsumerCallbackFactory(_bootstrapConsumerStats,
+                                                                       _unifiedClientStats),
+                                  _bootstrapConsumerStats,
+                                  _unifiedClientStats,
+                                  loggingConsumer);
+
+    if (_bootstrapEventsBuffer != null) {
+      _bootstrapPuller = new BootstrapPullThread(_name
+          + "-BootstrapPuller", this, _bootstrapEventsBuffer, _connStateFactory,
+          bootstrapServices, bootstrapFilterConfigs,
+          connConfig.getPullerUtilizationPct(),
+          ManagementFactory.getPlatformMBeanServer(),
+          _eventFactory, _v3BootstrapLock);
+    } else {
+      _bootstrapPuller = null;
+    }
+
+    _relayDispatcher = new RelayDispatcher(_name + "-RelayDispatcher",
+        connConfig, getSubscriptions(), checkpointPersistenceProvider,
+        dataEventsBuffer, relayAsyncCallback, _bootstrapPuller,
+        ManagementFactory.getPlatformMBeanServer(), serverHandle,
+        _registrationId);
+
+    _relayPuller = new RelayPullThread(_name + "-RelayPuller", this,
+        _dataEventsBuffer, _connStateFactory, relays, relayFilterConfigs,
+        connConfig.getConsumeCurrent(),
+        connConfig.isReadLatestScnOnErrorEnabled(),
+        connConfig.getPullerUtilizationPct(),
+        connConfig.getNoEventsConnectionResetTimeSec(),
+        ManagementFactory.getPlatformMBeanServer(),
+        _eventFactory);
+
+    _relayPuller.enqueueMessage(LifecycleMessage.createStartMessage());
+
+    if (_bootstrapEventsBuffer != null) {
+      _bootstrapDispatcher = new BootstrapDispatcher(_name
+          + "-BootstrapDispatcher", connConfig, getSubscriptions(),
+          checkpointPersistenceProvider, bootstrapEventsBuffer,
+          bootstrapAsyncCallback, _relayPuller,
+          ManagementFactory.getPlatformMBeanServer(), serverHandle,
+          _registrationId);
+    } else {
+      _bootstrapDispatcher = null;
+    }
+
+    _messageQueuesMonitorThread = new Thread(new MessageQueuesMonitor());
+    _messageQueuesMonitorThread.setDaemon(true);
+
+    _isBootstrapEnabled = !(null == getBootstrapServices()
+        || getBootstrapServices().isEmpty()
+        || null == getBootstrapRegistrations()
+        || 0 == getBootstrapRegistrations().size() || _bootstrapEventsBuffer == null);
+
+    _log.info(" Is Service Empty : "
+        + (null == getBootstrapServices() || getBootstrapServices()
+            .isEmpty()));
+    _log.info(" Is Consumers Empty : "
+        + (null == getBootstrapRegistrations() || 0 == getBootstrapRegistrations()
+            .size()));
+
+    _nannyRunnable = new NannyRunnable();
+  }
+
+  // figure out name for the connection - to be used in mbean
+  private String composeName(String id) {
+    StringBuilder shortSourcesListBuilder = new StringBuilder();
+    String separatorChar = "[";
+    for (DatabusSubscription sub : getSubscriptions()) {
+      shortSourcesListBuilder.append(separatorChar);
+      PhysicalPartition p = sub.getPhysicalPartition();
+      String sourceName = "AnySource";
+      LogicalSource source = sub.getLogicalPartition().getSource();
+      if (!source.isAllSourcesWildcard()) {
+        sourceName = source.getName();
+        int lastDotIdx = sourceName.lastIndexOf('.');
+        if (lastDotIdx >= 0)
+          sourceName = sourceName.substring(lastDotIdx + 1);
+      }
+      String partString = "AnyPPart_";
+      if (!p.isAnyPartitionWildcard()) {
+        partString = p.getId() + "_";
+      }
+      shortSourcesListBuilder.append(partString + sourceName);
+      separatorChar = "_";
+    }
+    shortSourcesListBuilder.append(']');
+    String shortSourcesList = shortSourcesListBuilder.toString();
+
+    return "conn" + shortSourcesList + (id == null ? "" : "_" + id);
+  }
+
+  public boolean isBootstrapEnabled()
+  {
+    return _isBootstrapEnabled;
+  }
+
+  public void start()
+  {
+    _log.info("Starting http relay connection for sources:"
+        + _subscriptions);
+    _nannyThread = new Thread(_nannyRunnable, _name + ".Nanny");
+    _nannyThread.setDaemon(true);
+
+    _connectionStatus.start();
+    _messageQueuesMonitorThread.start();
+    _nannyThread.start();
+  }
+
+  public boolean isRunning()
+  {
+    boolean pullThreadRunning = _relayPullerThread.isAlive();
+    boolean dispatcherThreadRunning = _relayDispatcherThread.isAlive();
+
+    if (!pullThreadRunning)
+      _log.info("Pull thread is DEAD!");
+    if (null != _relayPullerThread.getLastException()) {
+      _log.error(" Reason: "
+          + _relayPullerThread.getLastException().getMessage(),
+          _relayPullerThread.getLastException());
+    }
+
+    if (!dispatcherThreadRunning)
+      _log.info("Dispatch thread is DEAD!");
+    if (null != _relayDispatcherThread.getLastException()) {
+      _log.error(" Reason: "
+          + _relayDispatcherThread.getLastException().getMessage(),
+          _relayDispatcherThread.getLastException());
+    }
+
+    return pullThreadRunning && dispatcherThreadRunning;
+  }
+
+  public void await()
+  {
+    boolean running = isRunning();
+    _log.info("waiting for shutdown: " + running);
+    while (running) {
+      _relayPuller.awaitShutdown();
+      _relayDispatcher.awaitShutdown();
+
+      running = isRunning();
+      _log.info("waiting for shutdown: " + running);
+    }
+  }
+
+  public void stop()
+  {
+    _log.info("Stopping ... :" + isRunning());
+
+    unregisterMbeans();
+    _connectionStatus.shutdown();
+
+      if (_relayPullerThread.isAlive())
+      {
+        _log.info("shutting down relay puller ...");
+        _relayPuller.awaitShutdown();
+      }
+      if (_relayDispatcherThread.isAlive())
+      {
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+class StateVerifyingStreamConsumer extends DelegatingDatabusCombinedConsumer
+=======
+static class StateVerifyingStreamConsumer extends DelegatingDatabusCombinedConsumer
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+  /**
+   * thread that writes Checkpoints to clusters
+   *
+   */
+  public class CheckpointRW extends Thread
+  {
+    private final String _clusterName;
+    private final String _partitionId;
+    private final long _startScn;
+    private final long _durationMs = 5000;
+    private final long _delayMs = 200;
+    private boolean _hasError = false;
+=======
+    private Checkpoint storedCheckpoint = null;
+>>>>>>> YOURS

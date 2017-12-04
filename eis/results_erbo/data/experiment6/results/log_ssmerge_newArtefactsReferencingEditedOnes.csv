@@ -1,0 +1,4295 @@
+revision;file;leftContent;rightContent;conflict
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8.revisions;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;@Override
+	public synchronized void shutdown() throws IllegalStateException
+	{
+
+		if (! _state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+		_sourcesConnection.unregisterMbeans();
+		_sourcesConnection.stop();
+		_status.shutdown();
+		_state = RegistrationState.SHUTDOWN;
+
+		// remove this registration stats from client stats Collector list.
+		_client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+	    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	};@Overridepublicsynchronizedvoidshutdown()throwsIllegalStateException{if(!_state.isRunning())thrownewIllegalStateException("Registration("+_id+")isnotinrunningstatetobeshutdown.Currentstate:"+_state);_sourcesConnection.unregisterMbeans();_sourcesConnection.stop();_status.shutdown();_state=RegistrationState.SHUTDOWN;//removethisregistrationstatsfromclientstatsCollectorlist._client.getBootstrapEventsStats().removeStatsCollector(_id.getId());_client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());_client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());_client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());_client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());};
+		DatabusSourcesConnection sourcesConnection =
+				  new DatabusSourcesConnection(
+						  connConfig,
+						  subs,
+						  candidateRelays,
+						  candidateBootstrapServers,
+						  _streamConsumerRawRegistrations,
+						  _bootstrapConsumerRawRegistrations,
+						  eventBuffer,
+						  bootstrapBuffer,
+						  _client.getDefaultExecutorService(),
+						  _client.getContainerStatsCollector(),
+						  _inboundEventsStatsCollector,
+						  _bootstrapEventsStatsCollector,
+						  _relayConsumerStats,
+						  _bootstrapConsumerStats,
+						  _checkpointPersistenceProvider,
+						  _client.getRelayConnFactory(),
+						  _client.getBootstrapConnFactory(),
+						  _client.getHttpStatsCollector(),
+						  null, // This should make sure the checkpoint directory structure is compatible with V2.
+						  _client,
+						  _id.toString(), // Used to uniquely identify logs and mbean name
+						  _client.getEventFactory(),
+						  null,
+						  connStateFactory);
+		return sourcesConnection;
+	}
+
+
+	@Override
+	public synchronized void shutdown() throws IllegalStateException
+	{
+
+		if (! _state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+		_sourcesConnection.unregisterMbeans();
+		_sourcesConnection.stop();
+		_status.shutdown();
+		_state = RegistrationState.SHUTDOWN;
+
+		// remove this registration stats from client stats Collector list.
+		_client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+	    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	}
+
+	@Override
+	public synchronized void pause() throws IllegalStateException
+	{
+
+		if ( _state == RegistrationState.PAUSED)
+			return;
+
+		if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().pause();
+		_status.pause();
+		_state = RegistrationState.PAUSED;
+
+	}
+
+	@Override
+	public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+	{
+		if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+			return;
+
+		if ( !_state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().suspendOnError(ex);
+		_status.suspendOnError(ex);
+		_state = RegistrationState.SUSPENDED_ON_ERROR;
+
+	}
+
+	@Override
+	public synchronized void resume() throws IllegalStateException
+	{
+		if ( _state == RegistrationState.RESUMED)
+			return;
+
+		if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().resume();
+		_status.resume();
+		_state = RegistrationState.RESUMED;
+	}
+
+	@Override
+	public RegistrationState getState() {
+		return _state;
+	}
+
+	@Override
+	public synchronized boolean deregister()
+			throws IllegalStateException
+	{
+		if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+			return false;
+
+		if ( _state.isRunning())
+			shutdown();
+
+		deregisterFromClient();
+		_state = RegistrationState.DEREGISTERED;
+
+		return true;
+	}
+
+	protected void deregisterFromClient()
+	{
+		_client.deregister(this);
+	}
+
+
+	@Override
+	public Collection<DatabusSubscription> getSubscriptions()
+	{
+		return DatabusSubscription.createSubscriptionList(_sources);
+	}
+
+	@Override
+	public synchronized DatabusComponentStatus getStatus()
+	{
+		return _status;
+	}
+
+	@Override
+	public synchronized Logger getLogger() {
+		return _log;
+	}
+
+	@Override
+	public DatabusRegistration getParent() {
+		return _parent;
+	}
+
+
+	protected void setParent(DatabusRegistration parent) {
+		_parent = parent;
+	}
+
+	@Override
+	public synchronized DatabusRegistration withRegId(RegistrationId regId)
+			throws DatabusClientException, IllegalStateException
+	{
+		if ( (_id != null) && (_id.equals(regId)))
+			return this;
+
+		if (! RegistrationIdGenerator.isIdValid(regId))
+			throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+		_id = regId;
+		_status = new Status(); // Component Status should use the correct component name
+
+		return this;
+	}
+
+
+	@Override
+	public synchronized DatabusRegistration withServerSideFilter(
+			DbusKeyCompositeFilterConfig filterConfig)
+			throws IllegalStateException
+	{
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+					+ ", State :" + _state);
+
+		_filterConfig = filterConfig;
+		return this;
+	}
+
+	@Override
+	public List<DbusPartitionInfo> getPartitions() {
+		return null;
+	}
+
+	@Override
+	public Checkpoint getLastPersistedCheckpoint()
+	{
+		Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+		return cp;
+	}
+
+	@Override
+	public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+			throws IllegalStateException
+	{
+		try
+		{
+			_checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+		} catch (IOException ioe) {
+			_log.error("Storing checkpoint failed with exception", ioe);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+	{
+		return _inboundEventsStatsCollector;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+	{
+		return _bootstrapEventsStatsCollector;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getRelayCallbackStats()
+	{
+		return _relayConsumerStats;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+	{
+		return _bootstrapConsumerStats;
+	}
+
+	@Override
+	public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+			throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+
+	protected synchronized String getStatusName()
+	{
+	  return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+	}
+
+	private static boolean canServe(ServerInfo s, Collection<String> sources)
+	{
+		List<String> supportedSources = s.getSources();
+
+		for (String src : sources)
+		{
+			if (! supportedSources.contains(src))
+				return false;
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public synchronized RegistrationId getRegistrationId() {
+		return _id;
+	}
+
+	@Override
+	public synchronized String toString() {
+		return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+				+ ", _sources=" + _sources + ", _status=" + _status
+				+ ", _filterConfig=" + _filterConfig
+				+ ", _streamConsumerRawRegistrations="
+				+ _streamConsumerRawRegistrations
+				+ ", _bootstrapConsumerRawRegistrations="
+				+ _bootstrapConsumerRawRegistrations + "]";
+	}
+
+	@Override
+	public synchronized DbusKeyCompositeFilterConfig getFilterConfig() {
+		return _filterConfig;
+	}
+=======
+    DatabusSourcesConnection sourcesConnection =
+          new DatabusSourcesConnection(
+              connConfig,
+              subs,
+              candidateRelays,
+              candidateBootstrapServers,
+              _streamConsumerRawRegistrations,
+              _bootstrapConsumerRawRegistrations,
+              eventBuffer,
+              bootstrapBuffer,
+              _client.getDefaultExecutorService(),
+              _client.getContainerStatsCollector(),
+              _inboundEventsStatsCollector,
+              _bootstrapEventsStatsCollector,
+              _relayConsumerStats,
+              _bootstrapConsumerStats,
+              _unifiedClientStats,
+              _checkpointPersistenceProvider,
+              _client.getRelayConnFactory(),
+              _client.getBootstrapConnFactory(),
+              _client.getHttpStatsCollector(),
+              null, // This should make sure the checkpoint directory structure is compatible with V2.
+              _client,
+              _id.toString(), // Used to uniquely identify logs and mbean name
+              _client.getEventFactory(),
+              null,
+              connStateFactory);
+    return sourcesConnection;
+  }
+
+  @Override
+  public synchronized void shutdown() throws IllegalStateException
+  {
+    if (! _state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+    _sourcesConnection.unregisterMbeans();
+    _sourcesConnection.stop();
+    _status.shutdown();
+    _state = RegistrationState.SHUTDOWN;
+
+    // remove this registration stats from client stats Collector list.
+    _client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());
+  }
+
+  @Override
+  public synchronized void pause() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.PAUSED)
+      return;
+
+    if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().pause();
+    _status.pause();
+    _state = RegistrationState.PAUSED;
+  }
+
+  @Override
+  public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+  {
+    if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+      return;
+
+    if ( !_state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().suspendOnError(ex);
+    _status.suspendOnError(ex);
+    _state = RegistrationState.SUSPENDED_ON_ERROR;
+  }
+
+  @Override
+  public synchronized void resume() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.RESUMED)
+      return;
+
+    if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().resume();
+    _status.resume();
+    _state = RegistrationState.RESUMED;
+  }
+
+  @Override
+  public RegistrationState getState()
+  {
+    return _state;
+  }
+
+  @Override
+  public synchronized boolean deregister()
+      throws IllegalStateException
+  {
+    if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+      return false;
+
+    if ( _state.isRunning())
+      shutdown();
+
+    deregisterFromClient();
+    _state = RegistrationState.DEREGISTERED;
+
+    return true;
+  }
+
+  protected void deregisterFromClient()
+  {
+    _client.deregister(this);
+  }
+
+
+  @Override
+  public Collection<DatabusSubscription> getSubscriptions()
+  {
+    return DatabusSubscription.createSubscriptionList(_sources);
+  }
+
+  @Override
+  public synchronized DatabusComponentStatus getStatus()
+  {
+    return _status;
+  }
+
+  @Override
+  public synchronized Logger getLogger()
+  {
+    return _log;
+  }
+
+  @Override
+  public DatabusRegistration getParent()
+  {
+    return _parent;
+  }
+
+
+  protected void setParent(DatabusRegistration parent)
+  {
+    _parent = parent;
+  }
+
+  @Override
+  public synchronized DatabusRegistration withRegId(RegistrationId regId)
+      throws DatabusClientException, IllegalStateException
+  {
+    if ( (_id != null) && (_id.equals(regId)))
+      return this;
+
+    if (! RegistrationIdGenerator.isIdValid(regId))
+      throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+    _id = regId;
+    _status = new Status(); // Component Status should use the correct component name
+
+    return this;
+  }
+
+
+  @Override
+  public synchronized DatabusRegistration withServerSideFilter(DbusKeyCompositeFilterConfig filterConfig)
+      throws IllegalStateException
+  {
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+          + ", State :" + _state);
+
+    _filterConfig = filterConfig;
+    return this;
+  }
+
+  @Override
+  public List<DbusPartitionInfo> getPartitions()
+  {
+    return null;
+  }
+
+  @Override
+  public Checkpoint getLastPersistedCheckpoint()
+  {
+    Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+    return cp;
+  }
+
+  @Override
+  public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+      throws IllegalStateException
+  {
+    try
+    {
+      _checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+    } catch (IOException ioe) {
+      _log.error("Storing checkpoint failed with exception", ioe);
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+  {
+    return _inboundEventsStatsCollector;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+  {
+    return _bootstrapEventsStatsCollector;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getRelayCallbackStats()
+  {
+    return _relayConsumerStats;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+  {
+    return _bootstrapConsumerStats;
+  }
+
+  @Override
+  public UnifiedClientStatsMBean getUnifiedClientStats()
+  {
+    return _unifiedClientStats;
+  }
+
+  @Override
+  public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+      throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+
+  protected synchronized String getStatusName()
+  {
+    return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+  }
+
+  private static boolean canServe(ServerInfo s, Collection<String> sources)
+  {
+    List<String> supportedSources = s.getSources();
+
+    for (String src : sources)
+    {
+      if (! supportedSources.contains(src))
+        return false;
+    }
+
+    return true;
+  }
+
+
+  @Override
+  public synchronized RegistrationId getRegistrationId()
+  {
+    return _id;
+  }
+
+  @Override
+  public synchronized String toString()
+  {
+    return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+        + ", _sources=" + _sources + ", _status=" + _status
+        + ", _filterConfig=" + _filterConfig
+        + ", _streamConsumerRawRegistrations="
+        + _streamConsumerRawRegistrations
+        + ", _bootstrapConsumerRawRegistrations="
+        + _bootstrapConsumerRawRegistrations + "]";
+  }
+
+  @Override
+  public synchronized DbusKeyCompositeFilterConfig getFilterConfig()
+  {
+    return _filterConfig;
+  }
+
+
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8.revisions;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;@Override
+	public synchronized boolean deregister()
+			throws IllegalStateException
+	{
+		if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+			return false;
+
+		if ( _state.isRunning())
+			shutdown();
+
+		deregisterFromClient();
+		_state = RegistrationState.DEREGISTERED;
+
+		return true;
+	};@Overridepublicsynchronizedvoidshutdown()throwsIllegalStateException{if(!_state.isRunning())thrownewIllegalStateException("Registration("+_id+")isnotinrunningstatetobeshutdown.Currentstate:"+_state);_sourcesConnection.unregisterMbeans();_sourcesConnection.stop();_status.shutdown();_state=RegistrationState.SHUTDOWN;//removethisregistrationstatsfromclientstatsCollectorlist._client.getBootstrapEventsStats().removeStatsCollector(_id.getId());_client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());_client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());_client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());_client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());};
+		DatabusSourcesConnection sourcesConnection =
+				  new DatabusSourcesConnection(
+						  connConfig,
+						  subs,
+						  candidateRelays,
+						  candidateBootstrapServers,
+						  _streamConsumerRawRegistrations,
+						  _bootstrapConsumerRawRegistrations,
+						  eventBuffer,
+						  bootstrapBuffer,
+						  _client.getDefaultExecutorService(),
+						  _client.getContainerStatsCollector(),
+						  _inboundEventsStatsCollector,
+						  _bootstrapEventsStatsCollector,
+						  _relayConsumerStats,
+						  _bootstrapConsumerStats,
+						  _checkpointPersistenceProvider,
+						  _client.getRelayConnFactory(),
+						  _client.getBootstrapConnFactory(),
+						  _client.getHttpStatsCollector(),
+						  null, // This should make sure the checkpoint directory structure is compatible with V2.
+						  _client,
+						  _id.toString(), // Used to uniquely identify logs and mbean name
+						  _client.getEventFactory(),
+						  null,
+						  connStateFactory);
+		return sourcesConnection;
+	}
+
+
+	@Override
+	public synchronized void shutdown() throws IllegalStateException
+	{
+
+		if (! _state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+		_sourcesConnection.unregisterMbeans();
+		_sourcesConnection.stop();
+		_status.shutdown();
+		_state = RegistrationState.SHUTDOWN;
+
+		// remove this registration stats from client stats Collector list.
+		_client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+	    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	}
+
+	@Override
+	public synchronized void pause() throws IllegalStateException
+	{
+
+		if ( _state == RegistrationState.PAUSED)
+			return;
+
+		if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().pause();
+		_status.pause();
+		_state = RegistrationState.PAUSED;
+
+	}
+
+	@Override
+	public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+	{
+		if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+			return;
+
+		if ( !_state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().suspendOnError(ex);
+		_status.suspendOnError(ex);
+		_state = RegistrationState.SUSPENDED_ON_ERROR;
+
+	}
+
+	@Override
+	public synchronized void resume() throws IllegalStateException
+	{
+		if ( _state == RegistrationState.RESUMED)
+			return;
+
+		if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().resume();
+		_status.resume();
+		_state = RegistrationState.RESUMED;
+	}
+
+	@Override
+	public RegistrationState getState() {
+		return _state;
+	}
+
+	@Override
+	public synchronized boolean deregister()
+			throws IllegalStateException
+	{
+		if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+			return false;
+
+		if ( _state.isRunning())
+			shutdown();
+
+		deregisterFromClient();
+		_state = RegistrationState.DEREGISTERED;
+
+		return true;
+	}
+
+	protected void deregisterFromClient()
+	{
+		_client.deregister(this);
+	}
+
+
+	@Override
+	public Collection<DatabusSubscription> getSubscriptions()
+	{
+		return DatabusSubscription.createSubscriptionList(_sources);
+	}
+
+	@Override
+	public synchronized DatabusComponentStatus getStatus()
+	{
+		return _status;
+	}
+
+	@Override
+	public synchronized Logger getLogger() {
+		return _log;
+	}
+
+	@Override
+	public DatabusRegistration getParent() {
+		return _parent;
+	}
+
+
+	protected void setParent(DatabusRegistration parent) {
+		_parent = parent;
+	}
+
+	@Override
+	public synchronized DatabusRegistration withRegId(RegistrationId regId)
+			throws DatabusClientException, IllegalStateException
+	{
+		if ( (_id != null) && (_id.equals(regId)))
+			return this;
+
+		if (! RegistrationIdGenerator.isIdValid(regId))
+			throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+		_id = regId;
+		_status = new Status(); // Component Status should use the correct component name
+
+		return this;
+	}
+
+
+	@Override
+	public synchronized DatabusRegistration withServerSideFilter(
+			DbusKeyCompositeFilterConfig filterConfig)
+			throws IllegalStateException
+	{
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+					+ ", State :" + _state);
+
+		_filterConfig = filterConfig;
+		return this;
+	}
+
+	@Override
+	public List<DbusPartitionInfo> getPartitions() {
+		return null;
+	}
+
+	@Override
+	public Checkpoint getLastPersistedCheckpoint()
+	{
+		Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+		return cp;
+	}
+
+	@Override
+	public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+			throws IllegalStateException
+	{
+		try
+		{
+			_checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+		} catch (IOException ioe) {
+			_log.error("Storing checkpoint failed with exception", ioe);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+	{
+		return _inboundEventsStatsCollector;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+	{
+		return _bootstrapEventsStatsCollector;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getRelayCallbackStats()
+	{
+		return _relayConsumerStats;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+	{
+		return _bootstrapConsumerStats;
+	}
+
+	@Override
+	public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+			throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+
+	protected synchronized String getStatusName()
+	{
+	  return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+	}
+
+	private static boolean canServe(ServerInfo s, Collection<String> sources)
+	{
+		List<String> supportedSources = s.getSources();
+
+		for (String src : sources)
+		{
+			if (! supportedSources.contains(src))
+				return false;
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public synchronized RegistrationId getRegistrationId() {
+		return _id;
+	}
+
+	@Override
+	public synchronized String toString() {
+		return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+				+ ", _sources=" + _sources + ", _status=" + _status
+				+ ", _filterConfig=" + _filterConfig
+				+ ", _streamConsumerRawRegistrations="
+				+ _streamConsumerRawRegistrations
+				+ ", _bootstrapConsumerRawRegistrations="
+				+ _bootstrapConsumerRawRegistrations + "]";
+	}
+
+	@Override
+	public synchronized DbusKeyCompositeFilterConfig getFilterConfig() {
+		return _filterConfig;
+	}
+=======
+    DatabusSourcesConnection sourcesConnection =
+          new DatabusSourcesConnection(
+              connConfig,
+              subs,
+              candidateRelays,
+              candidateBootstrapServers,
+              _streamConsumerRawRegistrations,
+              _bootstrapConsumerRawRegistrations,
+              eventBuffer,
+              bootstrapBuffer,
+              _client.getDefaultExecutorService(),
+              _client.getContainerStatsCollector(),
+              _inboundEventsStatsCollector,
+              _bootstrapEventsStatsCollector,
+              _relayConsumerStats,
+              _bootstrapConsumerStats,
+              _unifiedClientStats,
+              _checkpointPersistenceProvider,
+              _client.getRelayConnFactory(),
+              _client.getBootstrapConnFactory(),
+              _client.getHttpStatsCollector(),
+              null, // This should make sure the checkpoint directory structure is compatible with V2.
+              _client,
+              _id.toString(), // Used to uniquely identify logs and mbean name
+              _client.getEventFactory(),
+              null,
+              connStateFactory);
+    return sourcesConnection;
+  }
+
+  @Override
+  public synchronized void shutdown() throws IllegalStateException
+  {
+    if (! _state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+    _sourcesConnection.unregisterMbeans();
+    _sourcesConnection.stop();
+    _status.shutdown();
+    _state = RegistrationState.SHUTDOWN;
+
+    // remove this registration stats from client stats Collector list.
+    _client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());
+  }
+
+  @Override
+  public synchronized void pause() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.PAUSED)
+      return;
+
+    if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().pause();
+    _status.pause();
+    _state = RegistrationState.PAUSED;
+  }
+
+  @Override
+  public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+  {
+    if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+      return;
+
+    if ( !_state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().suspendOnError(ex);
+    _status.suspendOnError(ex);
+    _state = RegistrationState.SUSPENDED_ON_ERROR;
+  }
+
+  @Override
+  public synchronized void resume() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.RESUMED)
+      return;
+
+    if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().resume();
+    _status.resume();
+    _state = RegistrationState.RESUMED;
+  }
+
+  @Override
+  public RegistrationState getState()
+  {
+    return _state;
+  }
+
+  @Override
+  public synchronized boolean deregister()
+      throws IllegalStateException
+  {
+    if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+      return false;
+
+    if ( _state.isRunning())
+      shutdown();
+
+    deregisterFromClient();
+    _state = RegistrationState.DEREGISTERED;
+
+    return true;
+  }
+
+  protected void deregisterFromClient()
+  {
+    _client.deregister(this);
+  }
+
+
+  @Override
+  public Collection<DatabusSubscription> getSubscriptions()
+  {
+    return DatabusSubscription.createSubscriptionList(_sources);
+  }
+
+  @Override
+  public synchronized DatabusComponentStatus getStatus()
+  {
+    return _status;
+  }
+
+  @Override
+  public synchronized Logger getLogger()
+  {
+    return _log;
+  }
+
+  @Override
+  public DatabusRegistration getParent()
+  {
+    return _parent;
+  }
+
+
+  protected void setParent(DatabusRegistration parent)
+  {
+    _parent = parent;
+  }
+
+  @Override
+  public synchronized DatabusRegistration withRegId(RegistrationId regId)
+      throws DatabusClientException, IllegalStateException
+  {
+    if ( (_id != null) && (_id.equals(regId)))
+      return this;
+
+    if (! RegistrationIdGenerator.isIdValid(regId))
+      throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+    _id = regId;
+    _status = new Status(); // Component Status should use the correct component name
+
+    return this;
+  }
+
+
+  @Override
+  public synchronized DatabusRegistration withServerSideFilter(DbusKeyCompositeFilterConfig filterConfig)
+      throws IllegalStateException
+  {
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+          + ", State :" + _state);
+
+    _filterConfig = filterConfig;
+    return this;
+  }
+
+  @Override
+  public List<DbusPartitionInfo> getPartitions()
+  {
+    return null;
+  }
+
+  @Override
+  public Checkpoint getLastPersistedCheckpoint()
+  {
+    Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+    return cp;
+  }
+
+  @Override
+  public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+      throws IllegalStateException
+  {
+    try
+    {
+      _checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+    } catch (IOException ioe) {
+      _log.error("Storing checkpoint failed with exception", ioe);
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+  {
+    return _inboundEventsStatsCollector;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+  {
+    return _bootstrapEventsStatsCollector;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getRelayCallbackStats()
+  {
+    return _relayConsumerStats;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+  {
+    return _bootstrapConsumerStats;
+  }
+
+  @Override
+  public UnifiedClientStatsMBean getUnifiedClientStats()
+  {
+    return _unifiedClientStats;
+  }
+
+  @Override
+  public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+      throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+
+  protected synchronized String getStatusName()
+  {
+    return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+  }
+
+  private static boolean canServe(ServerInfo s, Collection<String> sources)
+  {
+    List<String> supportedSources = s.getSources();
+
+    for (String src : sources)
+    {
+      if (! supportedSources.contains(src))
+        return false;
+    }
+
+    return true;
+  }
+
+
+  @Override
+  public synchronized RegistrationId getRegistrationId()
+  {
+    return _id;
+  }
+
+  @Override
+  public synchronized String toString()
+  {
+    return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+        + ", _sources=" + _sources + ", _status=" + _status
+        + ", _filterConfig=" + _filterConfig
+        + ", _streamConsumerRawRegistrations="
+        + _streamConsumerRawRegistrations
+        + ", _bootstrapConsumerRawRegistrations="
+        + _bootstrapConsumerRawRegistrations + "]";
+  }
+
+  @Override
+  public synchronized DbusKeyCompositeFilterConfig getFilterConfig()
+  {
+    return _filterConfig;
+  }
+
+
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8.revisions;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;@Override
+	public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+			throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	};@OverridepublicRelayFindMaxSCNResultfetchMaxSCN(FetchMaxSCNRequestrequest)throwsInterruptedException{thrownewRuntimeException("Notyetsupported!!");};
+		DatabusSourcesConnection sourcesConnection =
+				  new DatabusSourcesConnection(
+						  connConfig,
+						  subs,
+						  candidateRelays,
+						  candidateBootstrapServers,
+						  _streamConsumerRawRegistrations,
+						  _bootstrapConsumerRawRegistrations,
+						  eventBuffer,
+						  bootstrapBuffer,
+						  _client.getDefaultExecutorService(),
+						  _client.getContainerStatsCollector(),
+						  _inboundEventsStatsCollector,
+						  _bootstrapEventsStatsCollector,
+						  _relayConsumerStats,
+						  _bootstrapConsumerStats,
+						  _checkpointPersistenceProvider,
+						  _client.getRelayConnFactory(),
+						  _client.getBootstrapConnFactory(),
+						  _client.getHttpStatsCollector(),
+						  null, // This should make sure the checkpoint directory structure is compatible with V2.
+						  _client,
+						  _id.toString(), // Used to uniquely identify logs and mbean name
+						  _client.getEventFactory(),
+						  null,
+						  connStateFactory);
+		return sourcesConnection;
+	}
+
+
+	@Override
+	public synchronized void shutdown() throws IllegalStateException
+	{
+
+		if (! _state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+		_sourcesConnection.unregisterMbeans();
+		_sourcesConnection.stop();
+		_status.shutdown();
+		_state = RegistrationState.SHUTDOWN;
+
+		// remove this registration stats from client stats Collector list.
+		_client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+	    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	}
+
+	@Override
+	public synchronized void pause() throws IllegalStateException
+	{
+
+		if ( _state == RegistrationState.PAUSED)
+			return;
+
+		if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().pause();
+		_status.pause();
+		_state = RegistrationState.PAUSED;
+
+	}
+
+	@Override
+	public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+	{
+		if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+			return;
+
+		if ( !_state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().suspendOnError(ex);
+		_status.suspendOnError(ex);
+		_state = RegistrationState.SUSPENDED_ON_ERROR;
+
+	}
+
+	@Override
+	public synchronized void resume() throws IllegalStateException
+	{
+		if ( _state == RegistrationState.RESUMED)
+			return;
+
+		if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().resume();
+		_status.resume();
+		_state = RegistrationState.RESUMED;
+	}
+
+	@Override
+	public RegistrationState getState() {
+		return _state;
+	}
+
+	@Override
+	public synchronized boolean deregister()
+			throws IllegalStateException
+	{
+		if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+			return false;
+
+		if ( _state.isRunning())
+			shutdown();
+
+		deregisterFromClient();
+		_state = RegistrationState.DEREGISTERED;
+
+		return true;
+	}
+
+	protected void deregisterFromClient()
+	{
+		_client.deregister(this);
+	}
+
+
+	@Override
+	public Collection<DatabusSubscription> getSubscriptions()
+	{
+		return DatabusSubscription.createSubscriptionList(_sources);
+	}
+
+	@Override
+	public synchronized DatabusComponentStatus getStatus()
+	{
+		return _status;
+	}
+
+	@Override
+	public synchronized Logger getLogger() {
+		return _log;
+	}
+
+	@Override
+	public DatabusRegistration getParent() {
+		return _parent;
+	}
+
+
+	protected void setParent(DatabusRegistration parent) {
+		_parent = parent;
+	}
+
+	@Override
+	public synchronized DatabusRegistration withRegId(RegistrationId regId)
+			throws DatabusClientException, IllegalStateException
+	{
+		if ( (_id != null) && (_id.equals(regId)))
+			return this;
+
+		if (! RegistrationIdGenerator.isIdValid(regId))
+			throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+		_id = regId;
+		_status = new Status(); // Component Status should use the correct component name
+
+		return this;
+	}
+
+
+	@Override
+	public synchronized DatabusRegistration withServerSideFilter(
+			DbusKeyCompositeFilterConfig filterConfig)
+			throws IllegalStateException
+	{
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+					+ ", State :" + _state);
+
+		_filterConfig = filterConfig;
+		return this;
+	}
+
+	@Override
+	public List<DbusPartitionInfo> getPartitions() {
+		return null;
+	}
+
+	@Override
+	public Checkpoint getLastPersistedCheckpoint()
+	{
+		Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+		return cp;
+	}
+
+	@Override
+	public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+			throws IllegalStateException
+	{
+		try
+		{
+			_checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+		} catch (IOException ioe) {
+			_log.error("Storing checkpoint failed with exception", ioe);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+	{
+		return _inboundEventsStatsCollector;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+	{
+		return _bootstrapEventsStatsCollector;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getRelayCallbackStats()
+	{
+		return _relayConsumerStats;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+	{
+		return _bootstrapConsumerStats;
+	}
+
+	@Override
+	public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+			throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+
+	protected synchronized String getStatusName()
+	{
+	  return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+	}
+
+	private static boolean canServe(ServerInfo s, Collection<String> sources)
+	{
+		List<String> supportedSources = s.getSources();
+
+		for (String src : sources)
+		{
+			if (! supportedSources.contains(src))
+				return false;
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public synchronized RegistrationId getRegistrationId() {
+		return _id;
+	}
+
+	@Override
+	public synchronized String toString() {
+		return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+				+ ", _sources=" + _sources + ", _status=" + _status
+				+ ", _filterConfig=" + _filterConfig
+				+ ", _streamConsumerRawRegistrations="
+				+ _streamConsumerRawRegistrations
+				+ ", _bootstrapConsumerRawRegistrations="
+				+ _bootstrapConsumerRawRegistrations + "]";
+	}
+
+	@Override
+	public synchronized DbusKeyCompositeFilterConfig getFilterConfig() {
+		return _filterConfig;
+	}
+=======
+    DatabusSourcesConnection sourcesConnection =
+          new DatabusSourcesConnection(
+              connConfig,
+              subs,
+              candidateRelays,
+              candidateBootstrapServers,
+              _streamConsumerRawRegistrations,
+              _bootstrapConsumerRawRegistrations,
+              eventBuffer,
+              bootstrapBuffer,
+              _client.getDefaultExecutorService(),
+              _client.getContainerStatsCollector(),
+              _inboundEventsStatsCollector,
+              _bootstrapEventsStatsCollector,
+              _relayConsumerStats,
+              _bootstrapConsumerStats,
+              _unifiedClientStats,
+              _checkpointPersistenceProvider,
+              _client.getRelayConnFactory(),
+              _client.getBootstrapConnFactory(),
+              _client.getHttpStatsCollector(),
+              null, // This should make sure the checkpoint directory structure is compatible with V2.
+              _client,
+              _id.toString(), // Used to uniquely identify logs and mbean name
+              _client.getEventFactory(),
+              null,
+              connStateFactory);
+    return sourcesConnection;
+  }
+
+  @Override
+  public synchronized void shutdown() throws IllegalStateException
+  {
+    if (! _state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+    _sourcesConnection.unregisterMbeans();
+    _sourcesConnection.stop();
+    _status.shutdown();
+    _state = RegistrationState.SHUTDOWN;
+
+    // remove this registration stats from client stats Collector list.
+    _client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());
+  }
+
+  @Override
+  public synchronized void pause() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.PAUSED)
+      return;
+
+    if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().pause();
+    _status.pause();
+    _state = RegistrationState.PAUSED;
+  }
+
+  @Override
+  public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+  {
+    if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+      return;
+
+    if ( !_state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().suspendOnError(ex);
+    _status.suspendOnError(ex);
+    _state = RegistrationState.SUSPENDED_ON_ERROR;
+  }
+
+  @Override
+  public synchronized void resume() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.RESUMED)
+      return;
+
+    if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().resume();
+    _status.resume();
+    _state = RegistrationState.RESUMED;
+  }
+
+  @Override
+  public RegistrationState getState()
+  {
+    return _state;
+  }
+
+  @Override
+  public synchronized boolean deregister()
+      throws IllegalStateException
+  {
+    if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+      return false;
+
+    if ( _state.isRunning())
+      shutdown();
+
+    deregisterFromClient();
+    _state = RegistrationState.DEREGISTERED;
+
+    return true;
+  }
+
+  protected void deregisterFromClient()
+  {
+    _client.deregister(this);
+  }
+
+
+  @Override
+  public Collection<DatabusSubscription> getSubscriptions()
+  {
+    return DatabusSubscription.createSubscriptionList(_sources);
+  }
+
+  @Override
+  public synchronized DatabusComponentStatus getStatus()
+  {
+    return _status;
+  }
+
+  @Override
+  public synchronized Logger getLogger()
+  {
+    return _log;
+  }
+
+  @Override
+  public DatabusRegistration getParent()
+  {
+    return _parent;
+  }
+
+
+  protected void setParent(DatabusRegistration parent)
+  {
+    _parent = parent;
+  }
+
+  @Override
+  public synchronized DatabusRegistration withRegId(RegistrationId regId)
+      throws DatabusClientException, IllegalStateException
+  {
+    if ( (_id != null) && (_id.equals(regId)))
+      return this;
+
+    if (! RegistrationIdGenerator.isIdValid(regId))
+      throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+    _id = regId;
+    _status = new Status(); // Component Status should use the correct component name
+
+    return this;
+  }
+
+
+  @Override
+  public synchronized DatabusRegistration withServerSideFilter(DbusKeyCompositeFilterConfig filterConfig)
+      throws IllegalStateException
+  {
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+          + ", State :" + _state);
+
+    _filterConfig = filterConfig;
+    return this;
+  }
+
+  @Override
+  public List<DbusPartitionInfo> getPartitions()
+  {
+    return null;
+  }
+
+  @Override
+  public Checkpoint getLastPersistedCheckpoint()
+  {
+    Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+    return cp;
+  }
+
+  @Override
+  public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+      throws IllegalStateException
+  {
+    try
+    {
+      _checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+    } catch (IOException ioe) {
+      _log.error("Storing checkpoint failed with exception", ioe);
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+  {
+    return _inboundEventsStatsCollector;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+  {
+    return _bootstrapEventsStatsCollector;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getRelayCallbackStats()
+  {
+    return _relayConsumerStats;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+  {
+    return _bootstrapConsumerStats;
+  }
+
+  @Override
+  public UnifiedClientStatsMBean getUnifiedClientStats()
+  {
+    return _unifiedClientStats;
+  }
+
+  @Override
+  public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+      throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+
+  protected synchronized String getStatusName()
+  {
+    return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+  }
+
+  private static boolean canServe(ServerInfo s, Collection<String> sources)
+  {
+    List<String> supportedSources = s.getSources();
+
+    for (String src : sources)
+    {
+      if (! supportedSources.contains(src))
+        return false;
+    }
+
+    return true;
+  }
+
+
+  @Override
+  public synchronized RegistrationId getRegistrationId()
+  {
+    return _id;
+  }
+
+  @Override
+  public synchronized String toString()
+  {
+    return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+        + ", _sources=" + _sources + ", _status=" + _status
+        + ", _filterConfig=" + _filterConfig
+        + ", _streamConsumerRawRegistrations="
+        + _streamConsumerRawRegistrations
+        + ", _bootstrapConsumerRawRegistrations="
+        + _bootstrapConsumerRawRegistrations + "]";
+  }
+
+  @Override
+  public synchronized DbusKeyCompositeFilterConfig getFilterConfig()
+  {
+    return _filterConfig;
+  }
+
+
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8.revisions;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	};@OverridepublicRelayFlushMaxSCNResultflush(RelayFindMaxSCNResultfetchSCNResult,FlushRequestflushRequest)throwsInterruptedException{thrownewRuntimeException("Notyetsupported!!");};
+		DatabusSourcesConnection sourcesConnection =
+				  new DatabusSourcesConnection(
+						  connConfig,
+						  subs,
+						  candidateRelays,
+						  candidateBootstrapServers,
+						  _streamConsumerRawRegistrations,
+						  _bootstrapConsumerRawRegistrations,
+						  eventBuffer,
+						  bootstrapBuffer,
+						  _client.getDefaultExecutorService(),
+						  _client.getContainerStatsCollector(),
+						  _inboundEventsStatsCollector,
+						  _bootstrapEventsStatsCollector,
+						  _relayConsumerStats,
+						  _bootstrapConsumerStats,
+						  _checkpointPersistenceProvider,
+						  _client.getRelayConnFactory(),
+						  _client.getBootstrapConnFactory(),
+						  _client.getHttpStatsCollector(),
+						  null, // This should make sure the checkpoint directory structure is compatible with V2.
+						  _client,
+						  _id.toString(), // Used to uniquely identify logs and mbean name
+						  _client.getEventFactory(),
+						  null,
+						  connStateFactory);
+		return sourcesConnection;
+	}
+
+
+	@Override
+	public synchronized void shutdown() throws IllegalStateException
+	{
+
+		if (! _state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+		_sourcesConnection.unregisterMbeans();
+		_sourcesConnection.stop();
+		_status.shutdown();
+		_state = RegistrationState.SHUTDOWN;
+
+		// remove this registration stats from client stats Collector list.
+		_client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+	    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	}
+
+	@Override
+	public synchronized void pause() throws IllegalStateException
+	{
+
+		if ( _state == RegistrationState.PAUSED)
+			return;
+
+		if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().pause();
+		_status.pause();
+		_state = RegistrationState.PAUSED;
+
+	}
+
+	@Override
+	public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+	{
+		if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+			return;
+
+		if ( !_state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().suspendOnError(ex);
+		_status.suspendOnError(ex);
+		_state = RegistrationState.SUSPENDED_ON_ERROR;
+
+	}
+
+	@Override
+	public synchronized void resume() throws IllegalStateException
+	{
+		if ( _state == RegistrationState.RESUMED)
+			return;
+
+		if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().resume();
+		_status.resume();
+		_state = RegistrationState.RESUMED;
+	}
+
+	@Override
+	public RegistrationState getState() {
+		return _state;
+	}
+
+	@Override
+	public synchronized boolean deregister()
+			throws IllegalStateException
+	{
+		if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+			return false;
+
+		if ( _state.isRunning())
+			shutdown();
+
+		deregisterFromClient();
+		_state = RegistrationState.DEREGISTERED;
+
+		return true;
+	}
+
+	protected void deregisterFromClient()
+	{
+		_client.deregister(this);
+	}
+
+
+	@Override
+	public Collection<DatabusSubscription> getSubscriptions()
+	{
+		return DatabusSubscription.createSubscriptionList(_sources);
+	}
+
+	@Override
+	public synchronized DatabusComponentStatus getStatus()
+	{
+		return _status;
+	}
+
+	@Override
+	public synchronized Logger getLogger() {
+		return _log;
+	}
+
+	@Override
+	public DatabusRegistration getParent() {
+		return _parent;
+	}
+
+
+	protected void setParent(DatabusRegistration parent) {
+		_parent = parent;
+	}
+
+	@Override
+	public synchronized DatabusRegistration withRegId(RegistrationId regId)
+			throws DatabusClientException, IllegalStateException
+	{
+		if ( (_id != null) && (_id.equals(regId)))
+			return this;
+
+		if (! RegistrationIdGenerator.isIdValid(regId))
+			throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+		_id = regId;
+		_status = new Status(); // Component Status should use the correct component name
+
+		return this;
+	}
+
+
+	@Override
+	public synchronized DatabusRegistration withServerSideFilter(
+			DbusKeyCompositeFilterConfig filterConfig)
+			throws IllegalStateException
+	{
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+					+ ", State :" + _state);
+
+		_filterConfig = filterConfig;
+		return this;
+	}
+
+	@Override
+	public List<DbusPartitionInfo> getPartitions() {
+		return null;
+	}
+
+	@Override
+	public Checkpoint getLastPersistedCheckpoint()
+	{
+		Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+		return cp;
+	}
+
+	@Override
+	public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+			throws IllegalStateException
+	{
+		try
+		{
+			_checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+		} catch (IOException ioe) {
+			_log.error("Storing checkpoint failed with exception", ioe);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+	{
+		return _inboundEventsStatsCollector;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+	{
+		return _bootstrapEventsStatsCollector;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getRelayCallbackStats()
+	{
+		return _relayConsumerStats;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+	{
+		return _bootstrapConsumerStats;
+	}
+
+	@Override
+	public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+			throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+
+	protected synchronized String getStatusName()
+	{
+	  return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+	}
+
+	private static boolean canServe(ServerInfo s, Collection<String> sources)
+	{
+		List<String> supportedSources = s.getSources();
+
+		for (String src : sources)
+		{
+			if (! supportedSources.contains(src))
+				return false;
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public synchronized RegistrationId getRegistrationId() {
+		return _id;
+	}
+
+	@Override
+	public synchronized String toString() {
+		return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+				+ ", _sources=" + _sources + ", _status=" + _status
+				+ ", _filterConfig=" + _filterConfig
+				+ ", _streamConsumerRawRegistrations="
+				+ _streamConsumerRawRegistrations
+				+ ", _bootstrapConsumerRawRegistrations="
+				+ _bootstrapConsumerRawRegistrations + "]";
+	}
+
+	@Override
+	public synchronized DbusKeyCompositeFilterConfig getFilterConfig() {
+		return _filterConfig;
+	}
+=======
+    DatabusSourcesConnection sourcesConnection =
+          new DatabusSourcesConnection(
+              connConfig,
+              subs,
+              candidateRelays,
+              candidateBootstrapServers,
+              _streamConsumerRawRegistrations,
+              _bootstrapConsumerRawRegistrations,
+              eventBuffer,
+              bootstrapBuffer,
+              _client.getDefaultExecutorService(),
+              _client.getContainerStatsCollector(),
+              _inboundEventsStatsCollector,
+              _bootstrapEventsStatsCollector,
+              _relayConsumerStats,
+              _bootstrapConsumerStats,
+              _unifiedClientStats,
+              _checkpointPersistenceProvider,
+              _client.getRelayConnFactory(),
+              _client.getBootstrapConnFactory(),
+              _client.getHttpStatsCollector(),
+              null, // This should make sure the checkpoint directory structure is compatible with V2.
+              _client,
+              _id.toString(), // Used to uniquely identify logs and mbean name
+              _client.getEventFactory(),
+              null,
+              connStateFactory);
+    return sourcesConnection;
+  }
+
+  @Override
+  public synchronized void shutdown() throws IllegalStateException
+  {
+    if (! _state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+    _sourcesConnection.unregisterMbeans();
+    _sourcesConnection.stop();
+    _status.shutdown();
+    _state = RegistrationState.SHUTDOWN;
+
+    // remove this registration stats from client stats Collector list.
+    _client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());
+  }
+
+  @Override
+  public synchronized void pause() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.PAUSED)
+      return;
+
+    if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().pause();
+    _status.pause();
+    _state = RegistrationState.PAUSED;
+  }
+
+  @Override
+  public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+  {
+    if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+      return;
+
+    if ( !_state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().suspendOnError(ex);
+    _status.suspendOnError(ex);
+    _state = RegistrationState.SUSPENDED_ON_ERROR;
+  }
+
+  @Override
+  public synchronized void resume() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.RESUMED)
+      return;
+
+    if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().resume();
+    _status.resume();
+    _state = RegistrationState.RESUMED;
+  }
+
+  @Override
+  public RegistrationState getState()
+  {
+    return _state;
+  }
+
+  @Override
+  public synchronized boolean deregister()
+      throws IllegalStateException
+  {
+    if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+      return false;
+
+    if ( _state.isRunning())
+      shutdown();
+
+    deregisterFromClient();
+    _state = RegistrationState.DEREGISTERED;
+
+    return true;
+  }
+
+  protected void deregisterFromClient()
+  {
+    _client.deregister(this);
+  }
+
+
+  @Override
+  public Collection<DatabusSubscription> getSubscriptions()
+  {
+    return DatabusSubscription.createSubscriptionList(_sources);
+  }
+
+  @Override
+  public synchronized DatabusComponentStatus getStatus()
+  {
+    return _status;
+  }
+
+  @Override
+  public synchronized Logger getLogger()
+  {
+    return _log;
+  }
+
+  @Override
+  public DatabusRegistration getParent()
+  {
+    return _parent;
+  }
+
+
+  protected void setParent(DatabusRegistration parent)
+  {
+    _parent = parent;
+  }
+
+  @Override
+  public synchronized DatabusRegistration withRegId(RegistrationId regId)
+      throws DatabusClientException, IllegalStateException
+  {
+    if ( (_id != null) && (_id.equals(regId)))
+      return this;
+
+    if (! RegistrationIdGenerator.isIdValid(regId))
+      throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+    _id = regId;
+    _status = new Status(); // Component Status should use the correct component name
+
+    return this;
+  }
+
+
+  @Override
+  public synchronized DatabusRegistration withServerSideFilter(DbusKeyCompositeFilterConfig filterConfig)
+      throws IllegalStateException
+  {
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+          + ", State :" + _state);
+
+    _filterConfig = filterConfig;
+    return this;
+  }
+
+  @Override
+  public List<DbusPartitionInfo> getPartitions()
+  {
+    return null;
+  }
+
+  @Override
+  public Checkpoint getLastPersistedCheckpoint()
+  {
+    Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+    return cp;
+  }
+
+  @Override
+  public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+      throws IllegalStateException
+  {
+    try
+    {
+      _checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+    } catch (IOException ioe) {
+      _log.error("Storing checkpoint failed with exception", ioe);
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+  {
+    return _inboundEventsStatsCollector;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+  {
+    return _bootstrapEventsStatsCollector;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getRelayCallbackStats()
+  {
+    return _relayConsumerStats;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+  {
+    return _bootstrapConsumerStats;
+  }
+
+  @Override
+  public UnifiedClientStatsMBean getUnifiedClientStats()
+  {
+    return _unifiedClientStats;
+  }
+
+  @Override
+  public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+      throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+
+  protected synchronized String getStatusName()
+  {
+    return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+  }
+
+  private static boolean canServe(ServerInfo s, Collection<String> sources)
+  {
+    List<String> supportedSources = s.getSources();
+
+    for (String src : sources)
+    {
+      if (! supportedSources.contains(src))
+        return false;
+    }
+
+    return true;
+  }
+
+
+  @Override
+  public synchronized RegistrationId getRegistrationId()
+  {
+    return _id;
+  }
+
+  @Override
+  public synchronized String toString()
+  {
+    return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+        + ", _sources=" + _sources + ", _status=" + _status
+        + ", _filterConfig=" + _filterConfig
+        + ", _streamConsumerRawRegistrations="
+        + _streamConsumerRawRegistrations
+        + ", _bootstrapConsumerRawRegistrations="
+        + _bootstrapConsumerRawRegistrations + "]";
+  }
+
+  @Override
+  public synchronized DbusKeyCompositeFilterConfig getFilterConfig()
+  {
+    return _filterConfig;
+  }
+
+
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8.revisions;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	};@OverridepublicRelayFlushMaxSCNResultflush(FetchMaxSCNRequestmaxScnRequest,FlushRequestflushRequest)throwsInterruptedException{thrownewRuntimeException("Notyetsupported!!");};
+		DatabusSourcesConnection sourcesConnection =
+				  new DatabusSourcesConnection(
+						  connConfig,
+						  subs,
+						  candidateRelays,
+						  candidateBootstrapServers,
+						  _streamConsumerRawRegistrations,
+						  _bootstrapConsumerRawRegistrations,
+						  eventBuffer,
+						  bootstrapBuffer,
+						  _client.getDefaultExecutorService(),
+						  _client.getContainerStatsCollector(),
+						  _inboundEventsStatsCollector,
+						  _bootstrapEventsStatsCollector,
+						  _relayConsumerStats,
+						  _bootstrapConsumerStats,
+						  _checkpointPersistenceProvider,
+						  _client.getRelayConnFactory(),
+						  _client.getBootstrapConnFactory(),
+						  _client.getHttpStatsCollector(),
+						  null, // This should make sure the checkpoint directory structure is compatible with V2.
+						  _client,
+						  _id.toString(), // Used to uniquely identify logs and mbean name
+						  _client.getEventFactory(),
+						  null,
+						  connStateFactory);
+		return sourcesConnection;
+	}
+
+
+	@Override
+	public synchronized void shutdown() throws IllegalStateException
+	{
+
+		if (! _state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+		_sourcesConnection.unregisterMbeans();
+		_sourcesConnection.stop();
+		_status.shutdown();
+		_state = RegistrationState.SHUTDOWN;
+
+		// remove this registration stats from client stats Collector list.
+		_client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+	    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	}
+
+	@Override
+	public synchronized void pause() throws IllegalStateException
+	{
+
+		if ( _state == RegistrationState.PAUSED)
+			return;
+
+		if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().pause();
+		_status.pause();
+		_state = RegistrationState.PAUSED;
+
+	}
+
+	@Override
+	public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+	{
+		if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+			return;
+
+		if ( !_state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().suspendOnError(ex);
+		_status.suspendOnError(ex);
+		_state = RegistrationState.SUSPENDED_ON_ERROR;
+
+	}
+
+	@Override
+	public synchronized void resume() throws IllegalStateException
+	{
+		if ( _state == RegistrationState.RESUMED)
+			return;
+
+		if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().resume();
+		_status.resume();
+		_state = RegistrationState.RESUMED;
+	}
+
+	@Override
+	public RegistrationState getState() {
+		return _state;
+	}
+
+	@Override
+	public synchronized boolean deregister()
+			throws IllegalStateException
+	{
+		if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+			return false;
+
+		if ( _state.isRunning())
+			shutdown();
+
+		deregisterFromClient();
+		_state = RegistrationState.DEREGISTERED;
+
+		return true;
+	}
+
+	protected void deregisterFromClient()
+	{
+		_client.deregister(this);
+	}
+
+
+	@Override
+	public Collection<DatabusSubscription> getSubscriptions()
+	{
+		return DatabusSubscription.createSubscriptionList(_sources);
+	}
+
+	@Override
+	public synchronized DatabusComponentStatus getStatus()
+	{
+		return _status;
+	}
+
+	@Override
+	public synchronized Logger getLogger() {
+		return _log;
+	}
+
+	@Override
+	public DatabusRegistration getParent() {
+		return _parent;
+	}
+
+
+	protected void setParent(DatabusRegistration parent) {
+		_parent = parent;
+	}
+
+	@Override
+	public synchronized DatabusRegistration withRegId(RegistrationId regId)
+			throws DatabusClientException, IllegalStateException
+	{
+		if ( (_id != null) && (_id.equals(regId)))
+			return this;
+
+		if (! RegistrationIdGenerator.isIdValid(regId))
+			throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+		_id = regId;
+		_status = new Status(); // Component Status should use the correct component name
+
+		return this;
+	}
+
+
+	@Override
+	public synchronized DatabusRegistration withServerSideFilter(
+			DbusKeyCompositeFilterConfig filterConfig)
+			throws IllegalStateException
+	{
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+					+ ", State :" + _state);
+
+		_filterConfig = filterConfig;
+		return this;
+	}
+
+	@Override
+	public List<DbusPartitionInfo> getPartitions() {
+		return null;
+	}
+
+	@Override
+	public Checkpoint getLastPersistedCheckpoint()
+	{
+		Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+		return cp;
+	}
+
+	@Override
+	public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+			throws IllegalStateException
+	{
+		try
+		{
+			_checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+		} catch (IOException ioe) {
+			_log.error("Storing checkpoint failed with exception", ioe);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+	{
+		return _inboundEventsStatsCollector;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+	{
+		return _bootstrapEventsStatsCollector;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getRelayCallbackStats()
+	{
+		return _relayConsumerStats;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+	{
+		return _bootstrapConsumerStats;
+	}
+
+	@Override
+	public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+			throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+
+	protected synchronized String getStatusName()
+	{
+	  return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+	}
+
+	private static boolean canServe(ServerInfo s, Collection<String> sources)
+	{
+		List<String> supportedSources = s.getSources();
+
+		for (String src : sources)
+		{
+			if (! supportedSources.contains(src))
+				return false;
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public synchronized RegistrationId getRegistrationId() {
+		return _id;
+	}
+
+	@Override
+	public synchronized String toString() {
+		return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+				+ ", _sources=" + _sources + ", _status=" + _status
+				+ ", _filterConfig=" + _filterConfig
+				+ ", _streamConsumerRawRegistrations="
+				+ _streamConsumerRawRegistrations
+				+ ", _bootstrapConsumerRawRegistrations="
+				+ _bootstrapConsumerRawRegistrations + "]";
+	}
+
+	@Override
+	public synchronized DbusKeyCompositeFilterConfig getFilterConfig() {
+		return _filterConfig;
+	}
+=======
+    DatabusSourcesConnection sourcesConnection =
+          new DatabusSourcesConnection(
+              connConfig,
+              subs,
+              candidateRelays,
+              candidateBootstrapServers,
+              _streamConsumerRawRegistrations,
+              _bootstrapConsumerRawRegistrations,
+              eventBuffer,
+              bootstrapBuffer,
+              _client.getDefaultExecutorService(),
+              _client.getContainerStatsCollector(),
+              _inboundEventsStatsCollector,
+              _bootstrapEventsStatsCollector,
+              _relayConsumerStats,
+              _bootstrapConsumerStats,
+              _unifiedClientStats,
+              _checkpointPersistenceProvider,
+              _client.getRelayConnFactory(),
+              _client.getBootstrapConnFactory(),
+              _client.getHttpStatsCollector(),
+              null, // This should make sure the checkpoint directory structure is compatible with V2.
+              _client,
+              _id.toString(), // Used to uniquely identify logs and mbean name
+              _client.getEventFactory(),
+              null,
+              connStateFactory);
+    return sourcesConnection;
+  }
+
+  @Override
+  public synchronized void shutdown() throws IllegalStateException
+  {
+    if (! _state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+    _sourcesConnection.unregisterMbeans();
+    _sourcesConnection.stop();
+    _status.shutdown();
+    _state = RegistrationState.SHUTDOWN;
+
+    // remove this registration stats from client stats Collector list.
+    _client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());
+  }
+
+  @Override
+  public synchronized void pause() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.PAUSED)
+      return;
+
+    if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().pause();
+    _status.pause();
+    _state = RegistrationState.PAUSED;
+  }
+
+  @Override
+  public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+  {
+    if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+      return;
+
+    if ( !_state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().suspendOnError(ex);
+    _status.suspendOnError(ex);
+    _state = RegistrationState.SUSPENDED_ON_ERROR;
+  }
+
+  @Override
+  public synchronized void resume() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.RESUMED)
+      return;
+
+    if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().resume();
+    _status.resume();
+    _state = RegistrationState.RESUMED;
+  }
+
+  @Override
+  public RegistrationState getState()
+  {
+    return _state;
+  }
+
+  @Override
+  public synchronized boolean deregister()
+      throws IllegalStateException
+  {
+    if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+      return false;
+
+    if ( _state.isRunning())
+      shutdown();
+
+    deregisterFromClient();
+    _state = RegistrationState.DEREGISTERED;
+
+    return true;
+  }
+
+  protected void deregisterFromClient()
+  {
+    _client.deregister(this);
+  }
+
+
+  @Override
+  public Collection<DatabusSubscription> getSubscriptions()
+  {
+    return DatabusSubscription.createSubscriptionList(_sources);
+  }
+
+  @Override
+  public synchronized DatabusComponentStatus getStatus()
+  {
+    return _status;
+  }
+
+  @Override
+  public synchronized Logger getLogger()
+  {
+    return _log;
+  }
+
+  @Override
+  public DatabusRegistration getParent()
+  {
+    return _parent;
+  }
+
+
+  protected void setParent(DatabusRegistration parent)
+  {
+    _parent = parent;
+  }
+
+  @Override
+  public synchronized DatabusRegistration withRegId(RegistrationId regId)
+      throws DatabusClientException, IllegalStateException
+  {
+    if ( (_id != null) && (_id.equals(regId)))
+      return this;
+
+    if (! RegistrationIdGenerator.isIdValid(regId))
+      throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+    _id = regId;
+    _status = new Status(); // Component Status should use the correct component name
+
+    return this;
+  }
+
+
+  @Override
+  public synchronized DatabusRegistration withServerSideFilter(DbusKeyCompositeFilterConfig filterConfig)
+      throws IllegalStateException
+  {
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+          + ", State :" + _state);
+
+    _filterConfig = filterConfig;
+    return this;
+  }
+
+  @Override
+  public List<DbusPartitionInfo> getPartitions()
+  {
+    return null;
+  }
+
+  @Override
+  public Checkpoint getLastPersistedCheckpoint()
+  {
+    Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+    return cp;
+  }
+
+  @Override
+  public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+      throws IllegalStateException
+  {
+    try
+    {
+      _checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+    } catch (IOException ioe) {
+      _log.error("Storing checkpoint failed with exception", ioe);
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+  {
+    return _inboundEventsStatsCollector;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+  {
+    return _bootstrapEventsStatsCollector;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getRelayCallbackStats()
+  {
+    return _relayConsumerStats;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+  {
+    return _bootstrapConsumerStats;
+  }
+
+  @Override
+  public UnifiedClientStatsMBean getUnifiedClientStats()
+  {
+    return _unifiedClientStats;
+  }
+
+  @Override
+  public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+      throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+
+  protected synchronized String getStatusName()
+  {
+    return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+  }
+
+  private static boolean canServe(ServerInfo s, Collection<String> sources)
+  {
+    List<String> supportedSources = s.getSources();
+
+    for (String src : sources)
+    {
+      if (! supportedSources.contains(src))
+        return false;
+    }
+
+    return true;
+  }
+
+
+  @Override
+  public synchronized RegistrationId getRegistrationId()
+  {
+    return _id;
+  }
+
+  @Override
+  public synchronized String toString()
+  {
+    return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+        + ", _sources=" + _sources + ", _status=" + _status
+        + ", _filterConfig=" + _filterConfig
+        + ", _streamConsumerRawRegistrations="
+        + _streamConsumerRawRegistrations
+        + ", _bootstrapConsumerRawRegistrations="
+        + _bootstrapConsumerRawRegistrations + "]";
+  }
+
+  @Override
+  public synchronized DbusKeyCompositeFilterConfig getFilterConfig()
+  {
+    return _filterConfig;
+  }
+
+
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8.revisions;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	};@OverridepublicRelayFlushMaxSCNResultflush(RelayFindMaxSCNResultfetchSCNResult,FlushRequestflushRequest)throwsInterruptedException{thrownewRuntimeException("Notyetsupported!!");};
+		DatabusSourcesConnection sourcesConnection =
+				  new DatabusSourcesConnection(
+						  connConfig,
+						  subs,
+						  candidateRelays,
+						  candidateBootstrapServers,
+						  _streamConsumerRawRegistrations,
+						  _bootstrapConsumerRawRegistrations,
+						  eventBuffer,
+						  bootstrapBuffer,
+						  _client.getDefaultExecutorService(),
+						  _client.getContainerStatsCollector(),
+						  _inboundEventsStatsCollector,
+						  _bootstrapEventsStatsCollector,
+						  _relayConsumerStats,
+						  _bootstrapConsumerStats,
+						  _checkpointPersistenceProvider,
+						  _client.getRelayConnFactory(),
+						  _client.getBootstrapConnFactory(),
+						  _client.getHttpStatsCollector(),
+						  null, // This should make sure the checkpoint directory structure is compatible with V2.
+						  _client,
+						  _id.toString(), // Used to uniquely identify logs and mbean name
+						  _client.getEventFactory(),
+						  null,
+						  connStateFactory);
+		return sourcesConnection;
+	}
+
+
+	@Override
+	public synchronized void shutdown() throws IllegalStateException
+	{
+
+		if (! _state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+		_sourcesConnection.unregisterMbeans();
+		_sourcesConnection.stop();
+		_status.shutdown();
+		_state = RegistrationState.SHUTDOWN;
+
+		// remove this registration stats from client stats Collector list.
+		_client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+	    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	}
+
+	@Override
+	public synchronized void pause() throws IllegalStateException
+	{
+
+		if ( _state == RegistrationState.PAUSED)
+			return;
+
+		if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().pause();
+		_status.pause();
+		_state = RegistrationState.PAUSED;
+
+	}
+
+	@Override
+	public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+	{
+		if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+			return;
+
+		if ( !_state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().suspendOnError(ex);
+		_status.suspendOnError(ex);
+		_state = RegistrationState.SUSPENDED_ON_ERROR;
+
+	}
+
+	@Override
+	public synchronized void resume() throws IllegalStateException
+	{
+		if ( _state == RegistrationState.RESUMED)
+			return;
+
+		if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().resume();
+		_status.resume();
+		_state = RegistrationState.RESUMED;
+	}
+
+	@Override
+	public RegistrationState getState() {
+		return _state;
+	}
+
+	@Override
+	public synchronized boolean deregister()
+			throws IllegalStateException
+	{
+		if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+			return false;
+
+		if ( _state.isRunning())
+			shutdown();
+
+		deregisterFromClient();
+		_state = RegistrationState.DEREGISTERED;
+
+		return true;
+	}
+
+	protected void deregisterFromClient()
+	{
+		_client.deregister(this);
+	}
+
+
+	@Override
+	public Collection<DatabusSubscription> getSubscriptions()
+	{
+		return DatabusSubscription.createSubscriptionList(_sources);
+	}
+
+	@Override
+	public synchronized DatabusComponentStatus getStatus()
+	{
+		return _status;
+	}
+
+	@Override
+	public synchronized Logger getLogger() {
+		return _log;
+	}
+
+	@Override
+	public DatabusRegistration getParent() {
+		return _parent;
+	}
+
+
+	protected void setParent(DatabusRegistration parent) {
+		_parent = parent;
+	}
+
+	@Override
+	public synchronized DatabusRegistration withRegId(RegistrationId regId)
+			throws DatabusClientException, IllegalStateException
+	{
+		if ( (_id != null) && (_id.equals(regId)))
+			return this;
+
+		if (! RegistrationIdGenerator.isIdValid(regId))
+			throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+		_id = regId;
+		_status = new Status(); // Component Status should use the correct component name
+
+		return this;
+	}
+
+
+	@Override
+	public synchronized DatabusRegistration withServerSideFilter(
+			DbusKeyCompositeFilterConfig filterConfig)
+			throws IllegalStateException
+	{
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+					+ ", State :" + _state);
+
+		_filterConfig = filterConfig;
+		return this;
+	}
+
+	@Override
+	public List<DbusPartitionInfo> getPartitions() {
+		return null;
+	}
+
+	@Override
+	public Checkpoint getLastPersistedCheckpoint()
+	{
+		Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+		return cp;
+	}
+
+	@Override
+	public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+			throws IllegalStateException
+	{
+		try
+		{
+			_checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+		} catch (IOException ioe) {
+			_log.error("Storing checkpoint failed with exception", ioe);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+	{
+		return _inboundEventsStatsCollector;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+	{
+		return _bootstrapEventsStatsCollector;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getRelayCallbackStats()
+	{
+		return _relayConsumerStats;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+	{
+		return _bootstrapConsumerStats;
+	}
+
+	@Override
+	public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+			throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+
+	protected synchronized String getStatusName()
+	{
+	  return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+	}
+
+	private static boolean canServe(ServerInfo s, Collection<String> sources)
+	{
+		List<String> supportedSources = s.getSources();
+
+		for (String src : sources)
+		{
+			if (! supportedSources.contains(src))
+				return false;
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public synchronized RegistrationId getRegistrationId() {
+		return _id;
+	}
+
+	@Override
+	public synchronized String toString() {
+		return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+				+ ", _sources=" + _sources + ", _status=" + _status
+				+ ", _filterConfig=" + _filterConfig
+				+ ", _streamConsumerRawRegistrations="
+				+ _streamConsumerRawRegistrations
+				+ ", _bootstrapConsumerRawRegistrations="
+				+ _bootstrapConsumerRawRegistrations + "]";
+	}
+
+	@Override
+	public synchronized DbusKeyCompositeFilterConfig getFilterConfig() {
+		return _filterConfig;
+	}
+=======
+    DatabusSourcesConnection sourcesConnection =
+          new DatabusSourcesConnection(
+              connConfig,
+              subs,
+              candidateRelays,
+              candidateBootstrapServers,
+              _streamConsumerRawRegistrations,
+              _bootstrapConsumerRawRegistrations,
+              eventBuffer,
+              bootstrapBuffer,
+              _client.getDefaultExecutorService(),
+              _client.getContainerStatsCollector(),
+              _inboundEventsStatsCollector,
+              _bootstrapEventsStatsCollector,
+              _relayConsumerStats,
+              _bootstrapConsumerStats,
+              _unifiedClientStats,
+              _checkpointPersistenceProvider,
+              _client.getRelayConnFactory(),
+              _client.getBootstrapConnFactory(),
+              _client.getHttpStatsCollector(),
+              null, // This should make sure the checkpoint directory structure is compatible with V2.
+              _client,
+              _id.toString(), // Used to uniquely identify logs and mbean name
+              _client.getEventFactory(),
+              null,
+              connStateFactory);
+    return sourcesConnection;
+  }
+
+  @Override
+  public synchronized void shutdown() throws IllegalStateException
+  {
+    if (! _state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+    _sourcesConnection.unregisterMbeans();
+    _sourcesConnection.stop();
+    _status.shutdown();
+    _state = RegistrationState.SHUTDOWN;
+
+    // remove this registration stats from client stats Collector list.
+    _client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());
+  }
+
+  @Override
+  public synchronized void pause() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.PAUSED)
+      return;
+
+    if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().pause();
+    _status.pause();
+    _state = RegistrationState.PAUSED;
+  }
+
+  @Override
+  public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+  {
+    if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+      return;
+
+    if ( !_state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().suspendOnError(ex);
+    _status.suspendOnError(ex);
+    _state = RegistrationState.SUSPENDED_ON_ERROR;
+  }
+
+  @Override
+  public synchronized void resume() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.RESUMED)
+      return;
+
+    if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().resume();
+    _status.resume();
+    _state = RegistrationState.RESUMED;
+  }
+
+  @Override
+  public RegistrationState getState()
+  {
+    return _state;
+  }
+
+  @Override
+  public synchronized boolean deregister()
+      throws IllegalStateException
+  {
+    if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+      return false;
+
+    if ( _state.isRunning())
+      shutdown();
+
+    deregisterFromClient();
+    _state = RegistrationState.DEREGISTERED;
+
+    return true;
+  }
+
+  protected void deregisterFromClient()
+  {
+    _client.deregister(this);
+  }
+
+
+  @Override
+  public Collection<DatabusSubscription> getSubscriptions()
+  {
+    return DatabusSubscription.createSubscriptionList(_sources);
+  }
+
+  @Override
+  public synchronized DatabusComponentStatus getStatus()
+  {
+    return _status;
+  }
+
+  @Override
+  public synchronized Logger getLogger()
+  {
+    return _log;
+  }
+
+  @Override
+  public DatabusRegistration getParent()
+  {
+    return _parent;
+  }
+
+
+  protected void setParent(DatabusRegistration parent)
+  {
+    _parent = parent;
+  }
+
+  @Override
+  public synchronized DatabusRegistration withRegId(RegistrationId regId)
+      throws DatabusClientException, IllegalStateException
+  {
+    if ( (_id != null) && (_id.equals(regId)))
+      return this;
+
+    if (! RegistrationIdGenerator.isIdValid(regId))
+      throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+    _id = regId;
+    _status = new Status(); // Component Status should use the correct component name
+
+    return this;
+  }
+
+
+  @Override
+  public synchronized DatabusRegistration withServerSideFilter(DbusKeyCompositeFilterConfig filterConfig)
+      throws IllegalStateException
+  {
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+          + ", State :" + _state);
+
+    _filterConfig = filterConfig;
+    return this;
+  }
+
+  @Override
+  public List<DbusPartitionInfo> getPartitions()
+  {
+    return null;
+  }
+
+  @Override
+  public Checkpoint getLastPersistedCheckpoint()
+  {
+    Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+    return cp;
+  }
+
+  @Override
+  public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+      throws IllegalStateException
+  {
+    try
+    {
+      _checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+    } catch (IOException ioe) {
+      _log.error("Storing checkpoint failed with exception", ioe);
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+  {
+    return _inboundEventsStatsCollector;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+  {
+    return _bootstrapEventsStatsCollector;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getRelayCallbackStats()
+  {
+    return _relayConsumerStats;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+  {
+    return _bootstrapConsumerStats;
+  }
+
+  @Override
+  public UnifiedClientStatsMBean getUnifiedClientStats()
+  {
+    return _unifiedClientStats;
+  }
+
+  @Override
+  public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+      throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+
+  protected synchronized String getStatusName()
+  {
+    return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+  }
+
+  private static boolean canServe(ServerInfo s, Collection<String> sources)
+  {
+    List<String> supportedSources = s.getSources();
+
+    for (String src : sources)
+    {
+      if (! supportedSources.contains(src))
+        return false;
+    }
+
+    return true;
+  }
+
+
+  @Override
+  public synchronized RegistrationId getRegistrationId()
+  {
+    return _id;
+  }
+
+  @Override
+  public synchronized String toString()
+  {
+    return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+        + ", _sources=" + _sources + ", _status=" + _status
+        + ", _filterConfig=" + _filterConfig
+        + ", _streamConsumerRawRegistrations="
+        + _streamConsumerRawRegistrations
+        + ", _bootstrapConsumerRawRegistrations="
+        + _bootstrapConsumerRawRegistrations + "]";
+  }
+
+  @Override
+  public synchronized DbusKeyCompositeFilterConfig getFilterConfig()
+  {
+    return _filterConfig;
+  }
+
+
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8.revisions;/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	};@OverridepublicRelayFlushMaxSCNResultflush(FetchMaxSCNRequestmaxScnRequest,FlushRequestflushRequest)throwsInterruptedException{thrownewRuntimeException("Notyetsupported!!");};
+		DatabusSourcesConnection sourcesConnection =
+				  new DatabusSourcesConnection(
+						  connConfig,
+						  subs,
+						  candidateRelays,
+						  candidateBootstrapServers,
+						  _streamConsumerRawRegistrations,
+						  _bootstrapConsumerRawRegistrations,
+						  eventBuffer,
+						  bootstrapBuffer,
+						  _client.getDefaultExecutorService(),
+						  _client.getContainerStatsCollector(),
+						  _inboundEventsStatsCollector,
+						  _bootstrapEventsStatsCollector,
+						  _relayConsumerStats,
+						  _bootstrapConsumerStats,
+						  _checkpointPersistenceProvider,
+						  _client.getRelayConnFactory(),
+						  _client.getBootstrapConnFactory(),
+						  _client.getHttpStatsCollector(),
+						  null, // This should make sure the checkpoint directory structure is compatible with V2.
+						  _client,
+						  _id.toString(), // Used to uniquely identify logs and mbean name
+						  _client.getEventFactory(),
+						  null,
+						  connStateFactory);
+		return sourcesConnection;
+	}
+
+
+	@Override
+	public synchronized void shutdown() throws IllegalStateException
+	{
+
+		if (! _state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+		_sourcesConnection.unregisterMbeans();
+		_sourcesConnection.stop();
+		_status.shutdown();
+		_state = RegistrationState.SHUTDOWN;
+
+		// remove this registration stats from client stats Collector list.
+		_client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+	    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	}
+
+	@Override
+	public synchronized void pause() throws IllegalStateException
+	{
+
+		if ( _state == RegistrationState.PAUSED)
+			return;
+
+		if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().pause();
+		_status.pause();
+		_state = RegistrationState.PAUSED;
+
+	}
+
+	@Override
+	public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+	{
+		if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+			return;
+
+		if ( !_state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().suspendOnError(ex);
+		_status.suspendOnError(ex);
+		_state = RegistrationState.SUSPENDED_ON_ERROR;
+
+	}
+
+	@Override
+	public synchronized void resume() throws IllegalStateException
+	{
+		if ( _state == RegistrationState.RESUMED)
+			return;
+
+		if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().resume();
+		_status.resume();
+		_state = RegistrationState.RESUMED;
+	}
+
+	@Override
+	public RegistrationState getState() {
+		return _state;
+	}
+
+	@Override
+	public synchronized boolean deregister()
+			throws IllegalStateException
+	{
+		if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+			return false;
+
+		if ( _state.isRunning())
+			shutdown();
+
+		deregisterFromClient();
+		_state = RegistrationState.DEREGISTERED;
+
+		return true;
+	}
+
+	protected void deregisterFromClient()
+	{
+		_client.deregister(this);
+	}
+
+
+	@Override
+	public Collection<DatabusSubscription> getSubscriptions()
+	{
+		return DatabusSubscription.createSubscriptionList(_sources);
+	}
+
+	@Override
+	public synchronized DatabusComponentStatus getStatus()
+	{
+		return _status;
+	}
+
+	@Override
+	public synchronized Logger getLogger() {
+		return _log;
+	}
+
+	@Override
+	public DatabusRegistration getParent() {
+		return _parent;
+	}
+
+
+	protected void setParent(DatabusRegistration parent) {
+		_parent = parent;
+	}
+
+	@Override
+	public synchronized DatabusRegistration withRegId(RegistrationId regId)
+			throws DatabusClientException, IllegalStateException
+	{
+		if ( (_id != null) && (_id.equals(regId)))
+			return this;
+
+		if (! RegistrationIdGenerator.isIdValid(regId))
+			throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+		_id = regId;
+		_status = new Status(); // Component Status should use the correct component name
+
+		return this;
+	}
+
+
+	@Override
+	public synchronized DatabusRegistration withServerSideFilter(
+			DbusKeyCompositeFilterConfig filterConfig)
+			throws IllegalStateException
+	{
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+					+ ", State :" + _state);
+
+		_filterConfig = filterConfig;
+		return this;
+	}
+
+	@Override
+	public List<DbusPartitionInfo> getPartitions() {
+		return null;
+	}
+
+	@Override
+	public Checkpoint getLastPersistedCheckpoint()
+	{
+		Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+		return cp;
+	}
+
+	@Override
+	public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+			throws IllegalStateException
+	{
+		try
+		{
+			_checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+		} catch (IOException ioe) {
+			_log.error("Storing checkpoint failed with exception", ioe);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+	{
+		return _inboundEventsStatsCollector;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+	{
+		return _bootstrapEventsStatsCollector;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getRelayCallbackStats()
+	{
+		return _relayConsumerStats;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+	{
+		return _bootstrapConsumerStats;
+	}
+
+	@Override
+	public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+			throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+
+	protected synchronized String getStatusName()
+	{
+	  return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+	}
+
+	private static boolean canServe(ServerInfo s, Collection<String> sources)
+	{
+		List<String> supportedSources = s.getSources();
+
+		for (String src : sources)
+		{
+			if (! supportedSources.contains(src))
+				return false;
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public synchronized RegistrationId getRegistrationId() {
+		return _id;
+	}
+
+	@Override
+	public synchronized String toString() {
+		return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+				+ ", _sources=" + _sources + ", _status=" + _status
+				+ ", _filterConfig=" + _filterConfig
+				+ ", _streamConsumerRawRegistrations="
+				+ _streamConsumerRawRegistrations
+				+ ", _bootstrapConsumerRawRegistrations="
+				+ _bootstrapConsumerRawRegistrations + "]";
+	}
+
+	@Override
+	public synchronized DbusKeyCompositeFilterConfig getFilterConfig() {
+		return _filterConfig;
+	}
+=======
+    DatabusSourcesConnection sourcesConnection =
+          new DatabusSourcesConnection(
+              connConfig,
+              subs,
+              candidateRelays,
+              candidateBootstrapServers,
+              _streamConsumerRawRegistrations,
+              _bootstrapConsumerRawRegistrations,
+              eventBuffer,
+              bootstrapBuffer,
+              _client.getDefaultExecutorService(),
+              _client.getContainerStatsCollector(),
+              _inboundEventsStatsCollector,
+              _bootstrapEventsStatsCollector,
+              _relayConsumerStats,
+              _bootstrapConsumerStats,
+              _unifiedClientStats,
+              _checkpointPersistenceProvider,
+              _client.getRelayConnFactory(),
+              _client.getBootstrapConnFactory(),
+              _client.getHttpStatsCollector(),
+              null, // This should make sure the checkpoint directory structure is compatible with V2.
+              _client,
+              _id.toString(), // Used to uniquely identify logs and mbean name
+              _client.getEventFactory(),
+              null,
+              connStateFactory);
+    return sourcesConnection;
+  }
+
+  @Override
+  public synchronized void shutdown() throws IllegalStateException
+  {
+    if (! _state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+    _sourcesConnection.unregisterMbeans();
+    _sourcesConnection.stop();
+    _status.shutdown();
+    _state = RegistrationState.SHUTDOWN;
+
+    // remove this registration stats from client stats Collector list.
+    _client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());
+  }
+
+  @Override
+  public synchronized void pause() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.PAUSED)
+      return;
+
+    if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().pause();
+    _status.pause();
+    _state = RegistrationState.PAUSED;
+  }
+
+  @Override
+  public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+  {
+    if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+      return;
+
+    if ( !_state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().suspendOnError(ex);
+    _status.suspendOnError(ex);
+    _state = RegistrationState.SUSPENDED_ON_ERROR;
+  }
+
+  @Override
+  public synchronized void resume() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.RESUMED)
+      return;
+
+    if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().resume();
+    _status.resume();
+    _state = RegistrationState.RESUMED;
+  }
+
+  @Override
+  public RegistrationState getState()
+  {
+    return _state;
+  }
+
+  @Override
+  public synchronized boolean deregister()
+      throws IllegalStateException
+  {
+    if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+      return false;
+
+    if ( _state.isRunning())
+      shutdown();
+
+    deregisterFromClient();
+    _state = RegistrationState.DEREGISTERED;
+
+    return true;
+  }
+
+  protected void deregisterFromClient()
+  {
+    _client.deregister(this);
+  }
+
+
+  @Override
+  public Collection<DatabusSubscription> getSubscriptions()
+  {
+    return DatabusSubscription.createSubscriptionList(_sources);
+  }
+
+  @Override
+  public synchronized DatabusComponentStatus getStatus()
+  {
+    return _status;
+  }
+
+  @Override
+  public synchronized Logger getLogger()
+  {
+    return _log;
+  }
+
+  @Override
+  public DatabusRegistration getParent()
+  {
+    return _parent;
+  }
+
+
+  protected void setParent(DatabusRegistration parent)
+  {
+    _parent = parent;
+  }
+
+  @Override
+  public synchronized DatabusRegistration withRegId(RegistrationId regId)
+      throws DatabusClientException, IllegalStateException
+  {
+    if ( (_id != null) && (_id.equals(regId)))
+      return this;
+
+    if (! RegistrationIdGenerator.isIdValid(regId))
+      throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+    _id = regId;
+    _status = new Status(); // Component Status should use the correct component name
+
+    return this;
+  }
+
+
+  @Override
+  public synchronized DatabusRegistration withServerSideFilter(DbusKeyCompositeFilterConfig filterConfig)
+      throws IllegalStateException
+  {
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+          + ", State :" + _state);
+
+    _filterConfig = filterConfig;
+    return this;
+  }
+
+  @Override
+  public List<DbusPartitionInfo> getPartitions()
+  {
+    return null;
+  }
+
+  @Override
+  public Checkpoint getLastPersistedCheckpoint()
+  {
+    Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+    return cp;
+  }
+
+  @Override
+  public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+      throws IllegalStateException
+  {
+    try
+    {
+      _checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+    } catch (IOException ioe) {
+      _log.error("Storing checkpoint failed with exception", ioe);
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+  {
+    return _inboundEventsStatsCollector;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+  {
+    return _bootstrapEventsStatsCollector;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getRelayCallbackStats()
+  {
+    return _relayConsumerStats;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+  {
+    return _bootstrapConsumerStats;
+  }
+
+  @Override
+  public UnifiedClientStatsMBean getUnifiedClientStats()
+  {
+    return _unifiedClientStats;
+  }
+
+  @Override
+  public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+      throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+
+  protected synchronized String getStatusName()
+  {
+    return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+  }
+
+  private static boolean canServe(ServerInfo s, Collection<String> sources)
+  {
+    List<String> supportedSources = s.getSources();
+
+    for (String src : sources)
+    {
+      if (! supportedSources.contains(src))
+        return false;
+    }
+
+    return true;
+  }
+
+
+  @Override
+  public synchronized RegistrationId getRegistrationId()
+  {
+    return _id;
+  }
+
+  @Override
+  public synchronized String toString()
+  {
+    return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+        + ", _sources=" + _sources + ", _status=" + _status
+        + ", _filterConfig=" + _filterConfig
+        + ", _streamConsumerRawRegistrations="
+        + _streamConsumerRawRegistrations
+        + ", _bootstrapConsumerRawRegistrations="
+        + _bootstrapConsumerRawRegistrations + "]";
+  }
+
+  @Override
+  public synchronized DbusKeyCompositeFilterConfig getFilterConfig()
+  {
+    return _filterConfig;
+  }
+
+

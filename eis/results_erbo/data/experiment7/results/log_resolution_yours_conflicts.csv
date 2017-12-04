@@ -1,0 +1,36 @@
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Workflow.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;<<<<<<< MINE
+  @JsonSerialize(
+    include=JsonSerialize.Inclusion.NON_NULL
+  )
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/DAGNode.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/OutputInfo.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/InputInfo.java;<<<<<<< MINE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+>>>>>>> YOURS

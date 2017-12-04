@@ -1,0 +1,452 @@
+file;ssmergeConf;linedbasedConf
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_fb20fd2_c9fa125/rev_fb20fd2-c9fa125/cucumber-maven-plugin/src/main/java/cucumber/mojo/CucumberMojo.java;<<<<<<< MINE
+=======
+//    @Override
+>>>>>>> YOURS;<<<<<<< MINE
+=======
+//    @Override
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4702abb_d36ff5d/rev_4702abb-d36ff5d/cuke4duke/src/test/java/cuke4duke/internal/ArgumentsConverterTest.java;<<<<<<< MINE
+                .convert(new Class<?>[] { Double.TYPE }, new Object[] { String.format("%e", Double.MAX_VALUE) });
+=======
+                .convert(new Class<?>[] { Double.TYPE }, new Object[] { String.format(Locale.US, "%f", Double.MAX_VALUE) });
+>>>>>>> YOURS;<<<<<<< MINE
+                .convert(new Class<?>[] { Double.TYPE }, new Object[] { String.format("%e", Double.MAX_VALUE) });
+=======
+                .convert(new Class<?>[] { Double.TYPE }, new Object[] { String.format(Locale.US, "%f", Double.MAX_VALUE) });
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_359b66f_d36ff5d/rev_359b66f-d36ff5d/cuke4duke/src/main/java/cuke4duke/internal/ik/IkStepDefinition.java;<<<<<<< MINE
+        Object multilineArg;
+
+        // TODO: Change Cucumber API so that we get an additional argument
+        // telling us whether or not we have a multiline argument. Needed
+        // to support multiline Strings.
+        if(args.length > 0 && (args[args.length-1] instanceof Table)) {
+            multilineArg = args[args.length-1];
+        } else {
+            multilineArg = ioke.nil;
+        }
+
+        // TODO: catch expectation failures and resignal correctly
+        List<Runtime.RescueInfo> pendingRescues = new ArrayList<Runtime.RescueInfo>();
+        IokeObject rr = IokeObject.as(((Message)IokeObject.data(ioke.mimic)).sendTo(ioke.mimic, ioke.ground, ioke.rescue), ioke.ground);
+        List<Object> conds = new ArrayList();
+        final IokeObject pendingCondition = IokeObject.as(IokeObject.getCellChain(ioke.condition,
+                                                                                  ioke.message,
+                                                                                  ioke.ground,
+                                                                                  "Pending"), ioke.ground);
+        conds.add(pendingCondition);
+        pendingRescues.add(new Runtime.RescueInfo(rr, conds, pendingRescues, ioke.getBindIndex()));
+        ioke.registerRescues(pendingRescues);
+        try {
+            invoke.sendTo(msg, iokeStepDefObject, iokeStepDefObject, multilineArg);
+        } catch(ControlFlow.Rescue e) {
+            if(e.getRescue().token == pendingRescues) {
+                throw JRuby.cucumberPending("TODO");
+                //                throw (Exception)(e.getCondition().getCell(ioke.message, ioke.ground, "rootException"));
+            } else {
+                throw e;
+            }
+        } finally {
+            ioke.unregisterRescues(pendingRescues);
+        }
+=======
+        invoke.sendTo(msg, iokeStepDefObject, iokeStepDefObject, multilineArg(args));
+>>>>>>> YOURS;<<<<<<< MINE
+        Object multilineArg;
+
+        // TODO: Change Cucumber API so that we get an additional argument
+        // telling us whether or not we have a multiline argument. Needed
+        // to support multiline Strings.
+        if(args.length > 0 && (args[args.length-1] instanceof Table)) {
+            multilineArg = args[args.length-1];
+        } else {
+            multilineArg = ioke.nil;
+        }
+
+        // TODO: catch expectation failures and resignal correctly
+        List<Runtime.RescueInfo> pendingRescues = new ArrayList<Runtime.RescueInfo>();
+        IokeObject rr = IokeObject.as(((Message)IokeObject.data(ioke.mimic)).sendTo(ioke.mimic, ioke.ground, ioke.rescue), ioke.ground);
+        List<Object> conds = new ArrayList();
+        final IokeObject pendingCondition = IokeObject.as(IokeObject.getCellChain(ioke.condition,
+                                                                                  ioke.message,
+                                                                                  ioke.ground,
+                                                                                  "Pending"), ioke.ground);
+        conds.add(pendingCondition);
+        pendingRescues.add(new Runtime.RescueInfo(rr, conds, pendingRescues, ioke.getBindIndex()));
+        ioke.registerRescues(pendingRescues);
+        try {
+            invoke.sendTo(msg, iokeStepDefObject, iokeStepDefObject, multilineArg);
+        } catch(ControlFlow.Rescue e) {
+            if(e.getRescue().token == pendingRescues) {
+                throw JRuby.cucumberPending("TODO");
+                //                throw (Exception)(e.getCondition().getCell(ioke.message, ioke.ground, "rootException"));
+            } else {
+                throw e;
+            }
+        } finally {
+            ioke.unregisterRescues(pendingRescues);
+        }
+=======
+        invoke.sendTo(msg, iokeStepDefObject, iokeStepDefObject, multilineArg(args));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_fb029a2_9fd0062/rev_fb029a2-9fd0062/cuke4duke/src/main/java/cuke4duke/internal/jvmclass/ClassLanguage.java;<<<<<<< MINE
+        String className = System.getProperty("cuke4duke.objectFactory");
+        if(className == null) {
+            throw new RuntimeException("Missing system property: cuke4duke.objectFactory");
+        }
+        Class<?> ofc = Thread.currentThread().getContextClassLoader().loadClass(className);
+        Constructor<?> ctor = ofc.getConstructor();
+        try {
+            objectFactory = (ObjectFactory) ctor.newInstance();
+            objectFactory.addStepMother(stepMother);
+            objectFactory.addClass(DefaultJavaTransforms.class);
+        } catch(InvocationTargetException e) {
+            throw e.getTargetException();
+=======
+        objectFactory = createObjectFactory();
+        objectFactory.addStepMother(stepMother);
+        for(ClassAnalyzer analyzer : analyzers){
+            for(Class<?> clazz : analyzer.alwaysLoad()){
+                objectFactory.addClass(clazz);
+            }
+>>>>>>> YOURS;<<<<<<< MINE
+        String className = System.getProperty("cuke4duke.objectFactory");
+        if(className == null) {
+            throw new RuntimeException("Missing system property: cuke4duke.objectFactory");
+        }
+        Class<?> ofc = Thread.currentThread().getContextClassLoader().loadClass(className);
+        Constructor<?> ctor = ofc.getConstructor();
+        try {
+            objectFactory = (ObjectFactory) ctor.newInstance();
+            objectFactory.addStepMother(stepMother);
+            objectFactory.addClass(DefaultJavaTransforms.class);
+        } catch(InvocationTargetException e) {
+            throw e.getTargetException();
+=======
+        objectFactory = createObjectFactory();
+        objectFactory.addStepMother(stepMother);
+        for(ClassAnalyzer analyzer : analyzers){
+            for(Class<?> clazz : analyzer.alwaysLoad()){
+                objectFactory.addClass(clazz);
+            }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_09f3133_0ec7421/rev_09f3133-0ec7421/core/src/main/java/cucumber/runtime/World.java;<<<<<<< MINE
+                Result result = new Result(status, duration, e, DUMMY_ARG);
+=======
+                Result result = new Result(status, duration, e, null);
+>>>>>>> YOURS;<<<<<<< MINE
+                Result result = new Result(status, duration, e, DUMMY_ARG);
+=======
+                Result result = new Result(status, duration, e, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_71f83bb_46294e4/rev_71f83bb-46294e4/core/src/main/java/cucumber/runtime/World.java;<<<<<<< MINE
+        List<HookDefinition> hooks = new ArrayList<HookDefinition>();
+        for (Backend backend : backends) {
+            backend.disposeWorld();
+            hooks.addAll(backend.getAfterHooks());            
+        }
+        Collections.sort(hooks, new HookComparator(false));
+        for (HookDefinition hook : hooks) {
+            runHookMaybe(hook);            
+=======
+        for (Backend backend : backends) {            
+            List<HookDefinition> hooks = backend.getAfterHooks();
+            for (HookDefinition hook : hooks) {
+                runHookMaybe(hook);
+            }
+            backend.disposeWorld();
+>>>>>>> YOURS;<<<<<<< MINE
+        List<HookDefinition> hooks = new ArrayList<HookDefinition>();
+        for (Backend backend : backends) {
+            backend.disposeWorld();
+            hooks.addAll(backend.getAfterHooks());            
+        }
+        Collections.sort(hooks, new HookComparator(false));
+        for (HookDefinition hook : hooks) {
+            runHookMaybe(hook);            
+=======
+        for (Backend backend : backends) {            
+            List<HookDefinition> hooks = backend.getAfterHooks();
+            for (HookDefinition hook : hooks) {
+                runHookMaybe(hook);
+            }
+            backend.disposeWorld();
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_6b11cde_59b5d96/rev_6b11cde-59b5d96/core/src/main/java/cucumber/cli/Main.java;<<<<<<< MINE
+        FormatterFactory formatterReporterFactory = new FormatterFactory();
+        Formatter formatter = formatterReporterFactory.createFormatter(format, System.out);
+        runner.run(filesOrDirs, filters, formatter, formatterReporterFactory.reporter(formatter));
+=======
+        PrettyFormatter prettyFormatter = new PrettyFormatter(System.out, false, true);
+        runtime.run(filesOrDirs, filters, prettyFormatter, prettyFormatter);
+>>>>>>> YOURS;<<<<<<< MINE
+        FormatterFactory formatterReporterFactory = new FormatterFactory();
+        Formatter formatter = formatterReporterFactory.createFormatter(format, System.out);
+        runner.run(filesOrDirs, filters, formatter, formatterReporterFactory.reporter(formatter));
+=======
+        PrettyFormatter prettyFormatter = new PrettyFormatter(System.out, false, true);
+        runtime.run(filesOrDirs, filters, prettyFormatter, prettyFormatter);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_c28106b_749660d/rev_c28106b-749660d/clojure/src/main/java/cucumber/runtime/clojure/ClojureStepDefinition.java;<<<<<<< MINE
+        List<Class<Object>> classes = Utils.listOf(args.length, Object.class);
+        Class<?>[] params = classes.toArray(new Class<?>[classes.size()]);
+        return AFunction.class.getMethod("invoke", params);
+=======
+        return IFn.class.getMethod("invoke", (Class<?>[]) Utils.listOf(args.length, Object.class).toArray());
+>>>>>>> YOURS;<<<<<<< MINE
+        List<Class<Object>> classes = Utils.listOf(args.length, Object.class);
+        Class<?>[] params = classes.toArray(new Class<?>[classes.size()]);
+        return AFunction.class.getMethod("invoke", params);
+=======
+        return IFn.class.getMethod("invoke", (Class<?>[]) Utils.listOf(args.length, Object.class).toArray());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b0f48d2_321c656/rev_b0f48d2-321c656/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+            if (gluedPaths.add(gluePath)) {
+                for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                    runScriptlet(resource);
+                }
+=======
+            for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                if (loadedResources.add(resource.getPath())) {
+                    runScriptlet(resource);
+                }
+>>>>>>> YOURS;<<<<<<< MINE
+            if (gluedPaths.add(gluePath)) {
+                for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                    runScriptlet(resource);
+                }
+=======
+            for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                if (loadedResources.add(resource.getPath())) {
+                    runScriptlet(resource);
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b0f48d2_321c656/rev_b0f48d2-321c656/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+            if (gluedPaths.add(gluePath)) {
+                for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                    runScriptlet(resource);
+                }
+=======
+            for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                if (loadedResources.add(resource.getPath())) {
+                    runScriptlet(resource);
+                }
+>>>>>>> YOURS;<<<<<<< MINE
+            if (gluedPaths.add(gluePath)) {
+                for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                    runScriptlet(resource);
+                }
+=======
+            for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                if (loadedResources.add(resource.getPath())) {
+                    runScriptlet(resource);
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9de70ac_0b0b02c/rev_9de70ac-0b0b02c/clojure/src/test/java/cucumber/runtime/clojure/ClojureSnippetTest.java;<<<<<<< MINE
+                "(Given #\"^I have (\\d+) cukes in my \"([^\"]*)\" belly$\" [arg1, arg2]\n" +
+                "  (comment  Express the Regexp above with the code you wish you had  ))\n";
+=======
+                "(Given #\"^I have (\\d+) cukes in my \"([^\"]*)\" belly$\" [arg1, arg2]\n" +
+                "  ' Express the Regexp above with the code you wish you had\n" +
+                "  )\n";
+>>>>>>> YOURS;<<<<<<< MINE
+                "(Given #\"^I have (\\d+) cukes in my \"([^\"]*)\" belly$\" [arg1, arg2]\n" +
+                "  (comment  Express the Regexp above with the code you wish you had  ))\n";
+=======
+                "(Given #\"^I have (\\d+) cukes in my \"([^\"]*)\" belly$\" [arg1, arg2]\n" +
+                "  ' Express the Regexp above with the code you wish you had\n" +
+                "  )\n";
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9de70ac_0b0b02c/rev_9de70ac-0b0b02c/clojure/src/test/java/cucumber/runtime/clojure/ClojureSnippet.java;<<<<<<< MINE
+        return "({0} #\"{1}\" [{3}]\n" +
+               "  (comment  {4}  ))\n";
+=======
+        return "({0} #\"{1}\" [{3}]\n" +
+                "  '' {4}\n" +
+                "  )\n";
+>>>>>>> YOURS;<<<<<<< MINE
+        return "({0} #\"{1}\" [{3}]\n" +
+               "  (comment  {4}  ))\n";
+=======
+        return "({0} #\"{1}\" [{3}]\n" +
+                "  '' {4}\n" +
+                "  )\n";
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_f388f5e_5654134/rev_f388f5e-5654134/junit/src/main/java/cucumber/junit/DescriptionFactory.java;<<<<<<< MINE
+        if (USE_UNIQUE_ID) {
+            return (Description) Utils.invoke(null, CREATE_SUITE_DESCRIPTION, name, uniqueId, Array.newInstance(Annotation.class, 0));
+        } else {
+            UNIQUE_HACK += " ";
+            return (Description) Utils.invoke(null, CREATE_SUITE_DESCRIPTION, name + UNIQUE_HACK, Array.newInstance(Annotation.class, 0));
+=======
+        try {
+            if (USE_UNIQUE_ID) {
+                return (Description) CREATE_SUITE_DESCRIPTION.invoke(null, name, uniqueId, Array.newInstance(Annotation.class, 0));
+            } else {
+                UNIQUE_HACK += " ";
+                return (Description) CREATE_SUITE_DESCRIPTION.invoke(null, name + UNIQUE_HACK, Array.newInstance(Annotation.class, 0));
+            }
+        } catch (IllegalAccessException e) {
+            throw new CucumberException("Failed to create a description", e);
+        } catch (InvocationTargetException e) {
+            throw new CucumberException("Failed to create a description", e.getTargetException());
+>>>>>>> YOURS;<<<<<<< MINE
+        if (USE_UNIQUE_ID) {
+            return (Description) Utils.invoke(null, CREATE_SUITE_DESCRIPTION, name, uniqueId, Array.newInstance(Annotation.class, 0));
+        } else {
+            UNIQUE_HACK += " ";
+            return (Description) Utils.invoke(null, CREATE_SUITE_DESCRIPTION, name + UNIQUE_HACK, Array.newInstance(Annotation.class, 0));
+=======
+        try {
+            if (USE_UNIQUE_ID) {
+                return (Description) CREATE_SUITE_DESCRIPTION.invoke(null, name, uniqueId, Array.newInstance(Annotation.class, 0));
+            } else {
+                UNIQUE_HACK += " ";
+                return (Description) CREATE_SUITE_DESCRIPTION.invoke(null, name + UNIQUE_HACK, Array.newInstance(Annotation.class, 0));
+            }
+        } catch (IllegalAccessException e) {
+            throw new CucumberException("Failed to create a description", e);
+        } catch (InvocationTargetException e) {
+            throw new CucumberException("Failed to create a description", e.getTargetException());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_842ecca_16cb45d/rev_842ecca-16cb45d/junit/src/main/java/cucumber/runtime/junit/ExecutionUnitRunner.java;<<<<<<< MINE
+            description = Description.createSuiteDescription(step.getKeyword() + step.getName(), step);
+=======
+            description = Description.createTestDescription(getName(), step.getKeyword() + step.getName(), step);
+>>>>>>> YOURS;<<<<<<< MINE
+            description = Description.createSuiteDescription(step.getKeyword() + step.getName(), step);
+=======
+            description = Description.createTestDescription(getName(), step.getKeyword() + step.getName(), step);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_517487c_10ba032/rev_517487c-10ba032/core/src/main/java/cucumber/runtime/FeatureBuilder.java;<<<<<<< MINE
+        parser.parse(gherkin, convertPathToUri(resource.getPath()), 0);
+=======
+        try {
+            parser.parse(gherkin, resource.getPath(), 0);
+        } catch (Exception e) {
+            throw new CucumberException(String.format("Error parsing feature file %s", resource.getPath()), e);
+        }
+>>>>>>> YOURS;<<<<<<< MINE
+        parser.parse(gherkin, convertPathToUri(resource.getPath()), 0);
+=======
+        try {
+            parser.parse(gherkin, resource.getPath(), 0);
+        } catch (Exception e) {
+            throw new CucumberException(String.format("Error parsing feature file %s", resource.getPath()), e);
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_6e7e1b3_f9cad32/rev_6e7e1b3-f9cad32/core/src/main/java/cucumber/runtime/formatter/JUnitFormatter.java;<<<<<<< MINE
+            if (rootElement.getElementsByTagName("testcase").getLength() == 0) {
+                addDummyTestCase(); // to avoid failed Jenkins jobs
+            }
+=======
+            rootElement.setAttribute("skipped", String.valueOf(rootElement.getElementsByTagName("skipped").getLength()));
+            rootElement.setAttribute("time", sumTimes(rootElement.getElementsByTagName("testcase")));
+>>>>>>> YOURS;<<<<<<< MINE
+            if (rootElement.getElementsByTagName("testcase").getLength() == 0) {
+                addDummyTestCase(); // to avoid failed Jenkins jobs
+            }
+=======
+            rootElement.setAttribute("skipped", String.valueOf(rootElement.getElementsByTagName("skipped").getLength()));
+            rootElement.setAttribute("time", sumTimes(rootElement.getElementsByTagName("testcase")));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2ac08a8_c591426/rev_2ac08a8-c591426/core/src/test/java/cucumber/runtime/formatter/JUnitFormatterTest.java;<<<<<<< MINE
+        final RuntimeOptions runtimeOptions = new RuntimeOptions(Collections.<String>emptyList());
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(classLoader);
+        final RuntimeGlue glue = createMockedRuntimeGlueThatMatchesTheSteps(stepsToResult, hooks);
+        final Runtime runtime = new Runtime(resourceLoader, classLoader, asList(mock(Backend.class)), runtimeOptions, new StopWatch.Stub(stepHookDuration), glue);
+=======
+>>>>>>> YOURS;<<<<<<< MINE
+        final RuntimeOptions runtimeOptions = new RuntimeOptions(Collections.<String>emptyList());
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(classLoader);
+        final RuntimeGlue glue = createMockedRuntimeGlueThatMatchesTheSteps(stepsToResult, hooks);
+        final Runtime runtime = new Runtime(resourceLoader, classLoader, asList(mock(Backend.class)), runtimeOptions, new StopWatch.Stub(stepHookDuration), glue);
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2ac08a8_c591426/rev_2ac08a8-c591426/core/src/test/java/cucumber/runtime/formatter/CucumberPrettyFormatterTest.java;<<<<<<< MINE
+private String runFeatureWithPrettyFormatter(final CucumberFeature feature, final Map<String, String> stepsToLocation) throws IOException {
+        final RuntimeOptions runtimeOptions = new RuntimeOptions("");
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(classLoader);
+        final RuntimeGlue glue = createMockedRuntimeGlueThatMatchesTheSteps(stepsToLocation);
+        final Runtime runtime = new Runtime(resourceLoader, classLoader, asList(mock(Backend.class)), runtimeOptions, glue);
+=======
+private String runFeatureWithPrettyFormatter(final CucumberFeature feature, final Map<String, String> stepsToLocation) throws Throwable {
+>>>>>>> YOURS;<<<<<<< MINE
+    private String runFeatureWithPrettyFormatter(final CucumberFeature feature, final Map<String, String> stepsToLocation) throws IOException {
+        final RuntimeOptions runtimeOptions = new RuntimeOptions("");
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(classLoader);
+        final RuntimeGlue glue = createMockedRuntimeGlueThatMatchesTheSteps(stepsToLocation);
+        final Runtime runtime = new Runtime(resourceLoader, classLoader, asList(mock(Backend.class)), runtimeOptions, glue);
+=======
+    private String runFeatureWithPrettyFormatter(final CucumberFeature feature, final Map<String, String> stepsToLocation) throws Throwable {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_3745fd6_ae0b2e2/rev_3745fd6-ae0b2e2/core/src/main/java/cucumber/runtime/ParameterInfo.java;<<<<<<< MINE
+            boolean transposed = false;
+            Transformer transformer = null;
+=======
+            Transformer<?> transformer = null;
+>>>>>>> YOURS;<<<<<<< MINE
+            boolean transposed = false;
+            Transformer transformer = null;
+=======
+            Transformer<?> transformer = null;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_3745fd6_ae0b2e2/rev_3745fd6-ae0b2e2/core/src/main/java/cucumber/runtime/ParameterInfo.java;<<<<<<< MINE
+                if (annotation instanceof Transpose) {
+                    transposed = ((Transpose) annotation).value();
+                }
+=======
+                
+>>>>>>> YOURS;<<<<<<< MINE
+                if (annotation instanceof Transpose) {
+                    transposed = ((Transpose) annotation).value();
+                }
+=======
+                
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b7d2505_d90c7af/rev_b7d2505-d90c7af/core/src/main/java/cucumber/runtime/model/CucumberScenarioOutline.java;<<<<<<< MINE
+        if (name.isEmpty()) {
+            throw new CucumberException("Step generated from scenario outline '" + step.getName() + "' is empty");
+        }
+=======
+        if (name.isEmpty()) {
+            throw new CucumberException("Step generated from scenario outline is empty: " + step.getName());
+        }
+>>>>>>> YOURS;<<<<<<< MINE
+        if (name.isEmpty()) {
+            throw new CucumberException("Step generated from scenario outline '" + step.getName() + "' is empty");
+        }
+=======
+        if (name.isEmpty()) {
+            throw new CucumberException("Step generated from scenario outline is empty: " + step.getName());
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_f8ecfb4_494ec54/rev_f8ecfb4-494ec54/testng/src/main/java/cucumber/api/testng/TestNGCucumberRunner.java;<<<<<<< MINE
+        // remove duplicates from glue path.
+        List<String> uniqueGlue = new ArrayList<String>(new HashSet<String>(runtimeOptions.getGlue()));
+        runtimeOptions.getGlue().clear();
+        runtimeOptions.getGlue().addAll(uniqueGlue);
+
+=======
+>>>>>>> YOURS;<<<<<<< MINE
+        // remove duplicates from glue path.
+        List<String> uniqueGlue = new ArrayList<String>(new HashSet<String>(runtimeOptions.getGlue()));
+        runtimeOptions.getGlue().clear();
+        runtimeOptions.getGlue().addAll(uniqueGlue);
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b66c765_0ac2df0/rev_b66c765-0ac2df0/core/src/main/java/cucumber/runtime/RuntimeOptions.java;<<<<<<< MINE
+        List<String> parsedJunitOptions = new ArrayList<String>();
+=======
+        ParsedPluginData parsedPluginData = new ParsedPluginData();
+>>>>>>> YOURS;<<<<<<< MINE
+        List<String> parsedJunitOptions = new ArrayList<String>();
+=======
+        ParsedPluginData parsedPluginData = new ParsedPluginData();
+>>>>>>> YOURS

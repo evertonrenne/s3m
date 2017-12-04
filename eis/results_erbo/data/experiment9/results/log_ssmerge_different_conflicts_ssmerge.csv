@@ -1,0 +1,33 @@
+file;ssmergeConf
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+public boolean hasExpired(){
+        return ((System.currentTimeMillis() - touch.get()) > responseTimeoutInMs );
+    }
+=======
+public boolean hasExpired(){
+        return responseTimeoutInMs != -1 && ((System.currentTimeMillis() - touch.get()) > responseTimeoutInMs);
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d81c72d_ed2cd62/rev_d81c72d-ed2cd62/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+@Override
+        protected void onHttpHeaderError(final HttpHeader httpHeader,
+                                         final FilterChainContext ctx,
+                                         final Throwable t) throws IOException {
+            t.printStackTrace();
+            httpHeader.setSkipRemainder(true);
+            final HttpTransactionContext context =
+                    provider.getHttpTransactionContext(ctx.getConnection());
+            context.abort(t);
+        }
+=======
+@Override
+        protected void onHttpHeaderError(final HttpHeader httpHeader,
+                                   final FilterChainContext ctx,
+                                   final Throwable t) throws IOException {
+            t.printStackTrace();
+            httpHeader.setSkipRemainder(true);
+            final HttpTransactionContext context =
+                    provider.getHttpTransactionContext(ctx.getConnection());
+            context.abort(t);
+        }
+>>>>>>> YOURS

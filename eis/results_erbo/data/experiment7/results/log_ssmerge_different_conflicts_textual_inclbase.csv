@@ -1,0 +1,596 @@
+file;linedbasedConf
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;<<<<<<< MINE
+  private String runtimeName;
+  private Integer dagLevel;
+  private Double x, y;
+||||||| BASE
+  private String runtimeName;
+  private Integer dagLevel, x, y;
+=======
+  private String runtime;
+  private Integer dagLevel;
+  private Double x, y;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;<<<<<<< MINE
+||||||| BASE
+
+  private void setRuntimeName(String runtimeName) { this.runtimeName = runtimeName; }
+=======
+
+  private void setRuntime(String runtime) { this.runtime = runtime; }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_abe0afe_682cd4a/rev_abe0afe-682cd4a/pig/src/main/java/com/twitter/ambrose/service/impl/SugiyamaLayoutTransformer.java;<<<<<<< MINE
+||||||| BASE
+/*
+Copyright 2012 Twitter, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+package com.twitter.ambrose.service.impl;
+
+import azkaban.common.utils.Props;
+import azkaban.workflow.Flow;
+import azkaban.workflow.flow.DagLayout;
+import azkaban.workflow.flow.FlowNode;
+import azkaban.workflow.flow.SugiyamaLayout;
+import com.twitter.ambrose.service.DAGNode;
+import com.twitter.ambrose.service.DAGTransformer;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+/**
+ * Transformer that wraps Azkaban's SugiyamaLayout to create level, X and Y values for the nodes in
+ * the DAG.
+ * @author billg
+ */
+public class SugiyamaLayoutTransformer implements DAGTransformer {
+
+  private boolean landscape;
+
+  /**
+   * Create an instance of this class to generate top-down coordinates
+   */
+  public SugiyamaLayoutTransformer() {
+    this(false);
+  }
+
+  /**
+   * Create an instance of this class to generate coordinates. If <pre>landscape=true</pre>, then
+   * the graph will layout from left to right. Otherwise it will layout from top to bottom.
+   */
+  public SugiyamaLayoutTransformer(boolean landscape) {
+    this.landscape = landscape;
+  }
+
+  @Override
+  public Collection<DAGNode> transform(Collection<DAGNode> nodes) {
+    Flow flow = new Flow("sample flow", new Props());
+
+    for(DAGNode node : nodes) {
+      for(String successor : node.getSuccessorNames()) {
+        flow.addDependencies(successor, Arrays.asList(node.getName()));
+      }
+    }
+
+    flow.validateFlow(); // this sets levels
+    flow.printFlow();
+    if (!flow.isLayedOut()) {
+      DagLayout layout = new SugiyamaLayout(flow);
+      layout.setLayout();
+    }
+
+    for(DAGNode node : nodes) {
+      FlowNode flowNode = flow.getFlowNode(node.getName());
+
+      // invert X/Y if we're rendering in landscape
+      if (landscape) {
+        node.setX(flowNode.getY());
+        node.setY(flowNode.getX());
+      }
+      else {
+        node.setX(flowNode.getX());
+        node.setY(flowNode.getY());
+      }
+
+      node.setDagLevel(flowNode.getLevel());
+    }
+
+    return nodes;
+  }
+}=======
+/*
+Copyright 2012 Twitter, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+package com.twitter.ambrose.service.impl;
+
+import azkaban.common.utils.Props;
+import azkaban.workflow.Flow;
+import azkaban.workflow.flow.DagLayout;
+import azkaban.workflow.flow.FlowNode;
+import azkaban.workflow.flow.SugiyamaLayout;
+import com.twitter.ambrose.service.DAGNode;
+import com.twitter.ambrose.service.DAGTransformer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
+/**
+ * Transformer that wraps Azkaban's SugiyamaLayout to create level, X and Y values for the nodes in
+ * the DAG.
+ * @author billg
+ */
+public class SugiyamaLayoutTransformer implements DAGTransformer {
+
+  private boolean landscape;
+
+  /**
+   * Create an instance of this class to generate top-down coordinates
+   */
+  public SugiyamaLayoutTransformer() {
+    this(false);
+  }
+
+  /**
+   * Create an instance of this class to generate coordinates. If <pre>landscape=true</pre>, then
+   * the graph will layout from left to right. Otherwise it will layout from top to bottom.
+   */
+  public SugiyamaLayoutTransformer(boolean landscape) {
+    this.landscape = landscape;
+  }
+
+  @Override
+  public Collection<DAGNode> transform(Collection<DAGNode> nodes) {
+    Flow flow = new Flow("sample flow", new Props());
+
+    if(nodes.size() == 1) {
+      flow.addDependencies(nodes.iterator().next().getName(), new ArrayList<String>());
+    } else {
+      for(DAGNode node : nodes) {
+        for(String successor : node.getSuccessorNames()) {
+          flow.addDependencies(successor, Arrays.asList(node.getName()));
+        }
+      }
+    }
+
+    flow.validateFlow(); // this sets levels
+    flow.printFlow();
+    if (!flow.isLayedOut()) {
+      DagLayout layout = new SugiyamaLayout(flow);
+      layout.setLayout();
+    }
+
+    for(DAGNode node : nodes) {
+      FlowNode flowNode = flow.getFlowNode(node.getName());
+
+      // invert X/Y if we're rendering in landscape
+      if (landscape) {
+        node.setX(flowNode.getY());
+        node.setY(flowNode.getX());
+      }
+      else {
+        node.setX(flowNode.getX());
+        node.setY(flowNode.getY());
+      }
+
+      node.setDagLevel(flowNode.getLevel());
+    }
+
+    return nodes;
+  }
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_311fb3e_0974c60/rev_311fb3e-0974c60/common/src/test/java/com/twitter/ambrose/service/impl/InMemoryStatsServiceTest.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+  static {
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
+    mapper.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+    mapper.disable(SerializationFeature.CLOSE_CLOSEABLE);
+    mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  }
+||||||| BASE
+=======
+  static {
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
+    mapper.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+    mapper.disable(SerializationFeature.CLOSE_CLOSEABLE);
+    mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  }
+
+  public static void mixinAnnotatons(Class<?> target, Class<?> mixinSource) {
+    mapper.addMixInAnnotations(target, mixinSource);
+  }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Event.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Event.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Event.java;<<<<<<< MINE
+  @SuppressWarnings("unchecked")
+  public static void main(String[] args) throws IOException {
+    String json = JSONUtil.readFile("pig/src/main/resources/web/data/small-events.json");
+    List<Event> events = JSONUtil.toObject(json, new TypeReference<List<Event>>() { });
+    for (Event event : events) {
+      // useful if we need to read a file, add a field, output and re-generate
+    }
+    JSONUtil.writeJson("pig/src/main/resources/web/data/small-events.json2", events);
+||||||| BASE
+  @SuppressWarnings("unchecked")
+  public static void main(String[] args) throws IOException {
+    String json = JSONUtil.readFile("pig/src/main/resources/web/data/small-events.json");
+    List<Event> events =
+      (List<Event>)JSONUtil.readJson(json, new TypeReference<List<Event>>() { });
+//    for (Event event : events) {
+//      // useful if we need to read a file, add a field, output and re-generate
+//    }
+
+    JSONUtil.writeJson("pig/src/main/resources/web/data/small-events.json2", events);
+=======
+  public String toJson() throws IOException {
+    return JSONUtil.toJson(this);
+  }
+
+  public static Event<?> fromJson(String json) throws IOException {
+    return JSONUtil.toObject(json, new TypeReference<Event<?>>() { });
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Job.java;<<<<<<< MINE
+||||||| BASE
+@SuppressWarnings("deprecation")
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "runtime")
+@JsonTypeName("default")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value=com.twitter.ambrose.model.Job.class, name="default"),
+})
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Workflow.java;<<<<<<< MINE
+import java.io.IOException;
+import java.util.List;
+
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+||||||| BASE
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.io.IOException;
+import java.util.List;
+=======
+import java.io.IOException;
+import java.util.List;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Workflow.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;<<<<<<< MINE
+import java.util.HashMap;
+import java.util.Map;
+
+||||||| BASE
+=======
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;<<<<<<< MINE
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+||||||| BASE
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.util.HashMap;
+import java.util.Map;
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/hadoop/CounterGroup.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/DAGNode.java;<<<<<<< MINE
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+||||||| BASE
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.type.TypeReference;
+=======
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/DAGNode.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/DAGNode.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/OutputInfo.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/OutputInfo.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/PigJob.java;<<<<<<< MINE
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+||||||| BASE
+import com.twitter.ambrose.model.Job;
+import com.twitter.ambrose.model.hadoop.CounterGroup;
+import com.twitter.ambrose.model.hadoop.MapReduceJobState;
+=======
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import com.twitter.ambrose.util.JSONUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/PigJob.java;<<<<<<< MINE
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+||||||| BASE
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/PigJob.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/PigJob.java;<<<<<<< MINE
+||||||| BASE
+@JsonSerialize(
+  include=JsonSerialize.Inclusion.NON_NULL
+)
+=======
+@JsonTypeName("pig")
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/InputInfo.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/InputInfo.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/HiveJob.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHivePreHook.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFailHook.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/MetricsCounter.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/TaskTag.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFinishHook.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/test/java/com/twitter/ambrose/model/HiveJobTest.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_104bf38_e5f05a2/rev_104bf38-e5f05a2/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+||||||| BASE
+  private void pushEvent(String scriptId, Event event) {
+    try {
+      statsWriteService.pushEvent(scriptId, event);
+    } catch (IOException e) {
+      log.error("Couldn't send event to StatsWriteService", e);
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private void addMapReduceJobState(PigJob pigJob) {
+    JobClient jobClientLocal = getJobClient();
+
+    try {
+      String id = pigJob.getId();
+      RunningJob runningJob = jobClientLocal.getJob(id);
+      Properties jobConfProperties = getJobConfFromFile(runningJob);
+
+      if (runningJob == null) {
+        log.warn("Couldn't find job status for jobId=" + pigJob.getId());
+        return;
+      }
+
+      JobID jobID = null;
+      try {
+        jobID = runningJob.getID();
+      } catch (NullPointerException e) {
+        log.warn("Couldn't get JobID for runningId.");
+        return;
+      }
+      TaskReport[] mapTaskReport = jobClientLocal.getMapTaskReports(jobID);
+      TaskReport[] reduceTaskReport = jobClientLocal.getReduceTaskReports(jobID);
+      if (jobConfProperties != null && jobConfProperties.size() > 0) {
+        pigJob.setConfiguration(jobConfProperties);
+      }
+      pigJob.setMapReduceJobState(
+          new MapReduceJobState(runningJob, mapTaskReport, reduceTaskReport));
+    } catch (IOException e) {
+      log.warn("Error occurred when retrieving job progress info. ", e);
+    }
+  }
+
+  /**
+   * Get the configurations at the beginning of the job flow, it will contain information
+   * about the map/reduce plan and decoded pig script.
+   * @param runningJob
+   * @return Properties - configuration properties of the job
+   */
+  private Properties getJobConfFromFile(RunningJob runningJob) {
+    Properties jobConfProperties = new Properties();
+    try {
+      log.info("RunningJob Configuration File location: " + runningJob.getJobFile());
+      Path path = new Path(runningJob.getJobFile());
+      Configuration conf = new Configuration(false);
+      FileSystem fileSystem = FileSystem.get(new Configuration());
+      InputStream inputStream = fileSystem.open(path);
+      conf.addResource(inputStream);
+
+      for (Map.Entry<String, String> entry : conf) {
+        if (entry.getKey().equals("pig.mapPlan")
+            || entry.getKey().equals("pig.reducePlan")) {
+          jobConfProperties.setProperty(entry.getKey(),
+              ObjectSerializer.deserialize(entry.getValue()).toString());
+        } else {
+          jobConfProperties.setProperty(entry.getKey(), entry.getValue());
+        }
+      }
+    } catch (FileNotFoundException e) {
+      log.warn("Configuration file not found for old jobsflows.");
+    } catch (IOException e) {
+      log.warn("Error occurred when retrieving configuration info.", e);
+    }
+    return jobConfProperties;
+  }
+
+=======
+  private void pushEvent(String scriptId, Event event) {
+    try {
+      statsWriteService.pushEvent(scriptId, event);
+    } catch (IOException e) {
+      log.error("Couldn't send event to StatsWriteService", e);
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private void addMapReduceJobState(PigJob pigJob) {
+    JobClient jobClientLocal = getJobClient();
+
+    try {
+      String id = pigJob.getId();
+      RunningJob runningJob = null;
+      try {
+    	  runningJob = jobClientLocal.getJob(id);
+      } catch (Exception e) {
+    	  log.warn("Exception while querying job status for jobId=" + id +" message: " + e.getMessage());
+    	  log.debug(e);
+    	  return;
+      }
+      
+      if (runningJob == null) {
+          log.warn("Couldn't find job status for jobId=" + id);
+          return;
+      }
+      
+      Properties jobConfProperties = getJobConfFromFile(runningJob);
+
+      JobID jobID = null;
+      try {
+        jobID = runningJob.getID();
+      } catch (NullPointerException e) {
+        log.warn("Couldn't get jobID for runningJob.");
+        return;
+      }
+      
+      TaskReport[] mapTaskReport = jobClientLocal.getMapTaskReports(jobID);
+      TaskReport[] reduceTaskReport = jobClientLocal.getReduceTaskReports(jobID);
+      if (jobConfProperties != null && jobConfProperties.size() > 0) {
+        pigJob.setConfiguration(jobConfProperties);
+      }
+      pigJob.setMapReduceJobState(
+          new MapReduceJobState(runningJob, mapTaskReport, reduceTaskReport));
+    } catch (IOException e) {
+      log.warn("Error occurred when retrieving job progress info. ", e);
+    }
+  }
+
+  /**
+   * Get the configurations at the beginning of the job flow, it will contain information
+   * about the map/reduce plan and decoded pig script.
+   * @param runningJob
+   * @return Properties - configuration properties of the job
+   */
+  private Properties getJobConfFromFile(RunningJob runningJob) {
+    Properties jobConfProperties = new Properties();
+    try {
+      log.info("RunningJob Configuration File location: " + runningJob.getJobFile());
+      Path path = new Path(runningJob.getJobFile());
+      Configuration conf = new Configuration(false);
+      FileSystem fileSystem = FileSystem.get(new Configuration());
+      InputStream inputStream = fileSystem.open(path);
+      conf.addResource(inputStream);
+
+      for (Map.Entry<String, String> entry : conf) {
+        if (entry.getKey().equals("pig.mapPlan")
+            || entry.getKey().equals("pig.reducePlan")) {
+          jobConfProperties.setProperty(entry.getKey(),
+              ObjectSerializer.deserialize(entry.getValue()).toString());
+        } else {
+          jobConfProperties.setProperty(entry.getKey(), entry.getValue());
+        }
+      }
+    } catch (FileNotFoundException e) {
+      log.warn("Configuration file not found for old jobsflows.");
+    } catch (IOException e) {
+      log.warn("Error occurred when retrieving configuration info.", e);
+    }
+    return jobConfProperties;
+  }
+
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_24fc935_6383000/rev_24fc935-6383000/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_24fc935_6383000/rev_24fc935-6383000/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;null
+/experiment_ambrose/projects/ambrose/revisions/rev_24fc935_6383000/rev_24fc935-6383000/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;null

@@ -1,0 +1,86 @@
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+    ObjectMapper om = new ObjectMapper();
+    om.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
+    om.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+
+    writer.write(om.writeValueAsString(object));
+    writer.write("\n");
+    writer.flush();
+=======
+    mapper.writeValue(writer, object);
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+    JSONUtil.writeJson(new PrintWriter(fileName), object);
+=======
+    Writer writer = new PrintWriter(fileName);
+    try {
+      JSONUtil.writeJson(writer, object);
+    } finally {
+      writer.close();
+    }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+    // not currently setting successors, only successorNames
+    return om.readValue(json, type);
+=======
+  /**
+   * Parse JSON string to object.
+   *
+   * @param json string containing JSON.
+   * @param type type reference describing type of object to parse from json.
+   * @param <T> type of object to parse from json.
+   * @return object parsed from json.
+   * @throws IOException
+   */
+  public static <T> T toObject(String json, TypeReference<T> type) throws IOException {
+    return mapper.readValue(json, type);
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+    }
+    finally {
+=======
+    } finally {
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Event.java;<<<<<<< MINE
+  @SuppressWarnings("unchecked")
+  public static void main(String[] args) throws IOException {
+    String json = JSONUtil.readFile("pig/src/main/resources/web/data/small-events.json");
+    List<Event> events = JSONUtil.toObject(json, new TypeReference<List<Event>>() { });
+    for (Event event : events) {
+      // useful if we need to read a file, add a field, output and re-generate
+    }
+    JSONUtil.writeJson("pig/src/main/resources/web/data/small-events.json2", events);
+=======
+  public String toJson() throws IOException {
+    return JSONUtil.toJson(this);
+  }
+
+  public static Event<?> fromJson(String json) throws IOException {
+    return JSONUtil.toObject(json, new TypeReference<Event<?>>() { });
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+      Collection<DAGNode<Job>> nodes = dagNodeNameMap.values();
+      JSONUtil.writeJson(dagWriter, nodes.toArray(new DAGNode[dagNodeNameMap.size()]));
+=======
+      JSONUtil.writeJson(dagWriter, dagNodeNameMap.values());
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+      eventsWriter.append(!eventWritten ? "[ " : ", ");
+=======
+      eventsWriter.write(!eventWritten ? "[ " : ", ");
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+      if (eventWritten) { eventsWriter.append("]\n"); }
+=======
+      if (eventWritten) { eventsWriter.write(" ]\n"); }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+  private void addMapReduceJobState(PigJob pigJob)  {
+=======
+  private void addMapReduceJobState(PigJob pigJob) {
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_24fc935_6383000/rev_24fc935-6383000/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+   * @param statsWriteService
+=======
+   * @param statsWriteService service to which stats collected from PPNL callbacks are written.
+>>>>>>> YOURS

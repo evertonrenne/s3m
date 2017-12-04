@@ -1,0 +1,47 @@
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;<<<<<<< MINE
+=======
+    private final MetricsRegistry registry;
+
+    public InstrumentedHttpClient(MetricsRegistry registry,
+                                  InstrumentedClientConnManager manager,
+                                  HttpParams params) {
+        super(manager, params);
+        this.registry = registry;
+    }
+
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment/projects/dropwizard-metrics/revisions/rev_73b2e5f_cb6980f/rev_73b2e5f-cb6980f/metrics-graphite/src/main/java/com/codahale/metrics/graphite/Graphite.java;<<<<<<< MINE
+    protected Socket socket;
+    protected Writer writer;
+    protected int failures;
+=======
+    private Socket socket;
+    private Writer writer;
+    private int failures;
+    
+    /**
+     * Creates a new client which connects to the given address using the default
+     * {@link SocketFactory}.
+     *
+     * @param hostname The hostname of the Carbon server
+     * @param port The port of the Carbon server
+     */
+    public Graphite(String hostname, int port) {
+        this(new InetSocketAddress(hostname, port));
+    }
+    
+    /**
+     * Creates a new client which connects to the given address and socket factory.
+     *
+     * @param hostname The hostname of the Carbon server
+     * @param port The port of the Carbon server
+     * @param socketFactory the socket factory
+     */
+    public Graphite(String hostname, int port, SocketFactory socketFactory) {
+        this(new InetSocketAddress(hostname, port), socketFactory);
+    }
+>>>>>>> YOURS

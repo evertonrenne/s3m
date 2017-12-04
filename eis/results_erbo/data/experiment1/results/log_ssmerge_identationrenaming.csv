@@ -1,0 +1,297 @@
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003;/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest;testDateUtilISO8601_Date();;public void testDateUtilISO8601_Date() throws Exception
+    {
+    	// Date is constructed with the timezone of the ObjectMapper. Time part is set to zero.
+    	verify(MAPPER, "2000-01-02", judate(2000, 1, 2,   0, 0, 0, 0, LOCAL_TZ));
+    	
+    	
+    	// ---------------------------------------------------------------------------------------------
+    	// WARNING:
+    	//   ISO8601 (https://en.wikipedia.org/wiki/ISO_8601#Times) and its RFC339 profile 
+    	//   (https://tools.ietf.org/html/rfc3339, chapter 5.6) seem to require 2 DIGITS for 
+    	//   the month and dayofweek but 4 DIGITS for the year.
+    	//
+    	//   The following forms should therefore be refused but are accepted by Jackson (and 
+    	//   java.text.SimpleDateFormat). They are verified here to detect any changes in future
+    	//   releases.
+    	// ---------------------------------------------------------------------------------------------
+
+    	// day
+    	verify(  MAPPER, "2000-01-2",      judate(2000, 1, 2,   0, 0, 0, 0, LOCAL_TZ));
+    	failure( MAPPER, "2000-01-002");
+    	
+    	// month
+    	verify(  MAPPER, "2000-1-02",      judate(2000, 1, 2,   0, 0, 0, 0, LOCAL_TZ));
+    	failure( MAPPER, "2000-001-02");
+    	
+    	// year
+    	failure( MAPPER, "20000-01-02");
+    	failure( MAPPER, "200-01-02"  );
+    	failure( MAPPER, "20-01-02"   );
+    	verify(  MAPPER, "2-01-02",        judate(2, 1, 2,   0, 0, 0, 0, LOCAL_TZ));	// FIXME Why accept 1 digit and refuse they other cases??
+    };public void testDateUtilISO8601_Date() throws Exception
+    {
+        // Date is constructed with the timezone of the ObjectMapper. Time part is set to zero.
+        verify(MAPPER, "2000-01-02", judate(2000, 1, 2,   0, 0, 0, 0, LOCAL_TZ));
+        
+        
+        // ---------------------------------------------------------------------------------------------
+        // WARNING:
+        //   ISO8601 (https://en.wikipedia.org/wiki/ISO_8601#Times) and its RFC339 profile 
+        //   (https://tools.ietf.org/html/rfc3339, chapter 5.6) seem to require 2 DIGITS for 
+        //   the month and dayofweek but 4 DIGITS for the year.
+        //
+        //   The following forms should therefore be refused but are accepted by Jackson (and 
+        //   java.text.SimpleDateFormat). They are verified here to detect any changes in future
+        //   releases.
+        // ---------------------------------------------------------------------------------------------
+
+        // day
+        verify(  MAPPER, "2000-01-2",      judate(2000, 1, 2,   0, 0, 0, 0, LOCAL_TZ));
+        failure( MAPPER, "2000-01-002");
+        
+        // month
+        verify(  MAPPER, "2000-1-02",      judate(2000, 1, 2,   0, 0, 0, 0, LOCAL_TZ));
+        failure( MAPPER, "2000-001-02");
+        
+        // year
+        failure( MAPPER, "20000-01-02");
+        failure( MAPPER, "200-01-02"  );
+        failure( MAPPER, "20-01-02"   );
+        verify(  MAPPER, "2-01-02",        judate(2, 1, 2,   0, 0, 0, 0, LOCAL_TZ));    // FIXME Why accept 1 digit and refuse they other cases??
+    }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003;/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest;testDateUtil_Annotation();;public void testDateUtil_Annotation() throws Exception
+    {
+    	// Build the input JSON and expected value
+    	String json = aposToQuotes("{'date':'/2005/05/25/'}");
+    	java.util.Date expected = judate(2005, 05, 25, 0, 0, 0, 0, LOCAL_TZ);
+    	
+    	
+    	// Read it to make sure the format specified by the annotation is taken into account
+    	{
+	    	DateAsStringBean result = MAPPER.readValue(json, DateAsStringBean.class);
+	    	assertNotNull(result);
+	    	assertEquals( expected, result.date );
+    	}
+    	{
+	    	DateAsStringBean result = MAPPER.readerFor(DateAsStringBean.class)
+	    	        .with(Locale.GERMANY)
+	    	        .readValue(json);
+	    	assertNotNull(result);
+	    	assertEquals( expected, result.date );
+    	}
+    	
+        // or, via annotations
+    	{
+	        DateAsStringBeanGermany result = MAPPER.readerFor(DateAsStringBeanGermany.class)
+	        		                               .readValue(json);
+	        assertNotNull(result);
+	    	assertEquals( expected, result.date );
+    	}
+    };public void testDateUtil_Annotation() throws Exception
+    {
+        // Build the input JSON and expected value
+        String json = aposToQuotes("{'date':'/2005/05/25/'}");
+        java.util.Date expected = judate(2005, 05, 25, 0, 0, 0, 0, LOCAL_TZ);
+        
+        
+        // Read it to make sure the format specified by the annotation is taken into account
+        {
+            DateAsStringBean result = MAPPER.readValue(json, DateAsStringBean.class);
+            assertNotNull(result);
+            assertEquals( expected, result.date );
+        }
+        {
+            DateAsStringBean result = MAPPER.readerFor(DateAsStringBean.class)
+                    .with(Locale.GERMANY)
+                    .readValue(json);
+            assertNotNull(result);
+            assertEquals( expected, result.date );
+        }
+        
+        // or, via annotations
+        {
+            DateAsStringBeanGermany result = MAPPER.readerFor(DateAsStringBeanGermany.class)
+                                                   .readValue(json);
+            assertNotNull(result);
+            assertEquals( expected, result.date );
+        }
+    }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003;/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest;testDateUtil_Annotation_PatternAndLocale();;public void testDateUtil_Annotation_PatternAndLocale() throws Exception
+    {
+    	// Change the default locale set on the ObjectMapper to something else than the default.
+    	// This way we know if the default is correctly taken into account
+        ObjectMapper mapper = MAPPER.copy();
+        mapper.setLocale( Locale.ITALY );
+    	
+        // Build the JSON string. This is a mixed of ITALIAN and FRENCH (no ENGLISH because this 
+        // would be the default).
+        String json = aposToQuotes("{ 'pattern': '*1 giu 2000 01:02:03*', 'pattern_FR': '*01 juin 2000 01:02:03*', 'pattern_GMT4': '*1 giu 2000 01:02:03*', 'pattern_FR_GMT4': '*1 juin 2000 01:02:03*'}");
+    	    Annot_Pattern result = mapper.readValue(json, Annot_Pattern.class);
+    	
+    	    assertNotNull(result);
+    	    assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, LOCAL_TZ), result.pattern        );
+    	    assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, LOCAL_TZ), result.pattern_FR     );
+    	    assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, "GMT+4"),  result.pattern_GMT4    );
+    	    assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, "GMT+4"),  result.pattern_FR_GMT4 );
+    };public void testDateUtil_Annotation_PatternAndLocale() throws Exception
+    {
+        // Change the default locale set on the ObjectMapper to something else than the default.
+        // This way we know if the default is correctly taken into account
+        ObjectMapper mapper = MAPPER.copy();
+        mapper.setLocale( Locale.ITALY );
+
+        // Build the JSON string. This is a mixed of ITALIAN and FRENCH (no ENGLISH because this 
+        // would be the default).
+        String json = aposToQuotes("{ 'pattern': '*1 giu 2000 01:02:03*', 'pattern_FR': '*01 juin 2000 01:02:03*', 'pattern_GMT4': '*1 giu 2000 01:02:03*', 'pattern_FR_GMT4': '*1 juin 2000 01:02:03*'}");
+        Annot_Pattern result = mapper.readValue(json, Annot_Pattern.class);
+
+        assertNotNull(result);
+        assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, LOCAL_TZ), result.pattern        );
+        assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, LOCAL_TZ), result.pattern_FR     );
+        assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, "GMT+4"),  result.pattern_GMT4    );
+        assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, "GMT+4"),  result.pattern_FR_GMT4 );
+    }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003;/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest;testDateUtil_Annotation_TimeZone();;public void testDateUtil_Annotation_TimeZone() throws Exception
+    {
+    	// WITHOUT timezone
+    	{
+	    	String json = aposToQuotes("{ 'date': '2000-01-02T03:04:05.678' }");
+	    	Annot_TimeZone result = MAPPER.readValue(json, Annot_TimeZone.class);
+	    	
+	    	assertNotNull(result);
+	    	assertEquals( judate(2000, 1, 2, 3, 4, 5, 678, "GMT+4"), result.date);
+    	}
+    	
+    	// WITH timezone
+    	//   --> the annotation acts as the "default" timezone. The timezone specified
+    	//       in the JSON should be considered first.
+    	{
+	    	String json = aposToQuotes("{ 'date': '2000-01-02T03:04:05.678+01:00' }");
+	    	Annot_TimeZone result = MAPPER.readValue(json, Annot_TimeZone.class);
+	    	
+	    	assertNotNull(result);
+	    	assertEquals( judate(2000, 1, 2, 3, 4, 5, 678, "GMT+1"), result.date);
+    	}
+    };public void testDateUtil_Annotation_TimeZone() throws Exception
+    {
+        // WITHOUT timezone
+        {
+            String json = aposToQuotes("{ 'date': '2000-01-02T03:04:05.678' }");
+            Annot_TimeZone result = MAPPER.readValue(json, Annot_TimeZone.class);
+            
+            assertNotNull(result);
+            assertEquals( judate(2000, 1, 2, 3, 4, 5, 678, "GMT+4"), result.date);
+        }
+        
+        // WITH timezone
+        //   --> the annotation acts as the "default" timezone. The timezone specified
+        //       in the JSON should be considered first.
+        {
+            String json = aposToQuotes("{ 'date': '2000-01-02T03:04:05.678+01:00' }");
+            Annot_TimeZone result = MAPPER.readValue(json, Annot_TimeZone.class);
+            
+            assertNotNull(result);
+            assertEquals( judate(2000, 1, 2, 3, 4, 5, 678, "GMT+1"), result.date);
+        }
+    }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003;/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest;judate(int,int,int,int,int,int,int,String);;private static Date judate(int year, int month, int day, int hour, int minutes, int seconds, int millis, String tz) 
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setLenient(false);
+		cal.set(year, month-1, day, hour, minutes, seconds);
+		cal.set(Calendar.MILLISECOND, millis);
+		cal.setTimeZone(TimeZone.getTimeZone(tz));
+		
+		return cal.getTime();
+	};private static Date judate(int year, int month, int day, int hour, int minutes, int seconds, int millis, String tz) 
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setLenient(false);
+        cal.set(year, month-1, day, hour, minutes, seconds);
+        cal.set(Calendar.MILLISECOND, millis);
+        cal.setTimeZone(TimeZone.getTimeZone(tz));
+        
+        return cal.getTime();
+    }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003;/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest;verify(ObjectMapper,Object,Date);;private static void verify(ObjectMapper mapper, Object input, Date expected) throws Exception {
+		// Deserialize using the supplied ObjectMapper
+		Date actual = read(mapper, input, java.util.Date.class);
+		
+		// Test against the expected
+		if( expected==null && actual==null) {
+			return;
+		}
+		if( expected==null && actual != null) {
+			fail("Failed to deserialize "+input+", actual: '"+FORMAT.format(actual)+"', expected: <null>'");
+		}
+		if( expected != null && actual == null ) {
+			fail("Failed to deserialize "+input+", actual: <null>, expected: '"+FORMAT.format(expected)+"'");
+		}
+		if( actual.getTime() != expected.getTime() ) {
+			fail("Failed to deserialize "+input+", actual: '"+FORMAT.format(actual)+"', expected: '"+FORMAT.format(expected)+"'");
+		}
+	};private static void verify(ObjectMapper mapper, Object input, Date expected) throws Exception {
+        // Deserialize using the supplied ObjectMapper
+        Date actual = read(mapper, input, java.util.Date.class);
+
+        // Test against the expected
+        if( expected==null && actual==null) {
+            return;
+        }
+        if( expected==null && actual != null) {
+            fail("Failed to deserialize "+input+", actual: '"+FORMAT.format(actual)+"', expected: <null>'");
+        }
+        if( expected != null && actual == null ) {
+            fail("Failed to deserialize "+input+", actual: <null>, expected: '"+FORMAT.format(expected)+"'");
+        }
+        if( actual.getTime() != expected.getTime() ) {
+            fail("Failed to deserialize "+input+", actual: '"+FORMAT.format(actual)+"', expected: '"+FORMAT.format(expected)+"'");
+        }
+    }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003;/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest;failure(ObjectMapper,Object);;private static void failure(ObjectMapper mapper, Object input) throws Exception {
+		failure(mapper, input, InvalidFormatException.class);
+	};private static void failure(ObjectMapper mapper, Object input) throws Exception {
+        failure(mapper, input, InvalidFormatException.class);
+    }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003;/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest;failure(ObjectMapper,Object,Class<?extendsException>);;private static void failure(ObjectMapper mapper, Object input, Class<? extends Exception> exceptionType) throws Exception {
+		try {
+			Date date = read(mapper, input, java.util.Date.class);
+			fail("Input "+input+" should not have been accepted but was deserialized into "+FORMAT.format(date));
+		}
+		catch(Exception e) {
+			// Is it the expected exception ?
+			if( ! exceptionType.isAssignableFrom(e.getClass()) ) {
+				fail("Wrong exception thrown when reading "+input+", actual: "+e.getClass().getName() + "("+e.getMessage()+"), expected: "+exceptionType.getName());
+			}
+		}
+	};private static void failure(ObjectMapper mapper, Object input, Class<? extends Exception> exceptionType) throws Exception {
+        try {
+            Date date = read(mapper, input, java.util.Date.class);
+            fail("Input "+input+" should not have been accepted but was deserialized into "+FORMAT.format(date));
+        }
+        catch(Exception e) {
+            // Is it the expected exception ?
+            if( ! exceptionType.isAssignableFrom(e.getClass()) ) {
+                fail("Wrong exception thrown when reading "+input+", actual: "+e.getClass().getName() + "("+e.getMessage()+"), expected: "+exceptionType.getName());
+            }
+        }
+    }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003;/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest;read(ObjectMapper,Object,Class<T>);;private static <T> T read(ObjectMapper mapper, Object input, Class<T> type) throws Exception {
+		// Construct the json representation from the input
+		String json = input.toString();
+		if( !(input instanceof Number) ) {
+			json = "\""+json+"\"";
+		}
+
+		// Deserialize using the supplied ObjectMapper
+		return (T) mapper.readValue(json, type);
+	};private static <T> T read(ObjectMapper mapper, Object input, Class<T> type) throws Exception {
+        // Construct the json representation from the input
+        String json = input.toString();
+        if( !(input instanceof Number) ) {
+            json = "\""+json+"\"";
+        }
+
+        // Deserialize using the supplied ObjectMapper
+        return (T) mapper.readValue(json, type);
+    }

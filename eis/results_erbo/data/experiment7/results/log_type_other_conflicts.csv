@@ -1,0 +1,472 @@
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+  static {
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
+    mapper.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+    mapper.disable(SerializationFeature.CLOSE_CLOSEABLE);
+    mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  }
+=======
+  static {
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
+    mapper.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+    mapper.disable(SerializationFeature.CLOSE_CLOSEABLE);
+    mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  }
+
+  public static void mixinAnnotatons(Class<?> target, Class<?> mixinSource) {
+    mapper.addMixInAnnotations(target, mixinSource);
+  }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.twitter.ambrose.model.DAGNode;
+import com.twitter.ambrose.model.Event;
+import com.twitter.ambrose.model.Job;
+import com.twitter.ambrose.server.ScriptStatusServer;
+import com.twitter.ambrose.service.impl.InMemoryStatsService;
+
+/**
+ * Stateful singleton class which maintains a shared global state between hooks.
+ * It collects job information and job/workflow status reports from the hooks 
+ * and passes them to an Ambrose StatsWriteService object during the life cycle of 
+ * the running Hive script.
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ *
+ */
+public enum HiveProgressReporter {
+    
+    INSTANCE;
+
+    private static final Log LOG = LogFactory.getLog(HiveProgressReporter.class);
+   
+    private final InMemoryStatsService service;
+    private final ScriptStatusServer server;
+    
+    /** DAG and workflow progress shared between ClientStatsPublisher threads */
+    private Map<String, DAGNode<Job>> nodeIdToDAGNode;
+    private Map<String, Integer> jobIdToProgress;
+    private Map<String, String> jobIdToNodeId;
+    private List<Job> jobs;
+    private Set<String> completedJobIds;
+    
+    private int totalMRJobs;
+    private String workflowVersion;
+
+    /** holds all events within a script (for all workflows) */
+    private SortedMap<Integer, Event<?>> allEvents = new ConcurrentSkipListMap<Integer, Event<?>>();
+    
+    /** holds all dagNodes within a script (for all workflows) */
+    private SortedMap<String, DAGNode<Job>> allDagNodes = new ConcurrentSkipListMap<String, DAGNode<Job>>();
+    
+    /** internal eventMap field unfolded from from InMemoryStatsService */
+    private SortedMap<Integer, Event<?>> _eventMap;
+    
+    @SuppressWarnings("unchecked")
+    private HiveProgressReporter() {
+        service = new InMemoryStatsService();
+        server = new ScriptStatusServer(service, service);
+        init();
+        server.start();
+        initInternal();
+    }
+    
+    private void init() {
+        jobIdToProgress = new ConcurrentHashMap<String, Integer>();
+        jobIdToNodeId = new ConcurrentHashMap<String, String>();
+        jobs = new CopyOnWriteArrayList<Job>();
+        completedJobIds = new CopyOnWriteArraySet<String>();
+        totalMRJobs = 0;
+        workflowVersion = null;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void initInternal() {
+        try {
+            Field eventMapField = 
+                AmbroseHiveUtil.getInternalField(InMemoryStatsService.class, "eventMap");
+            _eventMap = (SortedMap<Integer, Event<?>>) eventMapField.get(service);
+        }
+        catch (Exception e) {
+            LOG.fatal("Can't access to eventMap/dagNodeNameMap fields at "
+                    + InMemoryStatsService.class.getName() + "!");
+            throw new RuntimeException("Incompatible Hive API found!", e);
+        }
+    }
+    
+    public static HiveProgressReporter get() {
+        return INSTANCE;
+    }
+    
+    public static void reset() {
+        INSTANCE.init();
+        INSTANCE._eventMap.clear();
+        INSTANCE.nodeIdToDAGNode= new ConcurrentSkipListMap<String, DAGNode<Job>>();
+        INSTANCE.sendDagNodeNameMap(null, INSTANCE.nodeIdToDAGNode);
+    }
+
+    public Map<String, DAGNode<Job>> getNodeIdToDAGNode() {
+        return nodeIdToDAGNode;
+    }
+
+    public void setNodeIdToDAGNode(Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        this.nodeIdToDAGNode = nodeIdToDAGNode;
+    }
+
+    public void addJobIdToProgress(String jobID, int progressUpdate) {
+        jobIdToProgress.put(jobID, progressUpdate);
+    }
+
+    public Map<String, String> getJobIdToNodeId() {
+        return jobIdToNodeId;
+    }
+
+    public void addJobIdToNodeId(String jobId, String nodeId) {
+        jobIdToNodeId.put(jobId, nodeId);
+    }
+    
+    public DAGNode<Job> getDAGNodeFromNodeId(String nodeId) {
+        return nodeIdToDAGNode.get(nodeId);
+    }
+    
+    /**
+     * Overall progress of the submitted script
+     * @return a number between 0 and 100
+     */
+    public synchronized int getOverallProgress() {
+        int sum = 0;
+        for (int progress : jobIdToProgress.values()) {
+            sum += progress;
+        }
+        return sum / totalMRJobs;
+    }
+
+    public void addJob(Job job) {
+        jobs.add(job);
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public String getWorkflowVersion() {
+        return workflowVersion;
+    }
+
+    public void setWorkflowVersion(String workflowVersion) {
+        this.workflowVersion = workflowVersion;
+    }
+
+    /**
+     * Forwards an event to the Ambrose server
+     * 
+     * @param queryId
+     * @param event
+     */
+    public void pushEvent(String queryId, Event<?> event) {
+        try {
+            service.pushEvent(queryId, event);
+        }
+        catch (IOException e) {
+            LOG.error("Couldn't send event to StatsWriteService!", e);
+        }
+    }
+    
+    /**
+     * Saves events and DAGNodes for a given workflow
+     */
+    public void saveEventStack() {
+        allEvents.putAll(_eventMap);
+        allDagNodes.putAll(service.getDagNodeNameMap(null));
+    }
+    
+    /**
+     * Restores events and DAGNodes of all workflows within a script
+     * This enables to replay all the workflows when the script finishes
+     */
+    public void restoreEventStack() {
+        _eventMap.putAll(allEvents);
+        service.getDagNodeNameMap(null).putAll(allDagNodes);
+    }
+    
+    public void sendDagNodeNameMap(String queryId, Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        try {
+            service.sendDagNodeNameMap(queryId, nodeIdToDAGNode);
+        }
+        catch (IOException e) {
+            LOG.error("Couldn't send DAGNode information to server!", e);
+        }
+    }
+    
+    public void flushJsonToDisk() {
+        try {
+            service.flushJsonToDisk();
+        }
+        catch (IOException e) {
+            LOG.warn("Couldn't write json to disk", e);
+        }
+    }
+
+    public void stopServer() {
+        LOG.info("Stopping Ambrose Server...");
+        server.stop();
+    }
+
+    public void setTotalMRJobs(int totalMRJobs) {
+        this.totalMRJobs = totalMRJobs;
+    }
+
+    public Set<String> getCompletedJobIds() {
+        return completedJobIds;
+    }
+
+    public void addCompletedJobIds(String jobID) {
+        completedJobIds.add(jobID);
+    }
+    
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/MetricsCounter.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Lookup class that constructs Counter names to be retrieved from Hive published
+ * statistics. Supports (legacy) Hadoop 0.20.x.x/1.x.x and YARN counter names.
+ * 
+ * @author Lorand Bendig <lbendig@gmail.com>
+ *
+ */
+public enum MetricsCounter {
+
+    // Task counters
+    SLOTS_MILLIS_MAPS(1), 
+    SLOTS_MILLIS_REDUCES(1),
+
+    // Filesystem counters
+    FILE_BYTES_WRITTEN(2), 
+    HDFS_BYTES_WRITTEN(2),
+
+    // Task counters
+    MAP_INPUT_RECORDS(3), 
+    MAP_OUTPUT_RECORDS(3), 
+    SPILLED_RECORDS(3), 
+    REDUCE_INPUT_RECORDS(3), 
+    REDUCE_OUTPUT_RECORDS(3);
+
+    private static final Map<MetricsCounter, String[]> lookup = new HashMap<MetricsCounter, String[]>();
+    static {
+        for (MetricsCounter hjc : MetricsCounter.values()) {
+            lookup.put(hjc, createLookupKeys(hjc));
+        }
+    }
+
+    private int type;
+    private MetricsCounter(int type) {
+        this.type = type;
+    }
+
+    private static final String JOB_COUNTER = "org.apache.hadoop.mapred.JobInProgress$Counter";
+    private static final String TASK_COUNTER = "org.apache.hadoop.mapred.Task$Counter";
+    private static final String FS_COUNTER = "FileSystemCounters";
+
+    private static final String JOB_COUNTER_YARN = "org.apache.hadoop.mapreduce.JobCounter";
+    private static final String TASK_COUNTER_YARN = "org.apache.hadoop.mapreduce.TaskCounter";
+    private static final String FS_COUNTER_YARN = "org.apache.hadoop.mapreduce.FileSystemCounter";
+
+    public static String[] get(MetricsCounter hjc) {
+        return lookup.get(hjc);
+    }
+
+    private static String[] createLookupKeys(MetricsCounter hjc) {
+        switch (hjc.type) {
+        //Job counter (type-1)
+        case 1 : return new String[]{
+                JOB_COUNTER + "::" + hjc.name(),
+                JOB_COUNTER_YARN + "::" + hjc.name()
+                };
+        //Task counter (type-2)
+        case 2 : return new String[]{
+                TASK_COUNTER + "::" + hjc.name(),
+                TASK_COUNTER_YARN + "::" + hjc.name()
+                };
+        //Filesystem counter (type-3)
+        case 3 : return new String[]{
+                FS_COUNTER + "::" + hjc.name(),
+                FS_COUNTER_YARN + "::" + hjc.name()
+                };
+        default : return null;
+        }
+    }
+
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb/hive/src/main/java/com/twitter/ambrose/hive/TaskTag.java;<<<<<<< MINE
+=======
+package com.twitter.ambrose.hive;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Additional job properties
+ * 
+ * @see org.apache.hadoop.hive.ql.exec.Task
+ * @author Lorand Bendig <lbendig@gmail.com>
+ *
+ */
+public enum TaskTag {
+    
+    COMMON_JOIN(1), 
+    CONVERTED_MAPJOIN(2), 
+    CONVERTED_LOCAL_MAPJOIN(3), 
+    BACKUP_COMMON_JOIN(4), 
+    LOCAL_MAPJOIN(5), 
+    MAPJOIN_ONLY_NOBACKUP(6);
+
+    private static final Map<Integer, String> lookup = new HashMap<Integer, String>();
+
+    static {
+        for (TaskTag s : TaskTag.values()) {
+            lookup.put(s.getId(), s.toString());
+        }
+    }
+
+    private int id;
+
+    private TaskTag(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public static String get(int code) {
+        return lookup.get(code);
+    }
+
+}>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_104bf38_e5f05a2/rev_104bf38-e5f05a2/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+=======
+  private void pushEvent(String scriptId, Event event) {
+    try {
+      statsWriteService.pushEvent(scriptId, event);
+    } catch (IOException e) {
+      log.error("Couldn't send event to StatsWriteService", e);
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private void addMapReduceJobState(PigJob pigJob) {
+    JobClient jobClientLocal = getJobClient();
+
+    try {
+      String id = pigJob.getId();
+      RunningJob runningJob = null;
+      try {
+    	  runningJob = jobClientLocal.getJob(id);
+      } catch (Exception e) {
+    	  log.warn("Exception while querying job status for jobId=" + id +" message: " + e.getMessage());
+    	  log.debug(e);
+    	  return;
+      }
+      
+      if (runningJob == null) {
+          log.warn("Couldn't find job status for jobId=" + id);
+          return;
+      }
+      
+      Properties jobConfProperties = getJobConfFromFile(runningJob);
+
+      JobID jobID = null;
+      try {
+        jobID = runningJob.getID();
+      } catch (NullPointerException e) {
+        log.warn("Couldn't get jobID for runningJob.");
+        return;
+      }
+      
+      TaskReport[] mapTaskReport = jobClientLocal.getMapTaskReports(jobID);
+      TaskReport[] reduceTaskReport = jobClientLocal.getReduceTaskReports(jobID);
+      if (jobConfProperties != null && jobConfProperties.size() > 0) {
+        pigJob.setConfiguration(jobConfProperties);
+      }
+      pigJob.setMapReduceJobState(
+          new MapReduceJobState(runningJob, mapTaskReport, reduceTaskReport));
+    } catch (IOException e) {
+      log.warn("Error occurred when retrieving job progress info. ", e);
+    }
+  }
+
+  /**
+   * Get the configurations at the beginning of the job flow, it will contain information
+   * about the map/reduce plan and decoded pig script.
+   * @param runningJob
+   * @return Properties - configuration properties of the job
+   */
+  private Properties getJobConfFromFile(RunningJob runningJob) {
+    Properties jobConfProperties = new Properties();
+    try {
+      log.info("RunningJob Configuration File location: " + runningJob.getJobFile());
+      Path path = new Path(runningJob.getJobFile());
+      Configuration conf = new Configuration(false);
+      FileSystem fileSystem = FileSystem.get(new Configuration());
+      InputStream inputStream = fileSystem.open(path);
+      conf.addResource(inputStream);
+
+      for (Map.Entry<String, String> entry : conf) {
+        if (entry.getKey().equals("pig.mapPlan")
+            || entry.getKey().equals("pig.reducePlan")) {
+          jobConfProperties.setProperty(entry.getKey(),
+              ObjectSerializer.deserialize(entry.getValue()).toString());
+        } else {
+          jobConfProperties.setProperty(entry.getKey(), entry.getValue());
+        }
+      }
+    } catch (FileNotFoundException e) {
+      log.warn("Configuration file not found for old jobsflows.");
+    } catch (IOException e) {
+      log.warn("Error occurred when retrieving configuration info.", e);
+    }
+    return jobConfProperties;
+  }
+
+>>>>>>> YOURS

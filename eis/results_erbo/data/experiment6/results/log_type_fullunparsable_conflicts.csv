@@ -1,0 +1,2824 @@
+/home/ramdisk/experiment6/projects/databus/revisions/rev_3744018_5eec32f/rev_3744018-5eec32f/databus2-relay/databus2-relay-impl/src/test/java/com/linkedin/databus2/relay/TestDatabusRelayMain.java;<<<<<<< MINE
+		log.setLevel(Level.DEBUG);
+=======
+		//log.setLevel(Level.DEBUG);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleanerQueryExecutor.java;<<<<<<< MINE
+  public BootstrapDBCleanerQueryExecutor(Connection conn, BootstrapDBCleanerQueryHelper bootstrapDBCleanerQueryHelper)
+=======
+  public BootstrapDBCleanerQueryExecutor(String name, Connection conn, BootstrapDBCleanerQueryHelper bootstrapDBCleanerQueryHelper)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleanerQueryExecutor.java;<<<<<<< MINE
+        LOG.error("Unable to delete log table :" + logInfo.getLogTable());
+=======
+        LOG.error("Unable to delete log table :" + logInfo.getLogTable(), ex);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapReadOnlyConfig.java;<<<<<<< MINE
+	  return "BootstrapReadOnlyConfig [_bootstrapDBUsername="
+	  + _bootstrapDBUsername + ", _bootstrapDBPassword=xxxxxx"
+	  + ", _bootstrapDBHostname="
+=======
+	  return "BootstrapReadOnlyConfig [_bootstrapDBHostname="
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+    _eventFactory = new DbusEventV1Factory();
+    Connection conn = getOrCreateConnection();
+=======
+    _cleaners = new HashMap<String, BootstrapDBSingleSourceCleaner>();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+      try
+      {
+        _sources = _bootstrapDao.getSourceIdAndStatusFromName(sources, false);
+      } catch (BootstrapDatabaseTooOldException bto)
+=======
+      for (String source: sources)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+        LOG.error(
+            "Not expected to receive this exception as activeCheck is turned-off",
+            bto);
+        throw new RuntimeException(bto);
+=======
+        String perSourceName = name + "_" + source;
+        DatabusThreadBase perSourceApplier = _appliers.get(source);
+        BootstrapDBSingleSourceCleaner cleaner =
+            new BootstrapDBSingleSourceCleaner(perSourceName,
+                source,
+                perSourceApplier,
+                config,
+                bootstrapConfig);
+        _cleaners.put(source,cleaner);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+    _bootstrapDBCleanerQueryHelper = BootstrapDBCleanerQueryHelper.getInstance();
+    _bootstrapDBCleanerQueryExecutor = new BootstrapDBCleanerQueryExecutor(conn, _bootstrapDBCleanerQueryHelper);
+=======
+    ThreadFactory tf = new NamedThreadFactory(name);
+    _cleanerThreadPoolService = Executors.newCachedThreadPool(tf);
+    _cleanerFutures =  new HashMap<String, Future<?>>();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+  /*
+   * @return a bootstrapDB connection object. Note: The connection object is
+   * still owned by BootstrapConn. SO dont close it
+   */
+  public Connection getOrCreateConnection() throws SQLException
+=======
+  public synchronized void doClean()
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+    Connection conn = null;
+
+    if (_bootstrapDao == null)
+=======
+    // Invoke doClean on each of the individual single source cleaners
+    for (Map.Entry<String, BootstrapDBSingleSourceCleaner> entry : _cleaners.entrySet())
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+      LOG.info("<<<< Creating Bootstrap Connection!! >>>>");
+      BootstrapConn dbConn = new BootstrapConn();
+      final boolean autoCommit = true;
+      _bootstrapDao = new BootstrapDBMetaDataDAO(dbConn,
+          _bootstrapConfig.getBootstrapDBHostname(),
+          _bootstrapConfig.getBootstrapDBUsername(),
+          _bootstrapConfig.getBootstrapDBPassword(),
+          _bootstrapConfig.getBootstrapDBName(), autoCommit);
+      try
+=======
+      String source = entry.getKey();
+      BootstrapDBSingleSourceCleaner singleSourceCleaner = entry.getValue();
+      Future<?> c = _cleanerFutures.get(source);
+      if (c != null && !c.isDone())
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+        dbConn.initBootstrapConn(autoCommit,
+            _bootstrapConfig.getBootstrapDBUsername(),
+            _bootstrapConfig.getBootstrapDBPassword(),
+            _bootstrapConfig.getBootstrapDBHostname(),
+            _bootstrapConfig.getBootstrapDBName());
+      } catch (Exception e)
+=======
+        LOG.info("Skipping running cleaner as it is already running for source = " + source);
+      }
+      else
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+        LOG.fatal("Unable to open BootstrapDB Connection !!", e);
+        throw new RuntimeException(
+            "Got exception when getting bootstrap DB Connection.", e);
+=======
+        LOG.info("Submitting a cleaner task for source = " + source);
+        Future<?> cleaner = _cleanerThreadPoolService.submit(singleSourceCleaner);
+        _cleanerFutures.put(source, cleaner);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+  /**
+   * Return the milli-second threshold for delete criteria.
+   *
+   * @param config
+   *          RetentionConfig
+   * @return milliSecThreshold
+   */
+  private long getMilliSecTime(RetentionStaticConfig config)
+=======
+  public synchronized boolean isAnyCleanerRunning()
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+    long qty = config.getRetentionQuantity();
+    long milliSecQty = -1;
+
+    switch (config.getRetentiontype())
+=======
+    for (Map.Entry<String, Future<?>> entry : _cleanerFutures.entrySet())
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+    case RETENTION_SECONDS:
+      milliSecQty = qty * MILLISEC_IN_SECONDS;
+      break;
+
+    default:
+      throw new RuntimeException("Retention Config (" + config
+          + ") expected to be time based but is not !!");
+
+=======
+      Future<?> cleanerFuture = entry.getValue();
+      if (!cleanerFuture.isDone())
+      {
+        LOG.debug("Cleaner process is running for source = " + entry.getKey());
+        return true;
+      }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+    return milliSecQty;
+=======
+    LOG.info("There are no cleaner processes running");
+    return false;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+  public long filterCandidateLogInfo(short srcId,
+      List<BootstrapLogInfo> candidateLogsInfo, RetentionStaticConfig config)
+      throws SQLException
+=======
+  public synchronized void sleepTillNoCleanerIsRunning()
+  throws DatabusException, InterruptedException
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+    switch (config.getRetentiontype())
+    {
+    case NO_CLEANUP:
+      return -1;
+    case RETENTION_LOGS:
+=======
+    final long maxWaitTime = TERMINATION_TIMEOUT_IN_MS;
+    long waitTime = 0;
+    while (isAnyCleanerRunning())
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+      Iterator<BootstrapLogInfo> itr = candidateLogsInfo.iterator();
+      BootstrapLogInfo lastValidLog = null;
+      int i = 0;
+      while (i < config.getRetentionQuantity() && itr.hasNext())
+=======
+      if (waitTime >= TERMINATION_TIMEOUT_IN_MS)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+        BootstrapLogInfo log = itr.next();
+        LOG.info("Removing the log table :" + log.getLogTable()
+            + " from the delete List as it is too recent. Retaining :"
+            + config.getRetentionQuantity() + " logs");
+        itr.remove();
+        lastValidLog = log;
+        i++;
+=======
+        throw new DatabusException("The cleaners have not terminated within " + maxWaitTime + " ms");
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+      _lastValidLogMap.put(srcId, lastValidLog);
+      break;
+=======
+      final long sleepIntervalInMs = 100;
+      Thread.sleep(sleepIntervalInMs);
+      waitTime += sleepIntervalInMs;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+    case RETENTION_SECONDS:
+=======
+  public void close()
+  {
+    List<Runnable> incompleteCleaners = _cleanerThreadPoolService.shutdownNow();
+    if (incompleteCleaners.size() > 0)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+      long quantity = config.getRetentionQuantity();
+      LOG.info("Retaining tables which could contain events which is less than "
+          + quantity + " seconds old !!");
+      long currTs = System.currentTimeMillis() * NANOSEC_IN_MILLISECONDS;
+      long nanoSecQty = getMilliSecTime(config) * NANOSEC_IN_MILLISECONDS;
+      long threshold = (currTs - nanoSecQty);
+
+      LOG.info("Removing tables from the delete-list whose last row has timestamp newer than :"
+          + threshold + " nanosecs");
+
+      Iterator<BootstrapLogInfo> itr = candidateLogsInfo.iterator();
+      BootstrapLogInfo lastValidLog = null;
+      LOG.info("Timestamp Threshold for src id :" + srcId + " is :" + threshold
+          + ", Retention Config " + config + "(" + nanoSecQty + " nanosecs)");
+
+      while (itr.hasNext())
+=======
+      // The cleaners that have not started as of initiating a shutdown, will not be started
+      // Not an error, hence logging for informational purpose
+      LOG.info("Number of cleaners that have not completed = " + incompleteCleaners.size());
+      LOG.info("Printing out sources for which cleaners what not completed ");
+      for (Runnable r: incompleteCleaners)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+        BootstrapLogInfo log = itr.next();
+
+        long timestamp = _bootstrapDBCleanerQueryExecutor.getNanoTimestampOfLastEventinLog(log, _eventFactory);
+
+        if (timestamp < threshold)
+        {
+          LOG.info("Reached the log table whose timestamp (" + timestamp
+              + ") is less than the threshold (" + threshold + ").");
+          break;
+        }
+        else
+        {
+          LOG.info("Removing the log table :"
+              + log.getLogTable()
+              + " from the delete List as it is too recent. Last Event Timestamp :"
+              + timestamp + ", threshold :" + threshold);
+          lastValidLog = log;
+          itr.remove();
+        }
+=======
+        BootstrapDBSingleSourceCleaner bsc = (BootstrapDBSingleSourceCleaner) r;
+        LOG.error(bsc.getName());
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+      isCleaning = true;
+
+      for (SourceStatusInfo s : _sources)
+      {
+        BootstrapDBType type = _cleanerConfig.getBootstrapType(s.getSrcName());
+
+        LOG.info("Cleaner running for source :" + s.getSrcName() + "("
+            + s.getSrcId() + ") with bootstrapDB type :" + type);
+
+        BootstrapLogInfo logInfo = _bootstrapDBCleanerQueryExecutor.getThresholdWindowSCN(type, s.getSrcId());
+
+        if (null == logInfo)
+        {
+          LOG.info("No WindowSCN. Nothing to cleanup for source : "
+              + s.getSrcName());
+          continue;
+        }
+
+        LOG.info("LOG info with lowest windowSCN :" + logInfo);
+
+        LOG.info("Begin phase 1 : Gather candidate loginfo :");
+        List<BootstrapLogInfo> candidateLogsInfo = _bootstrapDBCleanerQueryExecutor.getCandidateLogsInfo(
+            logInfo.getMinWindowSCN(), (short) (s.getSrcId()));
+        if ((null == candidateLogsInfo) || (candidateLogsInfo.isEmpty()))
+        {
+          LOG.info("No logs to cleanup for source :" + s.getSrcName() + "("
+              + s.getSrcId() + ")");
+          continue;
+        }
+        LOG.info("End phase 1 : Gather candidate loginfo :");
+
+        LOG.info("Initial Candidate Set for Source :" + s.getSrcName()
+            + " is :" + candidateLogsInfo);
+        RetentionStaticConfig rConf = _cleanerConfig.getRetentionConfig(s
+            .getSrcName());
+        LOG.info("Retention Config for source :" + s.getSrcName() + " is :"
+            + rConf);
+
+        LOG.info("Begin phase 2 : Filter based on retention config :");
+        long scn = filterCandidateLogInfo((short) s.getSrcId(),
+            candidateLogsInfo,
+            _cleanerConfig.getRetentionConfig(s.getSrcName()));
+
+        LOG.info("Log tables to be deleted for source :" + s.getSrcName() + "("
+            + s.getSrcId() + ") are :" + candidateLogsInfo
+            + ", Max SCN of deleted logs:" + scn);
+        LOG.info("End phase 2 : Filter based on retention config :");
+
+        if ((scn <= 0) || (candidateLogsInfo.isEmpty()))
+        {
+          LOG.info("Source :" + s.getSrcName() + "(" + s.getSrcId()
+              + ") No log tables to be deleted !! MaxSCN : " + scn
+              + ", candidateLogs :" + candidateLogsInfo);
+          continue;
+        }
+
+        LOG.info("Begin phase 3 : Updating Meta Info :");
+        BootstrapLogInfo firstValidLog = _bootstrapDBCleanerQueryExecutor.getFirstLogTableWithGreaterSCN(
+            (short) s.getSrcId(), scn);
+        _bootstrapDBCleanerQueryExecutor.updateSource(firstValidLog);
+        LOG.info("End phase 3 : Updating Meta Info :");
+
+        LOG.info("Begin phase 4 : Deleting Log tables :");
+        // marking logs as done; if any failures; there is a chance that the
+        // logs have to be cleaned up later
+        _bootstrapDBCleanerQueryExecutor.markDeleted(candidateLogsInfo);
+        _bootstrapDBCleanerQueryExecutor.dropTables(candidateLogsInfo);
+        LOG.info("End phase 4 : Deleting Log tables :");
+
+        if ((_cleanerConfig.getBootstrapType(s.getSrcName()) == BootstrapDBType.BOOTSTRAP_CATCHUP_APPLIER_RUNNING)
+            && ((_appliers.size() != 0) || _cleanerConfig.forceTabTableCleanup(s
+                .getSrcName())))
+        {
+          LOG.info("Source :" + s.getSrcName() + "(" + s.getSrcId()
+              + ") is running in catchup_applier_running mode. "
+              + "Will delete all rows whose scn is less than or equal to "
+              + scn);
+          applier = _appliers.get(s.getSrcName());
+          if ((null != applier) && (applier.isAlive()))
+          {
+            LOG.info("Begin phase 5 : Pausing Applier and deleting Rows from tab table :");
+
+            LOG.info("Requesting applier to pause !!");
+            applier.pause();
+            LOG.info("Applier paused !!");
+          }
+
+          try
+          {
+            // mark ahead of time; if this doesn't work this time; it will next
+            // cycle
+            _bootstrapDao.updateMinScnOfSnapshot(s.getSrcId(), scn);
+            String srcTable = _bootstrapDBCleanerQueryHelper.getSrcTable(s.getSrcId());
+            int numRowsDeleted = _bootstrapDBCleanerQueryExecutor.deleteTable(srcTable, scn);
+            LOG.info("Number of Rows deleted for source  :" + s.getSrcName()
+                + "(" + s.getSrcId() + ") :" + numRowsDeleted);
+            if (numRowsDeleted > 0
+                && _cleanerConfig.isOptimizeTableEnabled(s.getSrcName()))
+            {
+              LOG.info("Optimizing table to reclaim space for source :"
+                  + s.getSrcName() + "(" + s.getSrcId() + ")");
+              _bootstrapDBCleanerQueryExecutor.optimizeTable(srcTable);
+            }
+          } finally
+          {
+            if ((null != applier) && (applier.isAlive()))
+            {
+              LOG.info("Requesting applier to resume !!");
+              applier.unpause();
+              LOG.info("Applier resumed !!");
+            }
+          }
+
+          LOG.info("End phase 5 : Deleting Rows from tab table :");
+        }
+
+        LOG.info("Cleaner done for source :" + s.getSrcName() + "("
+            + s.getSrcId() + ")");
+      }
+    } catch (SQLException ex)
+    {
+      LOG.error("Got SQL exception while cleaning bootstrapDB !!", ex);
+    } catch (InterruptedException ie)
+=======
+      boolean hasTerminated = _cleanerThreadPoolService.awaitTermination(TERMINATION_TIMEOUT_IN_MS, TimeUnit.MILLISECONDS);
+      LOG.info("Result of terminating cleaner thread pool service: " + (hasTerminated ? "success" : "failure"));
+    } catch (InterruptedException e)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+      LOG.error("Got interrupted exception while cleaning bootstrapDB !!", ie);
+=======
+      LOG.error("Cleaner thread pool service termination has been interrupted", e);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+      isCleaning = false;
+=======
+      for (Map.Entry<String, BootstrapDBSingleSourceCleaner> entry : _cleaners.entrySet())
+      {
+        String source = entry.getKey();
+        BootstrapDBSingleSourceCleaner singleSourceCleaner = entry.getValue();
+        LOG.info("Invoking close on cleaner for source = " + source);
+        singleSourceCleaner.close();
+      }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/DatabusBootstrapProducer.java;<<<<<<< MINE
+    BootstrapDBCleaner dbCleaner = new BootstrapDBCleaner(dbCleanerName,
+=======
+    _dbCleaner = new BootstrapDBCleaner(dbCleanerName,
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/DatabusBootstrapProducer.java;<<<<<<< MINE
+    _dbPeriodicTriggerThread = new BootstrapDBPeriodicTriggerThread(dbCleaner,
+=======
+    _dbPeriodicTriggerThread = new BootstrapDBPeriodicTriggerThread(_dbCleaner,
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/DatabusBootstrapProducer.java;<<<<<<< MINE
+    _dbDiskSpaceTriggerThread = new BootstrapDBDiskSpaceTriggerThread(dbCleaner,
+=======
+    _dbDiskSpaceTriggerThread = new BootstrapDBDiskSpaceTriggerThread(_dbCleaner,
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/BootstrapDBDiskSpaceTriggerThread.java;<<<<<<< MINE
+          if (!_cleaner.isCleanerRunning())
+          {
+            _cleaner.doClean();
+          }
+          else
+          {
+            LOG.info("Skipping as cleaner is already running !!");
+          }
+=======
+          _cleaner.doClean();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/BootstrapApplierThread.java;<<<<<<< MINE
+    while (running && !isShutdownRequested())
+=======
+    while (_isRunning && !isShutdownRequested())
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/BootstrapApplierThread.java;<<<<<<< MINE
+            running = false;
+=======
+            _isRunning = false;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/BootstrapApplierThread.java;<<<<<<< MINE
+      SQLException, InterruptedException
+=======
+      SQLException
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/BootstrapDBPeriodicTriggerThread.java;<<<<<<< MINE
+        if (!_cleaner.isCleanerRunning())
+        {
+          roundBeginTime = System.currentTimeMillis();
+          _cleaner.doClean();
+          roundEndTime = System.currentTimeMillis();
+        }
+        else
+        {
+          LOG.info("Skipping this round as cleaner is already running !!");
+        }
+=======
+        roundBeginTime = System.currentTimeMillis();
+        _cleaner.doClean();
+        roundEndTime = System.currentTimeMillis();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/test/DbusEventAppender.java;<<<<<<< MINE
+  public void addBootstrapCheckpointEventToBuffer(long lastScn, long dataEventCount, int numCheckpoints)
+=======
+  public void addBootstrapCheckpointEventToBuffer(long lastScn, long dataEventCount,int numCheckpoints)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/test/DbusEventAppender.java;<<<<<<< MINE
+    Checkpoint cp = _bstCheckpointHandler.createInitialBootstrapCheckpoint(null, 0L);
+    cp.setBootstrapStartScn(0L);
+=======
+    Checkpoint cp = (_bootstrapCheckpoint == null) ? _bstCheckpointHandler.createInitialBootstrapCheckpoint(null, 0L): _bootstrapCheckpoint;
+    if (cp.getBootstrapStartScn()==Checkpoint.UNSET_BOOTSTRAP_START_SCN)
+    {
+      cp.setBootstrapStartScn(0L);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/test/DbusEventAppender.java;<<<<<<< MINE
+           //note: start should provide the first preceding scn;
+           // Test DDSDBUS-1109 by skipping the start() call. The scn Index should be set for streamEvents() to work correctly
+          if (_invokeStartOnBuffer)
+          {
+            _buffer.start(evScn-1);
+          }
+          _buffer.startEvents();
+=======
+            //note: start should provide the first preceding scn;
+            // Test DDSDBUS-1109 by skipping the start() call. The scn Index should be set for streamEvents() to work correctly
+            if (_invokeStartOnBuffer)
+            {
+              _buffer.start(evScn-1);
+            }
+            _buffer.startEvents();
+            if (_bootstrapCheckpoint != null)
+            {
+              //add the initial checkpoint event to dispatcher's buffer to simulate bootstrap
+              addBootstrapCheckpointEventToBuffer(evScn-1,dataEventCount,1);
+            }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+ *                                  "flexible" checkpoint (see below).
+=======
+ *                                  "flexible" checkpoint (see below). If the SCN is 0, and tsNescs is greater than 0
+ *                                  then the relay may (if capable) stream events that have timestamp greater than
+ *                                  or equal to tsNsecs. However, the relay MUST ensure that it does not miss any
+ *                                  events that have a timestamp greater than or equal to tsNsecs.
+ *                                  TODO: Until we have this capability in the relays we don't have to define the exact behavior
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+      endEvents(e.sequence());
+=======
+      endEvents(e.sequence(), e.timestampInNanos());
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+  public void endEvents(long endWindowScn)
+=======
+  private void endEvents(long endWindowScn, long nsecs)
+  {
+    setFullyConsumed(endWindowScn);
+    setTsNsecs(nsecs);
+  }
+
+  private void setFullyConsumed(long endWindowScn)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+    endEvents(currentWindowScn);
+=======
+    setFullyConsumed(currentWindowScn);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+        && (getWindowScn() < 0))
+=======
+        && (getWindowScn() < 0) && getTsNsecs() == UNSET_TS_NSECS)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus2/relay/config/PhysicalSourceStaticConfig.java;<<<<<<< MINE
+    sb.append("name=").append(_name).append(";part=").append(_partiton).append(";uri=").append(_uri)
+    .append(";role=").append(_role).append(";rsKey=").append(_resourceKey).append(";#src=").append(_sources.length);
+=======
+    sb.append("name=").append(_name).append(";part=").append(_partiton).append(";uri=")
+    .append(StringUtils.sanitizeDbUri(_uri))
+    .append(";role=").append(_role).append(";rsKey=").append(_resourceKey).append(";#src=")
+    .append(_sources.length);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/LoggingConsumer.java;<<<<<<< MINE
+        String schemaName = (null == payloadSchema) ? "unknown source: " + e.srcId() :
+=======
+        String schemaName = (null == payloadSchema) ? "unknown source: " + e.getSourceId() :
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/LoggingConsumer.java;<<<<<<< MINE
+          keyStr = e.isKeyString() ? new String(e.keyBytes(), "UTF-8") : Long.toString(e.key());
+=======
+          if (e.isKeyString())
+          {
+            keyStr = new String(e.keyBytes(), "UTF-8");
+          }
+          else if (e.isKeyNumber())
+          {
+            keyStr = Long.toString(e.key());
+          }
+          else if (e.isKeySchema())
+          {
+            // TODO Fix to use a decoder (DDSDBUS-2076)
+            DbusEventPart keyPart = e.getKeyPart();
+            keyStr = keyPart.toString();
+          }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+  // used only by tests
+  public MultiConsumerCallback(List<DatabusV2ConsumerRegistration> registrations,
+          ExecutorService executorService,
+          long timeBudgetMs,
+          ConsumerCallbackFactory<DatabusCombinedConsumer> callbackFactory
+         )
+=======
+  // used only by tests
+  public MultiConsumerCallback(List<DatabusV2ConsumerRegistration> registrations,
+                               ExecutorService executorService,
+                               long timeBudgetMs,
+                               ConsumerCallbackFactory<DatabusCombinedConsumer> callbackFactory)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+                               ConsumerCallbackStats consumerStats,
+                               LoggingConsumer loggingConsumer)
+=======
+                               ConsumerCallbackStats consumerStats,    // specific to relay or bootstrap mode, not both
+                               UnifiedClientStats unifiedClientStats,  // used in both relay and bootstrap mode
+                               LoggingConsumer loggingConsumer)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    // TODO:  Should we sniff registrations list and make sure no LoggingConsumers in there?
+    //        Sole non-test caller is DatabusSourcesConnection, so as long as LoggingConsumer
+    //        is not available to end-users, no need...
+    _loggingConsumer = loggingConsumer;  // may be null in unit tests
+=======
+    _unifiedClientStats = unifiedClientStats;
+    _loggingConsumer = loggingConsumer;  // may be null in unit tests
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+    TestUtil.setupLogging(true, "TestMultiConsumerCallback-testng.txt", Level.OFF);
+=======
+    TestUtil.setupLogging(true, "/tmp/TestMultiConsumerCallback.txt", Level.OFF);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+    log.info("test2ConsumerTimeout: start");
+=======
+    log.info("\n\nstarting test2ConsumerTimeout()");
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+      super(consumers, executorService, timeBudgetMs, callbackFactory, consumerStats, null);
+=======
+      super(consumers, executorService, timeBudgetMs, callbackFactory, consumerStats, unifiedClientStats, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;<<<<<<< MINE
+    // TODO:  nuke?  no Databus callers at all; is this a public (external) API?
+    public DatabusV2RegistrationImpl(RegistrationId id,
+                                     DatabusHttpClientImpl client)
+    {
+    	this(id, client, client.getCheckpointPersistenceProvider(), null, null);
+    }
+
+    public DatabusV2RegistrationImpl(RegistrationId id,
+                                     DatabusHttpClientImpl client,
+                                     CheckpointPersistenceProvider ckptProvider)
+    {
+    	this(id, client, ckptProvider, null, null);
+    }
+
+
+    // TODO:  make private?  no other Databus callers except two ctors above; is this a public (external) API?
+    public DatabusV2RegistrationImpl(RegistrationId id,
+                                     DatabusHttpClientImpl client,
+                                     CheckpointPersistenceProvider ckptProvider,
+                                     String[] sources,
+                                     AbstractDatabusCombinedConsumer[] consumers)
+    {
+    	_id = id;
+    	_status = new Status();
+    	_client = client;
+    	_checkpointPersistenceProvider = ckptProvider;
+    	_state = RegistrationState.INIT;
+    	_sources = new ArrayList<String>();
+    	_consumers = new ArrayList<DatabusCombinedConsumer>();
+        _log = Logger.getLogger(getClass().getName() +
+                			(null  == _id ? "" : "." + _id.getId()));
+        if ( null != sources)
+        	_sources.addAll(Arrays.asList(sources));
+
+    	if ( null != consumers)
+    		_consumers.addAll(Arrays.asList(consumers));
+    }
+
+    /**
+    *
+    * Add sources to a given registration object
+    * Adding an already existent subscription, will be a no-op.
+    *
+    * This does not create any new the DatabusRegistration object ( only modifies the current one ).
+    * Hence the id of the registration remains the same
+    *
+    * @throws IllegalStateException if this registration has already been started.
+    */
+   public synchronized void addSubscriptions(String ... sources)
+           throws IllegalStateException
+   {
+	   	if ( ! _state.isPreStartState())
+	   		throw new IllegalStateException("Cannot add sources when state is running or shut down. Current State :" + _state);
+
+	   	for (String s : sources)
+	   		if (! _sources.contains(s))
+	   			_sources.add(s);
+   }
+
+   /**
+    *
+    * Remove subscriptions from a given registration object
+    * Removing a non-existent subscription, will be a no-op.
+    *
+    * @throws IllegalStateException if this registration has already been started
+    */
+   public synchronized void removeSubscriptions(String ... sources)
+           throws IllegalStateException
+   {
+	   	if ( ! _state.isRunning())
+	   		throw new IllegalStateException("Cannot remove sources when state is running. Current State :" + _state);
+
+	   	for (String s : sources)
+	   		_sources.remove(s);
+   }
+
+    /**
+    *
+    * Adds the specified consumers associated with this registration
+    * The added consumers will have the same subscription(s) and filter parameters as the other consumers
+    * associated with this registration
+    *
+    */
+   public synchronized void addDatabusConsumers(Collection<DatabusCombinedConsumer> consumers)
+   		throws IllegalStateException
+   {
+	   if (! _state.isPreStartState())
+		   throw new IllegalStateException("Cannot add consumers when state is running/shutdown. Current State :" + _state);
+
+	   for (DatabusCombinedConsumer c : consumers)
+		   if (! _consumers.contains(c))
+			   _consumers.add(c);
+   }
+
+   /**
+    *
+    * Removes the specified consumers associated with this registration.
+    *
+    **/
+   public synchronized void removeDatabusConsumers(Collection<AbstractDatabusCombinedConsumer> consumers)
+   {
+
+	   if ( ! _state.isRunning())
+		   throw new IllegalStateException("Cannot remove consumers when state is running. Current State :" + _state);
+
+	   _consumers.removeAll(consumers);
+
+   }
+
+   /**
+    * Callback when registration is added to client Registration Set.
+    * @param state
+    */
+   public synchronized void onRegister()
+   {
+   	_state = RegistrationState.REGISTERED;
+   }
+
+    /**
+     * Initialize Statistics Collectors
+     */
+    protected synchronized void initializeStatsCollectors()
+    {
+	  MBeanServer mbeanServer =  null;
+
+      if ( null != _client )
+	  {
+	      mbeanServer = _client.getMbeanServer();
+	  }
+
+	  int ownerId = null == _client ? -1 : _client.getContainerStaticConfig().getId();
+	  String regId = null != _id ? _id.getId() : "unknownReg";
+
+	  initializeStatsCollectors(regId, ownerId, mbeanServer);
+
+	  if (null != _client)
+	  {
+        _client.getBootstrapEventsStats().addStatsCollector(regId, _bootstrapEventsStatsCollector );
+        _client.getInBoundStatsCollectors().addStatsCollector(regId, _inboundEventsStatsCollector);
+        _client.getRelayConsumerStatsCollectors().addStatsCollector(regId, _relayConsumerStats);
+        _client.getBootstrapConsumerStatsCollectors().addStatsCollector(regId, _bootstrapConsumerStats);
+	  }
+    }
+
+    /**
+     * Initialize Statistics Collectors
+     */
+    protected void initializeStatsCollectors(String regId, int ownerId, MBeanServer mbeanServer)
+    {
+	  _inboundEventsStatsCollector =
+	      new DbusEventsStatisticsCollector(ownerId,
+	                                        regId + STREAM_EVENT_STATS_SUFFIX_NAME,
+	                                        true,
+	                                        false,
+	                                        mbeanServer);
+	  _bootstrapEventsStatsCollector =
+	      new DbusEventsStatisticsCollector(ownerId,
+	                                        regId + BOOTSTRAP_EVENT_STATS_SUFFIX_NAME,
+	                                        true,
+	                                        false,
+	                                        mbeanServer);
+	  _relayConsumerStats =
+	      new ConsumerCallbackStats(ownerId, regId + RELAY_CONSUMER_STATS_SUFFIX_NAME,
+	                                regId, true, false, new ConsumerCallbackStatsEvent());
+      _bootstrapConsumerStats =
+          new ConsumerCallbackStats(ownerId, regId + BOOTSTRAP_CONSUMER_STATS_SUFFIX_NAME,
+                                    regId, true, false, new ConsumerCallbackStatsEvent());
+    }
+
+	@Override
+	public synchronized boolean start()
+			 throws IllegalStateException, DatabusClientException
+	{
+		_log.info("Starting registration (" + toString() + ") !!");
+
+		if (_state.isRunning())
+		{
+			_log.info("Registration (" + _id + ") already started !!");
+			return false;
+		}
+
+
+		if ( _state != RegistrationState.REGISTERED)
+			throw new IllegalStateException("Registration (" + _id + ") not in startable state !! Current State is :" + _state);
+
+		if ( (null == _sources) || (_sources.isEmpty()))
+			throw new DatabusClientException("Registration (" + _id + ") does not have any sources to start !!");
+
+		if ( (null == _consumers) || (_consumers.isEmpty()))
+			throw new DatabusClientException("Registration (" + _id + ") does not have any consumers to start !!");
+
+		List<ServerInfo> relays = _client.getRelays();
+		List<ServerInfo> bootstrapServers = _client.getBootstrapServices();
+
+		List<DatabusCombinedConsumer> streamConsumers = new ArrayList<DatabusCombinedConsumer>();
+		List<DatabusCombinedConsumer> bootstrapConsumers = new ArrayList<DatabusCombinedConsumer>();
+
+		if ( (null == relays) || ( relays.isEmpty()))
+			throw new DatabusClientException("No configured relays in the client to start");
+
+		Set<ServerInfo> candidateRelays = new HashSet<ServerInfo>();
+
+		for (ServerInfo s : relays)
+		{
+			if (canServe(s, _sources))
+				candidateRelays.add(s);
+		}
+
+		if (candidateRelays.isEmpty())
+			throw new DatabusClientException("No candidate relays for source : " + _sources);
+
+		streamConsumers.addAll(_consumers);
+
+		boolean canConsumerBootstrap = false;
+		_streamConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();
+		_streamConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(streamConsumers, _sources, _filterConfig));
+
+		for (DatabusCombinedConsumer c : _consumers)
+		{
+			if ( c.canBootstrap())
+			{
+				canConsumerBootstrap = true;
+				bootstrapConsumers.add(c);
+			}
+		}
+
+		boolean enableBootstrap = _client.getClientStaticConfig().getRuntime().getBootstrap().isEnabled();
+		Set<ServerInfo> candidateBootstrapServers = new HashSet<ServerInfo>();
+
+		if (enableBootstrap && canConsumerBootstrap)
+		{
+			if ( (null == bootstrapServers) || ( bootstrapServers.isEmpty()))
+				throw new DatabusClientException("No configured bootstrap servers in the client to start");
+
+			for (ServerInfo s : bootstrapServers)
+			{
+				if (canServe(s,_sources))
+					candidateBootstrapServers.add(s);
+			}
+
+			if (candidateBootstrapServers.isEmpty())
+				throw new DatabusClientException("No candidate bootstrap servers for source : " + _sources);
+
+			_bootstrapConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();;
+			_bootstrapConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(bootstrapConsumers, _sources, _filterConfig));
+		}
+
+		// All validations done. Setup and start
+		initializeStatsCollectors();
+
+		DatabusSourcesConnection.StaticConfig connConfig =
+				_client.getClientStaticConfig().getConnection(_sources);
+
+
+		if (null == connConfig)
+			connConfig = _client.getClientStaticConfig().getConnectionDefaults();
+
+			DbusEventBuffer eventBuffer = null;
+			{
+			  DbusEventBuffer.StaticConfig cfg = connConfig.getEventBuffer();
+			  eventBuffer = new DbusEventBuffer(cfg.getMaxSize(),
+=======
+    if (null == connConfig)
+      connConfig = _client.getClientStaticConfig().getConnectionDefaults();
+
+      DbusEventBuffer eventBuffer = null;
+      {
+        DbusEventBuffer.StaticConfig cfg = connConfig.getEventBuffer();
+        eventBuffer = new DbusEventBuffer(cfg.getMaxSize(),
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;<<<<<<< MINE
+		DatabusSourcesConnection sourcesConnection =
+				  new DatabusSourcesConnection(
+						  connConfig,
+						  subs,
+						  candidateRelays,
+						  candidateBootstrapServers,
+						  _streamConsumerRawRegistrations,
+						  _bootstrapConsumerRawRegistrations,
+						  eventBuffer,
+						  bootstrapBuffer,
+						  _client.getDefaultExecutorService(),
+						  _client.getContainerStatsCollector(),
+						  _inboundEventsStatsCollector,
+						  _bootstrapEventsStatsCollector,
+						  _relayConsumerStats,
+						  _bootstrapConsumerStats,
+						  _checkpointPersistenceProvider,
+						  _client.getRelayConnFactory(),
+						  _client.getBootstrapConnFactory(),
+						  _client.getHttpStatsCollector(),
+						  null, // This should make sure the checkpoint directory structure is compatible with V2.
+						  _client,
+						  _id.toString(), // Used to uniquely identify logs and mbean name
+						  _client.getEventFactory(),
+						  null,
+						  connStateFactory);
+		return sourcesConnection;
+	}
+
+
+	@Override
+	public synchronized void shutdown() throws IllegalStateException
+	{
+
+		if (! _state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+		_sourcesConnection.unregisterMbeans();
+		_sourcesConnection.stop();
+		_status.shutdown();
+		_state = RegistrationState.SHUTDOWN;
+
+		// remove this registration stats from client stats Collector list.
+		_client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+	    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+	}
+
+	@Override
+	public synchronized void pause() throws IllegalStateException
+	{
+
+		if ( _state == RegistrationState.PAUSED)
+			return;
+
+		if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().pause();
+		_status.pause();
+		_state = RegistrationState.PAUSED;
+
+	}
+
+	@Override
+	public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+	{
+		if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+			return;
+
+		if ( !_state.isRunning())
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().suspendOnError(ex);
+		_status.suspendOnError(ex);
+		_state = RegistrationState.SUSPENDED_ON_ERROR;
+
+	}
+
+	@Override
+	public synchronized void resume() throws IllegalStateException
+	{
+		if ( _state == RegistrationState.RESUMED)
+			return;
+
+		if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+			throw new IllegalStateException(
+					"Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+		_sourcesConnection.getConnectionStatus().resume();
+		_status.resume();
+		_state = RegistrationState.RESUMED;
+	}
+
+	@Override
+	public RegistrationState getState() {
+		return _state;
+	}
+
+	@Override
+	public synchronized boolean deregister()
+			throws IllegalStateException
+	{
+		if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+			return false;
+
+		if ( _state.isRunning())
+			shutdown();
+
+		deregisterFromClient();
+		_state = RegistrationState.DEREGISTERED;
+
+		return true;
+	}
+
+	protected void deregisterFromClient()
+	{
+		_client.deregister(this);
+	}
+
+
+	@Override
+	public Collection<DatabusSubscription> getSubscriptions()
+	{
+		return DatabusSubscription.createSubscriptionList(_sources);
+	}
+
+	@Override
+	public synchronized DatabusComponentStatus getStatus()
+	{
+		return _status;
+	}
+
+	@Override
+	public synchronized Logger getLogger() {
+		return _log;
+	}
+
+	@Override
+	public DatabusRegistration getParent() {
+		return _parent;
+	}
+
+
+	protected void setParent(DatabusRegistration parent) {
+		_parent = parent;
+	}
+
+	@Override
+	public synchronized DatabusRegistration withRegId(RegistrationId regId)
+			throws DatabusClientException, IllegalStateException
+	{
+		if ( (_id != null) && (_id.equals(regId)))
+			return this;
+
+		if (! RegistrationIdGenerator.isIdValid(regId))
+			throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+		_id = regId;
+		_status = new Status(); // Component Status should use the correct component name
+
+		return this;
+	}
+
+
+	@Override
+	public synchronized DatabusRegistration withServerSideFilter(
+			DbusKeyCompositeFilterConfig filterConfig)
+			throws IllegalStateException
+	{
+
+		if (_state.isRunning())
+			throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+					+ ", State :" + _state);
+
+		_filterConfig = filterConfig;
+		return this;
+	}
+
+	@Override
+	public List<DbusPartitionInfo> getPartitions() {
+		return null;
+	}
+
+	@Override
+	public Checkpoint getLastPersistedCheckpoint()
+	{
+		Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+		return cp;
+	}
+
+	@Override
+	public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+			throws IllegalStateException
+	{
+		try
+		{
+			_checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+		} catch (IOException ioe) {
+			_log.error("Storing checkpoint failed with exception", ioe);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+	{
+		return _inboundEventsStatsCollector;
+	}
+
+	@Override
+	public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+	{
+		return _bootstrapEventsStatsCollector;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getRelayCallbackStats()
+	{
+		return _relayConsumerStats;
+	}
+
+	@Override
+	public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+	{
+		return _bootstrapConsumerStats;
+	}
+
+	@Override
+	public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+			throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+	@Override
+	public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+			FlushRequest flushRequest) throws InterruptedException {
+		throw new RuntimeException("Not supported yet !!");
+	}
+
+
+	protected synchronized String getStatusName()
+	{
+	  return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+	}
+
+	private static boolean canServe(ServerInfo s, Collection<String> sources)
+	{
+		List<String> supportedSources = s.getSources();
+
+		for (String src : sources)
+		{
+			if (! supportedSources.contains(src))
+				return false;
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public synchronized RegistrationId getRegistrationId() {
+		return _id;
+	}
+
+	@Override
+	public synchronized String toString() {
+		return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+				+ ", _sources=" + _sources + ", _status=" + _status
+				+ ", _filterConfig=" + _filterConfig
+				+ ", _streamConsumerRawRegistrations="
+				+ _streamConsumerRawRegistrations
+				+ ", _bootstrapConsumerRawRegistrations="
+				+ _bootstrapConsumerRawRegistrations + "]";
+	}
+
+	@Override
+	public synchronized DbusKeyCompositeFilterConfig getFilterConfig() {
+		return _filterConfig;
+	}
+=======
+    DatabusSourcesConnection sourcesConnection =
+          new DatabusSourcesConnection(
+              connConfig,
+              subs,
+              candidateRelays,
+              candidateBootstrapServers,
+              _streamConsumerRawRegistrations,
+              _bootstrapConsumerRawRegistrations,
+              eventBuffer,
+              bootstrapBuffer,
+              _client.getDefaultExecutorService(),
+              _client.getContainerStatsCollector(),
+              _inboundEventsStatsCollector,
+              _bootstrapEventsStatsCollector,
+              _relayConsumerStats,
+              _bootstrapConsumerStats,
+              _unifiedClientStats,
+              _checkpointPersistenceProvider,
+              _client.getRelayConnFactory(),
+              _client.getBootstrapConnFactory(),
+              _client.getHttpStatsCollector(),
+              null, // This should make sure the checkpoint directory structure is compatible with V2.
+              _client,
+              _id.toString(), // Used to uniquely identify logs and mbean name
+              _client.getEventFactory(),
+              null,
+              connStateFactory);
+    return sourcesConnection;
+  }
+
+  @Override
+  public synchronized void shutdown() throws IllegalStateException
+  {
+    if (! _state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in running state to be shutdown. Current state :" + _state);
+
+    _sourcesConnection.unregisterMbeans();
+    _sourcesConnection.stop();
+    _status.shutdown();
+    _state = RegistrationState.SHUTDOWN;
+
+    // remove this registration stats from client stats Collector list.
+    _client.getBootstrapEventsStats().removeStatsCollector(_id.getId());
+    _client.getInBoundStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getRelayConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getBootstrapConsumerStatsCollectors().removeStatsCollector(_id.getId());
+    _client.getUnifiedClientStatsCollectors().removeStatsCollector(_id.getId());
+  }
+
+  @Override
+  public synchronized void pause() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.PAUSED)
+      return;
+
+    if ( (_state != RegistrationState.STARTED) && ( _state != RegistrationState.RESUMED))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be paused. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().pause();
+    _status.pause();
+    _state = RegistrationState.PAUSED;
+  }
+
+  @Override
+  public synchronized void suspendOnError(Throwable ex) throws IllegalStateException
+  {
+    if ( _state == RegistrationState.SUSPENDED_ON_ERROR)
+      return;
+
+    if ( !_state.isRunning())
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be suspended. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().suspendOnError(ex);
+    _status.suspendOnError(ex);
+    _state = RegistrationState.SUSPENDED_ON_ERROR;
+  }
+
+  @Override
+  public synchronized void resume() throws IllegalStateException
+  {
+    if ( _state == RegistrationState.RESUMED)
+      return;
+
+    if ( (_state != RegistrationState.PAUSED) && ( _state != RegistrationState.SUSPENDED_ON_ERROR))
+      throw new IllegalStateException(
+          "Registration (" + _id + ") is not in correct state to be resumed. Current state :" + _state);
+
+    _sourcesConnection.getConnectionStatus().resume();
+    _status.resume();
+    _state = RegistrationState.RESUMED;
+  }
+
+  @Override
+  public RegistrationState getState()
+  {
+    return _state;
+  }
+
+  @Override
+  public synchronized boolean deregister()
+      throws IllegalStateException
+  {
+    if ((_state == RegistrationState.DEREGISTERED) || (_state == RegistrationState.INIT))
+      return false;
+
+    if ( _state.isRunning())
+      shutdown();
+
+    deregisterFromClient();
+    _state = RegistrationState.DEREGISTERED;
+
+    return true;
+  }
+
+  protected void deregisterFromClient()
+  {
+    _client.deregister(this);
+  }
+
+
+  @Override
+  public Collection<DatabusSubscription> getSubscriptions()
+  {
+    return DatabusSubscription.createSubscriptionList(_sources);
+  }
+
+  @Override
+  public synchronized DatabusComponentStatus getStatus()
+  {
+    return _status;
+  }
+
+  @Override
+  public synchronized Logger getLogger()
+  {
+    return _log;
+  }
+
+  @Override
+  public DatabusRegistration getParent()
+  {
+    return _parent;
+  }
+
+
+  protected void setParent(DatabusRegistration parent)
+  {
+    _parent = parent;
+  }
+
+  @Override
+  public synchronized DatabusRegistration withRegId(RegistrationId regId)
+      throws DatabusClientException, IllegalStateException
+  {
+    if ( (_id != null) && (_id.equals(regId)))
+      return this;
+
+    if (! RegistrationIdGenerator.isIdValid(regId))
+      throw new DatabusClientException("Another registration with the same regId (" + regId + ") already present !!");
+
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update regId when registration is in running state. RegId :" + _id + ", State :" + _state);
+
+    _id = regId;
+    _status = new Status(); // Component Status should use the correct component name
+
+    return this;
+  }
+
+
+  @Override
+  public synchronized DatabusRegistration withServerSideFilter(DbusKeyCompositeFilterConfig filterConfig)
+      throws IllegalStateException
+  {
+    if (_state.isRunning())
+      throw new IllegalStateException("Cannot update server-side filter when registration is in running state. RegId :" + _id
+          + ", State :" + _state);
+
+    _filterConfig = filterConfig;
+    return this;
+  }
+
+  @Override
+  public List<DbusPartitionInfo> getPartitions()
+  {
+    return null;
+  }
+
+  @Override
+  public Checkpoint getLastPersistedCheckpoint()
+  {
+    Checkpoint cp =_checkpointPersistenceProvider.loadCheckpoint(_sources);
+    return cp;
+  }
+
+  @Override
+  public synchronized boolean storeCheckpoint(Checkpoint ckpt)
+      throws IllegalStateException
+  {
+    try
+    {
+      _checkpointPersistenceProvider.storeCheckpoint(_sources, ckpt);
+    } catch (IOException ioe) {
+      _log.error("Storing checkpoint failed with exception", ioe);
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getRelayEventStats()
+  {
+    return _inboundEventsStatsCollector;
+  }
+
+  @Override
+  public DbusEventsStatisticsCollectorMBean getBootstrapEventStats()
+  {
+    return _bootstrapEventsStatsCollector;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getRelayCallbackStats()
+  {
+    return _relayConsumerStats;
+  }
+
+  @Override
+  public ConsumerCallbackStatsMBean getBootstrapCallbackStats()
+  {
+    return _bootstrapConsumerStats;
+  }
+
+  @Override
+  public UnifiedClientStatsMBean getUnifiedClientStats()
+  {
+    return _unifiedClientStats;
+  }
+
+  @Override
+  public RelayFindMaxSCNResult fetchMaxSCN(FetchMaxSCNRequest request)
+      throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(RelayFindMaxSCNResult fetchSCNResult,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+  @Override
+  public RelayFlushMaxSCNResult flush(FetchMaxSCNRequest maxScnRequest,
+                                      FlushRequest flushRequest)
+  throws InterruptedException
+  {
+    throw new RuntimeException("Not yet supported !!");
+  }
+
+
+  protected synchronized String getStatusName()
+  {
+    return "Status" + ((_id != null ) ? "_" + _id.getId() : "");
+  }
+
+  private static boolean canServe(ServerInfo s, Collection<String> sources)
+  {
+    List<String> supportedSources = s.getSources();
+
+    for (String src : sources)
+    {
+      if (! supportedSources.contains(src))
+        return false;
+    }
+
+    return true;
+  }
+
+
+  @Override
+  public synchronized RegistrationId getRegistrationId()
+  {
+    return _id;
+  }
+
+  @Override
+  public synchronized String toString()
+  {
+    return "DatabusV2RegistrationImpl [_state=" + _state + ", _id=" + _id
+        + ", _sources=" + _sources + ", _status=" + _status
+        + ", _filterConfig=" + _filterConfig
+        + ", _streamConsumerRawRegistrations="
+        + _streamConsumerRawRegistrations
+        + ", _bootstrapConsumerRawRegistrations="
+        + _bootstrapConsumerRawRegistrations + "]";
+  }
+
+  @Override
+  public synchronized DbusKeyCompositeFilterConfig getFilterConfig()
+  {
+    return _filterConfig;
+  }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer.java;<<<<<<< MINE
+  protected DatabusFileLoggingConsumer createTypedConsumer(String valueDumpFile) throws IOException
+=======
+  protected DatabusFileLoggingConsumer createTypedConsumer(String valueDumpFile)
+  throws IOException
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer.java;<<<<<<< MINE
+    return new DatabusFileLoggingConsumer(valueDumpFile, false);
+=======
+    return createTypedConsumer(valueDumpFile, null);
+  }
+
+  protected DatabusFileLoggingConsumer createTypedConsumer(String valueDumpFile, String eventDumpFile)
+  throws IOException
+  {
+    return new DatabusFileLoggingConsumer(valueDumpFile, null, eventDumpFile, false);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer.java;<<<<<<< MINE
+    
+    if (null != filterConfig)
+    	reg.withServerSideFilter(filterConfig);
+    
+    if (reg instanceof DatabusV2RegistrationImpl)
+=======
+
+    if (!(reg instanceof DatabusV2RegistrationImpl))
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    
+    /** The file where to store the JSON values. If null, no values are to be stored. */
+=======
+
+    /** The file in which to store the payload values in JSON format. If null, no values are to be stored. */
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    
+    /** The file where to store the decoded metadata info from v2 event. If null, no metadata are to be stored. */
+=======
+
+    /** The file in which to store the decoded metadata info from v2 events. If null, no metadata are to be stored. */
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    	return _metadataDumpFile;
+=======
+      return _metadataDumpFile;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    public boolean isAppendOnly()
+=======
+    /** The file in which to store the raw (undecoded) event in JSON format. If null, no raw events will be stored. */
+    public String getEventDumpFile()
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    	return _append;
+=======
+      return _eventDumpFile;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    
+    public StaticConfig(String valueDumpFile, boolean append)
+=======
+
+    public boolean isAppendOnly()
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+      this(valueDumpFile, null, append);
+=======
+      return _append;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    
+    public StaticConfig(String valueDumpFile, String metadataDumpFile, boolean append)
+=======
+
+//NOT USED?
+//  public StaticConfig(String valueDumpFile, boolean append)
+//  {
+//    this(valueDumpFile, null, append);
+//  }
+
+    public StaticConfig(String valueDumpFile, String metadataDumpFile, String eventDumpFile, boolean append)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    	_valueDumpFile = valueDumpFile;
+    	_metadataDumpFile = metadataDumpFile;
+    	_append = append;
+=======
+      _valueDumpFile = valueDumpFile;
+      _metadataDumpFile = metadataDumpFile;
+      _eventDumpFile = eventDumpFile;
+      _append = append;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    	return _metadataDumpFile;
+=======
+      return _metadataDumpFile;
+    }
+
+    public String getEventDumpFile()
+    {
+      return _eventDumpFile;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    	_metadataDumpFile = metadataDumpFile;
+=======
+      _metadataDumpFile = metadataDumpFile;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+	@Override
+=======
+    public void setEventDumpFile(String eventDumpFile)
+    {
+      _eventDumpFile = eventDumpFile;
+    }
+
+    public boolean getAppendOnly()
+    {
+      return _appendOnly;
+    }
+
+    public void setAppendOnly(boolean appendOnly)
+    {
+      this._appendOnly = appendOnly;
+    }
+
+    @Override
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+      return new StaticConfig(_valueDumpFile, _metadataDumpFile, _appendOnly);
+=======
+      return new StaticConfig(_valueDumpFile, _metadataDumpFile, _eventDumpFile, _appendOnly);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+  }
+=======
+//NOT USED?
+//public DatabusFileLoggingConsumer() throws IOException
+//{
+//  this((String)null, false);
+//}
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    this(config.getValueDumpFile(), config.getMetadataDumpFile(), config.isAppendOnly());
+=======
+    this(config.getValueDumpFile(), config.getMetadataDumpFile(), config.getEventDumpFile(), config.isAppendOnly());
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+  public DatabusFileLoggingConsumer(String outputFilename, boolean appendOnly) throws IOException
+=======
+  public DatabusFileLoggingConsumer(String valueDumpFile, boolean appendOnly) throws IOException
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    this( outputFilename, null, appendOnly);
+=======
+    this(valueDumpFile, null, null, appendOnly);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+  
+  public DatabusFileLoggingConsumer(String outputFilename, String metadataDumpFile, boolean appendOnly) throws IOException
+=======
+
+  public DatabusFileLoggingConsumer(String valueDumpFile,
+                                    String metadataDumpFile,
+                                    String eventDumpFile,
+                                    boolean appendOnly)
+  throws IOException
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    if (outputFilename != null)
+=======
+    LOG.info("DatabusFileLoggingConsumer instantiated with payload-value dump file: " + valueDumpFile +
+             ", metadata dump file: " + metadataDumpFile +
+             ", raw-event dump file: " + eventDumpFile +
+             ", appendOnly: " + appendOnly);
+
+    if (valueDumpFile != null)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+      LOG.info("DatabusFileLoggingConsumer instantiated with output file :" + outputFilename + ", appendOnly :" + appendOnly);	
+      _fileBasedCallback = new ClientFileBasedEventTrackingCallback(outputFilename, appendOnly);
+      _fileBasedCallback.init();
+=======
+      _fileBasedDecodedValueCallback = new ClientFileBasedEventTrackingCallback(valueDumpFile, appendOnly);
+      _fileBasedDecodedValueCallback.init();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    
+    if( metadataDumpFile != null )
+=======
+
+    if (metadataDumpFile != null)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    	LOG.info("DatabusFileLoggingConsumer instantiated with output file: " + metadataDumpFile + ", appendOnly: " + appendOnly);
+    	_fileBasedMetadataCallback = new ClientFileBasedMetadataTrackingCallback(metadataDumpFile, appendOnly);
+    	_fileBasedMetadataCallback.init();
+=======
+      _fileBasedMetadataCallback = new ClientFileBasedMetadataTrackingCallback(metadataDumpFile, appendOnly);
+      _fileBasedMetadataCallback.init();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+  public DatabusFileLoggingConsumer() throws IOException
+  {
+    this((String)null, false);
+=======
+    if (eventDumpFile != null)
+    {
+      _fileBasedRawEventCallback = new FileBasedEventTrackingCallback(eventDumpFile, appendOnly);
+      _fileBasedRawEventCallback.init();
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+  public ConsumerCallbackResult onCheckpoint(SCN checkpointScn) {
+=======
+  public ConsumerCallbackResult onCheckpoint(SCN checkpointScn)
+  {
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+  protected void LogTypedValue(DbusEvent e, DbusEventDecoder eventDecoder) {
+=======
+  protected void LogTypedValue(DbusEvent e, DbusEventDecoder eventDecoder)
+  {
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+  public ConsumerCallbackResult onDataEvent(DbusEvent e, DbusEventDecoder eventDecoder) {
+=======
+  public ConsumerCallbackResult onDataEvent(DbusEvent e, DbusEventDecoder eventDecoder)
+  {
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    if (_fileBasedCallback != null)
+=======
+
+    if (_fileBasedDecodedValueCallback != null)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+      _fileBasedCallback.dumpEventValue(e, eventDecoder);
+=======
+      _fileBasedDecodedValueCallback.dumpEventValue(e, eventDecoder);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+    if (_fileBasedCallback != null)
+=======
+
+    if (_fileBasedDecodedValueCallback != null)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+      _fileBasedCallback.dumpEventValue(e, eventDecoder);
+=======
+      _fileBasedDecodedValueCallback.dumpEventValue(e, eventDecoder);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/ClusterFileLoggingClient.java;<<<<<<< MINE
+			DatabusRegistration reg = 
+				client.registerCluster(cluster, 
+						               createConsumerFactory(cluster,_valueDumpFile), 
+						               createServerSideFactory(cluster), 
+						               createPartitionListener(cluster,_eventDumpFile), 
+=======
+			DatabusRegistration reg = client.registerCluster(cluster,
+						               createConsumerFactory(cluster, _valueDumpFile, _eventDumpFile),
+						               createServerSideFactory(cluster),
+						               createPartitionListener(cluster),
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/monitoring/RegistrationStatsInfo.java;<<<<<<< MINE
+	  setParentRegId(reg.getParentRegId());
+=======
+	  setParentRegId(null != reg.getParentRegistration() ? reg.getParentRegistration().getId() : null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/RelayDispatcher.java;<<<<<<< MINE
+      return createOnlineConsumptionCheckpoint(_lastWindowScn, curState, event);
+=======
+      return createOnlineConsumptionCheckpoint(_lastWindowScn, _lastEowTsNsecs, curState, event);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+    _loggingListener = new LoggingConsumer(_clientStaticConfig.getLoggingListener());
+=======
+    _loggingConsumer = new LoggingConsumer(_clientStaticConfig.getLoggingListener());
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+  public synchronized void registerDatabusStreamListener(
+		  					DatabusStreamConsumer[] listeners,
+                            List<String> sources,
+                            DbusKeyCompositeFilterConfig filterConfig)
+          throws DatabusClientException
+  {
+	  List<DatabusStreamConsumer> listenersList = Arrays.asList(listeners);
+	  List<SelectingDatabusCombinedConsumer> sdccListenersList =
+			  SelectingDatabusCombinedConsumerFactory.convertListOfStreamConsumers(listenersList);
+	  List<DatabusCombinedConsumer> dccListenersList = new ArrayList<DatabusCombinedConsumer>();
+	  for(SelectingDatabusCombinedConsumer sdcc: sdccListenersList)
+	  {
+		  dccListenersList.add(sdcc);
+	  }
+
+	  DatabusV2ConsumerRegistration consumerReg =
+	      new DatabusV2ConsumerRegistration(dccListenersList, sources, filterConfig);
+
+	  registerDatabusListener(consumerReg, _relayGroups, getRelayGroupStreamConsumers(),
+	                          DatabusSubscription.createSubscriptionList(sources));
+=======
+  public synchronized void registerDatabusStreamListener(DatabusStreamConsumer[] listeners,
+                                                         List<String> sources,
+                                                         DbusKeyCompositeFilterConfig filterConfig)
+  throws DatabusClientException
+  {
+    List<DatabusStreamConsumer> listenersList = Arrays.asList(listeners);
+    List<SelectingDatabusCombinedConsumer> sdccListenersList =
+        SelectingDatabusCombinedConsumerFactory.convertListOfStreamConsumers(listenersList);
+    List<DatabusCombinedConsumer> dccListenersList = new ArrayList<DatabusCombinedConsumer>();
+    for(SelectingDatabusCombinedConsumer sdcc: sdccListenersList)
+    {
+      dccListenersList.add(sdcc);
+    }
+
+    DatabusV2ConsumerRegistration consumerReg =
+        new DatabusV2ConsumerRegistration(dccListenersList, sources, filterConfig);
+
+    registerDatabusListener(consumerReg, _relayGroups, getRelayGroupStreamConsumers(),
+                            DatabusSubscription.createSubscriptionList(sources));
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+		List<DatabusBootstrapConsumer> listenersList = Arrays.asList(listeners);
+		List<SelectingDatabusCombinedConsumer> sdccListenersList =
+				SelectingDatabusCombinedConsumerFactory.convertListOfBootstrapConsumers(listenersList);
+		List<DatabusCombinedConsumer> dccListenersList = new ArrayList<DatabusCombinedConsumer>();
+		for(SelectingDatabusCombinedConsumer sdcc: sdccListenersList)
+		{
+			dccListenersList.add(sdcc);
+		}
+
+		DatabusV2ConsumerRegistration consumerReg =
+				new DatabusV2ConsumerRegistration(dccListenersList, sources, filter);
+
+		registerDatabusListener(consumerReg, _relayGroups, getRelayGroupBootstrapConsumers(),
+		                        DatabusSubscription.createSubscriptionList(sources));
+=======
+    List<DatabusBootstrapConsumer> listenersList = Arrays.asList(listeners);
+    List<SelectingDatabusCombinedConsumer> sdccListenersList =
+        SelectingDatabusCombinedConsumerFactory.convertListOfBootstrapConsumers(listenersList);
+    List<DatabusCombinedConsumer> dccListenersList = new ArrayList<DatabusCombinedConsumer>();
+    for(SelectingDatabusCombinedConsumer sdcc: sdccListenersList)
+    {
+      dccListenersList.add(sdcc);
+    }
+
+    DatabusV2ConsumerRegistration consumerReg =
+        new DatabusV2ConsumerRegistration(dccListenersList, sources, filter);
+
+    registerDatabusListener(consumerReg, _relayGroups, getRelayGroupBootstrapConsumers(),
+                            DatabusSubscription.createSubscriptionList(sources));
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+    return _loggingListener;
+=======
+    return _loggingConsumer;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher.java;<<<<<<< MINE
+            LOG.info("skipping empty window: " + nextEvent.sequence());
+=======
+            if (LOG.isDebugEnabled())
+            {
+              LOG.debug("skipping empty window: " + nextEvent.sequence());
+            }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher.java;<<<<<<< MINE
+  public static Checkpoint createOnlineConsumptionCheckpoint(long lastCompleteWindowScn,DispatcherState curState, DbusEvent event)
+=======
+  public static Checkpoint createOnlineConsumptionCheckpoint(long lastCompleteWindowScn, long lastEowTsNsecs, DispatcherState curState, DbusEvent event)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher.java;<<<<<<< MINE
+      //For online consumption ; this means that a complete event window hasn't been read yet.
+=======
+      //TODO: What does this mean? "For online consumption ; this means that a complete event window hasn't been read yet."
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher.java;<<<<<<< MINE
+      return Checkpoint.createOnlineConsumptionCheckpoint(windowScn);
+=======
+      return Checkpoint.createOnlineConsumptionCheckpoint(windowScn, lastEowTsNsecs);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestDatabusHttpClient.java;<<<<<<< MINE
+      assertEquals("one consumer + logging consumer in (S1,S2) or (S1,S3)", 2,
+=======
+      assertEquals("expect one consumer in (S1,S2) or (S1,S3)", 1,
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestDatabusHttpClient.java;<<<<<<< MINE
+      assertTrue("two consumers + 1-2 logging consumer  in (S1,S2) or (S1,S3)", 3 <= consumersNum
+                 && consumersNum <= 4);
+=======
+      assertEquals("expect two consumers in (S1,S2) or (S1,S3)", 2, consumersNum);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestDatabusHttpClient.java;<<<<<<< MINE
+      assertEquals("one consumers in (S3,S4,S5)", 1,
+=======
+      assertEquals("expect one consumer in (S3,S4,S5)", 1,
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestDatabusHttpClient.java;<<<<<<< MINE
+      assertTrue("two consumers+ 1-2 logging consumer in (S1,S2) or (S1,S3)", 3 <= consumersNum1 &&
+                 consumersNum1 <= 4);
+      assertTrue("at least one consumer + logging consumer in (S1,S2)",
+                 safeListSize(client.getRelayGroupStreamConsumers().get(ls1))
+                 >= 2);
+=======
+      assertEquals("expect two consumers in (S1,S2) or (S1,S3)", 2, consumersNum1);
+      assertTrue("expect at least one consumer in (S1,S2)",
+                 safeListSize(client.getRelayGroupStreamConsumers().get(ls1)) >= 1);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestDatabusHttpClient.java;<<<<<<< MINE
+      assertTrue("three consumers+ 1-2 logging consumers in (S1,S2) or (S1,S3)", 4 <= consumersNum2 &&
+                 consumersNum2 <= 5);
+=======
+      assertEquals("expect three consumers in (S1,S2) or (S1,S3)", 3, consumersNum2);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestDatabusHttpClient.java;<<<<<<< MINE
+      assertEquals("one consumer + 1-2 logging consumer  in (S1,S2) or (S1,S3)", consumersNum3,
+                   consumersNum4);
+=======
+      assertEquals("expect one consumer in (S1,S2) or (S1,S3)", consumersNum3, consumersNum4);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestBootstrapPullThread.java;<<<<<<< MINE
+		  												boolean throwBSConnException,
+				  										boolean muteTransition,
+				  										boolean readDataThrowException,
+				  										boolean readDataException,
+				  										String exceptionName,
+				  										int freeReadSpace,
+				  										int numBytesRead,
+				  										boolean phaseCompleted,
+				  										long startScn,
+				  										long targetScn,
+				  										String... sourceNames)
+		throws Exception
+  {
+	  List<String> sources = Arrays.asList(sourceNames);
+
+	  Properties clientProps = new Properties();
+
+	  clientProps.setProperty("client.container.httpPort", "0");
+      clientProps.setProperty("client.container.jmx.rmiEnabled", "false");
+
+	  clientProps.setProperty("client.runtime.bootstrap.enabled", "true");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).name", "bs1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).port", "10001");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).sources", "source1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).name", "bs2");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).port", "10002");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).sources", "source1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).name", "bs3");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).port", "10003");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).sources", "source1");
+
+	  clientProps.setProperty("client.runtime.relay(1).name", "relay1");
+	  clientProps.setProperty("client.runtime.relay(1).port", "10001");
+	  clientProps.setProperty("client.runtime.relay(1).sources", "source1");
+	  clientProps.setProperty("client.runtime.relay(2).name", "relay2");
+	  clientProps.setProperty("client.runtime.relay(2).port", "10002");
+	  clientProps.setProperty("client.runtime.relay(2).sources", "source1");
+	  clientProps.setProperty("client.runtime.relay(3).name", "relay3");
+	  clientProps.setProperty("client.runtime.relay(3).port", "10003");
+	  clientProps.setProperty("client.runtime.relay(3).sources", "source1");
+
+	  clientProps.setProperty("client.connectionDefaults.eventBuffer.maxSize", "100000");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.maxRetryNum", "9");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncFactor", "1.0");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncDelta", "1");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.initSleep", "1");
+
+	  DatabusHttpClientImpl.Config clientConfBuilder = new DatabusHttpClientImpl.Config();
+	  ConfigLoader<DatabusHttpClientImpl.StaticConfig> configLoader =
+			  new ConfigLoader<DatabusHttpClientImpl.StaticConfig>("client.", clientConfBuilder);
+	  configLoader.loadConfig(clientProps);
+
+	  DatabusHttpClientImpl.StaticConfig clientConf = clientConfBuilder.build();
+	  DatabusSourcesConnection.StaticConfig srcConnConf = clientConf.getConnectionDefaults();
+
+	  DatabusHttpClientImpl client = new DatabusHttpClientImpl(clientConf);
+
+	  client.registerDatabusBootstrapListener(new LoggingConsumer(), null, "source1");
+
+	  Assert.assertNotNull(client, "client instantiation ok");
+
+	  DatabusHttpClientImpl.RuntimeConfig clientRtConf = clientConf.getRuntime().build();
+
+	  //we keep the index of the next server we expect to see
+	  AtomicInteger serverIdx = new AtomicInteger(-1);
+
+	  //generate the order in which we should see the servers
+	  List<ServerInfo> relayOrder = new ArrayList<ServerInfo>(clientRtConf.getRelays());
+	  if (LOG.isInfoEnabled())
+	  {
+		  StringBuilder sb = new StringBuilder();
+		  for (ServerInfo serverInfo: relayOrder)
+		  {
+			  sb.append(serverInfo.getName());
+			  sb.append(" ");
+		  }
+		  LOG.info("Relay order:" + sb.toString());
+	  }
+
+	  List<IdNamePair> sourcesResponse = new ArrayList<IdNamePair>();
+	  sourcesResponse.add(new IdNamePair(1L, "source1"));
+
+	  Map<Long, List<RegisterResponseEntry>> registerResponse = new HashMap<Long, List<RegisterResponseEntry>>();
+
+	  List<RegisterResponseEntry> regResponse = new ArrayList<RegisterResponseEntry>();
+	  regResponse.add(new RegisterResponseEntry(1L, (short)1, SCHEMA$.toString()));
+	  registerResponse.put(1L, regResponse);
+
+	  ChunkedBodyReadableByteChannel channel = EasyMock.createMock(ChunkedBodyReadableByteChannel.class);
+
+	  if ( ! readDataException)
+	  {
+		  EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(null).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(null).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(null).anyTimes();
+	  } else {
+		  EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(exceptionName).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(exceptionName).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(exceptionName).anyTimes();
+	  }
+
+	  if ( phaseCompleted)
+	    EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn("true").anyTimes();
+	  else
+		EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn(null).anyTimes();
+
+	  EasyMock.replay(channel);
+
+	  DbusEventBuffer dbusBuffer = EasyMock.createMock(DbusEventBuffer.class);
+	  dbusBuffer.endEvents(false, -1, false, false, null);
+	  EasyMock.expectLastCall().anyTimes();
+	  EasyMock.expect(dbusBuffer.injectEvent(EasyMock.<DbusEventInternalReadable>notNull())).andReturn(true).anyTimes();
+	  EasyMock.expect(dbusBuffer.getEventSerializationVersion()).andReturn(DbusEventFactory.DBUS_EVENT_V1).anyTimes();
+
+	  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull(),
+	                                        org.easymock.EasyMock.<List<InternalDatabusEventsListener>>notNull(),
+	                                        org.easymock.EasyMock.<DbusEventsStatisticsCollector>isNull()))
+	          .andReturn(numBytesRead).anyTimes();
+
+	  if ( readDataThrowException)
+	  {
+		  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+		          .andThrow(new RuntimeException("dummy")).anyTimes();
+	  } else {
+		  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+		          .andReturn(numBytesRead).anyTimes();
+	  }
+
+	  EasyMock.expect(dbusBuffer.acquireIterator(EasyMock.<String>notNull())).andReturn(null).anyTimes();
+	  dbusBuffer.waitForFreeSpace((int)(10000 * 100.0 / clientConf.getPullerBufferUtilizationPct()));
+	  EasyMock.expectLastCall().anyTimes();
+	  EasyMock.expect(dbusBuffer.getBufferFreeReadSpace()).andReturn(freeReadSpace).anyTimes();
+
+	  EasyMock.replay(dbusBuffer);
+
+	  //This guy succeeds on /sources but fails on /register
+	  MockBootstrapConnection mockSuccessConn = new MockBootstrapConnection(startScn, targetScn, channel, serverIdx,
+	                                                                        muteTransition);
+
+	  DatabusBootstrapConnectionFactory mockConnFactory =
+			  org.easymock.EasyMock.createMock("mockRelayFactory", DatabusBootstrapConnectionFactory.class);
+
+	  //each server should be tried MAX_RETRIES time until all retries are exhausted
+
+	  if ( throwBSConnException )
+	  {
+		  EasyMock.expect(mockConnFactory.createConnection(
+				  EasyMock.<ServerInfo>notNull(),
+				  EasyMock.<ActorMessageQueue>notNull(),
+				  EasyMock.<RemoteExceptionHandler>notNull())).andThrow(new RuntimeException("Mock Error")).anyTimes();
+	  } else if ( failBsConnection) {
+		  EasyMock.expect(mockConnFactory.createConnection(
+				  EasyMock.<ServerInfo>notNull(),
+				  EasyMock.<ActorMessageQueue>notNull(),
+				  EasyMock.<RemoteExceptionHandler>notNull())).andReturn(null).anyTimes();
+=======
+                              boolean throwBSConnException,
+                              boolean muteTransition,
+                              boolean readDataThrowException,
+                              boolean readDataException,
+                              String exceptionName,
+                              int freeReadSpace,
+                              int numBytesRead,
+                              boolean phaseCompleted,
+                              long startScn,
+                              long targetScn,
+                              String... sourceNames)
+  throws Exception
+  {
+    List<String> sources = Arrays.asList(sourceNames);
+
+    Properties clientProps = new Properties();
+
+    clientProps.setProperty("client.container.httpPort", "0");
+    clientProps.setProperty("client.container.jmx.rmiEnabled", "false");
+
+    clientProps.setProperty("client.runtime.bootstrap.enabled", "true");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).name", "bs1");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).host", "localhost");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).port", "10001");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).sources", "source1");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).name", "bs2");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).host", "localhost");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).port", "10002");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).sources", "source1");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).name", "bs3");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).host", "localhost");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).port", "10003");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).sources", "source1");
+
+    clientProps.setProperty("client.runtime.relay(1).name", "relay1");
+    clientProps.setProperty("client.runtime.relay(1).port", "10001");
+    clientProps.setProperty("client.runtime.relay(1).sources", "source1");
+    clientProps.setProperty("client.runtime.relay(2).name", "relay2");
+    clientProps.setProperty("client.runtime.relay(2).port", "10002");
+    clientProps.setProperty("client.runtime.relay(2).sources", "source1");
+    clientProps.setProperty("client.runtime.relay(3).name", "relay3");
+    clientProps.setProperty("client.runtime.relay(3).port", "10003");
+    clientProps.setProperty("client.runtime.relay(3).sources", "source1");
+
+    clientProps.setProperty("client.connectionDefaults.eventBuffer.maxSize", "100000");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.maxRetryNum", "9");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncFactor", "1.0");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncDelta", "1");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.initSleep", "1");
+
+    DatabusHttpClientImpl.Config clientConfBuilder = new DatabusHttpClientImpl.Config();
+    ConfigLoader<DatabusHttpClientImpl.StaticConfig> configLoader =
+        new ConfigLoader<DatabusHttpClientImpl.StaticConfig>("client.", clientConfBuilder);
+    configLoader.loadConfig(clientProps);
+
+    DatabusHttpClientImpl.StaticConfig clientConf = clientConfBuilder.build();
+    DatabusSourcesConnection.StaticConfig srcConnConf = clientConf.getConnectionDefaults();
+
+    DatabusHttpClientImpl client = new DatabusHttpClientImpl(clientConf);
+
+    client.registerDatabusBootstrapListener(new LoggingConsumer(), null, "source1");
+
+    Assert.assertNotNull(client, "client instantiation ok");
+
+    DatabusHttpClientImpl.RuntimeConfig clientRtConf = clientConf.getRuntime().build();
+
+    //we keep the index of the next server we expect to see
+    AtomicInteger serverIdx = new AtomicInteger(-1);
+
+    //generate the order in which we should see the servers
+    List<ServerInfo> relayOrder = new ArrayList<ServerInfo>(clientRtConf.getRelays());
+    if (LOG.isInfoEnabled())
+    {
+      StringBuilder sb = new StringBuilder();
+      for (ServerInfo serverInfo: relayOrder)
+      {
+        sb.append(serverInfo.getName());
+        sb.append(" ");
+      }
+      LOG.info("Relay order:" + sb.toString());
+    }
+
+    List<IdNamePair> sourcesResponse = new ArrayList<IdNamePair>();
+    sourcesResponse.add(new IdNamePair(1L, "source1"));
+
+    Map<Long, List<RegisterResponseEntry>> registerResponse = new HashMap<Long, List<RegisterResponseEntry>>();
+
+    List<RegisterResponseEntry> regResponse = new ArrayList<RegisterResponseEntry>();
+    regResponse.add(new RegisterResponseEntry(1L, (short)1, SCHEMA$.toString()));
+    registerResponse.put(1L, regResponse);
+
+    ChunkedBodyReadableByteChannel channel = EasyMock.createMock(ChunkedBodyReadableByteChannel.class);
+
+    if ( ! readDataException)
+    {
+      EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(null).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(null).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(null).anyTimes();
+    } else {
+      EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(exceptionName).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(exceptionName).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(exceptionName).anyTimes();
+    }
+
+    if ( phaseCompleted)
+      EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn("true").anyTimes();
+    else
+    EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn(null).anyTimes();
+
+    EasyMock.replay(channel);
+
+    DbusEventBuffer dbusBuffer = EasyMock.createMock(DbusEventBuffer.class);
+    dbusBuffer.endEvents(false, -1, false, false, null);
+    EasyMock.expectLastCall().anyTimes();
+    EasyMock.expect(dbusBuffer.injectEvent(EasyMock.<DbusEventInternalReadable>notNull())).andReturn(true).anyTimes();
+    EasyMock.expect(dbusBuffer.getEventSerializationVersion()).andReturn(DbusEventFactory.DBUS_EVENT_V1).anyTimes();
+
+    EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull(),
+                                          org.easymock.EasyMock.<List<InternalDatabusEventsListener>>notNull(),
+                                          org.easymock.EasyMock.<DbusEventsStatisticsCollector>isNull()))
+            .andReturn(numBytesRead).anyTimes();
+
+    if ( readDataThrowException)
+    {
+      EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+              .andThrow(new RuntimeException("dummy")).anyTimes();
+    } else {
+      EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+              .andReturn(numBytesRead).anyTimes();
+    }
+
+    EasyMock.expect(dbusBuffer.acquireIterator(EasyMock.<String>notNull())).andReturn(null).anyTimes();
+    dbusBuffer.waitForFreeSpace((int)(10000 * 100.0 / clientConf.getPullerBufferUtilizationPct()));
+    EasyMock.expectLastCall().anyTimes();
+    EasyMock.expect(dbusBuffer.getBufferFreeReadSpace()).andReturn(freeReadSpace).anyTimes();
+
+    EasyMock.replay(dbusBuffer);
+
+    //This guy succeeds on /sources but fails on /register
+    MockBootstrapConnection mockSuccessConn = new MockBootstrapConnection(startScn, targetScn, channel, serverIdx,
+                                                                          muteTransition);
+
+    DatabusBootstrapConnectionFactory mockConnFactory =
+        org.easymock.EasyMock.createMock("mockRelayFactory", DatabusBootstrapConnectionFactory.class);
+
+    //each server should be tried MAX_RETRIES time until all retries are exhausted
+
+    if ( throwBSConnException )
+    {
+      EasyMock.expect(mockConnFactory.createConnection(
+          EasyMock.<ServerInfo>notNull(),
+          EasyMock.<ActorMessageQueue>notNull(),
+          EasyMock.<RemoteExceptionHandler>notNull())).andThrow(new RuntimeException("Mock Error")).anyTimes();
+    } else if ( failBsConnection) {
+      EasyMock.expect(mockConnFactory.createConnection(
+          EasyMock.<ServerInfo>notNull(),
+          EasyMock.<ActorMessageQueue>notNull(),
+          EasyMock.<RemoteExceptionHandler>notNull())).andReturn(null).anyTimes();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+      TestUtil.setupLoggingWithTimestampedFile(true, "/tmp/TestGenericDispatcher_", ".log", Level.ERROR);
+=======
+      TestUtil.setupLoggingWithTimestampedFile(true, "/tmp/TestGenericDispatcher_", ".log", Level.INFO);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                    mConsumer);
+=======
+                    mConsumer,
+                    true);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                    mConsumer);
+=======
+                    mConsumer,
+                    true);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+
+    void runPartialWindowCheckpointPersistence(int numEvents,int maxWindowSize,int numFailWindow) throws Exception
+=======
+    void runPartialWindowCheckpointPersistence(int numEvents,int maxWindowSize,int numFailWindow) throws Exception
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                mConsumer);
+=======
+                mConsumer,
+                true);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+            Assert.assertEquals(cp.getWindowOffset().longValue() , -1L);
+=======
+            //the latest event seen should be newer (or at least as new) as the checkpoint
+            Assert.assertTrue(tConsumer.getLastTsInNanosOfEvent() >= tConsumer.getLastTsInNanosOfWindow());
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                Assert.assertEquals(cp.getWindowScn(),tConsumer.getLastSeenWindowScn());
+=======
+              Assert.assertEquals(cp.getWindowScn(),tConsumer.getLastSeenWindowScn());
+              //check if the timestamp in checkpoint is the same as checkpoint of last completed window (ts of last event of the window)
+              Assert.assertEquals(tConsumer.getLastTsInNanosOfWindow(),cp.getTsNsecs());
+            }
+            else
+            {
+              //not even one window was processed before error; expect uninitialized timestamp
+              Assert.assertEquals(Checkpoint.UNSET_TS_NSECS,cp.getTsNsecs());
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+    public void testBootstrapParitalWindowScnOrdering() throws Exception
+=======
+    public void testBootstrapPartialWindowScnOrdering() throws Exception
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+        dispatcher.enqueueMessage(CheckpointMessage.createSetCheckpointMessage(initCheckpoint));
+=======
+        initCheckpoint.setBootstrapStartNsecs(startTsNsecs);
+        initCheckpoint.setBootstrapStartScn(0L);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+    public TestDispatcher(String name, DatabusSourcesConnection.StaticConfig connConfig,
+            List<DatabusSubscription> subsList,
+            CheckpointPersistenceProvider checkpointPersistor,
+            DbusEventBuffer dataEventsBuffer,
+            MultiConsumerCallback asyncCallback) {
+=======
+    public TestDispatcher(String name,
+                          DatabusSourcesConnection.StaticConfig connConfig,
+                          List<DatabusSubscription> subsList,
+                          CheckpointPersistenceProvider checkpointPersistor,
+                          DbusEventBuffer dataEventsBuffer,
+                          MultiConsumerCallback asyncCallback,
+                          boolean isRelayDispatcher) {
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+        _isRelayDispatcher = isRelayDispatcher;
+=======
+        _isRelayDispatcher = isRelayDispatcher;
+        //disable schemaIdCheck at onStartSource() by default, in the interest of many unit tests written without paying attention to same schemaIds being present in events
+        _schemaIdCheck=false;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+       return createOnlineConsumptionCheckpoint(_lastWindowScn,curState,event);
+=======
+      if (_isRelayDispatcher)
+      {
+       return createOnlineConsumptionCheckpoint(_lastWindowScn, _lastEowTsNsecs, curState,event);
+      }
+      else
+      {
+        // TODO for bootstrap dispatcher: Update the prev checkpoint.
+        return createOnlineConsumptionCheckpoint(_lastWindowScn, _lastEowTsNsecs, curState, event);
+      }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+}
+
+=======
+}
+
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+*/
+=======
+ */
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+     TestUtil.setupLoggingWithTimestampedFile(true, "/tmp/TestClusterCheckpointPersistenceProvider_",
+                                              ".log", Level.WARN);
+     File zkroot = FileUtils.createTempDir("TestClusterCheckpointPersistenceProvider_zkroot");
+     LOG.info("starting ZK on port " + localZkPort + " and datadir " + zkroot.getAbsolutePath());
+
+     ZkServer zkServer = TestUtil.startZkServer(zkroot.getAbsolutePath(), 0,
+                                                localZkPort , 2000);
+     if (zkServer != null)
+     {
+       _localZkServers  = new Vector<ZkServer>(1);
+       _localZkServers.add(zkServer);
+     }
+=======
+    TestUtil.setupLoggingWithTimestampedFile(true, "/tmp/TestClusterCheckpointPersistenceProvider_",
+        ".log", Level.WARN);
+    File zkroot = FileUtils.createTempDir("TestClusterCheckpointPersistenceProvider_zkroot");
+    LOG.info("starting ZK on port " + localZkPort + " and datadir " + zkroot.getAbsolutePath());
+
+    ZkServer zkServer = TestUtil.startZkServer(zkroot.getAbsolutePath(), 0,
+        localZkPort , 2000);
+    if (zkServer != null)
+    {
+      _localZkServers  = new Vector<ZkServer>(1);
+      _localZkServers.add(zkServer);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+      if (_localZkServers != null)
+      {
+          TestUtil.stopLocalZookeeper(_localZkServers);
+      }
+=======
+    if (_localZkServers != null)
+    {
+      TestUtil.stopLocalZookeeper(_localZkServers);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+      Checkpoint cp = new Checkpoint();
+      cp.setWindowScn(50532L);
+      cp.setWindowOffset(-1);
+      cp.setConsumptionMode(DbusClientMode.ONLINE_CONSUMPTION);
+
+      String id = "4";
+      String clusterName = "test-cluster-persistence";
+	  ClusterCheckpointPersistenceProvider.createCluster(zkAddr,clusterName);
+      ClusterCheckpointPersistenceProvider.Config conf = new ClusterCheckpointPersistenceProvider.Config();
+      conf.setClusterName(clusterName);
+      conf.setZkAddr(zkAddr);
+
+      ArrayList<String> sources= new ArrayList<String>(3);
+      sources.add("source1");
+      sources.add("source2");
+      sources.add("source3");
+=======
+    Checkpoint cp = new Checkpoint();
+    cp.setWindowScn(50532L);
+    cp.setWindowOffset(-1);
+    cp.setConsumptionMode(DbusClientMode.ONLINE_CONSUMPTION);
+
+    String id = "4";
+    String clusterName = "test-cluster-persistence";
+    ClusterCheckpointPersistenceProvider.createCluster(zkAddr,clusterName);
+    ClusterCheckpointPersistenceProvider.Config conf = new ClusterCheckpointPersistenceProvider.Config();
+    conf.setClusterName(clusterName);
+    conf.setZkAddr(zkAddr);
+
+    ArrayList<String> sources= new ArrayList<String>(3);
+    sources.add("source1");
+    sources.add("source2");
+    sources.add("source3");
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+    try
+    {
+      ClusterCheckpointPersistenceProvider ccp = new ClusterCheckpointPersistenceProvider(id,conf);
+      ccp.storeCheckpoint(sources, cp);
+=======
+    try
+    {
+      ClusterCheckpointPersistenceProvider ccp = new ClusterCheckpointPersistenceProvider(id,conf);
+      ccp.storeCheckpoint(sources, cp);
+
+      Checkpoint newCp = ccp.loadCheckpoint(sources);
+      Assert.assertTrue(newCp != null);
+      Assert.assertTrue(newCp.getWindowOffset()==cp.getWindowOffset());
+      Assert.assertTrue(newCp.getWindowScn()==cp.getWindowScn());
+      Assert.assertTrue(newCp.getConsumptionMode()==cp.getConsumptionMode());
+
+    }
+    catch (InvalidConfigException e)
+    {
+      System.err.println("Invalid config: " + e);
+      Assert.assertTrue(false);
+    }
+    catch (IOException e)
+    {
+      System.err.println("Error storing checkpoint: " + e);
+      Assert.assertTrue(false);
+    }
+    catch (ClusterCheckpointException e)
+    {
+      Assert.assertTrue(false);
+    }
+    finally
+    {
+      ClusterCheckpointPersistenceProvider.close(clusterName);
+    }
+
+  }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+      Checkpoint newCp = ccp.loadCheckpoint(sources);
+      Assert.assertTrue(newCp != null);
+      Assert.assertTrue(newCp.getWindowOffset()==cp.getWindowOffset());
+      Assert.assertTrue(newCp.getWindowScn()==cp.getWindowScn());
+      Assert.assertTrue(newCp.getConsumptionMode()==cp.getConsumptionMode());
+=======
+  @Test
+  public void testFrequencyOfCheckpoints() throws Exception
+  {
+    Checkpoint cp = new Checkpoint();
+    long startWindowScn = 50532L;
+    cp.setWindowScn(startWindowScn);
+    cp.setWindowOffset(-1);
+    cp.setConsumptionMode(DbusClientMode.ONLINE_CONSUMPTION);
+
+    final int checkPointIntervalMs = 75;
+    final long delayMs = 31;
+    final int numAttemptedWrites = 7;
+    // We should write at 0, 31, 62, 93, 123, 155, 186, but only at at 0, 93, 155
+    // Persistent provider clock: 0              75           150            225
+    // checkpoint store clock     0    31   62       93  123      155  186
+    final int expectedActualStores = 3;
+
+    String id = "5";
+    String clusterName = "test-cluster-freq";
+    ClusterCheckpointPersistenceProvider.createCluster(zkAddr, clusterName);
+    ClusterCheckpointPersistenceProvider.Config conf = new ClusterCheckpointPersistenceProvider.Config();
+    conf.setClusterName(clusterName);
+    conf.setZkAddr(zkAddr);
+    conf.setCheckpointIntervalMs(checkPointIntervalMs);
+
+    ArrayList<String> sources = new ArrayList<String>(3);
+    sources.add("source1");
+    sources.add("source2");
+    sources.add("source3");
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+    }
+    catch (InvalidConfigException e)
+    {
+      System.err.println("Invalid config: " + e);
+      Assert.assertTrue(false);
+    }
+    catch (IOException e)
+    {
+      System.err.println("Error storing checkpoint: " + e);
+      Assert.assertTrue(false);
+    }
+    catch (ClusterCheckpointException e)
+    {
+      Assert.assertTrue(false);
+    }
+    finally
+    {
+      ClusterCheckpointPersistenceProvider.close(clusterName);
+    }
+=======
+    try
+    {
+      TestFrequencyCPP ccp = new TestFrequencyCPP(id, conf);
+      for (int i = 0; i < numAttemptedWrites; ++i)
+      {
+        cp.setWindowScn(startWindowScn + i);
+        ccp.storeCheckpoint(sources, cp);
+        Checkpoint newCp = ccp.getStoredCheckpoint();
+        // cp integrity checks
+        Assert.assertTrue(newCp != null);
+        Assert.assertTrue(newCp.getWindowOffset() == cp
+            .getWindowOffset());
+        Assert.assertTrue(newCp.getConsumptionMode() == cp
+            .getConsumptionMode());
+        // skipped store test;
+        Thread.sleep(delayMs);
+      }
+      Assert.assertEquals(ccp.getnStores(), expectedActualStores);
+    }
+    finally
+    {
+      ClusterCheckpointPersistenceProvider.close(clusterName);
+    }
+  }
+
+  @Test
+  public void testMultipleClusterCheckpointPersistence()
+  {
+    try
+    {
+      String[] partitionIds = { "1", "2", "3", "4", "5", "6" };
+      String[] clusters = { "tcluster1", "tcluster2", "tcluster3" };
+      ArrayList<CheckpointRW> cpRws = new ArrayList<TestClusterCheckpointPersistenceProvider.CheckpointRW>();
+      for (String c : clusters)
+      {
+        // create clusters;
+        ClusterCheckpointPersistenceProvider.createCluster(zkAddr, c);
+        for (String p : partitionIds)
+        {
+          cpRws.add(new CheckpointRW(c, p, RngUtils
+              .randomPositiveLong()));
+        }
+      }
+      for (CheckpointRW cpRW : cpRws)
+      {
+        cpRW.start();
+      }
+      for (CheckpointRW cpRW : cpRws)
+      {
+        cpRW.join(10000);
+        Assert.assertFalse(cpRW.hasError());
+      }
+    }
+    catch (Exception e)
+    {
+      Assert.assertTrue(false);
+    }
+  }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+  @Test
+  public void testFrequencyOfCheckpoints() throws Exception
+  {
+    Checkpoint cp = new Checkpoint();
+    long startWindowScn = 50532L;
+    cp.setWindowScn(startWindowScn);
+    cp.setWindowOffset(-1);
+    cp.setConsumptionMode(DbusClientMode.ONLINE_CONSUMPTION);
+
+    int checkPointIntervalMs = 200;
+
+    String id = "5";
+    String clusterName = "test-cluster-freq";
+    ClusterCheckpointPersistenceProvider.createCluster(zkAddr, clusterName);
+    ClusterCheckpointPersistenceProvider.Config conf = new ClusterCheckpointPersistenceProvider.Config();
+    conf.setClusterName(clusterName);
+    conf.setZkAddr(zkAddr);
+    conf.setCheckpointIntervalMs(checkPointIntervalMs);
+
+    ArrayList<String> sources = new ArrayList<String>(3);
+    sources.add("source1");
+    sources.add("source2");
+    sources.add("source3");
+
+    try
+=======
+    public boolean hasError()
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+      ClusterCheckpointPersistenceProvider ccp = new ClusterCheckpointPersistenceProvider(
+          id, conf);
+      long delayMs = 50;
+      int numAttemptedWrites = 100;
+      int numActualStores = 0;
+      int expectedActualStores = (delayMs >= checkPointIntervalMs) ? numAttemptedWrites
+          : (int) ((numAttemptedWrites / (checkPointIntervalMs / delayMs)));
+      for (int i = 0; i < numAttemptedWrites; ++i)
+      {
+        cp.setWindowScn(startWindowScn + i);
+        ccp.storeCheckpoint(sources, cp);
+        Checkpoint newCp = ccp.loadCheckpoint(sources);
+        // cp integrity checks
+        Assert.assertTrue(newCp != null);
+        Assert.assertTrue(newCp.getWindowOffset() == cp
+            .getWindowOffset());
+        Assert.assertTrue(newCp.getConsumptionMode() == cp
+            .getConsumptionMode());
+        // skipped store test;
+        if (newCp.getWindowScn() == cp.getWindowScn())
+        {
+          numActualStores++;
+        }
+        Thread.sleep(delayMs);
+      }
+      LOG.warn("Num actual stores=" + numActualStores
+          + " Num expected stores=" + expectedActualStores);
+      Assert.assertTrue((numActualStores == expectedActualStores)
+          || (numActualStores == expectedActualStores + 1));
+=======
+      return _hasError;
+    }
+
+    public String getClusterName()
+    {
+      return _clusterName;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+  @Test
+  public void testMultipleClusterCheckpointPersistence()
+  {
+    try
+=======
+    @Override
+    public void run()
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+      String[] partitionIds = { "1", "2", "3", "4", "5", "6" };
+      String[] clusters = { "tcluster1", "tcluster2", "tcluster3" };
+      ArrayList<CheckpointRW> cpRws = new ArrayList<TestClusterCheckpointPersistenceProvider.CheckpointRW>();
+      for (String c : clusters)
+      {
+        // create clusters;
+        ClusterCheckpointPersistenceProvider.createCluster(zkAddr, c);
+        for (String p : partitionIds)
+=======
+      try
+      {
+        ArrayList<String> sources = new ArrayList<String>(3);
+        sources.add("src1");
+        sources.add("src2");
+        sources.add("src3");
+        long endTimeMs = System.currentTimeMillis() + _durationMs;
+        while (System.currentTimeMillis() < endTimeMs)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+          cpRws.add(new CheckpointRW(c, p, RngUtils
+              .randomPositiveLong()));
+=======
+          ClusterCheckpointPersistenceProvider.Config conf = new ClusterCheckpointPersistenceProvider.Config();
+          conf.setClusterName(_clusterName);
+          conf.setZkAddr(zkAddr);
+          conf.setCheckpointIntervalMs(_delayMs - 10);
+
+          Checkpoint cp = new Checkpoint();
+          cp.setWindowScn(_startScn);
+          cp.setWindowOffset(-1);
+          cp.setConsumptionMode(DbusClientMode.ONLINE_CONSUMPTION);
+
+          // cluster creation code
+          ClusterCheckpointPersistenceProvider ccp = new ClusterCheckpointPersistenceProvider(
+              _partitionId, conf);
+          ccp.storeCheckpoint(sources, cp);
+
+          Checkpoint newCp = ccp.loadCheckpoint(sources);
+
+          Assert.assertTrue(newCp != null);
+          Assert.assertTrue(newCp.getWindowOffset() == cp
+              .getWindowOffset());
+          Assert.assertTrue(newCp.getWindowScn() == cp.getWindowScn());
+          Assert.assertTrue(newCp.getConsumptionMode() == cp
+              .getConsumptionMode());
+
+          Thread.sleep(_delayMs);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+      }
+      for (CheckpointRW cpRW : cpRws)
+      {
+        cpRW.start();
+      }
+      for (CheckpointRW cpRW : cpRws)
+      {
+        cpRW.join(10000);
+        Assert.assertFalse(cpRW.hasError());
+      }
+    }
+    catch (Exception e)
+    {
+      Assert.assertTrue(false);
+    }
+=======
+      }
+      catch (Exception e)
+      {
+        LOG.error("Exception caught " + e, e);
+        _hasError = true;
+      }
+      finally
+      {
+        ClusterCheckpointPersistenceProvider.close(_clusterName);
+      }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+          Thread.sleep(_delayMs);
+        }
+      }
+      catch (Exception e)
+      {
+        LOG.error("Exception caught " + e, e);
+        _hasError = true;
+      }
+      finally
+      {
+        ClusterCheckpointPersistenceProvider.close(_clusterName);
+      }
+    }
+  }
+=======
+  }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/main/java/com/linkedin/databus/client/pub/DatabusV3Registration.java;<<<<<<< MINE
+   * Internal-use only. Please do not use. DDSDBUS-2623.
+   *
+   * This call sets parent registration id for this (child) registration.
+   * Applicable for Multi-Partition Consumers only
+   *
+   * For e.g., if the subscription is for all the partitions on TestDB and TestDB has
+   * 2 partitions, then two individual registrations are created for each of the registrations
+   * In addition a "parent" registration is created, that assimilates information across
+   * all the partitions, and encapsulates the sub-partition level information.
+   *
+   * @param rid RegistrationId of the parent
+   */
+  public void setParentRegId(RegistrationId rid);
+
+  /**
+   * Internal-use only. Please do not use. DDSDBUS-2623.
+   *
+   * Get parent registration id of this registration.
+   *
+   * Applicable for Multi-Partition Consumers only.
+   */
+  public RegistrationId getParentRegId();
+=======
+   * Obtains the parent registration if any. Parent registrations are generally creating when consuming from multiple
+   * partitions simultaneously.
+   * @return the parent registration or null if there isn't any*/
+  public DatabusV3Registration getParentRegistration();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/main/java/com/linkedin/databus/client/pub/ConsumerCallbackResult.java;<<<<<<< MINE
+ *  <li>ERROR_FATAL - callback finished unsuccessfully with an unrecoverable error</li>
+=======
+ *  <li>ERROR_FATAL - *DO NOT USE* This is not currently supported by the databus library </li>
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+ * 
+=======
+ *
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+    
+    BootstrapDBCleaner cleaner = new BootstrapDBCleaner("StandAloneCleaner", 
+    													_sCleanerConfig, 
+    													_sBootstrapConfig, 
+    													null, 
+=======
+    BootstrapDBCleaner cleaner = new BootstrapDBCleaner("StandAloneCleaner",
+    													_sCleanerConfig,
+    													_sBootstrapConfig,
+    													null,
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-utils/databus-bootstrap-utils-impl/src/main/java/com/linkedin/databus/bootstrap/utils/BootstrapDBCleanerMain.java;<<<<<<< MINE
+              .withDescription("Comma seperated list of sourceNames. If not provided, will cleanup all sources in the bootstrap DB.")
+=======
+              .withDescription("Comma seperated list of sourceNames. If not provided, no source will be cleaned up")
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/BootstrapServerStaticConfig.java;<<<<<<< MINE
+			  Map<String, Long> rowsThresholdForSnapshotBypass,
+			  Map<String, Boolean> disableSnapshotBypass,
+			  boolean predicatePushDown,
+              Map<String, Boolean> predicatePushDownBypass,
+              int queryTimeoutInSec,
+              boolean enableMinScnCheck,
+			  BootstrapReadOnlyConfig db) {
+=======
+                                       Map<String, Long> rowsThresholdForSnapshotBypass,
+                                       Map<String, Boolean> disableSnapshotBypass,
+                                       boolean predicatePushDown,
+                                       Map<String, Boolean> predicatePushDownBypass,
+                                       int queryTimeoutInSec,
+                                       boolean enableMinScnCheck,
+                                       BootstrapReadOnlyConfig db,
+                                       long longestDbTxnTimeMins)
+    {
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/BootstrapServerConfig.java;<<<<<<< MINE
+    return new BootstrapServerStaticConfig(
+        defaultRowsThresholdForSnapshotBypass, rowsThresholdForSnapshotBypass,
+        disableSnapshotBypass, predicatePushDown, predicatePushDownBypass,
+        queryTimeoutInSec,enableMinScnCheck, db.build());
+=======
+    return new BootstrapServerStaticConfig(defaultRowsThresholdForSnapshotBypass,
+                                           rowsThresholdForSnapshotBypass,
+                                           disableSnapshotBypass,
+                                           predicatePushDown,
+                                           predicatePushDownBypass,
+                                           queryTimeoutInSec,
+                                           enableMinScnCheck,
+                                           db.build(),
+                                           longestDbTxnTimeMins);
+>>>>>>> YOURS

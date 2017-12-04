@@ -1,0 +1,10 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53;/pig/src/main/java/com/twitter/ambrose/service/DAGNode;main(String[]);
+    DAGTransformer dagTransformer = new SugiyamaLayoutTransformer(true);
+    dagTransformer.transform(nodes);;    for (DAGNode node : nodes) {
+      // useful if we need to read a file, add a field, output and re-generate
+      node.setRuntimeName("pig");
+    };    for (DAGNode node : nodes) {
+      // useful if we need to read a file, add a field, output and re-generate
+      node.setRuntime("pig");
+    }

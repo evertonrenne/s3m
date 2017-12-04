@@ -1,0 +1,188 @@
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_37833de_497bc19/rev_37833de-497bc19/src/main/java/com/netflix/astyanax/serializers/SerializerPackageImpl.java;<<<<<<< MINE
+=======
+        }
+        else {
+            this.keySerializer = type.getSerializer();
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_37833de_497bc19/rev_37833de-497bc19/src/main/java/com/netflix/astyanax/serializers/SerializerPackageImpl.java;<<<<<<< MINE
+        this.keySerializer = type.getSerializer();
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_37833de_497bc19/rev_37833de-497bc19/src/main/java/com/netflix/astyanax/serializers/CompositeSerializer.java;<<<<<<< MINE
+=======
+
+        composite.setComparatorsByPosition(getComparators());
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_37833de_497bc19/rev_37833de-497bc19/src/main/java/com/netflix/astyanax/serializers/SpecificCompositeSerializer.java;<<<<<<< MINE
+=======
+        if ( type != null ) {
+            comparators = new ArrayList<String>( type.types.size() );
+            for ( AbstractType compType : type.types ) {
+                String typeName = compType.toString();
+                if ( typeName.startsWith( "org.apache.cassandra.db.marshal." ) ) {
+                    typeName = typeName.substring( "org.apache.cassandra.db.marshal.".length() );
+                }
+                comparators.add( typeName );
+            }
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_eac3380_e943beb/rev_eac3380-e943beb/src/main/java/com/netflix/astyanax/mapping/Coercions.java;<<<<<<< MINE
+=======
+				} else if (field.getType().isInstance(objValue)) {
+					mutation.putColumn(columnName, ((StringCoercible)objValue).serializeToString());
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/serializers/CompositeRangeBuilder.java;<<<<<<< MINE
+=======
+        
+        getLastRecord().addQueryOp(object, Equality.EQUAL);
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/serializers/CompositeRangeBuilder.java;<<<<<<< MINE
+=======
+        getLastRecord().addQueryOp(value, Equality.GREATER_THAN);
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/serializers/CompositeRangeBuilder.java;<<<<<<< MINE
+=======
+        getLastRecord().addQueryOp(value, Equality.GREATER_THAN_EQUALS);
+
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/serializers/CompositeRangeBuilder.java;<<<<<<< MINE
+=======
+        getLastRecord().addQueryOp(value, Equality.LESS_THAN);
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/serializers/CompositeRangeBuilder.java;<<<<<<< MINE
+=======
+        getLastRecord().addQueryOp(value, Equality.LESS_THAN_EQUALS);
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/serializers/CompositeRangeBuilder.java;<<<<<<< MINE
+    public ByteBufferRange build() {
+        return new ByteBufferRange() {
+            @Override
+            public ByteBuffer getStart() {
+                return start.getByteBuffer();
+            }
+
+            @Override
+            public ByteBuffer getEnd() {
+                return end.getByteBuffer();
+            }
+
+            @Override
+            public boolean isReversed() {
+                return reversed;
+            }
+
+            @Override
+            public int getLimit() {
+                return limit;
+            }
+        };
+=======
+    public CompositeByteBufferRange build() {
+    	return new CompositeByteBufferRange(start, end, limit, reversed, records);
+    }
+    
+    public static class RangeQueryRecord {
+    	
+    	private List<RangeQueryOp> ops = new ArrayList<RangeQueryOp>();
+
+    	public RangeQueryRecord() {
+    		
+    	}
+    	
+    	public void addQueryOp(Object value, Equality operator) {
+    		add(new RangeQueryOp(value, operator));
+    	}
+    	
+    	public void add(RangeQueryOp rangeOp) {
+    		ops.add(rangeOp);
+    	}
+    	
+    	public List<RangeQueryOp> getOps() {
+    		return ops;
+    	}
+    }
+
+    public static class RangeQueryOp {
+		
+		private final Object value;
+		private final Equality operator;
+		
+		public RangeQueryOp(Object value, Equality operator) {
+			this.value = value;
+			this.operator = operator;
+		}
+		
+		public Object getValue() {
+			return value;
+		}
+		public Equality getOperator() {
+			return operator;
+		}
+	}
+    
+    public static class CompositeByteBufferRange implements ByteBufferRange {
+    	
+        private final ByteBufferOutputStream start;
+        private final ByteBufferOutputStream end;
+        private int limit;
+        private boolean reversed;
+        private final List<RangeQueryRecord> records;
+
+        private CompositeByteBufferRange(ByteBufferOutputStream rangeStart, ByteBufferOutputStream rangeEnd, 
+        		int rangeLimit, boolean rangeReversed, 
+        		List<RangeQueryRecord> rangeRecords) {
+        	this.start = rangeStart;
+        	this.end = rangeEnd;
+        	this.limit = rangeLimit;
+        	this.reversed = rangeReversed;
+        	this.records = rangeRecords;
+        }
+        
+        public CompositeByteBufferRange(int rangeLimit, boolean rangeReversed, List<RangeQueryRecord> rangeRecords) {
+        	// This is only meant to be called by internally
+        	this.start = null;
+        	this.end = null;
+        	this.limit = rangeLimit;
+        	this.reversed = rangeReversed;
+        	this.records = rangeRecords;
+        }
+
+    	 @Override
+         public ByteBuffer getStart() {
+             return start.getByteBuffer();
+         }
+
+         @Override
+         public ByteBuffer getEnd() {
+             return end.getByteBuffer();
+         }
+
+         @Override
+         public boolean isReversed() {
+             return reversed;
+         }
+
+         @Override
+         public int getLimit() {
+             return limit;
+         }
+         
+         public List<RangeQueryRecord> getRecords() {
+        	 return records;
+         }
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-cassandra/src/main/java/com/netflix/astyanax/AstyanaxContext.java;<<<<<<< MINE
+=======
+            
+            // HACK to get the CqlFamilyFactory working with AstyanaxContext
+            if (connectionFactory.getClass().getName().contains("CqlFamilyFactory")) {
+            	return new ConnectionPoolProxy<T>(cpConfig, connectionFactory, monitor);
+            }
+            
+>>>>>>> YOURS
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_2b15fd9_3de01e3/rev_2b15fd9-3de01e3/astyanax-entity-mapper/src/main/java/com/netflix/astyanax/entitystore/DefaultEntityManager.java;<<<<<<< MINE
+=======
+                    .withPartitioner(Murmur3Partitioner.get())
+>>>>>>> YOURS

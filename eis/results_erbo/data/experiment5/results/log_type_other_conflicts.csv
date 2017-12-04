@@ -1,0 +1,543 @@
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be93884_a608db1/rev_be93884-a608db1/src/main/java/org/elasticsearch/search/SearchModule.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be93884_a608db1/rev_be93884-a608db1/src/main/java/org/elasticsearch/search/SearchModule.java;<<<<<<< MINE
+=======
+    private final Settings settings;
+
+    public SearchModule(Settings settings) {
+        this.settings = settings;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_75ff5b5_3275939/rev_75ff5b5-3275939/src/main/java/org/elasticsearch/index/query/QueryBuilder.java;<<<<<<< MINE
+    BytesReference buildAsBytes(XContentType contentType) throws ElasticsearchException;
+
+    /**
+     * Create a {@link Query} based on this QueryBuilder
+     * @param parseContext additional information needed to construct the queries
+     * @return the {@link Query}
+     * @throws QueryParsingException
+     * @throws IOException
+     */
+    Query toQuery(QueryParseContext parseContext) throws QueryParsingException, IOException;
+=======
+    BytesReference buildAsBytes(XContentType contentType);
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_3bb8ff2_528f648/rev_3bb8ff2-528f648/src/main/java/org/elasticsearch/search/aggregations/AggregationModule.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_3bb8ff2_528f648/rev_3bb8ff2-528f648/src/main/java/org/elasticsearch/search/aggregations/AggregatorParsers.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_0fd7ed4_77ac452/rev_0fd7ed4-77ac452/src/main/java/org/elasticsearch/index/query/MultiMatchQueryParser.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ed094aa_a536bd5/rev_ed094aa-a536bd5/src/main/java/org/elasticsearch/index/query/ConstantScoreQueryBuilder.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_25b9b73_33fd250/rev_25b9b73-33fd250/src/main/java/org/elasticsearch/index/query/QueryBuilder.java;<<<<<<< MINE
+    BytesReference buildAsBytes(XContentType contentType);
+
+    /**
+     * Converts this QueryBuilder to a lucene {@link Query}
+     * @param parseContext additional information needed to construct the queries
+     * @return the {@link Query}
+     * @throws QueryParsingException
+     * @throws IOException
+     */
+    Query toQuery(QueryParseContext parseContext) throws QueryParsingException, IOException;
+
+    /**
+     * Validate the query.
+     * @return a {@link QueryValidationException} containing error messages, {@code null} if query is valid.
+     * e.g. if fields that are needed to create the lucene query are missing.
+     */
+    QueryValidationException validate();
+=======
+    protected abstract void doXContent(XContentBuilder builder, Params params) throws IOException;
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_61e9461_59d9f7e/rev_61e9461-59d9f7e/src/main/java/org/elasticsearch/index/query/TemplateQueryBuilder.java;<<<<<<< MINE
+    /** Name to reference this type of query. */
+    public static final String NAME = "template";
+
+=======
+    /** Template to fill. */
+    private Template template;
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_83f8849_9b230db/rev_83f8849-9b230db/src/main/java/org/elasticsearch/index/query/SimpleQueryStringFlag.java;<<<<<<< MINE
+/*
+ * Licensed to Elasticsearch under one or more contributor
+ * license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright
+ * ownership. Elasticsearch licenses this file to you under
+ * the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.elasticsearch.index.query;
+
+import org.elasticsearch.common.Strings;
+
+import java.util.Locale;
+
+/**
+ * Flags for the XSimpleQueryString parser
+ */
+public enum SimpleQueryStringFlag {
+    ALL(-1),
+    NONE(0),
+    AND(SimpleQueryParser.AND_OPERATOR),
+    NOT(SimpleQueryParser.NOT_OPERATOR),
+    OR(SimpleQueryParser.OR_OPERATOR),
+    PREFIX(SimpleQueryParser.PREFIX_OPERATOR),
+    PHRASE(SimpleQueryParser.PHRASE_OPERATOR),
+    PRECEDENCE(SimpleQueryParser.PRECEDENCE_OPERATORS),
+    ESCAPE(SimpleQueryParser.ESCAPE_OPERATOR),
+    WHITESPACE(SimpleQueryParser.WHITESPACE_OPERATOR),
+    FUZZY(SimpleQueryParser.FUZZY_OPERATOR),
+    // NEAR and SLOP are synonymous, since "slop" is a more familiar term than "near"
+    NEAR(SimpleQueryParser.NEAR_OPERATOR),
+    SLOP(SimpleQueryParser.NEAR_OPERATOR);
+
+    final int value;
+
+    private SimpleQueryStringFlag(int value) {
+        this.value = value;
+    }
+
+    public int value() {
+        return value;
+    }
+
+    static int resolveFlags(String flags) {
+        if (!Strings.hasLength(flags)) {
+            return ALL.value();
+        }
+        int magic = NONE.value();
+        for (String s : Strings.delimitedListToStringArray(flags, "|")) {
+            if (s.isEmpty()) {
+                continue;
+            }
+            try {
+                SimpleQueryStringFlag flag = SimpleQueryStringFlag.valueOf(s.toUpperCase(Locale.ROOT));
+                switch (flag) {
+                    case NONE:
+                        return 0;
+                    case ALL:
+                        return -1;
+                    default:
+                        magic |= flag.value();
+                }
+            } catch (IllegalArgumentException iae) {
+                throw new IllegalArgumentException("Unknown " + SimpleQueryStringBuilder.NAME + " flag [" + s + "]");
+            }
+        }
+        return magic;
+    }
+}=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_a0cccec_a6c0007/rev_a0cccec-a6c0007/core/src/main/java/org/elasticsearch/index/query/FuzzyQueryBuilder.java;<<<<<<< MINE
+=======
+    /**
+     * Constructs a new fuzzy query.
+     *
+     * @param name  The name of the field
+     * @param value The value of the text
+     */
+    public FuzzyQueryBuilder(String name, String value) {
+        this(name, (Object) value);
+    }
+
+    /**
+     * Constructs a new fuzzy query.
+     *
+     * @param name  The name of the field
+     * @param value The value of the text
+     */
+    public FuzzyQueryBuilder(String name, int value) {
+        this(name, (Object) value);
+    }
+
+    /**
+     * Constructs a new fuzzy query.
+     *
+     * @param name  The name of the field
+     * @param value The value of the text
+     */
+    public FuzzyQueryBuilder(String name, long value) {
+        this(name, (Object) value);
+    }
+
+    /**
+     * Constructs a new fuzzy query.
+     *
+     * @param name  The name of the field
+     * @param value The value of the text
+     */
+    public FuzzyQueryBuilder(String name, float value) {
+        this(name, (Object) value);
+    }
+
+    /**
+     * Constructs a new fuzzy query.
+     *
+     * @param name  The name of the field
+     * @param value The value of the text
+     */
+    public FuzzyQueryBuilder(String name, double value) {
+        this(name, (Object) value);
+    }
+
+    // NO COMMIT: not sure we should also allow boolean?
+    /**
+     * Constructs a new fuzzy query.
+     *
+     * @param name  The name of the field
+     * @param value The value of the text
+     */
+    public FuzzyQueryBuilder(String name, boolean value) {
+        this(name, (Object) value);
+    }
+
+    /**
+     * Sets the boost for this query.  Documents matching this query will (in addition to the normal
+     * weightings) have their score multiplied by the boost provided.
+     */
+    @Override
+    public FuzzyQueryBuilder boost(float boost) {
+        this.boost = boost;
+        return this;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171/core/src/main/java/org/elasticsearch/common/io/stream/StreamOutput.java;<<<<<<< MINE
+
+    /**
+     * Writes a {@link NamedWriteable} to the current stream, by first writing its name and then the object itself
+     */
+    public void writeNamedWriteable(NamedWriteable namedWriteable) throws IOException {
+        writeString(namedWriteable.getName());
+        namedWriteable.writeTo(this);
+    }
+
+    /**
+     * Writes a list of {@link NamedWriteable} to the current stream, by first writing its size and then iterating over the objects
+     * in the list
+     */
+    public void writeNamedWriteableList(List<? extends NamedWriteable> list) throws IOException {
+        writeInt(list.size());
+        for (NamedWriteable obj : list) {
+            writeNamedWriteable(obj);
+        }
+    }
+=======
+
+    /**
+     * Writes a {@link NamedWriteable} to the current stream, by first writing its name and then the object itself
+     */
+    void writeNamedWriteable(NamedWriteable namedWriteable) throws IOException {
+        writeString(namedWriteable.getWriteableName());
+        namedWriteable.writeTo(this);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_260a929_34635a4/rev_260a929-34635a4/core/src/main/java/org/elasticsearch/index/query/GeoDistanceRangeQueryBuilder.java;<<<<<<< MINE
+=======
+    public GeoDistanceRangeQueryBuilder coerce(boolean coerce) {
+        this.coerce = coerce;
+        return this;
+    }
+
+    public GeoDistanceRangeQueryBuilder ignoreMalformed(boolean ignoreMalformed) {
+        this.ignoreMalformed = ignoreMalformed;
+        return this;
+    }
+
+    /**
+     * Sets the filter name for the filter that can be used when searching for matched_filters per hit.
+     */
+    public GeoDistanceRangeQueryBuilder queryName(String queryName) {
+        this.queryName = queryName;
+        return this;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_260a929_34635a4/rev_260a929-34635a4/core/src/main/java/org/elasticsearch/index/query/GeoDistanceQueryBuilder.java;<<<<<<< MINE
+=======
+    /**
+     * Sets the filter name for the filter that can be used when searching for matched_filters per hit.
+     */
+    public GeoDistanceQueryBuilder queryName(String queryName) {
+        this.queryName = queryName;
+        return this;
+    }
+
+    public GeoDistanceQueryBuilder coerce(boolean coerce) {
+        this.coerce = coerce;
+        return this;
+    }
+
+    public GeoDistanceQueryBuilder ignoreMalformed(boolean ignoreMalformed) {
+        this.ignoreMalformed = ignoreMalformed;
+        return this;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_8d2a2f8_c10f116/rev_8d2a2f8-c10f116/core/src/main/java/org/elasticsearch/index/query/QueryFilterBuilder.java;<<<<<<< MINE
+    /**
+     * @return the query builder that is wrapped by this {@link QueryFilterBuilder}
+     */
+    public QueryBuilder innerQuery() {
+        return this.queryBuilder;
+    }
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_197313c_c8d1f7a/rev_197313c-c8d1f7a/core/src/main/java/org/elasticsearch/index/query/QueryParser.java;<<<<<<< MINE
+    Query parse(QueryShardContext context) throws IOException, QueryParsingException;
+
+    /**
+     * Creates a new {@link QueryBuilder} from the query held by the {@link QueryShardContext}
+     * in {@link org.elasticsearch.common.xcontent.XContent} format
+     *
+     * @param parseContext
+     *            the input parse context. The state on the parser contained in
+     *            this context will be changed as a side effect of this method
+     *            call
+     * @return the new QueryBuilder
+     * @throws IOException
+     * @throws QueryParsingException
+     */
+    QB fromXContent(QueryParseContext parseContext) throws IOException, QueryParsingException;
+
+    /**
+     * @return an empty {@link QueryBuilder} instance for this parser that can be used for deserialization
+     */
+    QB getBuilderPrototype();
+=======
+    Query parse(QueryParseContext parseContext) throws IOException, ParsingException;
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_2b43a1c_77a328a/rev_2b43a1c-77a328a/core/src/main/java/org/elasticsearch/common/io/stream/StreamOutput.java;<<<<<<< MINE
+
+    /**
+     * Writes a {@link QueryBuilder} to the current stream
+     */
+    public void writeQuery(QueryBuilder queryBuilder) throws IOException {
+        writeNamedWriteable(queryBuilder);
+    }
+
+    /**
+     * Writes a {@link ScoreFunctionBuilder} to the current stream
+     */
+    public void writeScoreFunction(ScoreFunctionBuilder<?> scoreFunctionBuilder) throws IOException {
+        writeNamedWriteable(scoreFunctionBuilder);
+    }
+=======
+
+    /**
+     * Writes the given {@link GeoPoint} to the stream
+     */
+    public void writeGeoPoint(GeoPoint geoPoint) throws IOException {
+        writeDouble(geoPoint.lat());
+        writeDouble(geoPoint.lon());
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/main/java/org/elasticsearch/action/update/UpdateResponse.java;<<<<<<< MINE
+    /**
+     * The index the document was indexed into.
+     */
+    public String getIndex() {
+        return this.index;
+    }
+
+    /**
+     * The type of the document indexed.
+     */
+    public String getType() {
+        return this.type;
+    }
+
+    /**
+     * The id of the document indexed.
+     */
+    public String getId() {
+        return this.id;
+    }
+
+    /**
+     * Returns the current version of the doc indexed.
+     */
+    public long getVersion() {
+        return this.version;
+    }
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_e9e300c_5c88164/rev_e9e300c-5c88164/core/src/main/java/org/elasticsearch/action/support/replication/ReplicationRequest.java;<<<<<<< MINE
+=======
+    /**
+     * Creates a new request that inherits headers and context from the request provided as argument.
+     */
+    public ReplicationRequest(ActionRequest<?> request) {
+        super(request);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_04681ef_bbeb09e/rev_04681ef-bbeb09e/core/src/main/java/org/elasticsearch/search/suggest/phrase/PhraseSuggestParser.java;<<<<<<< MINE
+
+
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_687aade_0b0a251/rev_687aade-0b0a251/core/src/main/java/org/elasticsearch/common/cli/Terminal.java;<<<<<<< MINE
+    /** Returns a Writer which can be used to write to the terminal directly. */
+    public abstract PrintWriter getWriter();
+
+    /** Print a message directly to the terminal. */
+    protected abstract void doPrint(String msg);
+=======
+    /** Returns a Writer which can be used to write to the terminal directly. */
+    public abstract PrintWriter getWriter();
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_687aade_0b0a251/rev_687aade-0b0a251/core/src/main/java/org/elasticsearch/common/cli/Terminal.java;<<<<<<< MINE
+        private static final PrintWriter writer = new PrintWriter(System.out);
+
+=======
+        private final PrintWriter writer = newWriter();
+
+        SystemTerminal() {
+            super(System.lineSeparator());
+        }
+
+        @SuppressForbidden(reason = "Writer for System.out")
+        private static PrintWriter newWriter() {
+            return new PrintWriter(System.out);
+        }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_838c7dd_ef4293a/rev_838c7dd-ef4293a/core/src/main/java/org/elasticsearch/common/io/stream/StreamOutput.java;<<<<<<< MINE
+    /**
+     * Serializes a potential null value.
+     */
+    public void writeOptionalWritable(@Nullable Writeable writeable) throws IOException {
+        if (writeable != null) {
+            writeBoolean(true);
+            writeable.writeTo(this);
+        } else {
+            writeBoolean(false);
+        }
+    }
+
+=======
+    public void writeOptionalWriteable(@Nullable Writeable writeable) throws IOException {
+        if (writeable != null) {
+            writeBoolean(true);
+            writeable.writeTo(this);
+        } else {
+            writeBoolean(false);
+        }
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7/core/src/main/java/org/elasticsearch/action/support/replication/ReplicationRequest.java;<<<<<<< MINE
+    /**
+     * Returns the sequence number for this operation. The sequence number is assigned while the operation
+     * is performed on the primary shard.
+     */
+    public long seqNo() {
+        return seqNo;
+    }
+
+    /** sets the sequence number for this operation. should only be called on the primary shard */
+    public void seqNo(long seqNo) {
+        this.seqNo = seqNo;
+    }
+
+    /** returns the primary term active at the time the operation was performed on the primary shard */
+    public long primaryTerm() {
+        return primaryTerm;
+    }
+
+    /** marks the primary term in which the operation was performed */
+    public void primaryTerm(long term) {
+        primaryTerm = term;
+    }
+
+=======
+    /** returns the primary term active at the time the operation was performed on the primary shard */
+    public long primaryTerm() {
+        return primaryTerm;
+    }
+
+    /** marks the primary term in which the operation was performed */
+    public void primaryTerm(long term) {
+        primaryTerm = term;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_90ef933_be168f5/rev_90ef933-be168f5/core/src/main/java/org/elasticsearch/action/DocWriteResponse.java;<<<<<<< MINE
+    /**
+     * Returns the sequence number assigned for this change. Returns {@link SequenceNumbersService#UNASSIGNED_SEQ_NO} if the operation
+     * wasn't performed (i.e., an update operation that resulted in a NOOP).
+     */
+    public long getSeqNo() {
+        return seqNo;
+    }
+
+=======
+    /**
+     * Did this request force a refresh? Requests that set {@link WriteRequest#setRefreshPolicy(RefreshPolicy)} to
+     * {@link RefreshPolicy#IMMEDIATE} will always return true for this. Requests that set it to {@link RefreshPolicy#WAIT_UNTIL} will
+     * only return true here if they run out of refresh listener slots (see {@link IndexSettings#MAX_REFRESH_LISTENERS_PER_SHARD}).
+     */
+    public boolean forcedRefresh() {
+        return forcedRefresh;
+    }
+
+    @Override
+    public void setForcedRefresh(boolean forcedRefresh) {
+        this.forcedRefresh = forcedRefresh;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_c809671_85402d5/rev_c809671-85402d5/core/src/main/java/org/elasticsearch/action/DocWriteResponse.java;<<<<<<< MINE
+=======
+    /**
+     * Gets the location of the written document as a string suitable for a {@code Location} header.
+     * @param routing any routing used in the request. If null the location doesn't include routing information.
+     */
+    public String getLocation(@Nullable String routing) {
+        // Absolute path for the location of the document. This should be allowed as of HTTP/1.1:
+        // https://tools.ietf.org/html/rfc7231#section-7.1.2
+        String index = getIndex();
+        String type = getType();
+        String id = getId();
+        String routingStart = "?routing=";
+        int bufferSize = 3 + index.length() + type.length() + id.length();
+        if (routing != null) {
+            bufferSize += routingStart.length() + routing.length();
+        }
+        StringBuilder location = new StringBuilder(bufferSize);
+        location.append('/').append(index);
+        location.append('/').append(type);
+        location.append('/').append(id);
+        if (routing != null) {
+            location.append(routingStart).append(routing);
+        }
+        return location.toString();
+    }
+
+>>>>>>> YOURS

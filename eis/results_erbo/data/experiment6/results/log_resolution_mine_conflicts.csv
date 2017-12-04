@@ -1,0 +1,582 @@
+/home/ramdisk/experiment6/projects/databus/revisions/rev_bf4c533_0afcc46/rev_bf4c533-0afcc46/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestChunkedBodyReadableByteChannel.java;<<<<<<< MINE
+=======
+  /** Block the writer because of running out of buffer space and check it times out eventually */
+  public void testUnblockWriteOnClose()
+  {
+    ChunkedBodyReadableByteChannel channel = new ChunkedBodyReadableByteChannel();
+
+    StringBuilder megabyte = new StringBuilder(1000000);
+    while (megabyte.length() < 1000000)
+    {
+      megabyte.append("TeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeSt");
+    }
+
+    StringBuilder chunkBuilder = new StringBuilder(5200000);
+    for (int i = 0; i < 5; ++i)
+    {
+      chunkBuilder.append(megabyte);
+    }
+    String chunk = chunkBuilder.toString();
+    String chunk2 = "Hello there.";
+
+    HttpResponseReplayer responseReplayer = new HttpResponseReplayer(channel, null, new String[]{chunk2, chunk});
+
+    Thread replayerThread = new Thread(responseReplayer, "replayer");
+
+    replayerThread.start();
+
+    TestUtil.sleep(ChunkedBodyReadableByteChannel.MAX_CHUNK_SPACE_WAIT_MS / 2);
+    Assert.assertTrue(replayerThread.isAlive());
+
+    Assert.assertTrue(joinThreadWithExpoBackoff(replayerThread,
+                                                ChunkedBodyReadableByteChannel.MAX_CHUNK_SPACE_WAIT_MS));
+  }
+
+  @Test
+  /** make sure the reader does not hang if the channel is closed while it is reading. */
+  public void testUnblockReadOnPrematureClose() throws IOException
+  {
+    final ChunkedBodyReadableByteChannel channel = new ChunkedBodyReadableByteChannel();
+
+    StringBuilder kilobyte = new StringBuilder(1000);
+    while (kilobyte.length() < 1000)
+    {
+      kilobyte.append("TeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeStTeSt");
+    }
+
+    final int chunkNum = 10000;
+    String[] chunks = new String[chunkNum];
+    for (int i = 0; i < chunkNum; ++i) chunks[i] = kilobyte.toString();
+
+    HttpResponseReplayer responseReplayer = new HttpResponseReplayer(channel, null, chunks);
+
+    Thread replayerThread = new Thread(responseReplayer);
+    //a flag if the read is finished
+    final AtomicBoolean out = new AtomicBoolean(false);
+
+    //start a thread waiting for data on the channel
+    final Thread readerThread = new Thread(new Runnable()
+      {
+
+        @Override
+        public void run()
+        {
+          ByteBuffer tmp = ByteBuffer.allocate(10 * 1024 * 1024);
+          try
+          {
+            channel.read(tmp);
+            out.set(true);
+          }
+          catch (IOException ioe)
+          {
+            out.set(true);
+          }
+        }
+      });
+    readerThread.setDaemon(true);
+
+    replayerThread.start();
+    readerThread.start();
+
+    TestUtil.sleep(5);
+
+    channel.close();
+
+    boolean replayerDone = joinThreadWithExpoBackoff(replayerThread, 30000);
+    Assert.assertTrue(replayerDone);
+
+    boolean readerDone = joinThreadWithExpoBackoff(readerThread, 30000);
+    Assert.assertTrue(readerDone);
+
+  }
+
+  @Test
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleanerQueryHelper.java;<<<<<<< MINE
+=======
+/**
+ * This class provides helper queries used for execution in the BootstrapDBCleaner context
+ * This is a singleton class, and expected to be held by multiple objects and invoked in
+ * various thread contexts. So, the methods are expected to be thread-safe by only operating
+ * with thread-local storage
+ */
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleanerQueryExecutor.java;<<<<<<< MINE
+=======
+    _name = name;
+    LOG = Logger.getLogger(MODULE + "." + name);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-common/databus-bootstrap-common-impl/src/main/java/com/linkedin/databus/bootstrap/common/BootstrapDBCleaner.java;<<<<<<< MINE
+=======
+  }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-producer/databus-bootstrap-producer-impl/src/main/java/com/linkedin/databus/bootstrap/producer/BootstrapDBPeriodicTriggerThread.java;<<<<<<< MINE
+=======
+    LOG.info("PeriodicTrigger Config :" + _config);
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/test/DbusEventAppender.java;<<<<<<< MINE
+=======
+    cp.setSnapshotOffset(dataEventCount);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+ *  <li> {@code tsNsecs}          - optional value that is set to the timestamp of the EOP event in the window of
+ *                                  events with the highest SCN that has been successfully consumed. If tsNsecs is
+ *                                  greater than 0 then the value of windowScn must not be -1 (see discussion on
+ *                                  flexible checkpoints below).
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+ * If a flexible checkpoint has tsNsecs set, the value of tsNsecs must be -1 (unset value).
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+ *   <li> {@code bootstrap_start_tsnsecs}
+ *                                     - (optional) the timestamp of the EOP event of the highest window successfully
+ *                                       processed by the client before the client fell off the relay. This value
+ *                                       is optionally set by the bootstrap client before bootstrapping begins, and
+ *                                       is never changed during the entire bootstrap sequence
+ *                                       (snapshot and catchup phases).
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+  // TODO ALERT XXX WARNING: Do NOT add any more member variables. See DDSDBUS-3070. It is ok to add to internalData
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+  // TODO Deprecate and remove this method. See DDSDBUS-3070.
+  // See toString()
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+  // This is the method used by databus components to "serialize" a checkpoint for on-the-wire
+  // transmission.
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+    setTsNsecs(UNSET_TS_NSECS);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+   * Creates a time-based checkpoint.
+   *
+   * A very nice API to have for the clients, when we provide the use case for a registration to
+   * start receiving relay events X hours before registration time (i,e. neither from the beginning of
+   * buffer, nor from latest point).
+  public static Checkpoint createTimeBasedCheckpoint(long nsecs)
+  throws DatabusRuntimeException
+  {
+    if (nsecs <= UNSET_TS_NSECS)
+    {
+      throw new DatabusRuntimeException("Invalid value for timestamp:" + nsecs);
+    }
+    Checkpoint cp = new Checkpoint();
+    cp.setTsNsecs(nsecs);
+    cp.setWindowScn(WINDOW_SCN_FOR_PURE_TIMEBASED_CKPT);
+    return cp;
+  }
+   */
+
+  /**
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+    lhash = Fnv1aHashImpl.addLong32(lhash, getTsNsecs());
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+      lhash = Fnv1aHashImpl.addLong32(lhash, getBootstrapStartNsecs());
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/main/java/com/linkedin/databus/core/Checkpoint.java;<<<<<<< MINE
+=======
+      long tsNsecs = getTsNsecs();
+      // tsNsecs should be unset.
+      if (tsNsecs != UNSET_TS_NSECS)
+      {
+        throw new InvalidCheckpointException("unexpected tsNsecs:" + tsNsecs, this);
+      }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/TestCheckpoint.java;<<<<<<< MINE
+
+=======
+    Assert.assertFalse(cp.getFlexible());
+    Assert.assertEquals(cp.getTsNsecs(), Checkpoint.UNSET_TS_NSECS);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-impl/src/test/java/com/linkedin/databus/core/TestCheckpoint.java;<<<<<<< MINE
+=======
+
+    try
+    {
+      newCp = Checkpoint.createFlexibleCheckpoint();
+      newCp.setTsNsecs(1L);
+      newCp.assertCheckpoint();
+      Assert.fail("InvalidCheckpointException expected");
+    }
+    catch (InvalidCheckpointException e)
+    {
+      // ok
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-container/src/main/java/com/linkedin/databus2/core/container/request/DatabusRequest.java;<<<<<<< MINE
+=======
+      if (_responseThrowable.getMessage() != null)
+      {
+        _responseContent.addMetadata(DatabusHttpHeaders.DATABUS_ERROR_MESSAGE_HEADER, _responseThrowable.getMessage());
+      }
+      else
+      {
+        _responseContent.addMetadata(DatabusHttpHeaders.DATABUS_ERROR_MESSAGE_HEADER, "No message provided");
+      }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-core/databus-core-container/src/main/java/com/linkedin/databus2/core/container/request/DatabusRequest.java;<<<<<<< MINE
+=======
+        if (cause.getMessage() != null)
+        {
+          _responseContent.addMetadata(DatabusHttpHeaders.DATABUS_ERROR_CAUSE_MESSAGE_HEADER,cause.getMessage());
+        }
+        else
+        {
+          _responseContent.addMetadata(DatabusHttpHeaders.DATABUS_ERROR_CAUSE_MESSAGE_HEADER,"No message provided");
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/DbusEventAvroDecoder.java;<<<<<<< MINE
+=======
+      g.writeFieldName("partId");
+      g.writeNumber(Integer.valueOf(e.getPartitionId()));
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+=======
+    LOG.info("\n\nstarting testPerf()");
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+=======
+    LOG.info("\n\nstarting test1StreamConsumerHappyPath()");
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+=======
+    LOG.info("\n\nstarting test1StreamConsumerCallFailure()");
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+=======
+    LOG.info("\n\nstarting testConsumersWithException()");
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+=======
+    LOG.info("\n\nstarting test3IndependentStreamConsumersHappyPath()");
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+=======
+    LOG.info("\n\nstarting test3IndependentStreamConsumersWithFailure()");
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+=======
+    LOG.info("\n\nstarting test3GroupedStreamConsumersHappyPath()");
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+=======
+    LOG.info("\n\nstarting test3GroupedStreamConsumersWithFailure()");
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+=======
+    LOG.info("\n\nstarting test1ConsumerTimeout()");
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/netty/RemoteExceptionHandler.java;<<<<<<< MINE
+=======
+    if (result==null)
+    {
+      result = readChannel.getMetadata(DatabusHttpHeaders.DATABUS_ERROR_CLASS_HEADER);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/netty/RemoteExceptionHandler.java;<<<<<<< MINE
+=======
+      else if (err.equalsIgnoreCase(BootstrapDatabaseTooYoungException.class.getName()))
+      {
+        remoteException = new BootstrapDatabaseTooYoungException();
+      }
+      else if (err.equalsIgnoreCase(BootstrapDBException.class.getName()))
+      {
+        remoteException = new BootstrapDBException();
+      }
+      else if (err.equalsIgnoreCase(SQLException.class.getName()))
+      {
+        remoteException = new SQLException();
+      }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/netty/NettyHttpDatabusBootstrapConnection.java;<<<<<<< MINE
+=======
+        LOG.error("Failed to process /startscn response");
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/SimpleFileLoggingConsumer.java;<<<<<<< MINE
+    
+=======
+
+    if (null != filterConfig)
+    	reg.withServerSideFilter(filterConfig);
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+=======
+  }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+=======
+
+    if (_fileBasedRawEventCallback != null)
+    {
+      _fileBasedRawEventCallback.onEvent(e);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+=======
+
+    if (_fileBasedRawEventCallback != null)
+    {
+      _fileBasedRawEventCallback.onEvent(e);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/generic/DatabusFileLoggingConsumer.java;<<<<<<< MINE
+=======
+    // There are integration tests that rely on this message (they look for "EndBootstrapSequence:" in the logs)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+=======
+  // TODO:  deprecate this?  returned instance is useless, but RuntimeConfigBuilder needs a managed instance...
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher.java;<<<<<<< MINE
+=======
+              _lastEowTsNsecs = nextEvent.timestampInNanos();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher.java;<<<<<<< MINE
+=======
+                //the first window (startEvents()) can have a eop whose sequence() is non-zero but timestamp 0 e.g. in chained relay .
+                //The reason is that the eop's timestamp is the max timestamp of all data events seen so far.
+                if (nextEvent.timestampInNanos() > 0)
+                {
+                  _lastEowTsNsecs = nextEvent.timestampInNanos();
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher.java;<<<<<<< MINE
+=======
+            // TODO: According to DbusEventFactory.createCheckpointEvent, event,sequence() is always 0!
+            // Is this even executed? If we send a checkpoint event from the relay, we could be screwed!
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/GenericDispatcher.java;<<<<<<< MINE
+=======
+              // TODO Can't do this math for timestamp. See DDSDBUS-3149
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestBootstrapPullThread.java;<<<<<<< MINE
+=======
+    EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(null).times(2);
+
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+        //Assumption: generates events with  non-decreasing timestamps
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+
+
+            Assert.assertEquals(cp.getWindowOffset().longValue() , -1L);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+        //simulate bootstrap server; use this checkpoint as init checkpoint
+        eventProducer.setBootstrapCheckpoint(initCheckpoint);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+        Assert.assertTrue(cps.size() > 0);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+            //check if progress has been made during bootstrap
+            Assert.assertTrue(cp.getSnapshotOffset() > 0);
+            //these two values should be unchanged during the course of bootstrap
+            Assert.assertEquals(sinceScn,cp.getBootstrapSinceScn().longValue());
+            Assert.assertEquals(startTsNsecs,cp.getBootstrapStartNsecs());
+            //the tsNsec normally udpdated by client at end of window should be a no-op during bootstrap
+            Assert.assertEquals(Checkpoint.UNSET_TS_NSECS,cp.getTsNsecs());
+            //the scn passed to consumers during onCheckpoint should be the sinceSCN and not any other interim value
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+        log.info("end\n");
+    }
+
+    //This is a negative test for DDSDBUS-3421. We expect dispatcher to fail without dataEvents being called.
+    @Test
+    public void testAbsentSchemaTest() throws Exception
+    {
+      runAbsentSchemaTest(true);
+      runAbsentSchemaTest(false);
+    }
+
+    void runAbsentSchemaTest(boolean setSchemaCheck) throws Exception
+    {
+      /* Experiment setup */
+      int numEvents=100; int maxWindowSize=20;
+      int payloadSize = 20;
+      int numCheckpoints = numEvents/maxWindowSize;
+
+      /* Consumer creation */
+      //setup consumer to fail on data callback at the nth event
+      DataDecodingConsumer tConsumer = new DataDecodingConsumer();
+
+      HashMap<Long, List<RegisterResponseEntry>> schemaMap =
+              new HashMap<Long, List<RegisterResponseEntry>>();
+
+      short srcId=1;
+      List<RegisterResponseEntry> l1 = new ArrayList<RegisterResponseEntry>();
+      l1.add(new RegisterResponseEntry(1L, srcId,SOURCE1_SCHEMA_STR));
+
+      schemaMap.put(1L, l1);
+
+      Map<Long, IdNamePair> sourcesMap = new HashMap<Long, IdNamePair>();
+      List<String> sources = new ArrayList<String>();
+      for (int i = 1; i <= 1; ++i)
+      {
+          IdNamePair sourcePair = new IdNamePair((long)i, "source" + i);
+          sources.add(sourcePair.getName());
+          sourcesMap.put(sourcePair.getId(), sourcePair);
+      }
+
+      long consumerTimeBudgetMs = 60*1000;
+      DatabusV2ConsumerRegistration consumerReg = new DatabusV2ConsumerRegistration(tConsumer, sources, null);
+      List<DatabusV2ConsumerRegistration> allRegistrations =  Arrays.asList(consumerReg);
+      //Single threaded execution of consumer
+      MultiConsumerCallback mConsumer = new MultiConsumerCallback(allRegistrations,Executors.newFixedThreadPool(1),
+              consumerTimeBudgetMs,new StreamConsumerCallbackFactory(null,null),null,null, null);
+
+
+
+      /* Generate events **/
+      Vector<DbusEvent> srcTestEvents = new Vector<DbusEvent>();
+      Vector<Short> srcIdList = new Vector<Short> ();
+      srcIdList.add(srcId);
+
+      DbusEventGenerator evGen = new DbusEventGenerator(0,srcIdList);
+      //the schemaIds generated here are random. They will not be the same as those computed in the dispatcher.
+      //The result is either the processing will fail early (desired behaviour) or during event decoding in the onDataEvent()
+      Assert.assertTrue(evGen.generateEvents(numEvents, maxWindowSize, 512, payloadSize, srcTestEvents) > 0);
+
+      int totalSize=0; int maxSize=0;
+      for (DbusEvent e : srcTestEvents)
+      {
+          totalSize += e.size();
+          maxSize = (e.size() > maxSize) ? e.size():maxSize;
+      }
+
+      /* Source configuration */
+      DatabusSourcesConnection.Config conf = new DatabusSourcesConnection.Config();
+      conf.getDispatcherRetries().setMaxRetryNum(1);
+      conf.setFreeBufferThreshold(maxSize);
+      conf.setConsumerTimeBudgetMs(consumerTimeBudgetMs);
+      int freeBufferThreshold = conf.getFreeBufferThreshold();
+      DatabusSourcesConnection.StaticConfig connConfig = conf.build();
+
+      //make buffer large enough to hold data; the control events are large that contain checkpoints
+      int producerBufferSize =  totalSize*2 + numCheckpoints*10*maxSize*5 + freeBufferThreshold;
+      int individualBufferSize = producerBufferSize;
+      int indexSize = producerBufferSize / 10;
+      int stagingBufferSize = producerBufferSize;
+
+      /*Event Buffer creation */
+      TestGenericDispatcherEventBuffer dataEventsBuffer=
+          new TestGenericDispatcherEventBuffer(
+              getConfig(producerBufferSize, individualBufferSize, indexSize ,
+                        stagingBufferSize, AllocationPolicy.HEAP_MEMORY,
+                        QueuePolicy.BLOCK_ON_WRITE));
+
+      List<DatabusSubscription> subs = DatabusSubscription.createSubscriptionList(sources);
+      /* Generic Dispatcher creation */
+      TestDispatcher<DatabusCombinedConsumer> dispatcher = new TestDispatcher<DatabusCombinedConsumer>("rollBackcheck",
+              connConfig,
+              subs,
+              new InMemoryPersistenceProvider(),
+              dataEventsBuffer,
+              mConsumer,
+              false);
+      //DDSDBUS-3421; set schema check to true
+      dispatcher.setSchemaIdCheck(setSchemaCheck);
+
+      /* Launch writer */
+      DbusEventAppender eventProducer = new DbusEventAppender(srcTestEvents, dataEventsBuffer,0 ,null) ;
+      Thread tEmitter = new Thread(eventProducer);
+      tEmitter.start();
+
+      /* Launch dispatcher */
+      Thread tDispatcher = new Thread(dispatcher);
+      tDispatcher.start();
+
+      /* Now initialize this  state machine */
+      dispatcher.enqueueMessage(SourcesMessage.createSetSourcesIdsMessage(sourcesMap.values()));
+      dispatcher.enqueueMessage(SourcesMessage.createSetSourcesSchemasMessage(schemaMap));
+
+      //be generous ; use worst case for num control events
+      long waitTimeMs  = (numEvents*1 + numEvents*1) * 4;
+      tEmitter.join(waitTimeMs);
+      //wait for dispatcher to finish reading the events;
+      tDispatcher.join(waitTimeMs);
+      Assert.assertFalse(tEmitter.isAlive());
+
+      //asserts
+      if (!setSchemaCheck)
+      {
+        //decoding fails many errors show up;
+        Assert.assertTrue(tConsumer.getNumDataEvents() > 0);
+        Assert.assertTrue(tConsumer.getNumErrors() > 0);
+      }
+      else
+      {
+        //never gets to decoding; but error shows up (exactly one - dispatcher retries set to 1);
+        Assert.assertEquals(0, tConsumer.getNumDataEvents());
+        Assert.assertEquals(1,tConsumer.getNumErrors());
+      }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+  // TODO Change this class to behave like bootstrap dispatcher or relay dispatcher depending on what we are
+  // testing. If bootstrap dispatcher, then we need to override processSysEvents to construct checkpoint when
+  // a checkpoint event is received (or better, initialize checkpoint in ctor), and then override createCheckpoint
+  // method to call onEvent on the saved checkpoint.
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+        _lastTsInNanosOfWindow=_lastTsInNanosOfEvent;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+=======
+        _lastTsInNanosOfEvent = e.timestampInNanos();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus2-example/databus2-example-relay/src/main/java/com/linkedin/databus/relay/example/PersonRelayServer.java;<<<<<<< MINE
+=======
+     cli.parseRelayConfig();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/BootstrapServerStaticConfig.java;<<<<<<< MINE
+=======
+      this._longestDbTxnTimeMins = longestDbTxnTimeMins;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/StartSCNRequestProcessor.java;<<<<<<< MINE
+=======
+
+    } catch (RequestProcessingException ex) {
+      LOG.error("Got exception while calculating startSCN", ex);
+      throw ex;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-bootstrap-server/databus-bootstrap-server-impl/src/main/java/com/linkedin/databus/bootstrap/server/BootstrapServerConfig.java;<<<<<<< MINE
+=======
+    longestDbTxnTimeMins = DEFAULT_LONGEST_DB_TXN_TIME_MINS;
+>>>>>>> YOURS

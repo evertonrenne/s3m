@@ -1,0 +1,712 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_17ab26b_c271fbc/rev_17ab26b-c271fbc;/src/main/java/com/fasterxml/jackson/databind/ObjectMapper;addMixInAnnotations(Class<?>,Class<?>);@Deprecated
+    public final void addMixInAnnotations(Class<?> target, Class<?> mixinSource) {
+        addMixIn(target, mixinSource);;@Deprecated
+    public final void addMixInAnnotations(Class<?> target, Class<?> mixinSource)
+    {
+        _mixInAnnotations.put(new ClassKey(target), mixinSource);;public final void addMixInAnnotations(Class<?> target, Class<?> mixinSource)
+    {
+        _mixInAnnotations.put(new ClassKey(target), mixinSource);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_785c456_fd4eb1b/rev_785c456-fd4eb1b;/src/main/java/com/fasterxml/jackson/databind/ser/BasicSerializerFactory;buildMapSerializer(SerializationConfig,MapType,BeanDescription,boolean,JsonSerializer<Object>,TypeSerializer,JsonSerializer<Object>);                Object filterId = findFilterId(config, beanDesc);
+                MapSerializer mapSer = MapSerializer.construct(config.getAnnotationIntrospector().findPropertiesToIgnore(beanDesc.getClassInfo()),;                Object filterId = findFilterId(config, beanDesc);
+                ser = MapSerializer.construct(config.getAnnotationIntrospector().findPropertiesToIgnore(beanDesc.getClassInfo()),;            */
+            Object filterId = findFilterId(config, beanDesc);
+            ser = MapSerializer.construct(config.getAnnotationIntrospector().findPropertiesToIgnore(beanDesc.getClassInfo()),
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_cc8b4a5_1ed7f38/rev_cc8b4a5-1ed7f38;/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass;resolveCreators();        ClassUtil.Ctor[] declaredCtors = ClassUtil.getConstructors(_class);
+        // Constructor also always members of this class, so
+        TypeResolutionContext typeContext = this;        
+        for (ClassUtil.Ctor ctor : declaredCtors) {
+            if (ctor.getParamCount() == 0) {
+                _defaultConstructor = _constructDefaultConstructor(ctor, typeContext);
+            } else {
+                if (constructors == null) {
+                    constructors = new ArrayList<AnnotatedConstructor>(Math.max(10, declaredCtors.length));;        Constructor<?>[] declaredCtors = _class.getDeclaredConstructors();
+        for (Constructor<?> ctor : declaredCtors) {
+            if (ctor.getParameterTypes().length == 0) {
+                _defaultConstructor = _constructConstructor(ctor, true);
+            } else {
+                if (constructors == null) {
+                    constructors = new ArrayList<AnnotatedConstructor>(Math.max(10, declaredCtors.length));;        Constructor<?>[] declaredCtors = _class.getDeclaredConstructors();
+        for (Constructor<?> ctor : declaredCtors) {
+            if (_isIncludableConstructor(ctor)) {
+                if (ctor.getParameterTypes().length == 0) {
+                    _defaultConstructor = _constructConstructor(ctor, true);
+                } else {
+                    if (constructors == null) {
+                        constructors = new ArrayList<AnnotatedConstructor>(Math.max(10, declaredCtors.length));
+                    }
+                    constructors.add(_constructConstructor(ctor, false));
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f75f2bf_660ec8f/rev_f75f2bf-660ec8f;/src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector;findNameForSerialization(Annotated);            return PropertyName.construct(jg.value());;            name = jg.value();
+        } else {
+            JsonProperty pann = _findAnnotation(a, JsonProperty.class);
+            if (pann != null) {
+                name = pann.value();
+            } else if (_hasAnnotation(a, JsonSerialize.class)
+                    || _hasAnnotation(a, JsonView.class)
+                    || _hasAnnotation(a, JsonRawValue.class)) {
+                name = "";
+            } else {
+                return null;
+            };            name = jg.value();
+        } else {
+            JsonProperty pann = _findAnnotation(a, JsonProperty.class);
+            if (pann != null) {
+                name = pann.value();
+                /* 22-Apr-2014, tatu: Should figure out a better way to do this, but
+                 *   it's actually bit tricky to do it more efficiently (meta-annotations
+                 *   add more lookups; AnnotationMap costs etc)
+                 */
+            } else if (_hasAnnotation(a, JsonSerialize.class)
+                    || _hasAnnotation(a, JsonView.class)
+                    || _hasAnnotation(a, JsonRawValue.class)
+                    || _hasAnnotation(a, JsonUnwrapped.class)
+                    || _hasAnnotation(a, JsonBackReference.class)
+                    || _hasAnnotation(a, JsonManagedReference.class)) {
+                name = "";
+            } else {
+                return null;
+            }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_ff4b9a2_7a3b0b1/rev_ff4b9a2-7a3b0b1;/src/main/java/com/fasterxml/jackson/databind/DeserializationContext;weirdStringException(String,Class<?>,String);                String.format("Can not construct instance of %s from String value (%s): %s",
+                        instClass.getName(), _quotedString(value), msg),;                String.format("Can not construct instance of %s from String value '%s': %s",
+                        instClass.getName(), _valueDesc(), msg),;                String.format("Can not construct instance of %s from String value '%s': %s",
+                        instClass.getName(), _desc(value), msg),
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_ce9fad9_7a3b0b1/rev_ce9fad9-7a3b0b1;/src/main/java/com/fasterxml/jackson/databind/DeserializationContext;weirdStringException(String,Class<?>,String);                String.format("Can not construct instance of %s from String value (%s): %s",
+                        instClass.getName(), _quotedString(value), msg),;                String.format("Can not construct instance of %s from String value '%s': %s",
+                        instClass.getName(), _valueDesc(), msg),;                String.format("Can not construct instance of %s from String value '%s': %s",
+                        instClass.getName(), _desc(value), msg),
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_0934fb7_493ba8d/rev_0934fb7-493ba8d;/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory;constructEnumResolver(Class<?>,DeserializationConfig,AnnotatedMethod);        // May need to use Enum.toString()
+        if (config.isEnabled(DeserializationFeature.READ_ENUMS_USING_TO_STRING)) {
+            return EnumResolver.constructUnsafeUsingToString(enumClass, config.getAnnotationIntrospector());
+        };        // May need to use Enum.toString()
+        if (config.isEnabled(DeserializationFeature.READ_ENUMS_USING_TO_STRING)) {
+            return EnumResolver.constructUnsafeUsingToString(enumClass);
+        };        // 14-Mar-2016, tatu: We used to check `DeserializationFeature.READ_ENUMS_USING_TO_STRING`
+        //   here, but that won't do: it must be dynamically changeable...
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_0934fb7_493ba8d/rev_0934fb7-493ba8d;/src/main/java/com/fasterxml/jackson/databind/deser/std/EnumDeserializer;EnumDeserializer(EnumResolver);        super(res.getEnumClass());
+        _enumLookup = res.constructLookup();
+        _enumsByIndex = res.getRawEnums();
+        _enumDefaultValue = res.getDefaultValue();;        super(res.getEnumClass());
+        _enumLookup = res.constructLookup();
+        _enumsByIndex = res.getRawEnums();;        super(byNameResolver.getEnumClass());
+        _lookupByName = byNameResolver.constructLookup();
+        _enumsByIndex = byNameResolver.getRawEnums();
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_580e652_2520c29/rev_580e652-2520c29;/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory;createReferenceDeserializer(DeserializationContext,ReferenceType,BeanDescription);                return new AtomicReferenceDeserializer(type, contentTypeDeser, contentDeser);;                return new AtomicReferenceDeserializer(contentType, contentTypeDeser, contentDeser);;                // 19-Apr-2016, tatu: By default we'd get something that expect to see an
+                //   AtomicReference... but what we need is something else, so...
+                return new AtomicReferenceDeserializer(contentType, contentTypeDeser, contentDeser);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_ee7ead7_7dd671d/rev_ee7ead7-7dd671d;/src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector;hasCreatorAnnotation(Annotated);         if (a instanceof AnnotatedConstructor) {
+             if (_java7Helper != null) {
+                 Boolean b = _java7Helper.hasCreatorAnnotation(a);
+                 if (b != null) {
+                     return b.booleanValue();;         if (a instanceof AnnotatedConstructor) {
+             if (_jdk7Helper != null) {
+                 Boolean b = _jdk7Helper.hasCreatorAnnotation(a);
+                 if (b != null) {
+                     return b.booleanValue();;         // 19-Apr-2016, tatu: As per [databind#1197], [databind#1122] (and some related),
+         //    may or may not consider it a creator
+         if (_cfgConstructorPropertiesImpliesCreator ) {
+             if (a instanceof AnnotatedConstructor) {
+                 if (_jdk7Helper != null) {
+                     Boolean b = _jdk7Helper.hasCreatorAnnotation(a);
+                     if (b != null) {
+                         return b.booleanValue();
+                     }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_6580a9d_f40e6c1/rev_6580a9d-f40e6c1;/src/main/java/com/fasterxml/jackson/databind/deser/std/StdDeserializer;_parseDate(JsonParser,DeserializationContext);            return _parseDate(p.getText(), ctxt);;            String value = null;
+            try {
+                // As per [JACKSON-203], take empty Strings to mean
+                value = jp.getText().trim();
+                if (value.length() == 0) {
+                    return (Date) getEmptyValue(ctxt);
+                }
+                if (_hasTextualNull(value)) {
+                    return (java.util.Date) getNullValue(ctxt);
+                }
+                return ctxt.parseDate(value);
+            } catch (IllegalArgumentException iae) {
+                throw ctxt.weirdStringException(value, _valueClass,
+                        "not a valid representation (error: "+iae.getMessage()+")");
+            };            String value = null;
+            try {
+                // As per [JACKSON-203], take empty Strings to mean
+                value = p.getText().trim();
+                if (value.length() == 0) {
+                    return (Date) getEmptyValue(ctxt);
+                }
+                if (_hasTextualNull(value)) {
+                    return (java.util.Date) getNullValue(ctxt);
+                }
+                return ctxt.parseDate(value);
+            } catch (IllegalArgumentException iae) {
+                throw ctxt.weirdStringException(value, _valueClass,
+                        "not a valid representation (error: "+iae.getMessage()+")");
+            }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_548245c_7bc0fc4/rev_548245c-7bc0fc4;/src/main/java/com/fasterxml/jackson/databind/DeserializationContext;mappingException(Class<?>,JsonToken);@Deprecated
+    public JsonMappingException mappingException(Class<?> targetClass, JsonToken token) {;public JsonMappingException mappingException(Class<?> targetClass, JsonToken token) {;public JsonMappingException mappingException(Class<?> targetClass, JsonToken token) {
+        String tokenDesc = (token == null) ? "<end of input>" : String.format("%s token", token);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_facb2c0_e4b261e/rev_facb2c0-e4b261e;/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory;constructSettableProperty(DeserializationContext,BeanDescription,BeanPropertyDefinition,JavaType);        JavaType type = resolveMemberAndTypeAnnotations(ctxt, mutator, propType0);
+        // Does the Method specify the deserializer to use? If so, let's use it.;        // note: this works since we know there's exactly one argument for methods
+        BeanProperty.Std property = new BeanProperty.Std(propDef.getFullName(),
+                propType0, propDef.getWrapperName(),
+                beanDesc.getClassAnnotations(), mutator, propDef.getMetadata());
+        JavaType type = resolveType(ctxt, beanDesc, propType0, mutator);
+        // did type change?
+        if (type != propType0) {
+            property = property.withType(type);
+        }
+
+        /* First: does the Method specify the deserializer to use?
+         * If so, let's use it.
+         */
+        JsonDeserializer<Object> propDeser = findDeserializerFromAnnotation(ctxt, mutator);
+        type = modifyTypeByAnnotation(ctxt, mutator, type);;        // note: this works since we know there's exactly one argument for methods
+        BeanProperty.Std property = new BeanProperty.Std(propDef.getFullName(),
+                propType0, propDef.getWrapperName(),
+                beanDesc.getClassAnnotations(), mutator, propDef.getMetadata());
+        JavaType type = resolveType(ctxt, beanDesc, propType0, mutator);
+        // did type change?
+        if (type != propType0) {
+            property = property.withType(type);
+        }
+
+        // First: does the Method specify the deserializer to use? If so, let's use it.
+        JsonDeserializer<Object> propDeser = findDeserializerFromAnnotation(ctxt, mutator);
+        type = modifyTypeByAnnotation(ctxt, mutator, type);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_129f9ba_84eca86/rev_129f9ba-84eca86;/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory;createEnumDeserializer(DeserializationContext,JavaType,BeanDescription);                if (ctxt.getAnnotationIntrospector().hasCreatorAnnotation(factory)) {
+                    if (factory.getParameterCount() == 0) { // [databind#960];                if (ctxt.getAnnotationIntrospector().hasCreatorAnnotation(factory)) {
+                    int argCount = factory.getParameterCount();
+                    if (argCount == 1) {
+                        Class<?> returnType = factory.getRawReturnType();
+                        // usually should be class, but may be just plain Enum<?> (for Enum.valueOf()?)
+                        if (returnType.isAssignableFrom(enumClass)) {
+                            deser = EnumDeserializer.deserializerForCreator(config, enumClass, factory, valueInstantiator, creatorProps);
+                            break;
+                        }
+                    } else if (argCount == 0) { // [databind#960];                if (_hasCreatorAnnotation(ctxt, factory)) {
+                    int argCount = factory.getParameterCount();
+                    if (argCount == 1) {
+                        Class<?> returnType = factory.getRawReturnType();
+                        // usually should be class, but may be just plain Enum<?> (for Enum.valueOf()?)
+                        if (returnType.isAssignableFrom(enumClass)) {
+                            deser = EnumDeserializer.deserializerForCreator(config, enumClass, factory, valueInstantiator, creatorProps);
+                            break;
+                        }
+                    } else if (argCount == 0) { // [databind#960]
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_6580734_b1df870/rev_6580734-b1df870;/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory;createEnumDeserializer(DeserializationContext,JavaType,BeanDescription);                if (_hasCreatorAnnotation(ctxt, factory)) {
+                    int argCount = factory.getParameterCount();
+                    if (argCount == 1) {
+                        Class<?> returnType = factory.getRawReturnType();
+                        // usually should be class, but may be just plain Enum<?> (for Enum.valueOf()?)
+                        if (returnType.isAssignableFrom(enumClass)) {
+                            deser = EnumDeserializer.deserializerForCreator(config, enumClass, factory, valueInstantiator, creatorProps);
+                            break;
+                        }
+                    } else if (argCount == 0) { // [databind#960];                if (ctxt.getAnnotationIntrospector().hasCreatorAnnotation(factory)) {
+                    int argCount = factory.getParameterCount();
+                    if (argCount == 1) {
+                        Class<?> returnType = factory.getRawReturnType();
+                        // usually should be class, but may be just plain Enum<?> (for Enum.valueOf()?)
+                        if (returnType.isAssignableFrom(enumClass)) {
+                            deser = EnumDeserializer.deserializerForCreator(config, enumClass, factory, valueInstantiator, creatorProps);
+                            break;
+                        }
+                    } else if (argCount == 0) { // [databind#960];                if (ctxt.getAnnotationIntrospector().hasCreatorAnnotation(factory)) {
+                    if (factory.getParameterCount() == 0) { // [databind#960]
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b3292c2_9a66688/rev_b3292c2-9a66688;/src/main/java/com/fasterxml/jackson/databind/introspect/BasicBeanDescription;isFactoryMethod(AnnotatedMethod);        // First: return type must be compatible with the introspected class
+        // (i.e. allowed to be sub-class, although usually is the same class);        /* First: return type must be compatible with the introspected class
+         * (i.e. allowed to be sub-class, although usually is the same
+         * class)
+         */;        /* First: return type must be compatible with the introspected class
+         * (i.e. allowed to be sub-class, although usually is the same class)
+         */
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_04ead2e_31ceee7/rev_04ead2e-31ceee7;/src/main/java/com/fasterxml/jackson/databind/ser/std/MapSerializer;serialize(Map<?,?>,JsonGenerator,SerializerProvider);            if (_filterId != null) {
+                serializeFilteredFields(value, gen, provider,
+                        findPropertyFilter(provider, _filterId, value), _suppressableValue);
+            } else if ((_suppressableValue != null) || _suppressNulls) {
+                serializeOptionalFields(value, gen, provider, _suppressableValue);;            if (_filterId != null) {
+                serializeFilteredFields(value, gen, provider,
+                        findPropertyFilter(provider, _filterId, value), suppressableValue);
+            } else if (suppressableValue != null) {
+                serializeOptionalFields(value, gen, provider, suppressableValue);;            PropertyFilter pf;
+            if ((_filterId != null) && (pf = findPropertyFilter(provider, _filterId, value)) != null) {
+                serializeFilteredFields(value, gen, provider, pf, suppressableValue);
+            } else if (suppressableValue != null) {
+                serializeOptionalFields(value, gen, provider, suppressableValue);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_04ead2e_31ceee7/rev_04ead2e-31ceee7;/src/main/java/com/fasterxml/jackson/databind/ser/std/MapSerializer;serializeWithType(Map<?,?>,JsonGenerator,SerializerProvider,TypeSerializer);            if (_filterId != null) {
+                serializeFilteredFields(value, gen, provider,
+                        findPropertyFilter(provider, _filterId, value), _suppressableValue);
+            } else if ((_suppressableValue != null) || _suppressNulls) {
+                serializeOptionalFields(value, gen, provider, _suppressableValue);;            if (_filterId != null) {
+                serializeFilteredFields(value, gen, provider,
+                        findPropertyFilter(provider, _filterId, value), suppressableValue);
+            } else if (suppressableValue != null) {
+                serializeOptionalFields(value, gen, provider, suppressableValue);;            PropertyFilter pf;
+            if ((_filterId != null) && (pf = findPropertyFilter(provider, _filterId, value)) != null) {
+                serializeFilteredFields(value, gen, provider, pf, suppressableValue);
+            } else if (suppressableValue != null) {
+                serializeOptionalFields(value, gen, provider, suppressableValue);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_75b7049_d44600d/rev_75b7049-d44600d;/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector;addPropertyCreator(AnnotatedWithParams,boolean,SettableBeanProperty[]);public void addPropertyCreator(AnnotatedWithParams creator,
+            boolean explicit, SettableBeanProperty[] properties) {
+        verifyNonDup(creator, C_PROPS, explicit);
+        // Better ensure we have no duplicate names either...
+        if (properties.length > 1) {
+            HashMap<String, Integer> names = new HashMap<String, Integer>();
+            for (int i = 0, len = properties.length; i < len; ++i) {
+                String name = properties[i].getName();
+                // Need to consider Injectables, which may not have
+                // a name at all, and need to be skipped
+                if (name.length() == 0
+                        && properties[i].getInjectableValueId() != null) {
+                    continue;
+                }
+                Integer old = names.put(name, Integer.valueOf(i));
+                if (old != null) {
+                    throw new IllegalArgumentException(String.format(
+                            "Duplicate creator property \"%s\" (index %s vs %d)",
+                            name, old, i));;public void addPropertyCreator(AnnotatedWithParams creator, boolean explicit,
+            SettableBeanProperty[] properties)
+    {
+        verifyNonDup(creator, C_PROPS, explicit);
+        // Better ensure we have no duplicate names either...
+        if (properties.length > 1) {
+            HashMap<String,Integer> names = new HashMap<String,Integer>();
+            for (int i = 0, len = properties.length; i < len; ++i) {
+                String name = properties[i].getName();
+                /* [Issue-13]: Need to consider Injectables, which may not have
+                 *   a name at all, and need to be skipped
+                 */
+                if (name.length() == 0 && properties[i].getInjectableValueId() != null) {
+                    continue;
+                }
+                Integer old = names.put(name, Integer.valueOf(i));
+                if (old != null) {
+                    throw new IllegalArgumentException("Duplicate creator property \""+name+"\" (index "+old+" vs "+i+")");;public void addPropertyCreator(AnnotatedWithParams creator, boolean explicit,
+            SettableBeanProperty[] properties)
+    {
+        if (verifyNonDup(creator, C_PROPS, explicit)) {
+            // Better ensure we have no duplicate names either...
+            if (properties.length > 1) {
+                HashMap<String,Integer> names = new HashMap<String,Integer>();
+                for (int i = 0, len = properties.length; i < len; ++i) {
+                    String name = properties[i].getName();
+                    /* [Issue-13]: Need to consider Injectables, which may not have
+                     *   a name at all, and need to be skipped
+                     */
+                    if (name.length() == 0 && properties[i].getInjectableValueId() != null) {
+                        continue;
+                    }
+                    Integer old = names.put(name, Integer.valueOf(i));
+                    if (old != null) {
+                        throw new IllegalArgumentException("Duplicate creator property \""+name+"\" (index "+old+" vs "+i+")");
+                    }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_dfd864f_58a7f7b/rev_dfd864f-58a7f7b;/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory;constructCreatorProperty(DeserializationContext,BeanDescription,PropertyName,int,AnnotatedParameter,Object);        JavaType type = resolveMemberAndTypeAnnotations(ctxt, param, param.getType());
+        BeanProperty.Std property = new BeanProperty.Std(name, type,;        // 15-Oct-2015, tatu: Not 100% if context needed; removing it does not make any
+        //    existing unit tests fail. Still seems like the right thing to do.
+        JavaType t0 = beanDesc.resolveType(param.getParameterType());
+        BeanProperty.Std property = new BeanProperty.Std(name, t0,;        // 15-Oct-2015, tatu: Not 100% if context needed; removing it does not make any
+        //    existing unit tests fail. Still seems like the right thing to do.
+        java.lang.reflect.Type paramType = param.getParameterType();
+        JavaType t0 = beanDesc.resolveType(paramType);
+if (t0 == null) {
+System.err.println("type of: "+param.getClass());    
+//    throw new Error("FOOBAR: param #"+index+" type? "+paramType);
+}
+        BeanProperty.Std property = new BeanProperty.Std(name, t0,
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_55f0f3e_16d7725/rev_55f0f3e-16d7725;/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory;constructCreatorProperty(DeserializationContext,BeanDescription,PropertyName,int,AnnotatedParameter,Object);        JavaType type = resolveMemberAndTypeAnnotations(ctxt, param, param.getType());
+        BeanProperty.Std property = new BeanProperty.Std(name, type,;        // 15-Oct-2015, tatu: Not 100% if context needed; removing it does not make any
+        //    existing unit tests fail. Still seems like the right thing to do.
+        java.lang.reflect.Type paramType = param.getParameterType();
+        JavaType t0 = beanDesc.resolveType(paramType);
+if (t0 == null) {
+System.err.println("type of: "+param.getClass());    
+//    throw new Error("FOOBAR: param #"+index+" type? "+paramType);
+}
+        BeanProperty.Std property = new BeanProperty.Std(name, t0,;        // 15-Oct-2015, tatu: Not 100% if context needed; removing it does not make any
+        //    existing unit tests fail. Still seems like the right thing to do.
+        java.lang.reflect.Type paramType = param.getParameterType();
+        JavaType t0 = beanDesc.resolveType(paramType);
+        BeanProperty.Std property = new BeanProperty.Std(name, t0,
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_a66b4e0_cc478a2/rev_a66b4e0-cc478a2;/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase;deserializeFromObjectUsingNonDefault(JsonParser,DeserializationContext);        return ctxt.handleMissingInstantiator(_beanType.getRawClass(), getValueInstantiator(), p,
+                "can not deserialize from Object value (no delegate- or property-based Creator)");;        // should only occur for abstract types...
+        if (_beanType.isAbstract()) {
+            return ctxt.handleMissingInstantiator(handledType(), p,
+                    "abstract type (need to add/enable type information?)");
+        }
+        return ctxt.handleMissingInstantiator(_beanType.getRawClass(), p,
+                "no suitable constructor found, can not deserialize from Object value (missing default constructor or creator, or perhaps need to add/enable type information?)");;        // should only occur for abstract types...
+        if (_beanType.isAbstract()) {
+            return ctxt.handleMissingInstantiator(handledType(), p,
+                    "abstract type (need to add/enable type information?)");
+        }
+        // 25-Jan-2017, tatu: We do not actually support use of Creators for non-static
+        //   inner classes -- with one and only one exception; that of default constructor!
+        //   -- so let's indicate it
+        Class<?> raw = _beanType.getRawClass();
+        if (ClassUtil.isNonStaticInnerClass(raw)) {
+            return ctxt.handleMissingInstantiator(raw, p,
+"can only instantiate non-static inner class by using default, no-argument constructor");
+        }
+        return ctxt.handleMissingInstantiator(raw, p,
+"no suitable constructor found, can not deserialize from Object value (missing default constructor or creator, or perhaps need to add/enable type information?)");
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_54fb5a3_5bd7605/rev_54fb5a3-5bd7605;/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/AsPropertyTypeDeserializer;_deserializeTypedUsingDefaultImpl(JsonParser,DeserializationContext,TokenBuffer);        ctxt.reportWrongTokenException(baseType(), JsonToken.FIELD_NAME,;        ctxt.reportWrongTokenException(p, JsonToken.FIELD_NAME,;        if (p.hasToken(JsonToken.VALUE_STRING)) {
+            if (ctxt.isEnabled(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)) {
+                String str = p.getText().trim();
+                if (str.isEmpty()) {
+                    return null;
+                }
+            }
+        }
+        ctxt.reportWrongTokenException(p, JsonToken.FIELD_NAME,
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef;/src/main/java/com/fasterxml/jackson/databind/deser/CreatorProperty;withValueDeserializer(JsonDeserializer<?>);    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new CreatorProperty(this, deser, _nullProvider);;    public CreatorProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new CreatorProperty(this, deser);;    public CreatorProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new CreatorProperty(this, deser);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef;/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase;resolve(DeserializationContext);                    deser = findDeserializer(ctxt, prop.getType(), prop);
+                }
+                prop = prop.withValueDeserializer(deser);
+            } else { // may need contextual version
+                JsonDeserializer<Object> deser = prop.getValueDeserializer();
+                /* Important! This is the only place where we actually handle "primary"
+                 * property deserializers -- call is different from other places.
+                 */
+                JsonDeserializer<?> cd = ctxt.handlePrimaryContextualization(deser, prop,
+                        prop.getType());
+                if (cd != deser) {
+                    prop = prop.withValueDeserializer(cd);;                    deser = findDeserializer(ctxt, prop.getType(), prop);
+                }
+                prop = prop.withValueDeserializer(deser);
+            } else { // may need contextual version
+                JsonDeserializer<Object> deser = prop.getValueDeserializer();
+                /* Important! This is the only place where actually handle "primary"
+                 * property deserializers -- call is different from other places.
+                 */
+                JsonDeserializer<?> cd = ctxt.handlePrimaryContextualization(deser, prop,
+                        prop.getType());
+                if (cd != deser) {
+                    prop = prop.withValueDeserializer(cd);;                    deser = ctxt.findNonContextualValueDeserializer(prop.getType());
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef;/src/main/java/com/fasterxml/jackson/databind/deser/impl/ObjectIdReferenceProperty;withValueDeserializer(JsonDeserializer<?>);        return new ObjectIdReferenceProperty(this, deser, _nullProvider);;        return new ObjectIdReferenceProperty(this, deser);;        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new ObjectIdReferenceProperty(this, deser);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef;/src/main/java/com/fasterxml/jackson/databind/deser/impl/SetterlessProperty;withValueDeserializer(JsonDeserializer<?>);    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new SetterlessProperty(this, deser, _nullProvider);;    public SetterlessProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new SetterlessProperty(this, deser);;    public SetterlessProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new SetterlessProperty(this, deser);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef;/src/main/java/com/fasterxml/jackson/databind/deser/impl/FieldProperty;withValueDeserializer(JsonDeserializer<?>);    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new FieldProperty(this, deser, _nullProvider);;    public FieldProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new FieldProperty(this, deser);;    public FieldProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new FieldProperty(this, deser);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef;/src/main/java/com/fasterxml/jackson/databind/deser/impl/MethodProperty;withValueDeserializer(JsonDeserializer<?>);    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new MethodProperty(this, deser, _nullProvider);;    public MethodProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new MethodProperty(this, deser);;    public MethodProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new MethodProperty(this, deser);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef;/src/main/java/com/fasterxml/jackson/databind/deser/impl/ObjectIdValueProperty;withValueDeserializer(JsonDeserializer<?>);    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new ObjectIdValueProperty(this, deser, _nullProvider);;    public ObjectIdValueProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new ObjectIdValueProperty(this, deser);;    public ObjectIdValueProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new ObjectIdValueProperty(this, deser);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2db5afe_934f485/rev_2db5afe-934f485;/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializer;serialize(Object,JsonGenerator,SerializerProvider);        // 19-Oct-2016, tatu: Simplified to bare essentials since this is deprecated
+        g.writeFieldName(value.toString());;        String str;
+        Class<?> cls = value.getClass();
+
+        if (cls == String.class) {
+            str = (String) value;
+        } else if (cls.isEnum()) {
+            // 24-Sep-2015, tatu: Minor improvement over older (2.6.2 and before) code: at least
+            //     use name/toString() variation for as per configuration
+            Enum<?> en = (Enum<?>) value;
+
+            if (provider.isEnabled(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)) {
+                str = en.toString();
+            } else {
+                str = en.name();
+            }
+        } else if (value instanceof Date) {
+            provider.defaultSerializeDateKey((Date) value, g);
+            return;
+        } else if (cls == Class.class) {
+            str = ((Class<?>) value).getName();
+        } else {
+            str = value.toString();
+        }
+        g.writeFieldName(str);;        String str;
+        Class<?> cls = value.getClass();
+
+        if (cls == String.class) {
+            str = (String) value;
+        } else if (cls.isEnum()) {
+            // 24-Sep-2015, tatu: Minor improvement over older (2.6.2 and before) code: at least
+            //     use name/toString() variation for as per configuration
+            if (provider.isEnabled(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)) {
+                str = value.toString();
+            } else {
+                Enum<?> en = (Enum<?>) value;
+                if (provider.isEnabled(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)) {
+                    str = String.valueOf(en.ordinal());
+                } else {
+                    str = en.name();
+                }
+            }
+        } else if (value instanceof Date) {
+            provider.defaultSerializeDateKey((Date) value, g);
+            return;
+        } else if (cls == Class.class) {
+            str = ((Class<?>) value).getName();
+        } else {
+            str = value.toString();
+        }
+        g.writeFieldName(str);
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fea0d29_9919f9d/rev_fea0d29-9919f9d;/src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer;_deserialize(JsonParser,DeserializationContext,Object);            DeserializationContext ctxt, Object builder) throws IOException
+    {        ;            DeserializationContext ctxt, Object builder)
+        throws IOException, JsonProcessingException
+    {        ;            DeserializationContext ctxt, Object builder)
+        throws IOException, JsonProcessingException
+    {
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fea0d29_9919f9d/rev_fea0d29-9919f9d;/src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer;_deserializeUsingPropertyBased(JsonParser,DeserializationContext);        throws IOException
+    { ;        throws IOException, JsonProcessingException
+    { ;        throws IOException, JsonProcessingException
+    {
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fea0d29_9919f9d/rev_fea0d29-9919f9d;/src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer;deserializeUsingPropertyBasedWithUnwrapped(JsonParser,DeserializationContext);                // Last creator property to set?
+                if (buffer.assignParameter(creatorProp, creatorProp.deserialize(p, ctxt))) {
+                    t = p.nextToken(); // to move to following FIELD_NAME/END_OBJECT
+                    Object bean;
+                    try {
+                        bean = creator.build(ctxt, buffer);
+                    } catch (Exception e) {
+                        wrapAndThrow(e, _beanType.getRawClass(), propName, ctxt);
+                        continue; // never gets here
+                    }
+                    // if so, need to copy all remaining tokens into buffer
+                    while (t == JsonToken.FIELD_NAME) {
+                        p.nextToken(); // to skip name
+                        tokens.copyCurrentStructure(p);
+                        t = p.nextToken();
+                    }
+                    tokens.writeEndObject();
+                    if (bean.getClass() != _beanType.getRawClass()) {
+                        // !!! 08-Jul-2011, tatu: Could probably support; but for now
+                        //   it's too complicated, so bail out
+                        ctxt.reportInputMismatch(creatorProp,
+                                "Can not create polymorphic instances with unwrapped values");
+                        return null;
+                    }
+                    return _unwrappedPropertyHandler.processUnwrapped(p, ctxt, bean, tokens);
+                };                // Last creator property to set?
+                if (buffer.assignParameter(creatorProp, creatorProp.deserialize(p, ctxt))) {
+                    t = p.nextToken(); // to move to following FIELD_NAME/END_OBJECT
+                    Object bean;
+                    try {
+                        bean = creator.build(ctxt, buffer);
+                    } catch (Exception e) {
+                        wrapAndThrow(e, _beanType.getRawClass(), propName, ctxt);
+                        continue; // never gets here
+                    }
+                    // if so, need to copy all remaining tokens into buffer
+                    while (t == JsonToken.FIELD_NAME) {
+                        p.nextToken(); // to skip name
+                        tokens.copyCurrentStructure(p);
+                        t = p.nextToken();
+                    }
+                    tokens.writeEndObject();
+                    if (bean.getClass() != _beanType.getRawClass()) {
+                        // !!! 08-Jul-2011, tatu: Could probably support; but for now
+                        //   it's too complicated, so bail out
+                        ctxt.reportMappingException("Can not create polymorphic instances with unwrapped values");
+                        return null;
+                    }
+                    return _unwrappedPropertyHandler.processUnwrapped(p, ctxt, bean, tokens);
+                };                buffer.assignParameter(creatorProp, creatorProp.deserialize(p, ctxt));
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_93a0b9b_32001a6/rev_93a0b9b-32001a6;/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass;resolveMemberMethods();private void resolveMemberMethods() {
+        _memberMethods = _resolveMemberMethods();;private void resolveMemberMethods()
+    {
+        _memberMethods = new AnnotatedMethodMap();
+        AnnotatedMethodMap mixins = new AnnotatedMethodMap();
+        // first: methods from the class itself
+        _addMemberMethods(_class, this, _memberMethods, _primaryMixIn, mixins);
+
+        // and then augment these with annotations from super-types:
+        for (JavaType type : _superTypes) {
+            Class<?> mixin = (_mixInResolver == null) ? null : _mixInResolver.findMixInClassFor(type.getRawClass());
+            _addMemberMethods(type.getRawClass(),
+                    new TypeResolutionContext.Basic(_typeFactory, type.getBindings()),
+                    _memberMethods, mixin, mixins);
+        }
+        // Special case: mix-ins for Object.class? (to apply to ALL classes)
+        if (_mixInResolver != null) {
+            Class<?> mixin = _mixInResolver.findMixInClassFor(Object.class);
+            if (mixin != null) {
+                _addMethodMixIns(_class, _memberMethods, mixin, mixins);
+            }
+        }
+
+        /* Any unmatched mix-ins? Most likely error cases (not matching
+         * any method); but there is one possible real use case:
+         * exposing Object#hashCode (alas, Object#getClass can NOT be
+         * exposed)
+         */
+        // 14-Feb-2011, tatu: AnnotationIntrospector is null if annotations not enabled; if so, can skip:
+        if (_annotationIntrospector != null) {
+            if (!mixins.isEmpty()) {
+                Iterator<AnnotatedMethod> it = mixins.iterator();
+                while (it.hasNext()) {
+                    AnnotatedMethod mixIn = it.next();
+                    try {
+                        Method m = Object.class.getDeclaredMethod(mixIn.getName(), mixIn.getRawParameterTypes());
+                        if (m != null) {
+                            // Since it's from java.lang.Object, no generics, no need for real type context:
+                            AnnotatedMethod am = _constructMethod(m, this);
+                            _addMixOvers(mixIn.getAnnotated(), am, false);
+                            _memberMethods.add(am);
+                        }
+                    } catch (Exception e) { }
+                }
+            }
+        };private void resolveMemberMethods()
+    {
+        _memberMethods = _resolveMemberMethods();
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f3d729a_513ab6e/rev_f3d729a-513ab6e;/src/main/java/com/fasterxml/jackson/databind/util/JSONPObject;serialize(JsonGenerator,SerializerProvider);        CharacterEscapes currentCharacterEscapes = jgen.getCharacterEscapes();
+
+        // NOTE: Escape line-separator characters that break JSONP only if no custom character escapes are set.
+        // If custom escapes are in place JSONP-breaking characters will not be escaped and it is recommended to
+        // add escaping for those (see JsonpCharacterEscapes class).
+        if (currentCharacterEscapes == null) {
+            jgen.setCharacterEscapes(JsonpCharacterEscapes.instance());
+        }
+
+        try {
+            // First, wrapping:
+            jgen.writeRaw(_function);
+            jgen.writeRaw('(');
+            if (_value == null) {
+                provider.defaultSerializeNull(jgen);
+            } else if (_serializationType != null) {
+                provider.findTypedValueSerializer(_serializationType, true, null).serialize(_value, jgen, provider);
+            } else {
+                Class<?> cls = _value.getClass();
+                provider.findTypedValueSerializer(cls, true, null).serialize(_value, jgen, provider);
+            }
+            jgen.writeRaw(')');
+        } finally {
+            jgen.setCharacterEscapes(currentCharacterEscapes);;        // First, wrapping:
+        jgen.writeRaw(_function);
+        jgen.writeRaw('(');
+        if (_value == null) {
+            provider.defaultSerializeNull(jgen);
+        } else if (_serializationType != null) {
+            provider.findTypedValueSerializer(_serializationType, true, null).serialize(_value, jgen, provider);
+        } else {
+            Class<?> cls = _value.getClass();
+            provider.findTypedValueSerializer(cls, true, null).serialize(_value, jgen, provider);;        // First, wrapping:
+        gen.writeRaw(_function);
+        gen.writeRaw('(');
+
+        if (_value == null) {
+            provider.defaultSerializeNull(gen);
+        } else {
+            // NOTE: Escape line-separator characters that break JSONP only if no custom character escapes are set.
+            // If custom escapes are in place JSONP-breaking characters will not be escaped and it is recommended to
+            // add escaping for those (see JsonpCharacterEscapes class).
+            boolean override = (gen.getCharacterEscapes() == null);
+            if (override) {
+                gen.setCharacterEscapes(JsonpCharacterEscapes.instance());
+            }
+
+            try {
+                if (_serializationType != null) {
+                    provider.findTypedValueSerializer(_serializationType, true, null).serialize(_value, gen, provider);
+                } else {
+                    provider.findTypedValueSerializer(_value.getClass(), true, null).serialize(_value, gen, provider);
+                }
+            } finally {
+                if (override) {
+                    gen.setCharacterEscapes(null);
+                }
+            }
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_68647e7_6cd5be9/rev_68647e7-6cd5be9;/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver;_typeFromId(String,DatabindContext);        JavaType t = ctxt.resolveSubType(_baseType, id);
+        if (t == null) {;        /* 30-Jan-2010, tatu: Most ids are basic class names; so let's first
+         *    check if any generics info is added; and only then ask factory
+         *    to do translation when necessary
+         */
+        TypeFactory tf = ctxt.getTypeFactory();
+        if (id.indexOf('<') > 0) {
+            // note: may want to try combining with specialization (esp for EnumMap)?
+            return tf.constructFromCanonical(id);
+        }
+        Class<?> cls;
+        try {
+            cls =  tf.findClass(id);
+        } catch (ClassNotFoundException e) {
+            // 24-May-2016, tatu: Ok, this is pretty ugly, but we should always get
+            //   DeserializationContext, just playing it safe;        /* 30-Jan-2010, tatu: Most ids are basic class names; so let's first
+         *    check if any generics info is added; and only then ask factory
+         *    to do translation when necessary
+         */
+        TypeFactory tf = ctxt.getTypeFactory();
+        if (id.indexOf('<') > 0) {
+            // note: may want to try combining with specialization (esp for EnumMap)?
+            // 17-Aug-2017, tatu: As per [databind#1735] need to ensure assignment
+            //    compatibility -- needed later anyway, and not doing so may open
+            //    security issues.
+            JavaType t = tf.constructFromCanonical(id);
+            if (!t.isTypeOrSubTypeOf(_baseType.getRawClass())) {
+                // Probably cleaner to have a method in `TypeFactory` but can't add in patch
+                throw new IllegalArgumentException(String.format(
+                        "Class %s not subtype of %s", t.getRawClass().getName(), _baseType));
+            }
+            return t;
+        }
+        Class<?> cls;
+        try {
+            cls =  tf.findClass(id);
+        } catch (ClassNotFoundException e) {
+            // 24-May-2016, tatu: Ok, this is pretty ugly, but we should always get
+            //   DeserializationContext, just playing it safe
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_ed5ed4e_424f56c/rev_ed5ed4e-424f56c;/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat;_parseAsISO8601(String,ParsePosition);                if( m.start(1) != -1 ) {
+	                start = m.start(1) + 1;
+	                end = m.end(1);
+
+                    int millisLen = Math.min(3, end-start);
+                    switch (millisLen) {;                if (start >= end) { // no fractional
+                    cal.set(Calendar.MILLISECOND, 0);
+                } else {
+                    // first char is '.', but rest....
+                    msecs = 0;
+                    switch (end-start) {;                if (start >= end) { // no fractional
+                    cal.set(Calendar.MILLISECOND, 0);
+                } else {
+                    // first char is '.', but rest....
+                    msecs = 0;
+                    final int fractLen = end-start;
+                    switch (fractLen) {
+                    default: // [databind#1745] Allow longer fractions... for now, cap at nanoseconds tho
+
+                        if (fractLen > 9) { // only allow up to nanos
+                            throw new ParseException(String.format(
+"Cannot parse date \"%s\": invalid fractional seconds '%s'; can use at most 9 digits",
+                                       dateStr, m.group(1).substring(1)
+                                       ),
+                                pos.getErrorIndex());
+                        }
+                        // fall through
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_58875ff_9458672/rev_58875ff-9458672;/src/test/java/com/fasterxml/jackson/databind/deser/creators/TestCreators;testBrokenConstructor();        } catch (JsonMappingException je) {
+            // 19-Sep-2017, tatu: Used to be broken when parameter names could
+            //   not be discovered; but with 3.x, different reasons....
+//            verifyException(je, "has no property name"); // jackson 2.x
+            verifyException(je, "unrecognized field \"x\""); // jackson 3.x;        } catch (JsonMappingException je) {
+            verifyException(je, "has no property name");;        } catch (InvalidDefinitionException je) {
+            verifyException(je, "has no property name");
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b505162_4675896/rev_b505162-4675896;/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory;_bindingsForSubtype(JavaType,int,Class<?>);        // Otherwise, two choices: match N first, or empty. Do latter, for now
+        return EMPTY_BINDINGS;;        // Otherwise, two choices: match N first, or empty. Do latter, for now
+        return TypeBindings.emptyBindings();;        return TypeBindings.create(subclass, typeParams);

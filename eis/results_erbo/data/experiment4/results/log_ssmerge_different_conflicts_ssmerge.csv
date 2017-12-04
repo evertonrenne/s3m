@@ -1,0 +1,787 @@
+file;ssmergeConf
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_413c3a2_6244128/rev_413c3a2-6244128/src/main/test/cucumber/internal/StepMotherTest.java;<<<<<<< MINE
+=======
+@Test
+    public void shouldInvokeSuccessfully() throws Throwable {
+        StepMother mother = new StepMother();
+        mother.add(FooSteps.class);
+        mother.newWorld();
+
+        StepDefinition given = mother.getStepDefinitions().get(0);
+        StepDefinition then = mother.getStepDefinitions().get(1);
+
+        given.invokeOnTarget(new Object[]{"56", "green"});
+        then.invokeOnTarget(new Object[]{"56", "green"});
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_413c3a2_6244128/rev_413c3a2-6244128/src/main/test/cucumber/internal/StepMotherTest.java;<<<<<<< MINE
+=======
+@Test(expected=RuntimeException.class) 
+    public void shouldInvokeWithFailure() throws Throwable {
+        StepMother mother = new StepMother();
+        mother.add(FooSteps.class);
+        mother.newWorld();
+
+        StepDefinition given = mother.getStepDefinitions().get(0);
+        StepDefinition then = mother.getStepDefinitions().get(1);
+
+        given.invokeOnTarget(new Object[]{"56", "green"});
+        then.invokeOnTarget(new Object[]{"99", "green"});
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_db70ab6_e189683/rev_db70ab6-e189683/cucumber-maven-plugin/src/main/java/cucumber/mojo/AbstractJRubyMojo.java;<<<<<<< MINE
+private void log(BuildEvent event) {
+            int priority = event.getPriority();
+            Log log = getLog();
+            String message = event.getMessage();
+            if (message.contains("nbb")) return;
+			switch (priority) {
+                case Project.MSG_ERR:
+                    log.error(message);
+                    break;
+
+                case Project.MSG_WARN:
+                    log.warn(message);
+                    break;
+
+                case Project.MSG_INFO:
+                    log.info(message);
+                    break;
+
+                case Project.MSG_VERBOSE:
+                    log.debug(message);
+                    break;
+
+                case Project.MSG_DEBUG:
+                    log.debug(message);
+                    break;
+
+                default:
+                    log.info(message);
+                    break;
+            }
+        }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_1316538_92fb52a/rev_1316538-92fb52a/cuke4duke/src/main/java/cuke4duke/internal/clj/CljStepDefinition.java;<<<<<<< MINE
+private Method lookupInvokeMethod(int argCount) throws NoSuchMethodException {
+        Class<?>[] parameterTypes = new Class[argCount];
+        for(int i = 0; i < argCount; i++) {
+            parameterTypes[i] = Object.class;
+        }
+        return AFunction.class.getMethod("invoke", parameterTypes);
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_857f0c4_5bdbeb1/rev_857f0c4-5bdbeb1/cuke4duke/src/main/java/cuke4duke/internal/language/ProgrammingLanguage.java;<<<<<<< MINE
+=======
+final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_857f0c4_5bdbeb1/rev_857f0c4-5bdbeb1/cuke4duke/src/main/java/cuke4duke/internal/language/ProgrammingLanguage.java;<<<<<<< MINE
+=======
+public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/language/ProgrammignLanguage.java;<<<<<<< MINE
+RubyArray step_matches(String step_name, String formatted_step_name);
+=======
+RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;<<<<<<< MINE
+final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+=======
+final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;<<<<<<< MINE
+public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+=======
+public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_09f3133_0ec7421/rev_09f3133-0ec7421/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+=======
+private Object[] getTransformedArgs(Class<?>[] parameterTypes) {
+        if (parameterTypes != null && parameterTypes.length != getArguments().size()) {
+            throw new CucumberException("Arity mismatch. Parameters: " + asList(parameterTypes) + ". Matched arguments: " + getArguments()); // TODO: Handle multiline args here...
+        }
+
+        Object[] result = new Object[getArguments().size()];
+        int n = 0;
+        for (Argument a : getArguments()) {
+            result[n] = this.transformer.transform(a, parameterTypes[n++], getLocale());
+        }
+        return result;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_ed96fe1_0fac5b8/rev_ed96fe1-0fac5b8/spring/src/test/java/cucumber/runtime/java/spring/hooks/SpringTransactionHooksTest.java;<<<<<<< MINE
+    public void setUp() {
+        target = new SpringTransactionHooks();
+        target.setTxMgr(mockedPlatformTransactionManager);
+    }
+=======
+    public void setUp() {
+        target = new SpringTransactionHooks() {
+            @Override
+            PlatformTransactionManager obtainPlatformTransactionManager() {
+                return mockedPlatformTransactionManager;
+            }
+        };
+        target.setBeanFactory(mockedBeanFactory);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_ed96fe1_0fac5b8/rev_ed96fe1-0fac5b8/spring/src/test/java/cucumber/runtime/java/spring/hooks/SpringTransactionHooksTest.java;<<<<<<< MINE
+    public void shouldTriggerTransactionRollbackInAfterHook() {
+        final SimpleTransactionStatus dummyTxStatus = new SimpleTransactionStatus();
+        target.txStatus = dummyTxStatus;
+
+        mockedPlatformTransactionManager.rollback(dummyTxStatus);
+
+        verify(mockedPlatformTransactionManager).rollback(dummyTxStatus);
+    }
+=======
+    public void shouldTriggerTransactionRollbackInAfterHook() {
+        final SimpleTransactionStatus dummyTxStatus = new SimpleTransactionStatus();
+        target.txStatus = dummyTxStatus;
+
+        target.rollBackAfterHook();
+
+        verify(mockedPlatformTransactionManager).rollback(dummyTxStatus);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_ed96fe1_0fac5b8/rev_ed96fe1-0fac5b8/spring/src/main/java/cucumber/runtime/java/spring/hooks/SpringTransactionHooks.java;<<<<<<< MINE
+public void setTxMgr(PlatformTransactionManager txMgr) {
+        this.txMgr = txMgr;
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+public void addBeforeHook(RubyObject body) {
+    	world.addBeforeHook(new JRubyHookDefinition(new String[0],body));
+    }
+=======
+public void addBeforeHook(RubyObject body) {
+        world.addBeforeHook(new JRubyHookDefinition(new String[0], body));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+public void addAfterHook(RubyObject body) {
+    	world.addAfterHook(new JRubyHookDefinition(new String[0],body));
+    }
+=======
+public void addAfterHook(RubyObject body) {
+        world.addAfterHook(new JRubyHookDefinition(new String[0], body));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+public void addBeforeHook(RubyObject body) {
+        world.addBeforeHook(new JRubyHookDefinition(new String[0], body));
+    }
+=======
+public void addBeforeHook(RubyObject body) {
+    	world.addBeforeHook(new JRubyHookDefinition(new String[0],body));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+public void addAfterHook(RubyObject body) {
+        world.addAfterHook(new JRubyHookDefinition(new String[0], body));
+    }
+=======
+public void addAfterHook(RubyObject body) {
+    	world.addAfterHook(new JRubyHookDefinition(new String[0],body));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05/examples/java-calculator/src/main/java/cucumber/examples/java/calculator/DateCalculator.java;<<<<<<< MINE
+public DateCalculator(Date now) {
+		super();
+		this.now = now;
+	}
+=======
+public DateCalculator(Date now) {
+        this.now = now;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05/examples/java-calculator/src/main/java/cucumber/examples/java/calculator/DateCalculator.java;<<<<<<< MINE
+public String isDateInThePast(Date date) {
+		if(date.before(now))
+			return "yes";
+		else
+			return "no";
+	}
+=======
+public String isDateInThePast(Date date) {
+        return (date.before(now)) ? "yes" : "no";
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_65cbace_f7ed8de/rev_65cbace-f7ed8de/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+=======
+public JRubyBackend() throws UnsupportedEncodingException {
+        jruby.put("$backend", this);
+        jruby.setClassLoader(this.getClass().getClassLoader());
+        jruby.runScriptlet(new InputStreamReader(getClass().getResourceAsStream(DSL), "UTF-8"), DSL);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df198fe_2b74d1b/rev_df198fe-2b74d1b/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+public JRubyBackend() throws UnsupportedEncodingException {
+        jruby.put("$backend", this);
+        //Look for a cucumber-jruby.properties file and load in the things I might care about
+        Properties props = new Properties();
+        InputStream propsStream = this.getClass().getResourceAsStream("/cucumber-jruby.properties");
+        try {
+            if (propsStream != null) {
+                props.load(propsStream);
+            }
+        } catch (IOException e) {
+            //Oh well?
+        }
+
+        String gemPath = props.getProperty("GEM_PATH");
+        if (gemPath != null && !gemPath.isEmpty()) {
+            jruby.runScriptlet("ENV['GEM_PATH']='" + gemPath + "'");
+        }
+
+        String rubyVersion = props.getProperty("RUBY_VERSION");
+        if ("1.9".equals(rubyVersion)) {
+            jruby.setCompatVersion(CompatVersion.RUBY1_9);
+        }
+        jruby.runScriptlet(new InputStreamReader(getClass().getResourceAsStream(DSL), "UTF-8"), DSL);
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8a45465_f711375/rev_8a45465-f711375/clojure/src/main/java/cucumber/runtime/clojure/ClojureHookDefinition.java;<<<<<<< MINE
+=======
+private Method lookupInvokeMethod(Object[] args) throws NoSuchMethodException {
+        return IFn.class.getMethod("invoke", (Class<?>[]) Utils.listOf(args.length, String.class).toArray());
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8a45465_f711375/rev_8a45465-f711375/clojure/src/main/java/cucumber/runtime/clojure/ClojureStepDefinition.java;<<<<<<< MINE
+=======
+private Method lookupInvokeMethod(Object[] args) throws NoSuchMethodException {
+        List<Class<Object>> classes = Utils.listOf(args.length, Object.class);
+        Class<?>[] params = classes.toArray(new Class<?>[classes.size()]);
+        return IFn.class.getMethod("invoke", params);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8a45465_f711375/rev_8a45465-f711375/clojure/src/main/java/cucumber/runtime/clojure/ClojureBackend.java;<<<<<<< MINE
+=======
+@Override
+    public void buildWorld(List<String> gluePaths, World world) {
+        this.world = world;
+        for (String gluePath : gluePaths) {
+            for (Resource resource : resourceLoader.resources(gluePath, ".clj")) {
+                loadScript(resource);
+            }
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_beb39a9_6c0dccd/rev_beb39a9-6c0dccd/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+=======
+public void runStep(String uri, Locale locale, String stepKeyword, String stepName, int line) throws Throwable {
+        //TODO: need a way to request running of an additional step!
+        unreportedStepExecutor.runUnreportedStep(uri, locale, stepKeyword, stepName, line);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_af2ad8b_9ed4fb0/rev_af2ad8b-9ed4fb0/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+=======
+@Override
+    public void runUnreportedStep(String uri, Locale locale, String stepKeyword, String stepName, int line) throws Throwable {
+        Step step = new Step(Collections.<Comment>emptyList(), stepKeyword, stepName, line, null, null);
+
+        StepDefinitionMatch match = glue.stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            UndefinedStepException error = new UndefinedStepException(step);
+
+            StackTraceElement[] originalTrace = error.getStackTrace();
+            StackTraceElement[] newTrace = new StackTraceElement[originalTrace.length + 1];
+            newTrace[0] = new StackTraceElement("â½", "StepDefinition", uri, line);
+            System.arraycopy(originalTrace, 0, newTrace, 1, originalTrace.length);
+            error.setStackTrace(newTrace);
+
+            throw error;
+        }
+        match.runStep(locale);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_34484c4_b25faf5/rev_34484c4-b25faf5/core/src/main/java/cucumber/runtime/UndefinedStepsTracker.java;<<<<<<< MINE
+=======
+private boolean isGivenWhenThenKeyword(String keyword, Locale locale) {
+        I18n i18n = new I18n(toIsoCode(locale));
+        for (String gwts : asList("given", "when", "then")) {
+            List<String> keywords = i18n.keywords(gwts);
+            if (keywords.contains(keyword) && !"* ".equals(keyword)) {
+                return true;
+            }
+        }
+        return false;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/clojure/src/main/java/cucumber/runtime/clojure/ClojureHookDefinition.java;<<<<<<< MINE
+private Method lookupInvokeMethod(Object[] args) throws NoSuchMethodException {
+        List<Class<Object>> classes = Utils.listOf(args.length, Object.class);
+        Class<?>[] params = classes.toArray(new Class<?>[classes.size()]);
+        return IFn.class.getMethod("invoke", params);
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/clojure/src/main/java/cucumber/runtime/clojure/ClojureBackend.java;<<<<<<< MINE
+@Override
+    public String getSnippet(Step step) {
+        return snippetGenerator.getSnippet(step);
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/clojure/src/main/java/cucumber/runtime/clojure/ClojureBackend.java;<<<<<<< MINE
+public static void addStepDefinition(Pattern regexp, IFn body) {
+        StackTraceElement location = instance.stepDefLocation("clojure.lang.Compiler", "eval");
+        instance.glue.addStepDefinition(new ClojureStepDefinition(regexp, body, location));
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/clojure/src/main/java/cucumber/runtime/clojure/ClojureBackend.java;<<<<<<< MINE
+public static void addBeforeHook(IFn body) {
+        instance.glue.addBeforeHook(new ClojureHookDefinition(new String[0], body));
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/clojure/src/main/java/cucumber/runtime/clojure/ClojureBackend.java;<<<<<<< MINE
+public static void addAfterHook(IFn body) {
+        instance.glue.addAfterHook(new ClojureHookDefinition(new String[0], body));
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+=======
+private Object[] transformedArgs(List<ParameterType> parameterTypes, Step step, XStream xStream, Locale locale) {
+        if (xStream == null) {
+            throw new NullPointerException("xStream");
+        }
+        int argumentCount = getArguments().size();
+        if (step.getDocString() != null) argumentCount++;
+        if (step.getRows() != null) argumentCount++;
+        if (parameterTypes != null) {
+            if (parameterTypes.size() != argumentCount) {
+                List<Argument> arguments = createArgumentsForErrorMessage(step);
+                throw new CucumberException("Arity mismatch. Declared parameters: " + parameterTypes + ". Matched arguments: " + arguments);
+            }
+        } else {
+            // Some backends, like ClojureBackend, don't know the arity and therefore pass in null.
+            parameterTypes = Utils.listOf(argumentCount, new ParameterType(String.class, null));
+        }
+
+        Object[] result = new Object[argumentCount];
+        ConverterLookup converterLookup = xStream.getConverterLookup();
+
+        int n = 0;
+        for (Argument a : getArguments()) {
+            if (parameterTypes != null) {
+            SingleValueConverter converter;
+
+            ParameterType parameterType = parameterTypes.get(n);
+            if (parameterType.getDateFormat() != null) {
+                converter = new DateConverter(parameterType.getDateFormat(), locale);
+            } else {
+                // TODO: We might get a lookup that doesn't implement SingleValueConverter
+                // Need to throw a more friendly exception in that case.
+                converter = (SingleValueConverter) converterLookup.lookupConverterForType(parameterType.getParameterClass());
+            }
+            result[n] = converter.fromString(a.getVal());
+            } else {
+                result[n] = a.getVal();
+            }
+            n++;
+        }
+
+        if (step.getRows() != null) {
+            ParameterType parameterType = parameterTypes.get(n);
+            DateConverter dateConverter = null;
+            if (parameterType.getDateFormat() != null) {
+                SingleValueConverterWrapperExt converterWrapper = (SingleValueConverterWrapperExt) xStream.getConverterLookup().lookupConverterForType(Date.class);
+                dateConverter = (DateConverter) converterWrapper.getConverter();
+                dateConverter.setOnlyFormat(parameterType.getDateFormat(), locale);
+            }
+            try {
+                result[n] = tableArgument(step, n, xStream);
+            } finally {
+                if (dateConverter != null) {
+                    dateConverter.removeOnlyFormat();
+                }
+            }
+        } else if (step.getDocString() != null) {
+            result[n] = step.getDocString().getValue();
+        }
+        return result;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a865428_dcec2a1/rev_a865428-dcec2a1/core/src/main/java/cucumber/formatter/FormatterFactory.java;<<<<<<< MINE
+private Formatter createFormatterFromClassName(String className, Object out) {
+        try {
+            Class ctorArgClass = Appendable.class;
+            if (out instanceof File) {
+                File file = (File) out;
+                if (file.isDirectory()) {
+                    out = file;
+                    ctorArgClass = File.class;
+                } else {
+                    out = new FileWriter(file);
+                }
+            }
+            Class<Formatter> formatterClass = getFormatterClass(className);
+            // TODO: Remove these if statements. We should fix PrettyFormatter and ProgressFormatter to only take a single Appendable arg.
+            // Whether or not to use Monochrome is tricky. Maybe always enforce another 2nd argument for that
+            if (PrettyFormatter.class.isAssignableFrom(formatterClass)) {
+                return formatterClass.getConstructor(ctorArgClass, Boolean.TYPE, Boolean.TYPE).newInstance(out, false, true);
+            } else if (ProgressFormatter.class.isAssignableFrom(formatterClass)) {
+                return formatterClass.getConstructor(ctorArgClass, Boolean.TYPE).newInstance(out, false);
+            } else if (UsageFormatter.class.isAssignableFrom(formatterClass)) {
+                return createUsageFormatter(out, ctorArgClass, formatterClass);
+            } else {
+                return formatterClass.getConstructor(ctorArgClass).newInstance(out);
+            }
+        } catch (Exception e) {
+            throw new CucumberException(String.format("Error creating instance of: %s outputting to %s", className, out), e);
+        }
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_f388f5e_5654134/rev_f388f5e-5654134/core/src/main/java/cucumber/runtime/RuntimeOptions.java;<<<<<<< MINE
+public RuntimeOptions(String... argv) {
+        parse(new ArrayList<String>(asList(argv)));
+
+        if (formatters.isEmpty()) {
+            formatters.add(new ProgressFormatter(System.out));
+        }
+        for (Formatter formatter : formatters) {
+            if (formatter instanceof ColorAware) {
+                ColorAware colorAware = (ColorAware) formatter;
+                colorAware.setMonochrome(monochrome);
+            }
+        }
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_f388f5e_5654134/rev_f388f5e-5654134/openejb/src/main/java/cucumber/runtime/java/openejb/OpenEJBObjectFactory.java;<<<<<<< MINE
+@Override
+    public void createInstances() {
+        final StringBuilder callers = new StringBuilder();
+        for (Iterator<String> it = classes.iterator(); it.hasNext(); ) {
+            callers.append(it.next());
+            if (it.hasNext()) {
+                callers.append(",");
+            }
+        }
+
+        Properties properties = new Properties();
+        properties.setProperty(OpenEjbContainer.Provider.OPENEJB_ADDITIONNAL_CALLERS_KEY, callers.toString());
+        container = EJBContainer.createEJBContainer(properties);
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/runtime/JdkPatternArgumentMatcherTest.java;<<<<<<< MINE
+private void assertVariables(String regex, String string, String v1, int pos1, String v2, int pos2) throws UnsupportedEncodingException {
+        List<Argument> args = new JdkPatternArgumentMatcher(Pattern.compile(regex)).argumentsFrom(string);
+        assertEquals(2, args.size());
+        assertEquals(v1, args.get(0).getVal());
+        assertEquals(pos1, (long)args.get(0).getOffset());
+        assertEquals(v2, args.get(1).getVal());
+        assertEquals(pos2, (long)args.get(1).getOffset());
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+public static DataTable parse(String source) {
+        final List<DataTableRow> rows = new ArrayList<DataTableRow>();
+        Lexer l = new EN(new Listener() {
+            @Override
+            public void comment(String comment, Integer line) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void tag(String tag, Integer line) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void feature(String keyword, String name, String description, Integer line) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void background(String keyword, String name, String description, Integer line) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void scenario(String keyword, String name, String description, Integer line) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void scenarioOutline(String keyword, String name, String description, Integer line) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void examples(String keyword, String name, String description, Integer line) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void step(String keyword, String name, Integer line) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void row(List<String> cells, Integer line) {
+                rows.add(new DataTableRow(NO_COMMENTS, cells, line));
+            }
+
+            @Override
+            public void docString(String contentType, String string, Integer line) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void eof() {
+            }
+        });
+        l.scan(source);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return new DataTable(rows, new TableConverter(new LocalizedXStreams(classLoader).get(new I18n("en"))));
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_442c4ed_4439178/rev_442c4ed-4439178/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+public Runtime(ResourceLoader resourceLoader, ClassLoader classLoader, Collection<? extends Backend> backends,
+            RuntimeOptions runtimeOptions, RuntimeGlue optionalGlue) {
+        if (backends.isEmpty()) {
+            throw new CucumberException("No backends were found. Please make sure you have a backend module on your CLASSPATH.");
+        }
+        this.resourceLoader = resourceLoader;
+        this.classLoader = classLoader;
+        this.backends = backends;
+        this.runtimeOptions = runtimeOptions;
+        this.glue = optionalGlue != null ? optionalGlue : new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader));
+        this.summaryCounter = new SummaryCounter(runtimeOptions.isMonochrome());
+
+        for (Backend backend : backends) {
+            backend.loadGlue(glue, runtimeOptions.glue);
+            backend.setUnreportedStepExecutor(this);
+        }
+    }
+=======
+public Runtime(ResourceLoader resourceLoader, ClassLoader classLoader, Collection<? extends Backend> backends,
+            RuntimeOptions runtimeOptions, RuntimeGlue optionalGlue) {
+        if (backends.isEmpty()) {
+            throw new CucumberException("No backends were found. Please make sure you have a backend module on your CLASSPATH.");
+        }
+        this.resourceLoader = resourceLoader;
+        this.classLoader = classLoader;
+        this.backends = backends;
+        this.runtimeOptions = runtimeOptions;
+        this.glue = optionalGlue != null ? optionalGlue : new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader));
+
+        for (Backend backend : backends) {
+            backend.loadGlue(glue, runtimeOptions.getGlue());
+            backend.setUnreportedStepExecutor(this);
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8c386b8_9dc0498/rev_8c386b8-9dc0498/core/src/main/java/cucumber/runtime/xstream/LocalizedXStreams.java;<<<<<<< MINE
+=======
+public void setParameterType(ParameterInfo parameterInfo) {
+            if (parameterInfo != null) {
+                List<Class> timeClasses = TimeConverter.getTimeClasses();
+                for (Class timeClass : timeClasses) {
+                    SingleValueConverterWrapperExt converterWrapper = (SingleValueConverterWrapperExt) getConverterLookup().lookupConverterForType(timeClass);
+                    TimeConverter timeConverter = (TimeConverter) converterWrapper.getConverter();
+                    timeConverter.setParameterInfoAndLocale(parameterInfo, locale);
+                    timeConverters.get().add(timeConverter);
+                }
+            }
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_c4f6c53_9cc482e/rev_c4f6c53-9cc482e/core/src/main/java/cucumber/runtime/xstream/LocalizedXStreams.java;<<<<<<< MINE
+=======
+public void setParameterType(ParameterInfo parameterInfo) {
+            if (parameterInfo != null) {
+                List<Class> timeClasses = TimeConverter.getTimeClasses();
+                for (Class timeClass : timeClasses) {
+                    SingleValueConverterWrapperExt converterWrapper = (SingleValueConverterWrapperExt) getConverterLookup().lookupConverterForType(timeClass);
+                    TimeConverter timeConverter = (TimeConverter) converterWrapper.getConverter();
+                    timeConverter.setParameterInfoAndLocale(parameterInfo, locale);
+                    timeConverters.get().add(timeConverter);
+                }
+            }
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_35438bf_e073420/rev_35438bf-e073420/core/src/test/java/cucumber/runtime/formatter/FormatterFactoryTest.java;<<<<<<< MINE
+=======
+@Test
+    public void instantiates_single_custom_appendable_formatter_with_stdout() {
+        WantsAppendable formatter = (WantsAppendable) fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable");
+        assertThat(formatter.out, is(instanceOf(PrintStream.class)));
+        try {
+            fc.create("cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable");
+            fail();
+        } catch (CucumberException expected) {
+            assertEquals("Only one formatter can use STDOUT, now both cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable " +
+                         "and cucumber.runtime.formatter.FormatterFactoryTest$WantsAppendable use it. " +
+                         "If you use more than one formatter you must specify output path with FORMAT:PATH_OR_URL", expected.getMessage());
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_35438bf_e073420/rev_35438bf-e073420/core/src/main/java/cucumber/runtime/formatter/FormatterFactory.java;<<<<<<< MINE
+=======
+private Formatter instantiate(String formatterString, Class<? extends Formatter> formatterClass, String pathOrUrl) throws IOException, URISyntaxException {
+        for (Class ctorArgClass : CTOR_ARGS) {
+            Constructor<? extends Formatter> constructor = findConstructor(formatterClass, ctorArgClass);
+            if (constructor != null) {
+                Object ctorArg = convertOrNull(pathOrUrl, ctorArgClass, formatterString);
+                try {
+                    if (ctorArgClass == null) {
+                        return constructor.newInstance();
+                    } else {
+                        if (ctorArg == null) {
+                            throw new CucumberException(String.format("You must supply an output argument to %s. Like so: %s:output", formatterString, formatterString));
+                        }
+                        return constructor.newInstance(ctorArg);
+                    }
+                } catch (InstantiationException e) {
+                    throw new CucumberException(e);
+                } catch (IllegalAccessException e) {
+                    throw new CucumberException(e);
+                } catch (InvocationTargetException e) {
+                    throw new CucumberException(e.getTargetException());
+                }
+            }
+        }
+        throw new CucumberException(String.format("%s must have a constructor that is either empty or a single arg of one of: %s", formatterClass, asList(CTOR_ARGS)));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_950172a_fd317c3/rev_950172a-fd317c3/core/src/main/java/cucumber/runtime/model/CucumberScenario.java;<<<<<<< MINE
+        formatter.endOfScenarioLifeCycle((Scenario) getGherkinModel());
+        runtime.disposeBackendWorlds();
+=======
+        try {
+            formatter.endOfScenarioLifeCycle((Scenario) getGherkinModel());
+        } catch (Throwable ignore) {
+            // IntelliJ has its own formatter which doesn't yet implement this.
+        }
+        runtime.disposeBackendWorlds(createScenarioDesignation());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b66c765_0ac2df0/rev_b66c765-0ac2df0/core/src/main/java/cucumber/runtime/RuntimeOptions.java;<<<<<<< MINE
+        if (!parsedJunitOptions.isEmpty()) {
+            junitOptions.clear();
+            junitOptions.addAll(parsedJunitOptions);
+        }
+=======
+
+        parsedPluginData.updatePluginFormatterNames(pluginFormatterNames);
+        parsedPluginData.updatePluginStepDefinitionReporterNames(pluginStepDefinitionReporterNames);
+        parsedPluginData.updatePluginSummaryPrinterNames(pluginSummaryPrinterNames);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_280113e_9ec2d0f/rev_280113e-9ec2d0f/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+=======
+public Runtime(ResourceLoader resourceLoader, ClassLoader classLoader, Collection<? extends Backend> backends,
+                   RuntimeOptions runtimeOptions, StopWatch stopWatch, RuntimeGlue optionalGlue) {
+        if (backends.isEmpty()) {
+            throw new CucumberException("No backends were found. Please make sure you have a backend module on your CLASSPATH.");
+        }
+        this.resourceLoader = resourceLoader;
+        this.classLoader = classLoader;
+        this.backends = backends;
+        this.runtimeOptions = runtimeOptions;
+        this.stopWatch = stopWatch;
+        this.glue = optionalGlue != null ? optionalGlue : new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader, runtimeOptions.getConverters()));
+        this.stats = new Stats(runtimeOptions.isMonochrome());
+
+        for (Backend backend : backends) {
+            backend.loadGlue(glue, runtimeOptions.getGlue());
+            backend.setUnreportedStepExecutor(this);
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_062758b_636471a/rev_062758b-636471a/core/src/test/java/cucumber/runtime/TestHelper.java;<<<<<<< MINE
+=======
+private static RuntimeGlue createMockedRuntimeGlueThatMatchesTheSteps(Map<String, Result> stepsToResult, Map<String, String> stepsToLocation,
+                                                                          final List<SimpleEntry<String, Result>> hooks) throws Throwable {
+        RuntimeGlue glue = mock(RuntimeGlue.class);
+        when(glue.getTracker()).thenReturn(new UndefinedStepsTracker());
+        TestHelper.mockSteps(glue, stepsToResult, stepsToLocation);
+        TestHelper.mockHooks(glue, hooks);
+        return glue;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_062758b_636471a/rev_062758b-636471a/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+=======
+public Runtime(ResourceLoader resourceLoader, ClassLoader classLoader, Collection<? extends Backend> backends,
+                   RuntimeOptions runtimeOptions, StopWatch stopWatch, RuntimeGlue optionalGlue) {
+        if (backends.isEmpty()) {
+            throw new CucumberException("No backends were found. Please make sure you have a backend module on your CLASSPATH.");
+        }
+        this.resourceLoader = resourceLoader;
+        this.classLoader = classLoader;
+        this.backends = backends;
+        this.runtimeOptions = runtimeOptions;
+        this.stopWatch = stopWatch;
+        if (optionalGlue == null) {
+            this.undefinedStepsTracker = new UndefinedStepsTracker();
+            this.glue = new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader));
+        } else {
+            this.undefinedStepsTracker = optionalGlue.getTracker();
+            this.glue = optionalGlue;
+        }
+        this.stats = new Stats(runtimeOptions.isMonochrome());
+
+        for (Backend backend : backends) {
+            backend.loadGlue(glue, runtimeOptions.getGlue());
+            backend.setUnreportedStepExecutor(this);
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_062758b_636471a/rev_062758b-636471a/junit/src/test/java/cucumber/runtime/junit/FeatureRunnerTest.java;<<<<<<< MINE
+=======
+private String runFeatureWithFormatterSpy(CucumberFeature cucumberFeature) throws InitializationError {
+        final RuntimeOptions runtimeOptions = new RuntimeOptions("");
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(classLoader);
+        final RuntimeGlue glue = mock(RuntimeGlue.class);
+        when(glue.getTracker()).thenReturn(new UndefinedStepsTracker());
+        final Runtime runtime = new Runtime(resourceLoader, classLoader, asList(mock(Backend.class)), runtimeOptions, new StopWatch.Stub(0l), glue);
+        FormatterSpy formatterSpy = new FormatterSpy();
+        FeatureRunner runner = new FeatureRunner(cucumberFeature, runtime, new JUnitReporter(formatterSpy, formatterSpy, false, new JUnitOptions(Collections.<String>emptyList())));
+        runner.run(mock(RunNotifier.class));
+        return formatterSpy.toString();
+    }
+>>>>>>> YOURS

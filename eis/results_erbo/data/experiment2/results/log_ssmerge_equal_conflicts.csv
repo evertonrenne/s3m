@@ -1,0 +1,53 @@
+file;ssmergeConf;linedbasedConf
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_7bfd794_666efaf/rev_7bfd794-666efaf/src/com/googlecode/jmxtrans/model/output/KeyOutWriter.java;<<<<<<< MINE
+		String fileStr = (String) this.getSettings().get("outputFile");
+		if (fileStr == null) {
+			throw new ValidationException("You must specify an outputFile setting.", query);
+		}
+		// Check if we've already created a logger for this file. If so, use it.
+		if (loggers.containsKey(fileStr)) {
+			logger = loggers.get(fileStr);
+			return;
+		}
+		// need to create a logger
+		try {
+			logger = initLogger(fileStr);
+			loggers.put(fileStr, logger);
+		} catch (IOException e) {
+			throw new ValidationException("Failed to setup log4j", query);
+		}
+=======
+		logger = getLogger(query);
+>>>>>>> YOURS;<<<<<<< MINE
+		String fileStr = (String) this.getSettings().get("outputFile");
+		if (fileStr == null) {
+			throw new ValidationException("You must specify an outputFile setting.", query);
+		}
+		// Check if we've already created a logger for this file. If so, use it.
+		if (loggers.containsKey(fileStr)) {
+			logger = loggers.get(fileStr);
+			return;
+		}
+		// need to create a logger
+		try {
+			logger = initLogger(fileStr);
+			loggers.put(fileStr, logger);
+		} catch (IOException e) {
+			throw new ValidationException("Failed to setup log4j", query);
+		}
+=======
+		logger = getLogger(query);
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_e6ccbb5_7cdfaaa/rev_e6ccbb5-7cdfaaa/jmxtrans-core/src/main/java/com/googlecode/jmxtrans/model/JmxResultProcessor.java;<<<<<<< MINE
+				} else if (value != null){
+					values.put(key, value);
+=======
+				} else if (value !=null){
+					values.put(key, value);
+>>>>>>> YOURS;<<<<<<< MINE
+				} else if (value != null){
+					values.put(key, value);
+=======
+				} else if (value !=null){
+					values.put(key, value);
+>>>>>>> YOURS

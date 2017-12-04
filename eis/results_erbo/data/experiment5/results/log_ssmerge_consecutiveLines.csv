@@ -1,0 +1,672 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_889db1c_34f4ca7/rev_889db1c-34f4ca7;/src/test/java/org/elasticsearch/discovery/ZenUnicastDiscoveryTests;nodeSettings(int);        ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder()
+                .put(super.nodeSettings(nodeOrdinal))
+                .put("discovery.type", "zen")
+                .put("discovery.zen.ping.multicast.enabled", false)
+                .put("http.enabled", false); // just to make test quicker
+
+
+        String[] unicastHosts = new String[currentNumOfUnicastHosts];
+        if (internalCluster().getDefaultSettings().get("node.mode").equals("local")) {
+            builder.put(LocalTransport.TRANSPORT_LOCAL_ADDRESS, "unicast_test_" + nodeOrdinal);
+            for (int i = 0; i < unicastHosts.length; i++) {
+                unicastHosts[i] = "unicast_test_" + i;
+            }
+        } else {
+            // we need to pin the node ports so we'd know where to point things
+            builder.put("transport.tcp.port", currentBaseHttpPort + nodeOrdinal);
+            for (int i = 0; i < unicastHosts.length; i++) {
+                unicastHosts[i] = "localhost:" + (currentBaseHttpPort + i);
+            }
+        }
+        builder.putArray("discovery.zen.ping.unicast.hosts", unicastHosts);
+        return builder.build();;        ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder()
+                .put("discovery.type", "zen")
+                .put("discovery.zen.ping.multicast.enabled", false)
+                .put("http.enabled", false) // just to make test quicker
+                .put(super.nodeSettings(nodeOrdinal));
+
+        String[] unicastHosts = new String[currentNumOfUnicastHosts];
+        if (internalCluster().getDefaultSettings().get("node.mode").equals("local")) {
+            builder.put(LocalTransport.TRANSPORT_LOCAL_ADDRESS, "unicast_test_" + nodeOrdinal);
+            for (int i = 0; i < unicastHosts.length; i++) {
+                unicastHosts[i] = "unicast_test_" + i;
+            }
+        } else {
+            // we need to pin the node ports so we'd know where to point things
+            builder.put("transport.tcp.port", currentBaseHttpPort + nodeOrdinal);
+            for (int i = 0; i < unicastHosts.length; i++) {
+                unicastHosts[i] = "localhost:" + (currentBaseHttpPort + i);
+            }
+        }
+        builder.putArray("discovery.zen.ping.unicast.hosts", unicastHosts);
+        return builder.build();;        return discoveryConfig.node(nodeOrdinal);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_75ff5b5_3275939/rev_75ff5b5-3275939;/src/main/java/org/elasticsearch/index/query/GeoShapeQueryParser;getArgs(ShapeBuilder,ShapeRelation);            throw new ElasticsearchIllegalArgumentException("");;            throw new ElasticsearchIllegalArgumentException("");
+        ;            throw new IllegalArgumentException("");
+        
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_3bb8ff2_528f648/rev_3bb8ff2-528f648;/src/main/java/org/elasticsearch/search/aggregations/AggregatorParsers;parseAggregators(XContentParser,SearchContext,int);                        if (aggFactory != null) {
+                            throw new SearchParseException(context, "Found two aggregation type definitions in [" + aggregationName + "]: ["
+                                + aggFactory.type + "] and [" + fieldName + "]");;                        if (factory != null) {
+                            throw new SearchParseException(context, "Found two aggregation type definitions in [" + aggregationName + "]: [" + factory.type + "] and [" + fieldName + "]");;                        if (factory != null) {
+                        throw new SearchParseException(context, "Found two aggregation type definitions in [" + aggregationName + "]: ["
+                                + factory.type + "] and [" + fieldName + "]", parser.getTokenLocation());
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_3bb8ff2_528f648/rev_3bb8ff2-528f648;/src/main/java/org/elasticsearch/search/aggregations/AggregatorParsers;parseAggregators(XContentParser,SearchContext,int);            if (aggFactory == null && reducerFactory == null) {
+                throw new SearchParseException(context, "Missing definition for aggregation [" + aggregationName + "]");
+            } else if (aggFactory != null) {
+                assert reducerFactory == null;
+                if (metaData != null) {
+                    aggFactory.setMetaData(metaData);
+                };            if (factory == null) {
+                throw new SearchParseException(context, "Missing definition for aggregation [" + aggregationName + "]");
+            };            if (factory == null) {
+                throw new SearchParseException(context, "Missing definition for aggregation [" + aggregationName + "]",
+                        parser.getTokenLocation());
+            }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_3bb8ff2_528f648/rev_3bb8ff2-528f648;/src/main/java/org/elasticsearch/search/aggregations/AggregationModule;AggregationModule();        aggParsers.add(GlobalParser.class);
+        aggParsers.add(MissingParser.class);
+        aggParsers.add(FilterParser.class);
+        aggParsers.add(FiltersParser.class);
+        aggParsers.add(TermsParser.class);
+        aggParsers.add(SignificantTermsParser.class);
+        aggParsers.add(RangeParser.class);
+        aggParsers.add(DateRangeParser.class);
+        aggParsers.add(IpRangeParser.class);
+        aggParsers.add(HistogramParser.class);
+        aggParsers.add(DateHistogramParser.class);
+        aggParsers.add(GeoDistanceParser.class);
+        aggParsers.add(GeoHashGridParser.class);
+        aggParsers.add(NestedParser.class);
+        aggParsers.add(ReverseNestedParser.class);
+        aggParsers.add(TopHitsParser.class);
+        aggParsers.add(GeoBoundsParser.class);
+        aggParsers.add(ScriptedMetricParser.class);
+        aggParsers.add(ChildrenParser.class);
+
+        reducerParsers.add(DerivativeParser.class);
+        reducerParsers.add(MaxBucketParser.class);
+        reducerParsers.add(MovAvgParser.class);;        parsers.add(GlobalParser.class);
+        parsers.add(MissingParser.class);
+        parsers.add(FilterParser.class);
+        parsers.add(FiltersParser.class);
+        parsers.add(TermsParser.class);
+        parsers.add(SignificantTermsParser.class);
+        parsers.add(RangeParser.class);
+        parsers.add(DateRangeParser.class);
+        parsers.add(IpRangeParser.class);
+        parsers.add(HistogramParser.class);
+        parsers.add(DateHistogramParser.class);
+        parsers.add(GeoDistanceParser.class);
+        parsers.add(GeoHashGridParser.class);
+        parsers.add(NestedParser.class);
+        parsers.add(ReverseNestedParser.class);
+        parsers.add(TopHitsParser.class);
+        parsers.add(GeoBoundsParser.class);
+        parsers.add(ScriptedMetricParser.class);
+        parsers.add(ChildrenParser.class);;        parsers.add(GlobalParser.class);
+        parsers.add(MissingParser.class);
+        parsers.add(FilterParser.class);
+        parsers.add(FiltersParser.class);
+        parsers.add(SamplerParser.class);
+        parsers.add(TermsParser.class);
+        parsers.add(SignificantTermsParser.class);
+        parsers.add(RangeParser.class);
+        parsers.add(DateRangeParser.class);
+        parsers.add(IpRangeParser.class);
+        parsers.add(HistogramParser.class);
+        parsers.add(DateHistogramParser.class);
+        parsers.add(GeoDistanceParser.class);
+        parsers.add(GeoHashGridParser.class);
+        parsers.add(NestedParser.class);
+        parsers.add(ReverseNestedParser.class);
+        parsers.add(TopHitsParser.class);
+        parsers.add(GeoBoundsParser.class);
+        parsers.add(ScriptedMetricParser.class);
+        parsers.add(ChildrenParser.class);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_61e9461_59d9f7e/rev_61e9461-59d9f7e;/src/main/java/org/elasticsearch/index/query/TemplateQueryBuilder;doXContent(XContentBuilder,Params);    protected void doXContent(XContentBuilder builder, Params params) throws IOException {
+        builder.startObject(NAME);
+        String fieldname;
+        switch(templateType){
+            case FILE:
+                fieldname = "file";
+                break;
+            case INDEXED:
+                fieldname = "id";
+                break;
+            case INLINE:
+                fieldname = TemplateQueryParser.QUERY;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown template type " + templateType);;    protected void doXContent(XContentBuilder builder, Params params) throws IOException {
+        builder.startObject(TemplateQueryParser.NAME);
+        String fieldname;
+        switch(templateType){
+            case FILE:
+                fieldname = "file";
+                break;
+            case INDEXED:
+                fieldname = "id";
+                break;
+            case INLINE:
+                fieldname = TemplateQueryParser.QUERY;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown template type " + templateType);;    protected void doXContent(XContentBuilder builder, Params builderParams) throws IOException {
+        builder.field(TemplateQueryParser.NAME);
+        if (template == null) {
+            new Template(templateString, templateType, null, null, this.vars).toXContent(builder, builderParams);
+        } else {
+            template.toXContent(builder, builderParams);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_1f2c42f_59d9f7e/rev_1f2c42f-59d9f7e;/src/test/java/org/elasticsearch/index/mapper/update/UpdateMappingTests;testTimestampParsing();        assertTrue(documentMapper.timestampFieldMapper().fieldType().hasDocValues());
+        documentMapper = indexService.mapperService().parse("type", new CompressedString(documentMapper.mappingSource().string()), true);;        assertTrue(documentMapper.timestampFieldMapper().hasDocValues());
+        documentMapper = indexService.mapperService().parse("type", new CompressedString(documentMapper.mappingSource().string()), true);;        assertTrue(documentMapper.timestampFieldMapper().hasDocValues());
+        documentMapper = indexService.mapperService().parse("type", new CompressedXContent(documentMapper.mappingSource().string()), true);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_33668a8_f4a143d/rev_33668a8-f4a143d;/core/src/main/java/org/elasticsearch/index/query/PrefixQueryBuilder;doXContent(XContentBuilder,Params);        builder.startObject(NAME);
+        if (boost == -1 && rewrite == null && queryName != null) {;        builder.startObject(PrefixQueryParser.NAME);
+        if (boost == -1 && rewrite == null && queryName != null) {;        builder.startObject(PrefixQueryParser.NAME);
+        if (boost == -1 && rewrite == null && queryName == null) {
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_33668a8_f4a143d/rev_33668a8-f4a143d;/core/src/main/java/org/elasticsearch/index/query/FuzzyQueryBuilder;doXContent(XContentBuilder,Params);        builder.startObject(NAME);
+        if (boost == -1 && fuzziness == null && prefixLength == null && queryName != null) {
+            builder.field(name, value);
+        } else {
+            builder.startObject(name);
+            builder.field("value", value);
+            if (boost != -1) {
+                builder.field("boost", boost);
+            }
+            if (transpositions != null) {
+                builder.field("transpositions", transpositions);
+            }
+            if (fuzziness != null) {
+                fuzziness.toXContent(builder, params);
+            }
+            if (prefixLength != null) {
+                builder.field("prefix_length", prefixLength);
+            }
+            if (maxExpansions != null) {
+                builder.field("max_expansions", maxExpansions);
+            }
+            if (rewrite != null) {
+                builder.field("rewrite", rewrite);
+            }
+            if (queryName != null) {
+                builder.field("_name", queryName);
+            }
+            builder.endObject();;        builder.startObject(FuzzyQueryParser.NAME);
+        if (boost == -1 && fuzziness == null && prefixLength == null && queryName != null) {
+            builder.field(name, value);
+        } else {
+            builder.startObject(name);
+            builder.field("value", value);
+            if (boost != -1) {
+                builder.field("boost", boost);
+            }
+            if (transpositions != null) {
+                builder.field("transpositions", transpositions);
+            }
+            if (fuzziness != null) {
+                fuzziness.toXContent(builder, params);
+            }
+            if (prefixLength != null) {
+                builder.field("prefix_length", prefixLength);
+            }
+            if (maxExpansions != null) {
+                builder.field("max_expansions", maxExpansions);
+            }
+            if (rewrite != null) {
+                builder.field("rewrite", rewrite);
+            }
+            if (queryName != null) {
+                builder.field("_name", queryName);
+            }
+            builder.endObject();;        builder.startObject(FuzzyQueryParser.NAME);
+        builder.startObject(name);
+        builder.field("value", value);
+        if (boost != -1) {
+            builder.field("boost", boost);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_33668a8_f4a143d/rev_33668a8-f4a143d;/core/src/main/java/org/elasticsearch/index/query/WildcardQueryBuilder;doXContent(XContentBuilder,Params);        builder.startObject(NAME);
+        if (boost == -1 && rewrite == null && queryName != null) {;        builder.startObject(WildcardQueryParser.NAME);
+        if (boost == -1 && rewrite == null && queryName != null) {;        builder.startObject(WildcardQueryParser.NAME);
+        if (boost == -1 && rewrite == null && queryName == null) {
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_33668a8_f4a143d/rev_33668a8-f4a143d;/core/src/main/java/org/elasticsearch/index/query/RegexpQueryBuilder;doXContent(XContentBuilder,Params);        builder.startObject(NAME);
+        if (boost == -1 && rewrite == null && queryName != null) {
+            builder.field(name, regexp);
+        } else {
+            builder.startObject(name);
+            builder.field("value", regexp);
+            if (flags != -1) {
+                builder.field("flags_value", flags);
+            }
+            if (maxDetermizedStatesSet) {
+                builder.field("max_determinized_states", maxDeterminizedStates);
+            }
+            if (boost != -1) {
+                builder.field("boost", boost);
+            }
+            if (rewrite != null) {
+                builder.field("rewrite", rewrite);
+            }
+            if (queryName != null) {
+                builder.field("name", queryName);
+            }
+            builder.endObject();;        builder.startObject(RegexpQueryParser.NAME);
+        if (boost == -1 && rewrite == null && queryName != null) {
+            builder.field(name, regexp);
+        } else {
+            builder.startObject(name);
+            builder.field("value", regexp);
+            if (flags != -1) {
+                builder.field("flags_value", flags);
+            }
+            if (maxDetermizedStatesSet) {
+                builder.field("max_determinized_states", maxDeterminizedStates);
+            }
+            if (boost != -1) {
+                builder.field("boost", boost);
+            }
+            if (rewrite != null) {
+                builder.field("rewrite", rewrite);
+            }
+            if (queryName != null) {
+                builder.field("name", queryName);
+            }
+            builder.endObject();;        builder.startObject(RegexpQueryParser.NAME);
+        builder.startObject(name);
+        builder.field("value", regexp);
+        if (flags != -1) {
+            builder.field("flags_value", flags);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9d47e80_f5f7325/rev_9d47e80-f5f7325;/core/src/main/java/org/elasticsearch/index/query/RangeQueryBuilder;doXContent(XContentBuilder,Params);        if (format != null) {
+            builder.field("format", format);;        builder.field("include_lower", includeLower);
+        builder.field("include_upper", includeUpper);
+        if (boost != -1) {
+            builder.field("boost", boost);;        if (format != null) {
+            builder.field("format", format);
+        }
+        builder.field("include_lower", includeLower);
+        builder.field("include_upper", includeUpper);
+        if (boost != -1) {
+            builder.field("boost", boost);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_53f6bf0_ed561cd/rev_53f6bf0-ed561cd;/core/src/main/java/org/elasticsearch/transport/netty/MessageChannelHandler;messageReceived(ChannelHandlerContext,MessageEvent);            wrappedStream = compressor.streamInput(streamIn);
+        } else {
+            wrappedStream = streamIn;
+        }
+        wrappedStream = new FilterStreamInput(wrappedStream, namedWriteableRegistry);
+        wrappedStream.setVersion(version);;            wrappedStream = compressor.streamInput(streamIn);
+        } else {
+            wrappedStream = streamIn;
+        }
+        wrappedStream.setVersion(version);;            wrappedStream.setVersion(version);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_4b071f8_6765635/rev_4b071f8-6765635;/core/src/main/java/org/elasticsearch/transport/netty/MessageChannelHandler;messageReceived(ChannelHandlerContext,MessageEvent);            wrappedStream = new FilterStreamInput(wrappedStream, namedWriteableRegistry);
+            wrappedStream.setVersion(version);;            wrappedStream.setVersion(version);;            streamIn.setVersion(version);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_a0cccec_a6c0007/rev_a0cccec-a6c0007;/core/src/main/java/org/elasticsearch/index/query/FuzzyQueryParser;parse(QueryParseContext);        String value = null;
+        float boost = AbstractQueryBuilder.DEFAULT_BOOST;;        String value = null;
+        float boost = 1.0f;;        Object value = null;
+        float boost = 1.0f;
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_a0cccec_a6c0007/rev_a0cccec-a6c0007;/core/src/main/java/org/elasticsearch/index/query/RegexpQueryParser;parse(QueryParseContext);        float boost = AbstractQueryBuilder.DEFAULT_BOOST;
+        int flagsValue = -1;;        float boost = 1.0f;
+        int flagsValue = -1;;        float boost = 1.0f;
+        int flagsValue = DEFAULT_FLAGS_VALUE;
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ac92ad6_964a849/rev_ac92ad6-964a849;/core/src/main/java/org/elasticsearch/index/query/PrefixQueryParser;parse(QueryParseContext);        Object value = null;
+        float boost = AbstractQueryBuilder.DEFAULT_BOOST;;        Object value = null;
+        float boost = 1.0f;;        String value = null;
+        float boost = 1.0f;
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ac92ad6_964a849/rev_ac92ad6-964a849;/core/src/main/java/org/elasticsearch/index/query/RegexpQueryParser;parse(QueryParseContext);        Object value = null;
+        float boost = AbstractQueryBuilder.DEFAULT_BOOST;;        Object value = null;
+        float boost = 1.0f;;        String value = null;
+        float boost = 1.0f;
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_3d53413_20faccc/rev_3d53413-20faccc;/core/src/test/java/org/elasticsearch/aliases/IndexAliasesTests;testSameAlias();        AliasMetaData aliasMetaData = internalCluster().clusterService().state().metaData().aliases().get("alias1").get("test");
+        assertThat(aliasMetaData.getFilter().toString(), equalTo("{\"term\":{\"name\":{\"value\":\"bar\",\"boost\":1.0}}}"));;        AliasMetaData aliasMetaData = internalCluster().clusterService().state().metaData().aliases().get("alias1").get("test");
+        assertThat(aliasMetaData.getFilter().toString(), equalTo("{\"term\":{\"name\":\"bar\"}}"));;        AliasMetaData aliasMetaData = ((AliasOrIndex.Alias) internalCluster().clusterService().state().metaData().getAliasAndIndexLookup().get("alias1")).getFirstAliasMetaData();
+        assertThat(aliasMetaData.getFilter().toString(), equalTo("{\"term\":{\"name\":\"bar\"}}"));
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be638fb_4010e7e/rev_be638fb-4010e7e;/plugins/analysis-kuromoji/src/test/java/org/elasticsearch/index/analysis/KuromojiAnalysisTests;createAnalysisService();public AnalysisService createAnalysisService() throws IOException {
+        InputStream empty_dict = getClass().getResourceAsStream("empty_user_dict.txt");
+        InputStream dict = getClass().getResourceAsStream("user_dict.txt");
+        Path home = createTempDir();
+        Path config = home.resolve("config");
+        Files.createDirectory(config);
+        Files.copy(empty_dict, config.resolve("empty_user_dict.txt"));
+        Files.copy(dict, config.resolve("user_dict.txt"));;public AnalysisService createAnalysisService() {;public AnalysisService createAnalysisService() {
+        String json = "/org/elasticsearch/index/analysis/kuromoji_analysis.json";
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be638fb_4010e7e/rev_be638fb-4010e7e;/plugins/analysis-kuromoji/src/test/java/org/elasticsearch/index/analysis/KuromojiAnalysisTests;createAnalysisService();                .put("path.home", home)
+                .loadFromClasspath("org/elasticsearch/index/analysis/kuromoji_analysis.json");                .put("path.home", createTempDir())
+                .loadFromClasspath("org/elasticsearch/index/analysis/kuromoji_analysis.json");                .put("path.home", createTempDir())
+                .loadFromStream(json, getClass().getResourceAsStream(json))
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be638fb_4010e7e/rev_be638fb-4010e7e;/core/src/test/java/org/elasticsearch/index/analysis/commongrams/CommonGramsTokenFilterFactoryTests;testCommonGramsAnalysis();                     .loadFromClasspath("org/elasticsearch/index/analysis/commongrams/commongrams.json")
+                     .put("path.home", createHome());                     .loadFromClasspath("org/elasticsearch/index/analysis/commongrams/commongrams.json")
+                     .put("path.home", createTempDir().toString());                     .loadFromStream(json, getClass().getResourceAsStream(json))
+                     .put("path.home", createTempDir().toString())
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_be638fb_4010e7e/rev_be638fb-4010e7e;/core/src/test/java/org/elasticsearch/index/analysis/synonyms/SynonymsAnalysisTest;testSynonymsAnalysis();                loadFromClasspath("org/elasticsearch/index/analysis/synonyms/synonyms.json")
+                .put("path.home", home);                loadFromClasspath("org/elasticsearch/index/analysis/synonyms/synonyms.json")
+                .put("path.home", createTempDir().toString());                loadFromStream(json, getClass().getResourceAsStream(json))
+                .put("path.home", createTempDir().toString())
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_260a929_34635a4/rev_260a929-34635a4;/core/src/main/java/org/elasticsearch/index/query/GeoDistanceQueryBuilder;doXContent(XContentBuilder,Params);        printBoostAndQueryName(builder);;        if (queryName != null) {
+            builder.field("_name", queryName);
+        };        if (queryName != null) {
+            builder.field("_name", queryName);
+        }
+        if (coerce != null) {
+            builder.field("coerce", coerce);
+        }
+        if (ignoreMalformed != null) {
+            builder.field("ignore_malformed", ignoreMalformed);
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_260a929_34635a4/rev_260a929-34635a4;/core/src/main/java/org/elasticsearch/index/query/GeoDistanceRangeQueryBuilder;doXContent(XContentBuilder,Params);        printBoostAndQueryName(builder);;        if (queryName != null) {
+            builder.field("_name", queryName);
+        };        if (queryName != null) {
+            builder.field("_name", queryName);
+        }
+        if (coerce != null) {
+            builder.field("coerce", coerce);
+        }
+        if (ignoreMalformed != null) {
+            builder.field("ignore_malformed", ignoreMalformed);
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_260a929_34635a4/rev_260a929-34635a4;/core/src/main/java/org/elasticsearch/index/query/GeoPolygonQueryBuilder;doXContent(XContentBuilder,Params);        printBoostAndQueryName(builder);;        if (queryName != null) {
+            builder.field("_name", queryName);
+        };        if (queryName != null) {
+            builder.field("_name", queryName);
+        }
+        if (coerce != null) {
+            builder.field("coerce", coerce);
+        }
+        if (ignoreMalformed != null) {
+            builder.field("ignore_malformed", ignoreMalformed);
+        }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_084a610_db5e225/rev_084a610-db5e225;/core/src/main/java/org/elasticsearch/index/query/NestedQueryParser;build();                ParsedQuery parsedQuery = new ParsedQuery(innerQuery, shardContext.copyNamedQueries());
+                InnerHitsContext.NestedInnerHits nestedInnerHits = new InnerHitsContext.NestedInnerHits(innerHits.v2(), parsedQuery, null, getParentObjectMapper(), nestedObjectMapper);
+                String name = innerHits.v1() != null ? innerHits.v1() : path;
+                shardContext.addInnerHits(name, nestedInnerHits);;                ParsedQuery parsedQuery = new ParsedQuery(innerQuery, parseContext.copyNamedQueries());
+                InnerHitsContext.NestedInnerHits nestedInnerHits = new InnerHitsContext.NestedInnerHits(innerHits.v2(), parsedQuery, null, getParentObjectMapper(), nestedObjectMapper);
+                String name = innerHits.v1() != null ? innerHits.v1() : path;
+                parseContext.addInnerHits(name, nestedInnerHits);;                ParsedQuery parsedQuery = new ParsedQuery(innerQuery, parseContext.copyNamedQueries());
+                InnerHitsContext.NestedInnerHits nestedInnerHits = new InnerHitsContext.NestedInnerHits(innerHits.getSubSearchContext(), parsedQuery, null, getParentObjectMapper(), nestedObjectMapper);
+                String name = innerHits.getName() != null ? innerHits.getName() : path;
+                parseContext.addInnerHits(name, nestedInnerHits);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/rest/action/bulk/RestBulkAction;handleRequest(RestRequest,RestChannel,Client);                    builder.startObject(itemResponse.getOpType());
+                    if (itemResponse.isFailed()) {
+                        builder.field(Fields._INDEX, itemResponse.getIndex());
+                        builder.field(Fields._TYPE, itemResponse.getType());
+                        builder.field(Fields._ID, itemResponse.getId());
+                        builder.field(Fields.STATUS, itemResponse.getFailure().getStatus().getStatus());
+                        builder.startObject(Fields.ERROR);
+                        ElasticsearchException.toXContent(builder, request, itemResponse.getFailure().getCause());
+                        builder.endObject();
+                    } else {
+                        final DocWriteResponse docResponse = itemResponse.getResponse();
+                        docResponse.toXContent(builder, request);
+                        RestStatus status = docResponse.getShardInfo().status();
+                        if (docResponse instanceof DeleteResponse) {
+                            DeleteResponse deleteResponse = (DeleteResponse) docResponse;
+                            if (deleteResponse.isFound() == false) {
+                                status = RestStatus.NOT_FOUND;
+                            }
+                        } else if (docResponse instanceof IndexResponse) {
+                            IndexResponse indexResponse = (IndexResponse) docResponse;
+                            if (indexResponse.isCreated()) {
+                                status = RestStatus.CREATED;
+                            }
+                        } else if (docResponse instanceof UpdateResponse) {
+                            UpdateResponse updateResponse = (UpdateResponse) docResponse;
+                            if (updateResponse.isCreated()) {
+                                status = RestStatus.CREATED;
+                            }
+                        }
+                        builder.field(Fields.STATUS, status.getStatus());
+                    }
+                    builder.endObject();;                    builder.startObject(itemResponse.getOpType());
+                    builder.field(Fields._INDEX, itemResponse.getIndex());
+                    builder.field(Fields._TYPE, itemResponse.getType());
+                    builder.field(Fields._ID, itemResponse.getId());
+                    long version = itemResponse.getVersion();
+                    if (version != -1) {
+                        builder.field(Fields._VERSION, itemResponse.getVersion());
+                    }
+                    if (itemResponse.isFailed()) {
+                        builder.field(Fields.STATUS, itemResponse.getFailure().getStatus().getStatus());
+                        builder.startObject(Fields.ERROR);
+                        ElasticsearchException.toXContent(builder, request, itemResponse.getFailure().getCause());
+                        builder.endObject();
+                    } else {
+                        ActionWriteResponse.ShardInfo shardInfo = itemResponse.getResponse().getShardInfo();
+                        shardInfo.toXContent(builder, request);
+                        if (itemResponse.getResponse() instanceof DeleteResponse) {
+                            DeleteResponse deleteResponse = itemResponse.getResponse();
+                            if (deleteResponse.isFound()) {
+                                builder.field(Fields.STATUS, shardInfo.status().getStatus());
+                            } else {
+                                builder.field(Fields.STATUS, RestStatus.NOT_FOUND.getStatus());
+                            }
+                            builder.field(Fields.FOUND, deleteResponse.isFound());
+                        } else if (itemResponse.getResponse() instanceof IndexResponse) {
+                            IndexResponse indexResponse = itemResponse.getResponse();
+                            if (indexResponse.isCreated()) {
+                                builder.field(Fields.STATUS, RestStatus.CREATED.getStatus());
+                            } else {
+                                builder.field(Fields.STATUS, shardInfo.status().getStatus());
+                            }
+                        } else if (itemResponse.getResponse() instanceof UpdateResponse) {
+                            UpdateResponse updateResponse = itemResponse.getResponse();
+                            if (updateResponse.isCreated()) {
+                                builder.field(Fields.STATUS, RestStatus.CREATED.getStatus());
+                            } else {
+                                builder.field(Fields.STATUS, shardInfo.status().getStatus());
+                            }
+                            if (updateResponse.getGetResult() != null) {
+                                builder.startObject(Fields.GET);
+                                updateResponse.getGetResult().toXContentEmbedded(builder, request);
+                                builder.endObject();
+                            }
+                        }
+                    }
+                    builder.endObject();;                    itemResponse.toXContent(builder, request);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/cluster/routing/ShardRouting;buildTargetRelocatingShard();        return new ShardRouting(index, shardId, relocatingNodeId, currentNodeId, restoreSource, primaryTerm, primary, ShardRoutingState.INITIALIZING, version, unassignedInfo,
+                AllocationId.newTargetRelocation(allocationId), true, expectedShardSize);;        return new ShardRouting(index, shardId, relocatingNodeId, currentNodeId, restoreSource, primary, ShardRoutingState.INITIALIZING, version, unassignedInfo,
+                AllocationId.newTargetRelocation(allocationId), true, expectedShardSize);;        return new ShardRouting(index, shardId, relocatingNodeId, currentNodeId, restoreSource, primary, ShardRoutingState.INITIALIZING, version, unassignedInfo,
+            AllocationId.newTargetRelocation(allocationId), true, expectedShardSize);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a;/core/src/main/java/org/elasticsearch/cluster/routing/ShardRouting;toXContent(XContentBuilder,Params);                .field("state", state())
+                .field("primary", primary())
+                .field("primary_term", primaryTerm())
+                .field("node", currentNodeId())
+                .field("relocating_node", relocatingNodeId())
+                .field("shard", shardId().id())
+                .field("index", shardId().index().name())
+                .field("version", version);
+        if (expectedShardSize != UNAVAILABLE_EXPECTED_SHARD_SIZE){;                .field("state", state())
+                .field("primary", primary())
+                .field("node", currentNodeId())
+                .field("relocating_node", relocatingNodeId())
+                .field("shard", shardId().id())
+                .field("index", shardId().index().name())
+                .field("version", version);
+        if (expectedShardSize != UNAVAILABLE_EXPECTED_SHARD_SIZE){;            .field("state", state())
+            .field("primary", primary())
+            .field("node", currentNodeId())
+            .field("relocating_node", relocatingNodeId())
+            .field("shard", shardId().id())
+            .field("index", shardId().index().name())
+            .field("version", version);
+        if (expectedShardSize != UNAVAILABLE_EXPECTED_SHARD_SIZE) {
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ad7fec8_e9bb3d3/rev_ad7fec8-e9bb3d3;/core/src/test/java/org/elasticsearch/indices/analyze/HunspellServiceIT;testLocaleDirectoryWithNodeLevelConfig();                .put("path.conf", getDataPath("/indices/analyze/conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD.getKey(), randomBoolean())
+                .put(HUNSPELL_IGNORE_CASE.getKey(), true);                .put("path.conf", getDataPath("/indices/analyze/conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD, randomBoolean())
+                .put(HUNSPELL_IGNORE_CASE, true);                .put(Environment.PATH_CONF_SETTING.getKey(), getDataPath("/indices/analyze/conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD, randomBoolean())
+                .put(HUNSPELL_IGNORE_CASE, true)
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ad7fec8_e9bb3d3/rev_ad7fec8-e9bb3d3;/core/src/test/java/org/elasticsearch/indices/analyze/HunspellServiceIT;testLocaleDirectoryWithLocaleSpecificConfig();                .put("path.conf", getDataPath("/indices/analyze/conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD.getKey(), randomBoolean())
+                .put(HUNSPELL_IGNORE_CASE.getKey(), true);                .put("path.conf", getDataPath("/indices/analyze/conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD, randomBoolean())
+                .put(HUNSPELL_IGNORE_CASE, true);                .put(Environment.PATH_CONF_SETTING.getKey(), getDataPath("/indices/analyze/conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD, randomBoolean())
+                .put(HUNSPELL_IGNORE_CASE, true)
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ad7fec8_e9bb3d3/rev_ad7fec8-e9bb3d3;/core/src/test/java/org/elasticsearch/indices/analyze/HunspellServiceIT;testDicWithNoAff();                .put("path.conf", getDataPath("/indices/analyze/no_aff_conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD.getKey(), randomBoolean());                .put("path.conf", getDataPath("/indices/analyze/no_aff_conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD, randomBoolean());                .put(Environment.PATH_CONF_SETTING.getKey(), getDataPath("/indices/analyze/no_aff_conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD, randomBoolean())
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ad7fec8_e9bb3d3/rev_ad7fec8-e9bb3d3;/core/src/test/java/org/elasticsearch/indices/analyze/HunspellServiceIT;testDicWithTwoAffs();                .put("path.conf", getDataPath("/indices/analyze/two_aff_conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD.getKey(), randomBoolean());                .put("path.conf", getDataPath("/indices/analyze/two_aff_conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD, randomBoolean());                .put(Environment.PATH_CONF_SETTING.getKey(), getDataPath("/indices/analyze/two_aff_conf_dir"))
+                .put(HUNSPELL_LAZY_LOAD, randomBoolean())
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_e6f9cbc_ec31fec/rev_e6f9cbc-ec31fec;/core/src/main/java/org/elasticsearch/search/aggregations/bucket/filter/FilterAggregator;createInternal(AggregationContext,Aggregator,boolean,List<PipelineAggregator>,Map<String,Object>);            Query filter = this.filter.toQuery(context.searchContext().indexShard().getQueryShardContext());
+            return new FilterAggregator(name, filter, factories, context, parent, pipelineAggregators, metaData);;            return new FilterAggregator(name, filter, factories, context, parent, pipelineAggregators, metaData);;            IndexSearcher contextSearcher = context.searchContext().searcher();
+            if (searcher != contextSearcher) {
+                searcher = contextSearcher;
+                weight = contextSearcher.createNormalizedWeight(filter, false);
+            }
+            return new FilterAggregator(name, weight, factories, context, parent, pipelineAggregators, metaData);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_687aade_0b0a251/rev_687aade-0b0a251;/core/src/test/java/org/elasticsearch/plugins/PluginCliTests;testHelpWorks();        /*
+        CliToolTestCase.CaptureOutputTerminal terminal = new CliToolTestCase.CaptureOutputTerminal();;        CliToolTestCase.CaptureOutputTerminal terminal = new CliToolTestCase.CaptureOutputTerminal();;        MockTerminal terminal = new MockTerminal();
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_838c7dd_ef4293a/rev_838c7dd-ef4293a;/core/src/test/java/org/elasticsearch/cluster/DiskUsageTests;testFillShardLevelInfo();        final Index index = new Index("test", "_na_");
+        ShardRouting test_0 = ShardRouting.newUnassigned(index, 0, null, 1, false, new UnassignedInfo(UnassignedInfo.Reason.INDEX_CREATED, "foo"));;        final Index index = new Index("test", "_na_");
+        ShardRouting test_0 = ShardRouting.newUnassigned(index, 0, null, false, new UnassignedInfo(UnassignedInfo.Reason.INDEX_CREATED, "foo"));;        final Index index = new Index("test", "0xdeadbeef");
+        ShardRouting test_0 = ShardRouting.newUnassigned(index, 0, null, false, new UnassignedInfo(UnassignedInfo.Reason.INDEX_CREATED, "foo"));
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_838c7dd_ef4293a/rev_838c7dd-ef4293a;/core/src/test/java/org/elasticsearch/cluster/DiskUsageTests;testFillShardLevelInfo();        ShardStats[] stats = new ShardStats[]{
+                new ShardStats(test_0, new ShardPath(false, test0Path, test0Path, "0xdeadbeef", test_0.shardId()), commonStats0, null, null),
+                new ShardStats(test_1, new ShardPath(false, test1Path, test1Path, "0xdeadbeef", test_1.shardId()), commonStats1, null, null);        ShardStats[] stats  = new ShardStats[] {
+                new ShardStats(test_0, new ShardPath(false, test0Path, test0Path, "0xdeadbeef", test_0.shardId()), commonStats0 , null),
+                new ShardStats(test_1, new ShardPath(false, test1Path, test1Path, "0xdeadbeef", test_1.shardId()), commonStats1 , null);        ShardStats[] stats  = new ShardStats[] {
+                new ShardStats(test_0, new ShardPath(false, test0Path, test0Path, test_0.shardId()), commonStats0 , null),
+                new ShardStats(test_1, new ShardPath(false, test1Path, test1Path, test_1.shardId()), commonStats1 , null)
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_801d178_63b754a/rev_801d178-63b754a;/core/src/main/java/org/elasticsearch/search/sort/FieldSortBuilder;fromXContent(QueryParseContext,String);                    missing = parser.objectBytes();;                    missing = parser.objectBytes();
+                } else if (context.parseFieldMatcher().match(currentFieldName, REVERSE)) {
+                    if (parser.booleanValue()) {
+                        order = SortOrder.DESC;
+                    }
+                    // else we keep the default ASC;                    missing = parser.objectText();
+                } else if (context.parseFieldMatcher().match(currentFieldName, REVERSE)) {
+                    if (parser.booleanValue()) {
+                        order = SortOrder.DESC;
+                    }
+                    // else we keep the default ASC
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_a56a9cb_f6074d3/rev_a56a9cb-f6074d3;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/LField;load(MethodWriter);    void load(MethodWriter adapter) {
+        if (java.lang.reflect.Modifier.isStatic(field.modifiers)) {
+            adapter.getStatic(field.owner.type, field.javaName, field.type.type);;    void load(MethodWriter adapter) {
+        if (java.lang.reflect.Modifier.isStatic(field.reflect.getModifiers())) {
+            adapter.getStatic(field.owner.type, field.reflect.getName(), field.type.type);;    void load(MethodWriter writer) {
+        if (java.lang.reflect.Modifier.isStatic(field.reflect.getModifiers())) {
+            writer.getStatic(field.owner.type, field.reflect.getName(), field.type.type);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_a56a9cb_f6074d3/rev_a56a9cb-f6074d3;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/LField;store(MethodWriter);    void store(MethodWriter adapter) {
+        if (java.lang.reflect.Modifier.isStatic(field.modifiers)) {
+            adapter.putStatic(field.owner.type, field.javaName, field.type.type);;    void store(MethodWriter adapter) {
+        if (java.lang.reflect.Modifier.isStatic(field.reflect.getModifiers())) {
+            adapter.putStatic(field.owner.type, field.reflect.getName(), field.type.type);;    void store(MethodWriter writer) {
+        if (java.lang.reflect.Modifier.isStatic(field.reflect.getModifiers())) {
+            writer.putStatic(field.owner.type, field.reflect.getName(), field.type.type);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_a56a9cb_f6074d3/rev_a56a9cb-f6074d3;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/LCall;load(MethodWriter);        if (java.lang.reflect.Modifier.isStatic(method.modifiers)) {
+            adapter.invokeStatic(method.owner.type, method.method);;        if (java.lang.reflect.Modifier.isStatic(method.reflect.getModifiers())) {
+            adapter.invokeStatic(method.owner.type, method.method);;        if (java.lang.reflect.Modifier.isStatic(method.reflect.getModifiers())) {
+            writer.invokeStatic(method.owner.type, method.method);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SIfElse;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SCatch;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SDo;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SFor;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/EChain;write(MethodWriter);        // For the case where the chain represents a String concatenation
+        // we must first write debug information, and then depending on the
+        // Java version write a StringBuilder or track types going onto the
+        // stack.  This must be done before the links in the chain are read
+        // because we need the StringBuilder to be placed on the stack
+        // ahead of any potential concatenation arguments.
+        if (cat) {
+            writer.writeDebugInfo(offset);;        if (cat) {
+            writer.writeDebugInfo(offset);
+        }
+
+        if (cat) {;        // can cause class cast exception among other things at runtime
+        writer.writeDebugInfo(location);
+
+        if (cat) {
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SWhile;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SIf;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/STry;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_9a0d0d7_d8056c8/rev_9a0d0d7-d8056c8;/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SDeclaration;write(MethodWriter);        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(offset);;        writer.writeStatementOffset(location);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_90ef933_be168f5/rev_90ef933-be168f5;/core/src/main/java/org/elasticsearch/action/DocWriteResponse;toXContent(XContentBuilder,Params);                .field(Fields._TYPE, type)
+                .field(Fields._ID, id)
+                .field(Fields._VERSION, version);;            .field(Fields._TYPE, type)
+            .field(Fields._ID, id)
+            .field(Fields._VERSION, version);;            .field(Fields._TYPE, type)
+            .field(Fields._ID, id)
+            .field(Fields._VERSION, version)
+            .field("forced_refresh", forcedRefresh);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_bd94c62_3871555/rev_bd94c62-3871555;/modules/lang-painless/src/main/java/org/elasticsearch/painless/antlr/PainlessParser;funcref();      enterOuterAlt(_localctx, 1);
+      {
+      setState(437);
+      match(TYPE);
+      setState(438);
+      match(REF);
+      setState(439);
+      _la = _input.LA(1);
+      if ( !(_la==NEW || _la==ID) ) {
+      _errHandler.recoverInline(this);
+      } else {
+        consume();
+      };      enterOuterAlt(_localctx, 1);
+      {
+      setState(201);
+      match(TYPE);
+      setState(202);
+      match(REF);
+      setState(203);
+      _la = _input.LA(1);
+      if ( !(_la==NEW || _la==ID) ) {
+      _errHandler.recoverInline(this);
+      } else {
+        consume();
+      };      setState(207);
+      switch (_input.LA(1)) {
+      case TYPE:
+        enterOuterAlt(_localctx, 1);
+        {
+        setState(201);
+        match(TYPE);
+        setState(202);
+        match(REF);
+        setState(203);
+        _la = _input.LA(1);
+        if ( !(_la==NEW || _la==ID) ) {
+        _errHandler.recoverInline(this);
+        } else {
+          consume();
+        }
+        }
+        break;
+      case ID:
+        enterOuterAlt(_localctx, 2);
+        {
+        setState(204);
+        match(ID);
+        setState(205);
+        match(REF);
+        setState(206);
+        match(ID);
+        }
+        break;
+      default:
+        throw new NoViableAltException(this);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_bd94c62_3871555/rev_bd94c62-3871555;/modules/lang-painless/src/main/java/org/elasticsearch/painless/antlr/PainlessParser;argument();        setState(410);
+        lambda();
+        }
+        break;
+      case 3:
+        enterOuterAlt(_localctx, 3);
+        {
+        setState(411);;        setState(410);;        setState(414);
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_c809671_85402d5/rev_c809671-85402d5;/core/src/main/java/org/elasticsearch/indices/recovery/RemoteRecoveryTargetHandler;finalizeRecovery();    public FinalizeResponse finalizeRecovery() {
+        return transportService.submitRequest(targetNode, RecoveryTargetService.Actions.FINALIZE,;    public void finalizeRecovery() {
+        transportService.submitRequest(targetNode, RecoveryTargetService.Actions.FINALIZE,;    public void finalizeRecovery() {
+        transportService.submitRequest(targetNode, PeerRecoveryTargetService.Actions.FINALIZE,
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_c809671_85402d5/rev_c809671-85402d5;/core/src/main/java/org/elasticsearch/action/index/IndexResponse;toString();        builder.append(",created=").append(created);
+        builder.append(",seqNo=").append(getSeqNo());
+        builder.append(",shards=").append(getShardInfo());;        builder.append(",created=").append(created);
+        builder.append(",shards=").append(getShardInfo());;        builder.append(",result=").append(getResult().getLowercase());
+        builder.append(",shards=").append(Strings.toString(getShardInfo(), true));
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ce6f6d3_6174e21/rev_ce6f6d3-6174e21;/core/src/main/java/org/elasticsearch/search/aggregations/metrics/tophits/TopHitsAggregatorFactory;createInternal(Aggregator,boolean,List<PipelineAggregator>,Map<String,Object>);        if (scriptFields != null) {
+            for (ScriptFieldsContext.ScriptField field : scriptFields) {
+                subSearchContext.scriptFields().add(field);
+            };        if (scriptFields != null) {
+            for (ScriptField field : scriptFields) {
+                SearchScript searchScript = subSearchContext.scriptService().search(subSearchContext.lookup(), field.script(),
+                        ScriptContext.Standard.SEARCH, Collections.emptyMap());
+                subSearchContext.scriptFields().add(new org.elasticsearch.search.fetch.subphase.ScriptFieldsContext.ScriptField(
+                        field.fieldName(), searchScript, field.ignoreFailure()));
+            };        for (ScriptFieldsContext.ScriptField field : scriptFields) {
+            subSearchContext.scriptFields().add(field);

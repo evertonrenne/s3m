@@ -1,0 +1,728 @@
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/PerRequestConfig.java;<<<<<<< MINE
+=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client;
+
+/**
+ * Per request configuration.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestConfig {
+    private final ProxyServer proxyServer;
+    private int requestTimeoutInMs;
+
+    public PerRequestConfig() {
+        this(null, 0);
+    }
+    
+    public PerRequestConfig(ProxyServer proxyServer, int requestTimeoutInMs) {
+        this.proxyServer = proxyServer;
+        this.requestTimeoutInMs = requestTimeoutInMs;
+    }
+
+    public ProxyServer getProxyServer() {
+        return proxyServer;
+    }
+
+    public int getRequestTimeoutInMs() {
+        return requestTimeoutInMs;
+    }
+
+    public void setRequestTimeoutInMs(int requestTimeoutInMs) {
+        this.requestTimeoutInMs = requestTimeoutInMs;
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/PerRequestTimeoutTest.java;<<<<<<< MINE
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalDefaultPerRequestInfiniteTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(-1);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get();
+            assertNotNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/websocket/DefaultWebSocketListener.java;<<<<<<< MINE
+=======
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright (c) 2011 Oracle and/or its affiliates. All rights reserved.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common Development
+ * and Distribution License("CDDL") (collectively, the "License").  You
+ * may not use this file except in compliance with the License.  You can
+ * obtain a copy of the License at
+ * https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
+ * or packager/legal/LICENSE.txt.  See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing the software, include this License Header Notice in each
+ * file and include the License file at packager/legal/LICENSE.txt.
+ *
+ * GPL Classpath Exception:
+ * Oracle designates this particular file as subject to the "Classpath"
+ * exception as provided by Oracle in the GPL Version 2 section of the License
+ * file that accompanied this code.
+ *
+ * Modifications:
+ * If applicable, add the following below the License Header, with the fields
+ * enclosed by brackets [] replaced by your own identifying information:
+ * "Portions Copyright [year] [name of copyright owner]"
+ *
+ * Contributor(s):
+ * If you wish your version of this file to be governed by only the CDDL or
+ * only the GPL Version 2, indicate your decision by adding "[Contributor]
+ * elects to include this software in this distribution under the [CDDL or GPL
+ * Version 2] license."  If you don't indicate a single choice of license, a
+ * recipient has the option to distribute your version of this file under
+ * either the CDDL, the GPL Version 2 or to extend the choice of license to
+ * its licensees as provided above.  However, if you add GPL Version 2 code
+ * and therefore, elected the GPL Version 2 license, then the option applies
+ * only if the new code is made subject to such option by the copyright
+ * holder.
+ */
+package com.ning.http.client.websocket;
+
+/**
+ * Default WebSocketListener implementation.  Most methods are no-ops.  This 
+ * allows for quick override customization without clutter of methods that the
+ * developer isn't interested in dealing with.
+ * 
+ * @since 1.7.0
+ */
+public class DefaultWebSocketListener implements  WebSocketByteListener, WebSocketTextListener, WebSocketPingListener, WebSocketPongListener {
+
+    protected WebSocket webSocket;
+    
+    // -------------------------------------- Methods from WebSocketByteListener
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onMessage(byte[] message) {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onFragment(byte[] fragment, boolean last) {
+    }
+
+    
+    // -------------------------------------- Methods from WebSocketPingListener
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onPing(byte[] message) {
+    }
+
+    
+    // -------------------------------------- Methods from WebSocketPongListener
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onPong(byte[] message) {
+    }
+    
+    
+    // -------------------------------------- Methods from WebSocketTextListener
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onMessage(String message) {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onFragment(String fragment, boolean last) {
+    }
+    
+    
+    // ------------------------------------------ Methods from WebSocketListener
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onOpen(WebSocket websocket) {
+        this.webSocket = websocket;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onClose(WebSocket websocket) {
+        this.webSocket = null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onError(Throwable t) {
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/netty/NettyByteMessageTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2010-2011 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.netty;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.websocket.TextMessageTest;
+
+public class NettyByteMessageTest extends TextMessageTest {
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        return ProviderUtil.nettyProvider(config);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/netty/NettyTextMessageTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2010-2011 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.netty;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.websocket.TextMessageTest;
+
+public class NettyTextMessageTest extends TextMessageTest {
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        return ProviderUtil.nettyProvider(config);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/grizzly/GrizzlyByteMessageTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2010-2011 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.grizzly;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.providers.grizzly.GrizzlyAsyncHttpProvider;
+import com.ning.http.client.websocket.ByteMessageTest;
+
+public class GrizzlyByteMessageTest extends ByteMessageTest {
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        if (config == null) {
+            config = new AsyncHttpClientConfig.Builder().build();
+        }
+        return new AsyncHttpClient(new GrizzlyAsyncHttpProvider(config), config);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/grizzly/GrizzlyTextMessageTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2010-2011 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.grizzly;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.providers.grizzly.GrizzlyAsyncHttpProvider;
+import com.ning.http.client.websocket.ByteMessageTest;
+
+public class GrizzlyTextMessageTest extends ByteMessageTest {
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        if (config == null) {
+            config = new AsyncHttpClientConfig.Builder().build();
+        }
+        return new AsyncHttpClient(new GrizzlyAsyncHttpProvider(config), config);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/netty/NettyRedirectTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2012 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.netty;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.websocket.RedirectTest;
+
+public class NettyRedirectTest extends RedirectTest {
+
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        return ProviderUtil.nettyProvider(config);
+    }
+
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/TextMessageTest.java;<<<<<<< MINE
+    private final class EchoTextWebSocket implements org.eclipse.jetty.websocket.WebSocket, org.eclipse.jetty.websocket.WebSocket.OnTextMessage {
+=======
+    public static final class EchoTextWebSocket implements org.eclipse.jetty.websocket.WebSocket, org.eclipse.jetty.websocket.WebSocket.OnTextMessage {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/RedirectTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2012 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+
+package com.ning.http.client.websocket;
+
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.testng.Assert.assertEquals;
+
+public abstract class RedirectTest extends AbstractBasicTest {
+
+    protected int port2;
+
+    // ------------------------------------------ Methods from AbstractBasicTest
+
+    @BeforeClass
+    @Override
+    public void setUpGlobal() throws Exception {
+        port1 = findFreePort();
+
+        _connector = new SelectChannelConnector();
+        _connector.setPort(port1);
+
+        addConnector(_connector);
+
+
+
+
+        port2 = findFreePort();
+        final SelectChannelConnector connector2 = new SelectChannelConnector();
+        connector2.setPort(port2);
+        addConnector(connector2);
+        WebSocketHandler _wsHandler = getWebSocketHandler();
+        HandlerList list = new HandlerList();
+        list.addHandler(new AbstractHandler() {
+                    @Override
+                    public void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
+                        if (request.getLocalPort() == port2) {
+                            httpServletResponse.sendRedirect(getTargetUrl());
+                        }
+                    }
+                });
+        list.addHandler(_wsHandler);
+        setHandler(list);
+
+        start();
+        log.info("Local HTTP server started successfully");
+    }
+
+    @Override
+    public WebSocketHandler getWebSocketHandler() {
+        return new WebSocketHandler() {
+            @Override
+            public org.eclipse.jetty.websocket.WebSocket doWebSocketConnect(HttpServletRequest httpServletRequest, String s) {
+                return new TextMessageTest.EchoTextWebSocket();
+            }
+        };
+    }
+
+    // ------------------------------------------------------------ Test Methods
+
+    @Test(timeOut = 60000)
+    public void testRedirectToWSResource() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(new AsyncHttpClientConfig.Builder().setFollowRedirects(true).build());
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicReference<String> text = new AtomicReference<String>("");
+
+        WebSocket websocket = c.prepareGet(getRedirectURL())
+                .execute(new WebSocketUpgradeHandler.Builder().addWebSocketListener(new WebSocketListener() {
+
+                    @Override
+                    public void onOpen(com.ning.http.client.websocket.WebSocket websocket) {
+                        text.set("OnOpen");
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onClose(com.ning.http.client.websocket.WebSocket websocket) {
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        t.printStackTrace();
+                        latch.countDown();
+                    }
+                }).build()).get();
+
+
+        latch.await();
+        assertEquals(text.get(), "OnOpen");
+        websocket.close();
+    }
+
+
+    // --------------------------------------------------------- Private Methods
+
+
+    private String getRedirectURL() {
+        return String.format("ws://127.0.0.1:%d/", port2);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/grizzly/GrizzlyRedirectTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2012 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+
+package com.ning.http.client.websocket.grizzly;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.providers.grizzly.GrizzlyAsyncHttpProvider;
+import com.ning.http.client.websocket.RedirectTest;
+
+public class GrizzlyRedirectTest extends RedirectTest {
+
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        if (config == null) {
+            config = new AsyncHttpClientConfig.Builder().build();
+        }
+        return new AsyncHttpClient(new GrizzlyAsyncHttpProvider(config), config);
+    }
+}>>>>>>> YOURS

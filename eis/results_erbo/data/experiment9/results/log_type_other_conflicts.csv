@@ -1,0 +1,181 @@
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/Response.java;<<<<<<< MINE
+=======
+
+    /**
+     * Return true if the response's status has been computed by an {@link AsyncHandler}
+     * @return true if the response's status has been computed by an {@link AsyncHandler}
+     */
+    public boolean hasResponseStatus();
+
+    /**
+     * Return true if the response's headers has been computed by an {@link AsyncHandler} It will return false if the
+     * either {@link com.ning.http.client.AsyncHandler#onStatusReceived(HttpResponseStatus)}
+     * or {@link AsyncHandler#onHeadersReceived(HttpResponseHeaders)} returned {@link com.ning.http.client.AsyncHandler.STATE#ABORT}
+     * @return true if the response's headers has been computed by an {@link AsyncHandler}
+     */
+    public boolean hasResponseHeaders();
+
+    /**
+     * Return true if the response's body has been computed by an {@link AsyncHandler}. It will return false if the
+     * either {@link com.ning.http.client.AsyncHandler#onStatusReceived(HttpResponseStatus)}
+     * or {@link AsyncHandler#onHeadersReceived(HttpResponseHeaders)} returned {@link com.ning.http.client.AsyncHandler.STATE#ABORT}
+     * @return true if the response's body has been computed by an {@link AsyncHandler}
+     */
+    public boolean hasResponseBody();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/Request.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/Request.java;<<<<<<< MINE
+=======
+
+    /**
+     * Return Per request configuration.
+     *
+     * @return Per request configuration.
+     */
+    public PerRequestConfig getPerRequestConfig();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/HttpResponseBodyPart.java;<<<<<<< MINE
+=======
+    /**
+     * Write the available bytes to the {@link java.io.OutputStream}
+     * @param outputStream
+     * @throws IOException
+     * @return The number of bytes written
+     */
+    abstract public int writeTo(OutputStream outputStream) throws IOException;
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+    /**
+     * {@inheritDoc}
+     */
+    /* @Override */
+    public boolean hasResponseStatus() {
+        return (bodyParts != null ? true : false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    /* @Override */
+    public boolean hasResponseHeaders() {
+        return (headers != null ? true : false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    /* @Override */
+    public boolean hasResponseBody() {
+        return (bodyParts != null && bodyParts.size() > 0 ? true : false);
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+    /**
+     * Return true if one of the {@link java.util.concurrent.ExecutorService} has been shutdown.
+     * @return true if one of the {@link java.util.concurrent.ExecutorService} has been shutdown.
+     */
+    public boolean isClosed(){
+        return applicationThreadPool.isShutdown() || reaper.isShutdown();
+    }
+
+    /**
+     * Return the {@link HostnameVerifier}
+     * @return the {@link HostnameVerifier}
+     */
+    public HostnameVerifier getHostnameVerifier() {
+        return hostnameVerifier;
+    }
+=======
+    /***
+     *
+     * @return number to multiply by availableProcessors() that will determine # of NioWorkers to use
+     */
+    public int getIoThreadMultiplier() {
+        return ioThreadMultiplier;
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyResponseFuture.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_cdd9574_b175f06/rev_cdd9574-b175f06/api/src/main/java/org/asynchttpclient/PerHostConnectionPoolPartitioning.java;<<<<<<< MINE
+=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package org.asynchttpclient;
+
+import org.asynchttpclient.uri.Uri;
+import org.asynchttpclient.util.AsyncHttpProviderUtils;
+
+public enum PerHostConnectionPoolPartitioning implements ConnectionPoolPartitioning {
+
+    INSTANCE;
+
+    @Override
+    public String getPartitionId(Uri uri, ProxyServer proxyServer) {
+        String serverPart = AsyncHttpProviderUtils.getBaseUrl(uri);
+        return proxyServer != null ? proxyServer.getUrl() + serverPart : serverPart;
+    }
+}>>>>>>> YOURS

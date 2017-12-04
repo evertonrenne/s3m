@@ -1,0 +1,1200 @@
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_83f8849_9b230db/rev_83f8849-9b230db;/src/main/java/org/elasticsearch/index/query/BoolQueryParser;parse(QueryParseContext);;@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        boolean disableCoord = false;
+        float boost = 1.0f;
+        String minimumShouldMatch = null;
+
+        List<BooleanClause> clauses = newArrayList();
+        boolean adjustPureNegative = true;
+        String queryName = null;
+        
+        String currentFieldName = null;
+        XContentParser.Token token;
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (parseContext.isDeprecatedSetting(currentFieldName)) {
+                // skip
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                switch (currentFieldName) {
+                case "must":
+                    Query query = parseContext.parseInnerQuery();
+                    if (query != null) {
+                        clauses.add(new BooleanClause(query, BooleanClause.Occur.MUST));
+                    }
+                    break;
+                case "should":
+                    query = parseContext.parseInnerQuery();
+                    if (query != null) {
+                        clauses.add(new BooleanClause(query, BooleanClause.Occur.SHOULD));
+                        if (parseContext.isFilter() && minimumShouldMatch == null) {
+                            minimumShouldMatch = "1";
+                        }
+                    }
+                    break;
+                case "filter":
+                    query = parseContext.parseInnerFilter();
+                    if (query != null) {
+                        clauses.add(new BooleanClause(query, BooleanClause.Occur.FILTER));
+                    }
+                    break;
+                case "must_not":
+                case "mustNot":
+                    query = parseContext.parseInnerFilter();
+                    if (query != null) {
+                        clauses.add(new BooleanClause(query, BooleanClause.Occur.MUST_NOT));
+                    }
+                    break;
+                default:
+                    throw new QueryParsingException(parseContext, "[bool] query does not support [" + currentFieldName + "]");
+                }
+            } else if (token == XContentParser.Token.START_ARRAY) {
+                while ((token = parser.nextToken()) != XContentParser.Token.END_ARRAY) {
+                    switch (currentFieldName) {
+                    case "must":
+                        Query query = parseContext.parseInnerQuery();
+                        if (query != null) {
+                            clauses.add(new BooleanClause(query, BooleanClause.Occur.MUST));
+                        }
+                        break;
+                    case "should":
+                        query = parseContext.parseInnerQuery();
+                        if (query != null) {
+                            clauses.add(new BooleanClause(query, BooleanClause.Occur.SHOULD));
+                            if (parseContext.isFilter() && minimumShouldMatch == null) {
+                                minimumShouldMatch = "1";
+                            }
+                        }
+                        break;
+                    case "filter":
+                        query = parseContext.parseInnerFilter();
+                        if (query != null) {
+                            clauses.add(new BooleanClause(query, BooleanClause.Occur.FILTER));
+                        }
+                        break;
+                    case "must_not":
+                    case "mustNot":
+                        query = parseContext.parseInnerFilter();
+                        if (query != null) {
+                            clauses.add(new BooleanClause(query, BooleanClause.Occur.MUST_NOT));
+                        }
+                        break;
+                    default:
+                        throw new QueryParsingException(parseContext, "bool query does not support [" + currentFieldName + "]");
+                    }
+                }
+            } else if (token.isValue()) {
+                if ("disable_coord".equals(currentFieldName) || "disableCoord".equals(currentFieldName)) {
+                    disableCoord = parser.booleanValue();
+                } else if ("minimum_should_match".equals(currentFieldName) || "minimumShouldMatch".equals(currentFieldName)) {
+                    minimumShouldMatch = parser.textOrNull();
+                } else if ("boost".equals(currentFieldName)) {
+                    boost = parser.floatValue();
+                } else if ("minimum_number_should_match".equals(currentFieldName) || "minimumNumberShouldMatch".equals(currentFieldName)) {
+                    minimumShouldMatch = parser.textOrNull();
+                } else if ("adjust_pure_negative".equals(currentFieldName) || "adjustPureNegative".equals(currentFieldName)) {
+                    adjustPureNegative = parser.booleanValue();
+                } else if ("_name".equals(currentFieldName)) {
+                    queryName = parser.text();
+                } else {
+                    throw new QueryParsingException(parseContext, "[bool] query does not support [" + currentFieldName + "]");
+                }
+            }
+        }
+
+        if (clauses.isEmpty()) {
+            return new MatchAllDocsQuery();
+        }
+
+        BooleanQuery booleanQuery = new BooleanQuery(disableCoord);
+        for (BooleanClause clause : clauses) {
+            booleanQuery.add(clause);
+        }
+        booleanQuery.setBoost(boost);
+        Queries.applyMinimumShouldMatch(booleanQuery, minimumShouldMatch);
+        Query query = adjustPureNegative ? fixNegativeQueryIfNeeded(booleanQuery) : booleanQuery;
+        if (queryName != null) {
+            parseContext.addNamedQuery(queryName, query);
+        }
+        return query;
+    };@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        boolean disableCoord = false;
+        float boost = 1.0f;
+        String minimumShouldMatch = null;
+
+        List<BooleanClause> clauses = newArrayList();
+        boolean adjustPureNegative = true;
+        String queryName = null;
+
+        String currentFieldName = null;
+        XContentParser.Token token;
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (parseContext.isDeprecatedSetting(currentFieldName)) {
+                // skip
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                switch (currentFieldName) {
+                case "must":
+                    Query query = parseContext.parseInnerQuery();
+                    if (query != null) {
+                        clauses.add(new BooleanClause(query, BooleanClause.Occur.MUST));
+                    }
+                    break;
+                case "should":
+                    query = parseContext.parseInnerQuery();
+                    if (query != null) {
+                        clauses.add(new BooleanClause(query, BooleanClause.Occur.SHOULD));
+                        if (parseContext.isFilter() && minimumShouldMatch == null) {
+                            minimumShouldMatch = "1";
+                        }
+                    }
+                    break;
+                case "filter":
+                    query = parseContext.parseInnerFilter();
+                    if (query != null) {
+                        clauses.add(new BooleanClause(query, BooleanClause.Occur.FILTER));
+                    }
+                    break;
+                case "must_not":
+                case "mustNot":
+                    query = parseContext.parseInnerFilter();
+                    if (query != null) {
+                        clauses.add(new BooleanClause(query, BooleanClause.Occur.MUST_NOT));
+                    }
+                    break;
+                default:
+                    throw new QueryParsingException(parseContext, "[bool] query does not support [" + currentFieldName + "]");
+                }
+            } else if (token == XContentParser.Token.START_ARRAY) {
+                while ((token = parser.nextToken()) != XContentParser.Token.END_ARRAY) {
+                    switch (currentFieldName) {
+                    case "must":
+                        Query query = parseContext.parseInnerQuery();
+                        if (query != null) {
+                            clauses.add(new BooleanClause(query, BooleanClause.Occur.MUST));
+                        }
+                        break;
+                    case "should":
+                        query = parseContext.parseInnerQuery();
+                        if (query != null) {
+                            clauses.add(new BooleanClause(query, BooleanClause.Occur.SHOULD));
+                            if (parseContext.isFilter() && minimumShouldMatch == null) {
+                                minimumShouldMatch = "1";
+                            }
+                        }
+                        break;
+                    case "filter":
+                        query = parseContext.parseInnerFilter();
+                        if (query != null) {
+                            clauses.add(new BooleanClause(query, BooleanClause.Occur.FILTER));
+                        }
+                        break;
+                    case "must_not":
+                    case "mustNot":
+                        query = parseContext.parseInnerFilter();
+                        if (query != null) {
+                            clauses.add(new BooleanClause(query, BooleanClause.Occur.MUST_NOT));
+                        }
+                        break;
+                    default:
+                        throw new QueryParsingException(parseContext, "bool query does not support [" + currentFieldName + "]");
+                    }
+                }
+            } else if (token.isValue()) {
+                if ("disable_coord".equals(currentFieldName) || "disableCoord".equals(currentFieldName)) {
+                    disableCoord = parser.booleanValue();
+                } else if ("minimum_should_match".equals(currentFieldName) || "minimumShouldMatch".equals(currentFieldName)) {
+                    minimumShouldMatch = parser.textOrNull();
+                } else if ("boost".equals(currentFieldName)) {
+                    boost = parser.floatValue();
+                } else if ("minimum_number_should_match".equals(currentFieldName) || "minimumNumberShouldMatch".equals(currentFieldName)) {
+                    minimumShouldMatch = parser.textOrNull();
+                } else if ("adjust_pure_negative".equals(currentFieldName) || "adjustPureNegative".equals(currentFieldName)) {
+                    adjustPureNegative = parser.booleanValue();
+                } else if ("_name".equals(currentFieldName)) {
+                    queryName = parser.text();
+                } else {
+                    throw new QueryParsingException(parseContext, "[bool] query does not support [" + currentFieldName + "]");
+                }
+            }
+        }
+
+        if (clauses.isEmpty()) {
+            return new MatchAllDocsQuery();
+        }
+
+        BooleanQuery booleanQuery = new BooleanQuery(disableCoord);
+        for (BooleanClause clause : clauses) {
+            booleanQuery.add(clause);
+        }
+        booleanQuery.setBoost(boost);
+        Queries.applyMinimumShouldMatch(booleanQuery, minimumShouldMatch);
+        Query query = adjustPureNegative ? fixNegativeQueryIfNeeded(booleanQuery) : booleanQuery;
+        if (queryName != null) {
+            parseContext.addNamedQuery(queryName, query);
+        }
+        return query;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_83f8849_9b230db/rev_83f8849-9b230db;/src/main/java/org/elasticsearch/index/query/SpanContainingQueryParser;parse(QueryParseContext);;@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        float boost = 1.0f;
+        String queryName = null;
+        SpanQuery big = null;
+        SpanQuery little = null;
+
+        String currentFieldName = null;
+        XContentParser.Token token;
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                if ("big".equals(currentFieldName)) {
+                    Query query = parseContext.parseInnerQuery();
+                    if (!(query instanceof SpanQuery)) {
+                        throw new QueryParsingException(parseContext, "span_containing [big] must be of type span query");
+                    }
+                    big = (SpanQuery) query;
+                } else if ("little".equals(currentFieldName)) {
+                    Query query = parseContext.parseInnerQuery();
+                    if (!(query instanceof SpanQuery)) {
+                        throw new QueryParsingException(parseContext, "span_containing [little] must be of type span query");
+                    }
+                    little = (SpanQuery) query;
+                } else {
+                    throw new QueryParsingException(parseContext, "[span_containing] query does not support [" + currentFieldName + "]");
+                }
+            } else if ("boost".equals(currentFieldName)) {
+                boost = parser.floatValue();
+            } else if ("_name".equals(currentFieldName)) {
+                queryName = parser.text();
+            } else {
+                throw new QueryParsingException(parseContext, "[span_containing] query does not support [" + currentFieldName + "]");
+            }
+        }        
+        
+        if (big == null) {
+            throw new QueryParsingException(parseContext, "span_containing must include [big]");
+        }
+        if (little == null) {
+            throw new QueryParsingException(parseContext, "span_containing must include [little]");
+        }
+
+        Query query = new SpanContainingQuery(big, little);
+        query.setBoost(boost);
+        if (queryName != null) {
+            parseContext.addNamedQuery(queryName, query);
+        }
+        return query;
+    };@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        float boost = 1.0f;
+        String queryName = null;
+        SpanQuery big = null;
+        SpanQuery little = null;
+
+        String currentFieldName = null;
+        XContentParser.Token token;
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                if ("big".equals(currentFieldName)) {
+                    Query query = parseContext.parseInnerQuery();
+                    if (!(query instanceof SpanQuery)) {
+                        throw new QueryParsingException(parseContext, "span_containing [big] must be of type span query");
+                    }
+                    big = (SpanQuery) query;
+                } else if ("little".equals(currentFieldName)) {
+                    Query query = parseContext.parseInnerQuery();
+                    if (!(query instanceof SpanQuery)) {
+                        throw new QueryParsingException(parseContext, "span_containing [little] must be of type span query");
+                    }
+                    little = (SpanQuery) query;
+                } else {
+                    throw new QueryParsingException(parseContext, "[span_containing] query does not support [" + currentFieldName + "]");
+                }
+            } else if ("boost".equals(currentFieldName)) {
+                boost = parser.floatValue();
+            } else if ("_name".equals(currentFieldName)) {
+                queryName = parser.text();
+            } else {
+                throw new QueryParsingException(parseContext, "[span_containing] query does not support [" + currentFieldName + "]");
+            }
+        }
+
+        if (big == null) {
+            throw new QueryParsingException(parseContext, "span_containing must include [big]");
+        }
+        if (little == null) {
+            throw new QueryParsingException(parseContext, "span_containing must include [little]");
+        }
+
+        Query query = new SpanContainingQuery(big, little);
+        query.setBoost(boost);
+        if (queryName != null) {
+            parseContext.addNamedQuery(queryName, query);
+        }
+        return query;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_83f8849_9b230db/rev_83f8849-9b230db;/src/main/java/org/elasticsearch/index/query/SpanWithinQueryParser;parse(QueryParseContext);;@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        float boost = 1.0f;
+        String queryName = null;
+        SpanQuery big = null;
+        SpanQuery little = null;
+
+        String currentFieldName = null;
+        XContentParser.Token token;
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                if ("big".equals(currentFieldName)) {
+                    Query query = parseContext.parseInnerQuery();
+                    if (query instanceof SpanQuery == false) {
+                        throw new QueryParsingException(parseContext, "span_within [big] must be of type span query");
+                    }
+                    big = (SpanQuery) query;
+                } else if ("little".equals(currentFieldName)) {
+                    Query query = parseContext.parseInnerQuery();
+                    if (query instanceof SpanQuery == false) {
+                        throw new QueryParsingException(parseContext, "span_within [little] must be of type span query");
+                    }
+                    little = (SpanQuery) query;
+                } else {
+                    throw new QueryParsingException(parseContext, "[span_within] query does not support [" + currentFieldName + "]");
+                }
+            } else if ("boost".equals(currentFieldName)) {
+                boost = parser.floatValue();
+            } else if ("_name".equals(currentFieldName)) {
+                queryName = parser.text();
+            } else {
+                throw new QueryParsingException(parseContext, "[span_within] query does not support [" + currentFieldName + "]");
+            }
+        }        
+        
+        if (big == null) {
+            throw new QueryParsingException(parseContext, "span_within must include [big]");
+        }
+        if (little == null) {
+            throw new QueryParsingException(parseContext, "span_within must include [little]");
+        }
+
+        Query query = new SpanWithinQuery(big, little);
+        query.setBoost(boost);
+        if (queryName != null) {
+            parseContext.addNamedQuery(queryName, query);
+        }
+        return query;
+    };@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        float boost = 1.0f;
+        String queryName = null;
+        SpanQuery big = null;
+        SpanQuery little = null;
+
+        String currentFieldName = null;
+        XContentParser.Token token;
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                if ("big".equals(currentFieldName)) {
+                    Query query = parseContext.parseInnerQuery();
+                    if (query instanceof SpanQuery == false) {
+                        throw new QueryParsingException(parseContext, "span_within [big] must be of type span query");
+                    }
+                    big = (SpanQuery) query;
+                } else if ("little".equals(currentFieldName)) {
+                    Query query = parseContext.parseInnerQuery();
+                    if (query instanceof SpanQuery == false) {
+                        throw new QueryParsingException(parseContext, "span_within [little] must be of type span query");
+                    }
+                    little = (SpanQuery) query;
+                } else {
+                    throw new QueryParsingException(parseContext, "[span_within] query does not support [" + currentFieldName + "]");
+                }
+            } else if ("boost".equals(currentFieldName)) {
+                boost = parser.floatValue();
+            } else if ("_name".equals(currentFieldName)) {
+                queryName = parser.text();
+            } else {
+                throw new QueryParsingException(parseContext, "[span_within] query does not support [" + currentFieldName + "]");
+            }
+        }
+
+        if (big == null) {
+            throw new QueryParsingException(parseContext, "span_within must include [big]");
+        }
+        if (little == null) {
+            throw new QueryParsingException(parseContext, "span_within must include [little]");
+        }
+
+        Query query = new SpanWithinQuery(big, little);
+        query.setBoost(boost);
+        if (queryName != null) {
+            parseContext.addNamedQuery(queryName, query);
+        }
+        return query;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_83f8849_9b230db/rev_83f8849-9b230db;/src/main/java/org/elasticsearch/index/query/GeoShapeQueryParser;getArgs(ShapeBuilder,ShapeRelation);;public static SpatialArgs getArgs(ShapeBuilder shape, ShapeRelation relation) {
+        switch(relation) {
+        case DISJOINT:
+            return new SpatialArgs(SpatialOperation.IsDisjointTo, shape.build());
+        case INTERSECTS:
+            return new SpatialArgs(SpatialOperation.Intersects, shape.build());
+        case WITHIN:
+            return new SpatialArgs(SpatialOperation.IsWithin, shape.build());
+        default:
+            throw new IllegalArgumentException("");
+
+        }
+    };public static SpatialArgs getArgs(ShapeBuilder shape, ShapeRelation relation) {
+        switch(relation) {
+        case DISJOINT:
+            return new SpatialArgs(SpatialOperation.IsDisjointTo, shape.build());
+        case INTERSECTS:
+            return new SpatialArgs(SpatialOperation.Intersects, shape.build());
+        case WITHIN:
+            return new SpatialArgs(SpatialOperation.IsWithin, shape.build());
+        default:
+            throw new IllegalArgumentException("");
+        }
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_83f8849_9b230db/rev_83f8849-9b230db;/src/main/java/org/elasticsearch/index/query/GeoBoundingBoxQueryParser;parse(QueryParseContext);;@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        String fieldName = null;
+
+        double top = Double.NaN;
+        double bottom = Double.NaN;
+        double left = Double.NaN;
+        double right = Double.NaN;
+        
+        String queryName = null;
+        String currentFieldName = null;
+        XContentParser.Token token;
+        boolean normalize = true;
+
+        GeoPoint sparse = new GeoPoint();
+        
+        String type = "memory";
+
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                fieldName = currentFieldName;
+
+                while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+                    if (token == XContentParser.Token.FIELD_NAME) {
+                        currentFieldName = parser.currentName();
+                        token = parser.nextToken();
+                        if (parseContext.isDeprecatedSetting(currentFieldName)) {
+                            // skip
+                        } else if (FIELD.equals(currentFieldName)) {
+                            fieldName = parser.text();
+                        } else if (TOP.equals(currentFieldName)) {
+                            top = parser.doubleValue();
+                        } else if (BOTTOM.equals(currentFieldName)) {
+                            bottom = parser.doubleValue();
+                        } else if (LEFT.equals(currentFieldName)) {
+                            left = parser.doubleValue();
+                        } else if (RIGHT.equals(currentFieldName)) {
+                            right = parser.doubleValue();
+                        } else {
+                            if (TOP_LEFT.equals(currentFieldName) || TOPLEFT.equals(currentFieldName)) {
+                                GeoUtils.parseGeoPoint(parser, sparse);
+                                top = sparse.getLat();
+                                left = sparse.getLon();
+                            } else if (BOTTOM_RIGHT.equals(currentFieldName) || BOTTOMRIGHT.equals(currentFieldName)) {
+                                GeoUtils.parseGeoPoint(parser, sparse);
+                                bottom = sparse.getLat();
+                                right = sparse.getLon();
+                            } else if (TOP_RIGHT.equals(currentFieldName) || TOPRIGHT.equals(currentFieldName)) {
+                                GeoUtils.parseGeoPoint(parser, sparse);
+                                top = sparse.getLat();
+                                right = sparse.getLon();
+                            } else if (BOTTOM_LEFT.equals(currentFieldName) || BOTTOMLEFT.equals(currentFieldName)) {
+                                GeoUtils.parseGeoPoint(parser, sparse);
+                                bottom = sparse.getLat();
+                                left = sparse.getLon();
+                            } else {
+                                throw new ElasticsearchParseException("Unexpected field [" + currentFieldName + "]");
+                            }
+                        }
+                    } else {
+                        throw new ElasticsearchParseException("fieldname expected but [" + token + "] found");
+                    }
+                }
+            } else if (token.isValue()) {
+                if ("_name".equals(currentFieldName)) {
+                    queryName = parser.text();
+                } else if ("normalize".equals(currentFieldName)) {
+                    normalize = parser.booleanValue();
+                } else if ("type".equals(currentFieldName)) {
+                    type = parser.text();
+                } else {
+                    throw new QueryParsingException(parseContext, "[geo_bbox] query does not support [" + currentFieldName + "]");
+                }
+            }
+        }
+
+        final GeoPoint topLeft = sparse.reset(top, left);  //just keep the object
+        final GeoPoint bottomRight = new GeoPoint(bottom, right);
+
+        if (normalize) {
+            // Special case: if the difference bettween the left and right is 360 and the right is greater than the left, we are asking for 
+            // the complete longitude range so need to set longitude to the complete longditude range
+            boolean completeLonRange = ((right - left) % 360 == 0 && right > left);
+            GeoUtils.normalizePoint(topLeft, true, !completeLonRange);
+            GeoUtils.normalizePoint(bottomRight, true, !completeLonRange);
+            if (completeLonRange) {
+                topLeft.resetLon(-180);
+                bottomRight.resetLon(180);
+            }
+        }
+
+        FieldMapper mapper = parseContext.fieldMapper(fieldName);
+        if (mapper == null) {
+            throw new QueryParsingException(parseContext, "failed to find geo_point field [" + fieldName + "]");
+        }
+        if (!(mapper instanceof GeoPointFieldMapper)) {
+            throw new QueryParsingException(parseContext, "field [" + fieldName + "] is not a geo_point field");
+        }
+        GeoPointFieldMapper geoMapper = ((GeoPointFieldMapper) mapper);
+
+        Query filter;
+        if ("indexed".equals(type)) {
+            filter = IndexedGeoBoundingBoxQuery.create(topLeft, bottomRight, geoMapper);
+        } else if ("memory".equals(type)) {
+            IndexGeoPointFieldData indexFieldData = parseContext.getForField(mapper);
+            filter = new InMemoryGeoBoundingBoxQuery(topLeft, bottomRight, indexFieldData);
+        } else {
+            throw new QueryParsingException(parseContext, "geo bounding box type [" + type
+                    + "] not supported, either 'indexed' or 'memory' are allowed");
+        }
+
+        if (queryName != null) {
+            parseContext.addNamedQuery(queryName, filter);
+        }
+        return filter;
+    };@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        String fieldName = null;
+
+        double top = Double.NaN;
+        double bottom = Double.NaN;
+        double left = Double.NaN;
+        double right = Double.NaN;
+
+        String queryName = null;
+        String currentFieldName = null;
+        XContentParser.Token token;
+        boolean normalize = true;
+
+        GeoPoint sparse = new GeoPoint();
+
+        String type = "memory";
+
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                fieldName = currentFieldName;
+
+                while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+                    if (token == XContentParser.Token.FIELD_NAME) {
+                        currentFieldName = parser.currentName();
+                        token = parser.nextToken();
+                        if (parseContext.isDeprecatedSetting(currentFieldName)) {
+                            // skip
+                        } else if (FIELD.equals(currentFieldName)) {
+                            fieldName = parser.text();
+                        } else if (TOP.equals(currentFieldName)) {
+                            top = parser.doubleValue();
+                        } else if (BOTTOM.equals(currentFieldName)) {
+                            bottom = parser.doubleValue();
+                        } else if (LEFT.equals(currentFieldName)) {
+                            left = parser.doubleValue();
+                        } else if (RIGHT.equals(currentFieldName)) {
+                            right = parser.doubleValue();
+                        } else {
+                            if (TOP_LEFT.equals(currentFieldName) || TOPLEFT.equals(currentFieldName)) {
+                                GeoUtils.parseGeoPoint(parser, sparse);
+                                top = sparse.getLat();
+                                left = sparse.getLon();
+                            } else if (BOTTOM_RIGHT.equals(currentFieldName) || BOTTOMRIGHT.equals(currentFieldName)) {
+                                GeoUtils.parseGeoPoint(parser, sparse);
+                                bottom = sparse.getLat();
+                                right = sparse.getLon();
+                            } else if (TOP_RIGHT.equals(currentFieldName) || TOPRIGHT.equals(currentFieldName)) {
+                                GeoUtils.parseGeoPoint(parser, sparse);
+                                top = sparse.getLat();
+                                right = sparse.getLon();
+                            } else if (BOTTOM_LEFT.equals(currentFieldName) || BOTTOMLEFT.equals(currentFieldName)) {
+                                GeoUtils.parseGeoPoint(parser, sparse);
+                                bottom = sparse.getLat();
+                                left = sparse.getLon();
+                            } else {
+                                throw new ElasticsearchParseException("Unexpected field [" + currentFieldName + "]");
+                            }
+                        }
+                    } else {
+                        throw new ElasticsearchParseException("fieldname expected but [" + token + "] found");
+                    }
+                }
+            } else if (token.isValue()) {
+                if ("_name".equals(currentFieldName)) {
+                    queryName = parser.text();
+                } else if ("normalize".equals(currentFieldName)) {
+                    normalize = parser.booleanValue();
+                } else if ("type".equals(currentFieldName)) {
+                    type = parser.text();
+                } else {
+                    throw new QueryParsingException(parseContext, "[geo_bbox] query does not support [" + currentFieldName + "]");
+                }
+            }
+        }
+
+        final GeoPoint topLeft = sparse.reset(top, left);  //just keep the object
+        final GeoPoint bottomRight = new GeoPoint(bottom, right);
+
+        if (normalize) {
+            // Special case: if the difference bettween the left and right is 360 and the right is greater than the left, we are asking for
+            // the complete longitude range so need to set longitude to the complete longditude range
+            boolean completeLonRange = ((right - left) % 360 == 0 && right > left);
+            GeoUtils.normalizePoint(topLeft, true, !completeLonRange);
+            GeoUtils.normalizePoint(bottomRight, true, !completeLonRange);
+            if (completeLonRange) {
+                topLeft.resetLon(-180);
+                bottomRight.resetLon(180);
+            }
+        }
+
+        FieldMapper mapper = parseContext.fieldMapper(fieldName);
+        if (mapper == null) {
+            throw new QueryParsingException(parseContext, "failed to find geo_point field [" + fieldName + "]");
+        }
+        if (!(mapper instanceof GeoPointFieldMapper)) {
+            throw new QueryParsingException(parseContext, "field [" + fieldName + "] is not a geo_point field");
+        }
+        GeoPointFieldMapper geoMapper = ((GeoPointFieldMapper) mapper);
+
+        Query filter;
+        if ("indexed".equals(type)) {
+            filter = IndexedGeoBoundingBoxQuery.create(topLeft, bottomRight, geoMapper);
+        } else if ("memory".equals(type)) {
+            IndexGeoPointFieldData indexFieldData = parseContext.getForField(mapper);
+            filter = new InMemoryGeoBoundingBoxQuery(topLeft, bottomRight, indexFieldData);
+        } else {
+            throw new QueryParsingException(parseContext, "geo bounding box type [" + type
+                    + "] not supported, either 'indexed' or 'memory' are allowed");
+        }
+
+        if (queryName != null) {
+            parseContext.addNamedQuery(queryName, filter);
+        }
+        return filter;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_83f8849_9b230db/rev_83f8849-9b230db;/src/main/java/org/elasticsearch/index/query/TypeQueryParser;parse(QueryParseContext);;@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        XContentParser.Token token = parser.nextToken();
+        if (token != XContentParser.Token.FIELD_NAME) {
+            throw new QueryParsingException(parseContext, "[type] filter should have a value field, and the type name");
+        }
+        String fieldName = parser.currentName();
+        if (!fieldName.equals("value")) {
+            throw new QueryParsingException(parseContext, "[type] filter should have a value field, and the type name");
+        }
+        token = parser.nextToken();
+        if (token != XContentParser.Token.VALUE_STRING) {
+            throw new QueryParsingException(parseContext, "[type] filter should have a value field, and the type name");
+        }
+        BytesRef type = parser.utf8Bytes();
+        // move to the next token
+        parser.nextToken();
+
+        Query filter;
+        //LUCENE 4 UPGRADE document mapper should use bytesref as well? 
+        DocumentMapper documentMapper = parseContext.mapperService().documentMapper(type.utf8ToString());
+        if (documentMapper == null) {
+            filter = new TermQuery(new Term(TypeFieldMapper.NAME, type));
+        } else {
+            filter = documentMapper.typeFilter();
+        }
+        return filter;
+    };@Override
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        XContentParser.Token token = parser.nextToken();
+        if (token != XContentParser.Token.FIELD_NAME) {
+            throw new QueryParsingException(parseContext, "[type] filter should have a value field, and the type name");
+        }
+        String fieldName = parser.currentName();
+        if (!fieldName.equals("value")) {
+            throw new QueryParsingException(parseContext, "[type] filter should have a value field, and the type name");
+        }
+        token = parser.nextToken();
+        if (token != XContentParser.Token.VALUE_STRING) {
+            throw new QueryParsingException(parseContext, "[type] filter should have a value field, and the type name");
+        }
+        BytesRef type = parser.utf8Bytes();
+        // move to the next token
+        parser.nextToken();
+
+        Query filter;
+        //LUCENE 4 UPGRADE document mapper should use bytesref as well?
+        DocumentMapper documentMapper = parseContext.mapperService().documentMapper(type.utf8ToString());
+        if (documentMapper == null) {
+            filter = new TermQuery(new Term(TypeFieldMapper.NAME, type));
+        } else {
+            filter = documentMapper.typeFilter();
+        }
+        return filter;
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_99398ad_caca13c/rev_99398ad-caca13c;/core/src/test/java/org/elasticsearch/aliases/IndexAliasesTests;testDeleteAliases();;@Test
+    public void testDeleteAliases() throws Exception {
+        logger.info("--> creating index [test1] and [test2]");
+        assertAcked(prepareCreate("test1").addMapping("type", "name", "type=string"));
+        assertAcked(prepareCreate("test2").addMapping("type", "name", "type=string"));
+        ensureGreen();
+
+        logger.info("--> adding filtering aliases to index [test1]");
+        assertAcked(admin().indices().prepareAliases().addAlias("test1", "aliasToTest1")
+                .addAlias("test1", "aliasToTests")
+                .addAlias("test1", "foos", termQuery("name", "foo"))
+                .addAlias("test1", "bars", termQuery("name", "bar"))
+                .addAlias("test1", "tests", termQuery("name", "test")));
+
+        logger.info("--> adding filtering aliases to index [test2]");
+        assertAcked(admin().indices().prepareAliases().addAlias("test2", "aliasToTest2")
+                .addAlias("test2", "aliasToTests")
+                .addAlias("test2", "foos", termQuery("name", "foo"))
+                .addAlias("test2", "tests", termQuery("name", "test")));
+        
+        String[] indices = {"test1", "test2"}; 
+        String[] aliases = {"aliasToTest1", "foos", "bars", "tests", "aliasToTest2", "aliasToTests"};
+        
+        admin().indices().prepareAliases().removeAlias(indices, aliases).get();
+        
+        AliasesExistResponse response = admin().indices().prepareAliasesExist(aliases).get();
+        assertThat(response.exists(), equalTo(false));
+    };@Test
+    public void testDeleteAliases() throws Exception {
+        logger.info("--> creating index [test1] and [test2]");
+        assertAcked(prepareCreate("test1").addMapping("type", "name", "type=string"));
+        assertAcked(prepareCreate("test2").addMapping("type", "name", "type=string"));
+        ensureGreen();
+
+        logger.info("--> adding filtering aliases to index [test1]");
+        assertAcked(admin().indices().prepareAliases().addAlias("test1", "aliasToTest1")
+                .addAlias("test1", "aliasToTests")
+                .addAlias("test1", "foos", termQuery("name", "foo"))
+                .addAlias("test1", "bars", termQuery("name", "bar"))
+                .addAlias("test1", "tests", termQuery("name", "test")));
+
+        logger.info("--> adding filtering aliases to index [test2]");
+        assertAcked(admin().indices().prepareAliases().addAlias("test2", "aliasToTest2")
+                .addAlias("test2", "aliasToTests")
+                .addAlias("test2", "foos", termQuery("name", "foo"))
+                .addAlias("test2", "tests", termQuery("name", "test")));
+
+        String[] indices = {"test1", "test2"};
+        String[] aliases = {"aliasToTest1", "foos", "bars", "tests", "aliasToTest2", "aliasToTests"};
+
+        admin().indices().prepareAliases().removeAlias(indices, aliases).get();
+
+        AliasesExistResponse response = admin().indices().prepareAliasesExist(aliases).get();
+        assertThat(response.exists(), equalTo(false));
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_05c0031_8c7c765/rev_05c0031-8c7c765;/core/src/test/java/org/elasticsearch/search/rescore/QueryRescorerIT;testScoring();;@Test
+    public void testScoring() throws Exception {
+        int numDocs = indexRandomNumbers("keyword");
+
+        String[] scoreModes = new String[]{ "max", "min", "avg", "total", "multiply", "" };
+        float primaryWeight = 1.1f;
+        float secondaryWeight = 1.6f;
+
+        for (String scoreMode : scoreModes) {
+            for (int i = 0; i < numDocs - 4; i++) {
+                String[] intToEnglish = new String[] { English.intToEnglish(i), English.intToEnglish(i + 1), English.intToEnglish(i + 2), English.intToEnglish(i + 3) };
+
+                QueryRescorer rescoreQuery = RescoreBuilder
+                        .queryRescorer(
+                                QueryBuilders.boolQuery()
+                                        .disableCoord(true)
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[0]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("5.0f"))).boostMode(CombineFunction.REPLACE))
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[1]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("7.0f"))).boostMode(CombineFunction.REPLACE))
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[3]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("0.0f"))).boostMode(CombineFunction.REPLACE)))
+                        .setQueryWeight(primaryWeight)
+                        .setRescoreQueryWeight(secondaryWeight);
+
+                if (!"".equals(scoreMode)) {
+                    rescoreQuery.setScoreMode(scoreMode);
+                }
+
+                SearchResponse rescored = client()
+                        .prepareSearch()
+                        .setPreference("test") // ensure we hit the same shards for tie-breaking
+                        .setQuery(QueryBuilders.boolQuery()
+                                .disableCoord(true)
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[0]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("2.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[1]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("3.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[2]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("5.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[3]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("0.2f"))).boostMode(CombineFunction.REPLACE)))
+                                .setFrom(0)
+                                .setSize(10)
+                                .setRescorer(rescoreQuery)
+                                .setRescoreWindow(50).execute().actionGet();
+
+                assertHitCount(rescored, 4);
+
+                if ("total".equals(scoreMode) || "".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(3.0f * primaryWeight + 7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(2.0f * primaryWeight + 5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight + 0.0f * secondaryWeight));
+                } else if ("max".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight));
+                } else if ("min".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(3.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(2.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.0f * secondaryWeight));
+                } else if ("avg".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo((3.0f * primaryWeight + 7.0f * secondaryWeight) / 2.0f));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo((2.0f * primaryWeight + 5.0f * secondaryWeight) / 2.0f));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo((0.2f * primaryWeight) / 2.0f));
+                } else if ("multiply".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(3.0f * primaryWeight * 7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(2.0f * primaryWeight * 5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight * 0.0f * secondaryWeight));
+                }
+            }
+        }
+    };@Test
+    public void testScoring() throws Exception {
+        int numDocs = indexRandomNumbers("keyword");
+
+        String[] scoreModes = new String[]{ "max", "min", "avg", "total", "multiply", "" };
+        float primaryWeight = 1.1f;
+        float secondaryWeight = 1.6f;
+
+        for (String scoreMode : scoreModes) {
+            for (int i = 0; i < numDocs - 4; i++) {
+                String[] intToEnglish = new String[] { English.intToEnglish(i), English.intToEnglish(i + 1), English.intToEnglish(i + 2), English.intToEnglish(i + 3) };
+
+                QueryRescorer rescoreQuery = RescoreBuilder
+                        .queryRescorer(
+                                QueryBuilders.boolQuery()
+                                        .disableCoord(true)
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[0]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("5.0f"))).boostMode(CombineFunction.REPLACE))
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[1]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("7.0f"))).boostMode(CombineFunction.REPLACE))
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[3]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("0.0f"))).boostMode(CombineFunction.REPLACE)))
+                        .setQueryWeight(primaryWeight)
+                        .setRescoreQueryWeight(secondaryWeight);
+
+                if (!"".equals(scoreMode)) {
+                    rescoreQuery.setScoreMode(scoreMode);
+                }
+
+                SearchResponse rescored = client()
+                        .prepareSearch()
+                        .setPreference("test") // ensure we hit the same shards for tie-breaking
+                        .setQuery(QueryBuilders.boolQuery()
+                                .disableCoord(true)
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[0]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("2.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[1]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("3.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[2]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("5.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[3]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("0.2f"))).boostMode(CombineFunction.REPLACE)))
+                        .setFrom(0)
+                        .setSize(10)
+                        .setRescorer(rescoreQuery)
+                        .setRescoreWindow(50).execute().actionGet();
+
+                assertHitCount(rescored, 4);
+
+                if ("total".equals(scoreMode) || "".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(3.0f * primaryWeight + 7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(2.0f * primaryWeight + 5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight + 0.0f * secondaryWeight));
+                } else if ("max".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight));
+                } else if ("min".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(3.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(2.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.0f * secondaryWeight));
+                } else if ("avg".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo((3.0f * primaryWeight + 7.0f * secondaryWeight) / 2.0f));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo((2.0f * primaryWeight + 5.0f * secondaryWeight) / 2.0f));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo((0.2f * primaryWeight) / 2.0f));
+                } else if ("multiply".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(3.0f * primaryWeight * 7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(2.0f * primaryWeight * 5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight * 0.0f * secondaryWeight));
+                }
+            }
+        }
+    }
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_a3a2432_7b431ec/rev_a3a2432-7b431ec;/plugins/lang-groovy/src/test/java/org/elasticsearch/messy/tests/QueryRescorerTests;testScoring();;@Test
+    public void testScoring() throws Exception {
+        int numDocs = indexRandomNumbers("keyword");
+
+        String[] scoreModes = new String[]{ "max", "min", "avg", "total", "multiply", "" };
+        float primaryWeight = 1.1f;
+        float secondaryWeight = 1.6f;
+
+        for (String scoreMode : scoreModes) {
+            for (int i = 0; i < numDocs - 4; i++) {
+                String[] intToEnglish = new String[] { English.intToEnglish(i), English.intToEnglish(i + 1), English.intToEnglish(i + 2), English.intToEnglish(i + 3) };
+
+                QueryRescorer rescoreQuery = RescoreBuilder
+                        .queryRescorer(
+                                QueryBuilders.boolQuery()
+                                        .disableCoord(true)
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[0]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("5.0f"))).boostMode(CombineFunction.REPLACE))
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[1]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("7.0f"))).boostMode(CombineFunction.REPLACE))
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[3]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("0.0f"))).boostMode(CombineFunction.REPLACE)))
+                        .setQueryWeight(primaryWeight)
+                        .setRescoreQueryWeight(secondaryWeight);
+
+                if (!"".equals(scoreMode)) {
+                    rescoreQuery.setScoreMode(scoreMode);
+                }
+
+                SearchResponse rescored = client()
+                        .prepareSearch()
+                        .setPreference("test") // ensure we hit the same shards for tie-breaking
+                        .setQuery(QueryBuilders.boolQuery()
+                                .disableCoord(true)
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[0]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("2.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[1]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("3.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[2]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("5.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[3]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("0.2f"))).boostMode(CombineFunction.REPLACE)))
+                                .setFrom(0)
+                                .setSize(10)
+                                .setRescorer(rescoreQuery)
+                                .setRescoreWindow(50).execute().actionGet();
+
+                assertHitCount(rescored, 4);
+
+                if ("total".equals(scoreMode) || "".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(3.0f * primaryWeight + 7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(2.0f * primaryWeight + 5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight + 0.0f * secondaryWeight));
+                } else if ("max".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight));
+                } else if ("min".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(3.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(2.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.0f * secondaryWeight));
+                } else if ("avg".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo((3.0f * primaryWeight + 7.0f * secondaryWeight) / 2.0f));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo((2.0f * primaryWeight + 5.0f * secondaryWeight) / 2.0f));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo((0.2f * primaryWeight) / 2.0f));
+                } else if ("multiply".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(3.0f * primaryWeight * 7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(2.0f * primaryWeight * 5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight * 0.0f * secondaryWeight));
+                }
+            }
+        }
+    };@Test
+    public void testScoring() throws Exception {
+        int numDocs = indexRandomNumbers("keyword");
+
+        String[] scoreModes = new String[]{ "max", "min", "avg", "total", "multiply", "" };
+        float primaryWeight = 1.1f;
+        float secondaryWeight = 1.6f;
+
+        for (String scoreMode : scoreModes) {
+            for (int i = 0; i < numDocs - 4; i++) {
+                String[] intToEnglish = new String[] { English.intToEnglish(i), English.intToEnglish(i + 1), English.intToEnglish(i + 2), English.intToEnglish(i + 3) };
+
+                QueryRescorer rescoreQuery = RescoreBuilder
+                        .queryRescorer(
+                                QueryBuilders.boolQuery()
+                                        .disableCoord(true)
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[0]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("5.0f"))).boostMode(CombineFunction.REPLACE))
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[1]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("7.0f"))).boostMode(CombineFunction.REPLACE))
+                                        .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[3]),
+                                                ScoreFunctionBuilders.scriptFunction(new Script("0.0f"))).boostMode(CombineFunction.REPLACE)))
+                        .setQueryWeight(primaryWeight)
+                        .setRescoreQueryWeight(secondaryWeight);
+
+                if (!"".equals(scoreMode)) {
+                    rescoreQuery.setScoreMode(scoreMode);
+                }
+
+                SearchResponse rescored = client()
+                        .prepareSearch()
+                        .setPreference("test") // ensure we hit the same shards for tie-breaking
+                        .setQuery(QueryBuilders.boolQuery()
+                                .disableCoord(true)
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[0]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("2.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[1]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("3.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[2]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("5.0f"))).boostMode(CombineFunction.REPLACE))
+                                .should(QueryBuilders.functionScoreQuery(QueryBuilders.termQuery("field1", intToEnglish[3]),
+                                        ScoreFunctionBuilders.scriptFunction(new Script("0.2f"))).boostMode(CombineFunction.REPLACE)))
+                        .setFrom(0)
+                        .setSize(10)
+                        .setRescorer(rescoreQuery)
+                        .setRescoreWindow(50).execute().actionGet();
+
+                assertHitCount(rescored, 4);
+
+                if ("total".equals(scoreMode) || "".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(3.0f * primaryWeight + 7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(2.0f * primaryWeight + 5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight + 0.0f * secondaryWeight));
+                } else if ("max".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight));
+                } else if ("min".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(3.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(2.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.0f * secondaryWeight));
+                } else if ("avg".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo((3.0f * primaryWeight + 7.0f * secondaryWeight) / 2.0f));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo((2.0f * primaryWeight + 5.0f * secondaryWeight) / 2.0f));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo((0.2f * primaryWeight) / 2.0f));
+                } else if ("multiply".equals(scoreMode)) {
+                    assertFirstHit(rescored, hasId(String.valueOf(i + 1)));
+                    assertSecondHit(rescored, hasId(String.valueOf(i)));
+                    assertThirdHit(rescored, hasId(String.valueOf(i + 2)));
+                    assertThat(rescored.getHits().getHits()[0].getScore(), equalTo(3.0f * primaryWeight * 7.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[1].getScore(), equalTo(2.0f * primaryWeight * 5.0f * secondaryWeight));
+                    assertThat(rescored.getHits().getHits()[2].getScore(), equalTo(5.0f * primaryWeight));
+                    assertThat(rescored.getHits().getHits()[3].getScore(), equalTo(0.2f * primaryWeight * 0.0f * secondaryWeight));
+                }
+            }
+        }
+    }

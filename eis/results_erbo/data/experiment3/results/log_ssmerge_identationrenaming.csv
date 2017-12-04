@@ -1,0 +1,14 @@
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_183d714_75acddc/rev_183d714-75acddc;/astyanax-cassandra/src/test/java/com/netflix/astyanax/model/DynamicCompositeTest;testComposite();;@Test
+    public void testComposite() {
+        DynamicComposite dc = new DynamicComposite();
+        for (char ch = 'A'; ch < 'Z'; ch++) {
+            dc.addComponent(Character.toString(ch), StringSerializer.get());
+        }
+
+    };@Test
+    public void testComposite() {
+        DynamicComposite dc = new DynamicComposite();
+        for ( char ch = 'A'; ch < 'Z'; ch++ ) {
+            dc.addComponent( Character.toString( ch ), StringSerializer.get() );
+        }
+    }

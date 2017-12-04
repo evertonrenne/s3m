@@ -1,0 +1,1043 @@
+file;ssmergeConf
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+public MultiConsumerCallback(List<DatabusV2ConsumerRegistration> registrations,
+          ExecutorService executorService,
+          long timeBudgetMs,
+          ConsumerCallbackFactory<DatabusCombinedConsumer> callbackFactory
+         )
+=======
+public MultiConsumerCallback(List<DatabusV2ConsumerRegistration> registrations,
+                               ExecutorService executorService,
+                               long timeBudgetMs,
+                               ConsumerCallbackFactory<DatabusCombinedConsumer> callbackFactory)
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+public TimingOutMultiConsumerCallback(
+        List<DatabusV2ConsumerRegistration> consumers,
+        ExecutorService executorService, long timeBudgetMs,
+        ConsumerCallbackFactory<DatabusCombinedConsumer> callbackFactory,
+        ConsumerCallbackStats consumerStats,
+        int errorCallNumber) {
+      super(consumers, executorService, timeBudgetMs, callbackFactory, consumerStats, null);
+      _failOnCall = errorCallNumber;
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;<<<<<<< MINE
+                                     DatabusHttpClientImpl client,
+                                     CheckpointPersistenceProvider ckptProvider,
+                                     String[] sources,
+                                     AbstractDatabusCombinedConsumer[] consumers)
+    {
+    	_id = id;
+    	_status = new Status();
+    	_client = client;
+    	_checkpointPersistenceProvider = ckptProvider;
+    	_state = RegistrationState.INIT;
+    	_sources = new ArrayList<String>();
+    	_consumers = new ArrayList<DatabusCombinedConsumer>();
+        _log = Logger.getLogger(getClass().getName() +
+                			(null  == _id ? "" : "." + _id.getId()));
+        if ( null != sources)
+        	_sources.addAll(Arrays.asList(sources));
+
+    	if ( null != consumers)
+    		_consumers.addAll(Arrays.asList(consumers));
+    }
+=======
+                                   DatabusHttpClientImpl client,
+                                   CheckpointPersistenceProvider ckptProvider,
+                                   String[] sources,
+                                   AbstractDatabusCombinedConsumer[] consumers)
+  {
+    _id = id;
+    _status = new Status();
+    _client = client;
+    _checkpointPersistenceProvider = ckptProvider;
+    _state = RegistrationState.INIT;
+    _sources = new ArrayList<String>();
+    _consumers = new ArrayList<DatabusCombinedConsumer>();
+    _log = Logger.getLogger(getClass().getName() + (null  == _id ? "" : "." + _id.getId()));
+    if ( null != sources)
+      _sources.addAll(Arrays.asList(sources));
+    if ( null != consumers)
+      _consumers.addAll(Arrays.asList(consumers));
+  }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;<<<<<<< MINE
+           throws IllegalStateException
+   {
+	   	if ( ! _state.isPreStartState())
+	   		throw new IllegalStateException("Cannot add sources when state is running or shut down. Current State :" + _state);
+=======
+          throws IllegalStateException
+  {
+    if ( ! _state.isPreStartState())
+      throw new IllegalStateException("Cannot add sources when state is running or shut down. Current State :" + _state);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;<<<<<<< MINE
+		boolean canConsumerBootstrap = false;
+		_streamConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();
+		_streamConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(streamConsumers, _sources, _filterConfig));
+=======
+    boolean enableBootstrap = _client.getClientStaticConfig().getRuntime().getBootstrap().isEnabled();
+    Set<ServerInfo> candidateBootstrapServers = new HashSet<ServerInfo>();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/registration/DatabusV2RegistrationImpl.java;<<<<<<< MINE
+		if (enableBootstrap && canConsumerBootstrap)
+		{
+			if ( (null == bootstrapServers) || ( bootstrapServers.isEmpty()))
+				throw new DatabusClientException("No configured bootstrap servers in the client to start");
+
+			for (ServerInfo s : bootstrapServers)
+			{
+				if (canServe(s,_sources))
+					candidateBootstrapServers.add(s);
+			}
+
+			if (candidateBootstrapServers.isEmpty())
+				throw new DatabusClientException("No candidate bootstrap servers for source : " + _sources);
+
+			_bootstrapConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();;
+			_bootstrapConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(bootstrapConsumers, _sources, _filterConfig));
+		}
+=======
+      _bootstrapConsumerRawRegistrations = new ArrayList<DatabusV2ConsumerRegistration>();;
+      _bootstrapConsumerRawRegistrations.add(new DatabusV2ConsumerRegistration(bootstrapConsumers, _sources, _filterConfig));
+    }
+
+    // All validations done. Setup and start
+    initializeStatsCollectors();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+	  registerDatabusListener(consumerReg, _relayGroups, getRelayGroupStreamConsumers(),
+	                          DatabusSubscription.createSubscriptionList(sources));
+=======
+    registerDatabusListener(consumerReg, _relayGroups, getRelayGroupStreamConsumers(),
+                            DatabusSubscription.createSubscriptionList(sources));
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusHttpClientImpl.java;<<<<<<< MINE
+		registerDatabusListener(consumerReg, _relayGroups, getRelayGroupBootstrapConsumers(),
+		                        DatabusSubscription.createSubscriptionList(sources));
+=======
+    registerDatabusListener(consumerReg, _relayGroups, getRelayGroupBootstrapConsumers(),
+                            DatabusSubscription.createSubscriptionList(sources));
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/main/java/com/linkedin/databus/client/DatabusSourcesConnection.java;<<<<<<< MINE
+public DatabusSourcesConnection(
+			DatabusSourcesConnection.StaticConfig connConfig,
+			List<DatabusSubscription> subscriptions, Set<ServerInfo> relays,
+			Set<ServerInfo> bootstrapServices,
+			List<DatabusV2ConsumerRegistration> registrations,
+			List<DatabusV2ConsumerRegistration> bootstrapRegistrations,
+			DbusEventBuffer dataEventsBuffer,
+			DbusEventBuffer bootstrapEventsBuffer,
+			ExecutorService ioThreadPool,
+			ContainerStatisticsCollector containerStatsCollector,
+			DbusEventsStatisticsCollector inboundEventsStatsCollector,
+			DbusEventsStatisticsCollector bootstrapEventsStatsCollector,
+			ConsumerCallbackStats relayCallbackStats,
+			ConsumerCallbackStats bootstrapCallbackStats,
+			CheckpointPersistenceProvider checkpointPersistenceProvider,
+			DatabusRelayConnectionFactory relayConnFactory,
+			DatabusBootstrapConnectionFactory bootstrapConnFactory,
+			HttpStatisticsCollector relayCallsStatsCollector,
+			RegistrationId registrationId, DatabusHttpClientImpl serverHandle,
+			String connRawId, // Unique Name to be used for generating mbean and logger names.
+			DbusEventFactory eventFactory,
+            ReentrantLock v3BootstrapLock,
+			ConnectionStateFactory connStateFactory
+			)
+	{
+		_eventFactory = eventFactory;
+		_connectionConfig = connConfig;
+		_dataEventsBuffer = dataEventsBuffer;
+		_bootstrapEventsBuffer = bootstrapEventsBuffer;
+		_subscriptions = subscriptions;
+		_ioThreadPool = ioThreadPool;
+		_checkpointPersistenceProvider = checkpointPersistenceProvider;
+		_containerStatisticsCollector = containerStatsCollector;
+		_inboundEventsStatsCollector = inboundEventsStatsCollector;
+		_bootstrapEventsStatsCollector = bootstrapEventsStatsCollector;
+		_relayConsumerStats = relayCallbackStats;
+		_bootstrapConsumerStats = bootstrapCallbackStats;
+		_relayConnFactory = relayConnFactory;
+		_bootstrapConnFactory = bootstrapConnFactory;
+		_relayRegistrations = registrations;
+		_bootstrapRegistrations = bootstrapRegistrations;
+		_relayCallsStatsCollector = relayCallsStatsCollector;
+		_localRelayCallsStatsCollector = null != relayCallsStatsCollector ? relayCallsStatsCollector
+				.createForClientConnection(toString()) : null;
+		_registrationId = registrationId;
+		_name = composeName(connRawId); // will be used as MBean name for
+											// example
+		_log = Logger.getLogger(DatabusSourcesConnection.class.getName()
+				+ ".srcconn-" + _name);
+		_connectionStatus = new SourcesConnectionStatus();
+		_v3BootstrapLock = v3BootstrapLock;
+		_connStateFactory = connStateFactory;
+
+		List<DbusKeyCompositeFilterConfig> relayFilterConfigs = new ArrayList<DbusKeyCompositeFilterConfig>();
+		List<DbusKeyCompositeFilterConfig> bootstrapFilterConfigs = new ArrayList<DbusKeyCompositeFilterConfig>();
+
+		if (null != registrations) {
+			for (DatabusV2ConsumerRegistration reg : registrations) {
+				DbusKeyCompositeFilterConfig conf = reg.getFilterConfig();
+
+				if (null != conf)
+					relayFilterConfigs.add(conf);
+			}
+		}
+
+		if (null != bootstrapRegistrations) {
+			for (DatabusV2ConsumerRegistration reg : bootstrapRegistrations) {
+				DbusKeyCompositeFilterConfig conf = reg.getFilterConfig();
+
+				if (null != conf)
+					bootstrapFilterConfigs.add(conf);
+			}
+		}
+
+		int consumerParallelism = connConfig.getConsumerParallelism();
+		if (1 == consumerParallelism) {
+			_consumerCallbackExecutor = Executors
+					.newSingleThreadExecutor(new NamedThreadFactory("callback"));
+		} else {
+			_consumerCallbackExecutor = Executors.newFixedThreadPool(
+					consumerParallelism, new NamedThreadFactory("callback"));
+		}
+
+		LoggingConsumer loggingConsumer = null;
+		if (serverHandle != null)
+		{
+		  try
+		  {
+		    // we intentionally don't use serverHandle.getLoggingListener(); LoggingConsumer
+		    // isn't thread-safe, so we need one instance per connection
+		    loggingConsumer = new LoggingConsumer(serverHandle.getClientStaticConfig().getLoggingListener());
+		  }
+		  catch (InvalidConfigException e)
+		  {
+		    throw new DatabusRuntimeException(e);  // alternatively, declare config exception and let it go
+		  }
+		}
+
+		MultiConsumerCallback relayAsyncCallback = new MultiConsumerCallback(
+				(null != _relayRegistrations ? _relayRegistrations
+						: new ArrayList<DatabusV2ConsumerRegistration>()),
+				_consumerCallbackExecutor,
+				connConfig.getConsumerTimeBudgetMs(),
+				new StreamConsumerCallbackFactory(), _relayConsumerStats,
+				loggingConsumer);
+
+		MultiConsumerCallback bootstrapAsyncCallback = new MultiConsumerCallback(
+				(null != _bootstrapRegistrations ? _bootstrapRegistrations
+						: new ArrayList<DatabusV2ConsumerRegistration>()),
+				_consumerCallbackExecutor,
+				connConfig.getBstConsumerTimeBudgetMs(),
+				new BootstrapConsumerCallbackFactory(), _bootstrapConsumerStats,
+				loggingConsumer);
+
+		if (_bootstrapEventsBuffer != null) {
+			_bootstrapPuller = new BootstrapPullThread(_name
+					+ "-BootstrapPuller", this, _bootstrapEventsBuffer, _connStateFactory,
+					bootstrapServices, bootstrapFilterConfigs,
+					connConfig.getPullerUtilizationPct(),
+					ManagementFactory.getPlatformMBeanServer(),
+					_eventFactory, _v3BootstrapLock);
+		} else {
+			_bootstrapPuller = null;
+		}
+
+		_relayDispatcher = new RelayDispatcher(_name + "-RelayDispatcher",
+				connConfig, getSubscriptions(), checkpointPersistenceProvider,
+				dataEventsBuffer, relayAsyncCallback, _bootstrapPuller,
+				ManagementFactory.getPlatformMBeanServer(), serverHandle,
+				_registrationId);
+
+		_relayPuller = new RelayPullThread(_name + "-RelayPuller", this,
+				_dataEventsBuffer, _connStateFactory, relays, relayFilterConfigs,
+				connConfig.getConsumeCurrent(),
+				connConfig.isReadLatestScnOnErrorEnabled(),
+				connConfig.getPullerUtilizationPct(),
+				connConfig.getNoEventsConnectionResetTimeSec(),
+				ManagementFactory.getPlatformMBeanServer(),
+ 				_eventFactory);
+
+		_relayPuller.enqueueMessage(LifecycleMessage.createStartMessage());
+
+		if (_bootstrapEventsBuffer != null) {
+			_bootstrapDispatcher = new BootstrapDispatcher(_name
+					+ "-BootstrapDispatcher", connConfig, getSubscriptions(),
+					checkpointPersistenceProvider, bootstrapEventsBuffer,
+					bootstrapAsyncCallback, _relayPuller,
+					ManagementFactory.getPlatformMBeanServer(), serverHandle,
+					_registrationId);
+		} else {
+			_bootstrapDispatcher = null;
+		}
+
+		_messageQueuesMonitorThread = new Thread(new MessageQueuesMonitor());
+		_messageQueuesMonitorThread.setDaemon(true);
+
+		_isBootstrapEnabled = !(null == getBootstrapServices()
+				|| getBootstrapServices().isEmpty()
+				|| null == getBootstrapRegistrations()
+				|| 0 == getBootstrapRegistrations().size() || _bootstrapEventsBuffer == null);
+
+		_log.info(" Is Service Empty : "
+				+ (null == getBootstrapServices() || getBootstrapServices()
+						.isEmpty()));
+		_log.info(" Is Consumers Empty : "
+				+ (null == getBootstrapRegistrations() || 0 == getBootstrapRegistrations()
+						.size()));
+
+		_nannyRunnable = new NannyRunnable();
+	}
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestBootstrapPullThread.java;<<<<<<< MINE
+	  clientProps.setProperty("client.runtime.bootstrap.enabled", "true");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).name", "bs1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).port", "10001");
+	  clientProps.setProperty("client.runtime.bootstrap.service(1).sources", "source1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).name", "bs2");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).port", "10002");
+	  clientProps.setProperty("client.runtime.bootstrap.service(2).sources", "source1");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).name", "bs3");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).host", "localhost");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).port", "10003");
+	  clientProps.setProperty("client.runtime.bootstrap.service(3).sources", "source1");
+
+	  clientProps.setProperty("client.runtime.relay(1).name", "relay1");
+	  clientProps.setProperty("client.runtime.relay(1).port", "10001");
+	  clientProps.setProperty("client.runtime.relay(1).sources", "source1");
+	  clientProps.setProperty("client.runtime.relay(2).name", "relay2");
+	  clientProps.setProperty("client.runtime.relay(2).port", "10002");
+	  clientProps.setProperty("client.runtime.relay(2).sources", "source1");
+	  clientProps.setProperty("client.runtime.relay(3).name", "relay3");
+	  clientProps.setProperty("client.runtime.relay(3).port", "10003");
+	  clientProps.setProperty("client.runtime.relay(3).sources", "source1");
+
+	  clientProps.setProperty("client.connectionDefaults.eventBuffer.maxSize", "100000");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.maxRetryNum", "9");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncFactor", "1.0");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncDelta", "1");
+	  clientProps.setProperty("client.connectionDefaults.pullerRetries.initSleep", "1");
+
+	  DatabusHttpClientImpl.Config clientConfBuilder = new DatabusHttpClientImpl.Config();
+	  ConfigLoader<DatabusHttpClientImpl.StaticConfig> configLoader =
+			  new ConfigLoader<DatabusHttpClientImpl.StaticConfig>("client.", clientConfBuilder);
+	  configLoader.loadConfig(clientProps);
+
+	  DatabusHttpClientImpl.StaticConfig clientConf = clientConfBuilder.build();
+	  DatabusSourcesConnection.StaticConfig srcConnConf = clientConf.getConnectionDefaults();
+
+	  DatabusHttpClientImpl client = new DatabusHttpClientImpl(clientConf);
+
+	  client.registerDatabusBootstrapListener(new LoggingConsumer(), null, "source1");
+
+	  Assert.assertNotNull(client, "client instantiation ok");
+
+	  DatabusHttpClientImpl.RuntimeConfig clientRtConf = clientConf.getRuntime().build();
+
+	  //we keep the index of the next server we expect to see
+	  AtomicInteger serverIdx = new AtomicInteger(-1);
+
+	  //generate the order in which we should see the servers
+	  List<ServerInfo> relayOrder = new ArrayList<ServerInfo>(clientRtConf.getRelays());
+	  if (LOG.isInfoEnabled())
+	  {
+		  StringBuilder sb = new StringBuilder();
+		  for (ServerInfo serverInfo: relayOrder)
+		  {
+			  sb.append(serverInfo.getName());
+			  sb.append(" ");
+		  }
+		  LOG.info("Relay order:" + sb.toString());
+	  }
+
+	  List<IdNamePair> sourcesResponse = new ArrayList<IdNamePair>();
+	  sourcesResponse.add(new IdNamePair(1L, "source1"));
+
+	  Map<Long, List<RegisterResponseEntry>> registerResponse = new HashMap<Long, List<RegisterResponseEntry>>();
+
+	  List<RegisterResponseEntry> regResponse = new ArrayList<RegisterResponseEntry>();
+	  regResponse.add(new RegisterResponseEntry(1L, (short)1, SCHEMA$.toString()));
+	  registerResponse.put(1L, regResponse);
+
+	  ChunkedBodyReadableByteChannel channel = EasyMock.createMock(ChunkedBodyReadableByteChannel.class);
+
+	  if ( ! readDataException)
+	  {
+		  EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(null).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(null).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(null).anyTimes();
+	  } else {
+		  EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(exceptionName).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(exceptionName).anyTimes();
+		  EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(exceptionName).anyTimes();
+	  }
+
+	  if ( phaseCompleted)
+	    EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn("true").anyTimes();
+	  else
+		EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn(null).anyTimes();
+
+	  EasyMock.replay(channel);
+
+	  DbusEventBuffer dbusBuffer = EasyMock.createMock(DbusEventBuffer.class);
+	  dbusBuffer.endEvents(false, -1, false, false, null);
+	  EasyMock.expectLastCall().anyTimes();
+	  EasyMock.expect(dbusBuffer.injectEvent(EasyMock.<DbusEventInternalReadable>notNull())).andReturn(true).anyTimes();
+	  EasyMock.expect(dbusBuffer.getEventSerializationVersion()).andReturn(DbusEventFactory.DBUS_EVENT_V1).anyTimes();
+
+	  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull(),
+	                                        org.easymock.EasyMock.<List<InternalDatabusEventsListener>>notNull(),
+	                                        org.easymock.EasyMock.<DbusEventsStatisticsCollector>isNull()))
+	          .andReturn(numBytesRead).anyTimes();
+
+	  if ( readDataThrowException)
+	  {
+		  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+		          .andThrow(new RuntimeException("dummy")).anyTimes();
+	  } else {
+		  EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+		          .andReturn(numBytesRead).anyTimes();
+	  }
+
+	  EasyMock.expect(dbusBuffer.acquireIterator(EasyMock.<String>notNull())).andReturn(null).anyTimes();
+	  dbusBuffer.waitForFreeSpace((int)(10000 * 100.0 / clientConf.getPullerBufferUtilizationPct()));
+	  EasyMock.expectLastCall().anyTimes();
+	  EasyMock.expect(dbusBuffer.getBufferFreeReadSpace()).andReturn(freeReadSpace).anyTimes();
+
+	  EasyMock.replay(dbusBuffer);
+
+	  //This guy succeeds on /sources but fails on /register
+	  MockBootstrapConnection mockSuccessConn = new MockBootstrapConnection(startScn, targetScn, channel, serverIdx,
+	                                                                        muteTransition);
+
+	  DatabusBootstrapConnectionFactory mockConnFactory =
+			  org.easymock.EasyMock.createMock("mockRelayFactory", DatabusBootstrapConnectionFactory.class);
+
+	  //each server should be tried MAX_RETRIES time until all retries are exhausted
+
+	  if ( throwBSConnException )
+	  {
+		  EasyMock.expect(mockConnFactory.createConnection(
+				  EasyMock.<ServerInfo>notNull(),
+				  EasyMock.<ActorMessageQueue>notNull(),
+				  EasyMock.<RemoteExceptionHandler>notNull())).andThrow(new RuntimeException("Mock Error")).anyTimes();
+	  } else if ( failBsConnection) {
+		  EasyMock.expect(mockConnFactory.createConnection(
+				  EasyMock.<ServerInfo>notNull(),
+				  EasyMock.<ActorMessageQueue>notNull(),
+				  EasyMock.<RemoteExceptionHandler>notNull())).andReturn(null).anyTimes();
+=======
+    clientProps.setProperty("client.runtime.bootstrap.enabled", "true");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).name", "bs1");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).host", "localhost");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).port", "10001");
+    clientProps.setProperty("client.runtime.bootstrap.service(1).sources", "source1");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).name", "bs2");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).host", "localhost");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).port", "10002");
+    clientProps.setProperty("client.runtime.bootstrap.service(2).sources", "source1");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).name", "bs3");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).host", "localhost");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).port", "10003");
+    clientProps.setProperty("client.runtime.bootstrap.service(3).sources", "source1");
+
+    clientProps.setProperty("client.runtime.relay(1).name", "relay1");
+    clientProps.setProperty("client.runtime.relay(1).port", "10001");
+    clientProps.setProperty("client.runtime.relay(1).sources", "source1");
+    clientProps.setProperty("client.runtime.relay(2).name", "relay2");
+    clientProps.setProperty("client.runtime.relay(2).port", "10002");
+    clientProps.setProperty("client.runtime.relay(2).sources", "source1");
+    clientProps.setProperty("client.runtime.relay(3).name", "relay3");
+    clientProps.setProperty("client.runtime.relay(3).port", "10003");
+    clientProps.setProperty("client.runtime.relay(3).sources", "source1");
+
+    clientProps.setProperty("client.connectionDefaults.eventBuffer.maxSize", "100000");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.maxRetryNum", "9");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncFactor", "1.0");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.sleepIncDelta", "1");
+    clientProps.setProperty("client.connectionDefaults.pullerRetries.initSleep", "1");
+
+    DatabusHttpClientImpl.Config clientConfBuilder = new DatabusHttpClientImpl.Config();
+    ConfigLoader<DatabusHttpClientImpl.StaticConfig> configLoader =
+        new ConfigLoader<DatabusHttpClientImpl.StaticConfig>("client.", clientConfBuilder);
+    configLoader.loadConfig(clientProps);
+
+    DatabusHttpClientImpl.StaticConfig clientConf = clientConfBuilder.build();
+    DatabusSourcesConnection.StaticConfig srcConnConf = clientConf.getConnectionDefaults();
+
+    DatabusHttpClientImpl client = new DatabusHttpClientImpl(clientConf);
+
+    client.registerDatabusBootstrapListener(new LoggingConsumer(), null, "source1");
+
+    Assert.assertNotNull(client, "client instantiation ok");
+
+    DatabusHttpClientImpl.RuntimeConfig clientRtConf = clientConf.getRuntime().build();
+
+    //we keep the index of the next server we expect to see
+    AtomicInteger serverIdx = new AtomicInteger(-1);
+
+    //generate the order in which we should see the servers
+    List<ServerInfo> relayOrder = new ArrayList<ServerInfo>(clientRtConf.getRelays());
+    if (LOG.isInfoEnabled())
+    {
+      StringBuilder sb = new StringBuilder();
+      for (ServerInfo serverInfo: relayOrder)
+      {
+        sb.append(serverInfo.getName());
+        sb.append(" ");
+      }
+      LOG.info("Relay order:" + sb.toString());
+    }
+
+    List<IdNamePair> sourcesResponse = new ArrayList<IdNamePair>();
+    sourcesResponse.add(new IdNamePair(1L, "source1"));
+
+    Map<Long, List<RegisterResponseEntry>> registerResponse = new HashMap<Long, List<RegisterResponseEntry>>();
+
+    List<RegisterResponseEntry> regResponse = new ArrayList<RegisterResponseEntry>();
+    regResponse.add(new RegisterResponseEntry(1L, (short)1, SCHEMA$.toString()));
+    registerResponse.put(1L, regResponse);
+
+    ChunkedBodyReadableByteChannel channel = EasyMock.createMock(ChunkedBodyReadableByteChannel.class);
+
+    if ( ! readDataException)
+    {
+      EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(null).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(null).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(null).anyTimes();
+    } else {
+      EasyMock.expect(channel.getMetadata("x-dbus-error-cause")).andReturn(exceptionName).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-req-id")).andReturn(exceptionName).anyTimes();
+      EasyMock.expect(channel.getMetadata("x-dbus-error")).andReturn(exceptionName).anyTimes();
+    }
+
+    if ( phaseCompleted)
+      EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn("true").anyTimes();
+    else
+    EasyMock.expect(channel.getMetadata("PhaseCompleted")).andReturn(null).anyTimes();
+
+    EasyMock.replay(channel);
+
+    DbusEventBuffer dbusBuffer = EasyMock.createMock(DbusEventBuffer.class);
+    dbusBuffer.endEvents(false, -1, false, false, null);
+    EasyMock.expectLastCall().anyTimes();
+    EasyMock.expect(dbusBuffer.injectEvent(EasyMock.<DbusEventInternalReadable>notNull())).andReturn(true).anyTimes();
+    EasyMock.expect(dbusBuffer.getEventSerializationVersion()).andReturn(DbusEventFactory.DBUS_EVENT_V1).anyTimes();
+
+    EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull(),
+                                          org.easymock.EasyMock.<List<InternalDatabusEventsListener>>notNull(),
+                                          org.easymock.EasyMock.<DbusEventsStatisticsCollector>isNull()))
+            .andReturn(numBytesRead).anyTimes();
+
+    if ( readDataThrowException)
+    {
+      EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+              .andThrow(new RuntimeException("dummy")).anyTimes();
+    } else {
+      EasyMock.expect(dbusBuffer.readEvents(EasyMock.<ReadableByteChannel>notNull()))
+              .andReturn(numBytesRead).anyTimes();
+    }
+
+    EasyMock.expect(dbusBuffer.acquireIterator(EasyMock.<String>notNull())).andReturn(null).anyTimes();
+    dbusBuffer.waitForFreeSpace((int)(10000 * 100.0 / clientConf.getPullerBufferUtilizationPct()));
+    EasyMock.expectLastCall().anyTimes();
+    EasyMock.expect(dbusBuffer.getBufferFreeReadSpace()).andReturn(freeReadSpace).anyTimes();
+
+    EasyMock.replay(dbusBuffer);
+
+    //This guy succeeds on /sources but fails on /register
+    MockBootstrapConnection mockSuccessConn = new MockBootstrapConnection(startScn, targetScn, channel, serverIdx,
+                                                                          muteTransition);
+
+    DatabusBootstrapConnectionFactory mockConnFactory =
+        org.easymock.EasyMock.createMock("mockRelayFactory", DatabusBootstrapConnectionFactory.class);
+
+    //each server should be tried MAX_RETRIES time until all retries are exhausted
+
+    if ( throwBSConnException )
+    {
+      EasyMock.expect(mockConnFactory.createConnection(
+          EasyMock.<ServerInfo>notNull(),
+          EasyMock.<ActorMessageQueue>notNull(),
+          EasyMock.<RemoteExceptionHandler>notNull())).andThrow(new RuntimeException("Mock Error")).anyTimes();
+    } else if ( failBsConnection) {
+      EasyMock.expect(mockConnFactory.createConnection(
+          EasyMock.<ServerInfo>notNull(),
+          EasyMock.<ActorMessageQueue>notNull(),
+          EasyMock.<RemoteExceptionHandler>notNull())).andReturn(null).anyTimes();
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+@Test
+    public void testBootstrapPartialWindowScnOrdering() throws Exception
+    {
+        //DDSDBUS-1889: Ensure bootstrap onCheckpoint() callback receives bootstrapSinceScn - not some scn.
+        int numEvents=100;
+        int maxWindowSize = 25;
+        /* Experiment setup */
+        int payloadSize = 20;
+        int numCheckpoints = numEvents/maxWindowSize;
+
+        /* Consumer creation */
+        //setup consumer to fail on end of first full window
+        int timeTakenForDataEventInMs = 1;
+        int timeTakenForControlEventInMs=1;
+        int numFailCheckpointEvent = 0;
+        int numFailDataEvent = 0;
+        int numFailEndWindow = 1;
+        int numFailures = 1;
+        //fail at the specified window; no retries; so the dispatcher should stop having written one window; but having checkpointed the other
+        //thanks to a very small checkpoint frequency threshold
+        TimeoutTestConsumer tConsumer = new TimeoutTestConsumer(timeTakenForDataEventInMs,timeTakenForControlEventInMs,
+                numFailCheckpointEvent,numFailDataEvent,numFailEndWindow,numFailures);
+
+        HashMap<Long, List<RegisterResponseEntry>> schemaMap =
+                new HashMap<Long, List<RegisterResponseEntry>>();
+
+        short srcId=1;
+        List<RegisterResponseEntry> l1 = new ArrayList<RegisterResponseEntry>();
+        l1.add(new RegisterResponseEntry(1L, srcId,SOURCE1_SCHEMA_STR));
+
+        schemaMap.put(1L, l1);
+
+        Map<Long, IdNamePair> sourcesMap = new HashMap<Long, IdNamePair>();
+        List<String> sources = new ArrayList<String>();
+        for (int i = 1; i <= 1; ++i)
+        {
+            IdNamePair sourcePair = new IdNamePair((long)i, "source" + i);
+            sources.add(sourcePair.getName());
+            sourcesMap.put(sourcePair.getId(), sourcePair);
+        }
+
+        long consumerTimeBudgetMs = 60*1000;
+        DatabusV2ConsumerRegistration consumerReg = new DatabusV2ConsumerRegistration(tConsumer, sources, null);
+        List<DatabusV2ConsumerRegistration> allRegistrations =  Arrays.asList(consumerReg);
+        //Single threaded execution of consumer
+        MultiConsumerCallback mConsumer = new MultiConsumerCallback(allRegistrations,Executors.newFixedThreadPool(1),
+                consumerTimeBudgetMs,new StreamConsumerCallbackFactory(),null, null);
+
+
+
+        /* Generate events **/
+        Vector<DbusEvent> srcTestEvents = new Vector<DbusEvent>();
+        Vector<Short> srcIdList = new Vector<Short> ();
+        srcIdList.add(srcId);
+
+        DbusEventGenerator evGen = new DbusEventGenerator(15000,srcIdList);
+        Assert.assertTrue(evGen.generateEvents(numEvents, maxWindowSize, 512, payloadSize,true, srcTestEvents) > 0);
+
+        int totalSize=0; int maxSize=0;
+        for (DbusEvent e : srcTestEvents)
+        {
+            totalSize += e.size();
+            maxSize = (e.size() > maxSize) ? e.size():maxSize;
+        }
+
+        /* Source configuration */
+        double thresholdChkptPct = 5.0;
+        DatabusSourcesConnection.Config conf = new DatabusSourcesConnection.Config();
+        conf.setCheckpointThresholdPct(thresholdChkptPct);
+        conf.getDispatcherRetries().setMaxRetryNum(0);
+        conf.setFreeBufferThreshold(maxSize);
+        conf.setConsumerTimeBudgetMs(consumerTimeBudgetMs);
+        int freeBufferThreshold = conf.getFreeBufferThreshold();
+        DatabusSourcesConnection.StaticConfig connConfig = conf.build();
+
+        //make buffer large enough to hold data; the control events are large that contain checkpoints
+        int producerBufferSize = totalSize*2 + numCheckpoints*10*maxSize*5 + freeBufferThreshold;
+        int individualBufferSize = producerBufferSize;
+        int indexSize = producerBufferSize / 10;
+        int stagingBufferSize = producerBufferSize;
+
+        /*Event Buffer creation */
+        TestGenericDispatcherEventBuffer dataEventsBuffer=
+            new TestGenericDispatcherEventBuffer(
+                getConfig(producerBufferSize, individualBufferSize, indexSize ,
+                          stagingBufferSize, AllocationPolicy.HEAP_MEMORY,
+                          QueuePolicy.BLOCK_ON_WRITE));
+
+        List<DatabusSubscription> subs = DatabusSubscription.createSubscriptionList(sources);
+        /* Generic Dispatcher creation */
+        InMemoryPersistenceProvider cpPersister = new InMemoryPersistenceProvider();
+        BootstrapDispatcher dispatcher = new BootstrapDispatcher("bootstrapPartialWindowCheckpointPersistence",
+                connConfig,
+                subs,
+                cpPersister,
+                dataEventsBuffer,
+                mConsumer,
+                null, //relaypuller
+                null, //mbean server
+                null, //ClientImpl
+                null  //registrationId
+                );
+
+        BootstrapCheckpointHandler cptHandler = new BootstrapCheckpointHandler("source1");
+        long sinceScn=15000L;
+        long startTsNsecs = System.nanoTime();
+        final Checkpoint initCheckpoint = cptHandler.createInitialBootstrapCheckpoint(null, sinceScn);
+        initCheckpoint.setBootstrapStartNsecs(startTsNsecs);
+        initCheckpoint.setBootstrapStartScn(0L);
+
+        /* Launch writer */
+        //numBootstrapCheckpoint - number of checkpoints before writing end of period
+        int numBootstrapCheckpoint=4;
+        DbusEventAppender eventProducer = new DbusEventAppender(srcTestEvents, dataEventsBuffer,numBootstrapCheckpoint,null) ;
+        //simulate bootstrap server; use this checkpoint as init checkpoint
+        eventProducer.setBootstrapCheckpoint(initCheckpoint);
+        Thread tEmitter = new Thread(eventProducer);
+      //be generous ; use worst case for num control events
+        long waitTimeMs  = (numEvents*timeTakenForDataEventInMs + numEvents*timeTakenForControlEventInMs) * 4;
+
+        tEmitter.start();
+        tEmitter.join(waitTimeMs);
+
+
+        /* Launch dispatcher */
+        Thread tDispatcher = new Thread(dispatcher);
+        tDispatcher.start();
+
+        /* Now initialize this  state machine */
+        dispatcher.enqueueMessage(SourcesMessage.createSetSourcesIdsMessage(sourcesMap.values()));
+        dispatcher.enqueueMessage(SourcesMessage.createSetSourcesSchemasMessage(schemaMap));
+
+        //expect dispatcher to fail - at end of window
+        tDispatcher.join(waitTimeMs);
+
+        Assert.assertFalse(tEmitter.isAlive());
+        Assert.assertFalse(tDispatcher.isAlive());
+
+        LOG.info("tConsumer: " + tConsumer);
+        HashMap<List<String>,Checkpoint> cps = cpPersister.getCheckpoints();
+        Assert.assertTrue(cps.size() > 0);
+        for (Map.Entry<List<String>,Checkpoint> i : cps.entrySet())
+        {
+            Checkpoint cp = i.getValue();
+            LOG.info("checkpoint="+ cp);
+            Assert.assertEquals(cp.getConsumptionMode(), DbusClientMode.BOOTSTRAP_SNAPSHOT);
+            //check if progress has been made during bootstrap
+            Assert.assertTrue(cp.getSnapshotOffset() > 0);
+            //these two values should be unchanged during the course of bootstrap
+            Assert.assertEquals(sinceScn,cp.getBootstrapSinceScn().longValue());
+            Assert.assertEquals(startTsNsecs,cp.getBootstrapStartNsecs());
+            //the tsNsec normally udpdated by client at end of window should be a no-op during bootstrap
+            Assert.assertEquals(Checkpoint.UNSET_TS_NSECS,cp.getTsNsecs());
+            //the scn passed to consumers during onCheckpoint should be the sinceSCN and not any other interim value
+            Assert.assertEquals(cp.getBootstrapSinceScn().longValue(),tConsumer.getLastSeenCheckpointScn());
+        }
+    }
+=======
+@Test
+    public void testBootstrapPartialWindowScnOrdering() throws Exception
+    {
+        final Logger log = Logger.getLogger("TestGenericDispatcher.testBootstrapPartialWindowScnOrdering");
+        //log.setLevel(Level.DEBUG);
+        log.info("start");
+
+        //DDSDBUS-1889: Ensure bootstrap onCheckpoint() callback receives bootstrapSinceScn - not some scn.
+        int numEvents=100;
+        int maxWindowSize = 25;
+        /* Experiment setup */
+        int payloadSize = 20;
+        int numCheckpoints = numEvents/maxWindowSize;
+
+        /* Consumer creation */
+        //setup consumer to fail on end of first full window
+        int timeTakenForDataEventInMs = 1;
+        int timeTakenForControlEventInMs=1;
+        int numFailCheckpointEvent = 0;
+        int numFailDataEvent = 0;
+        int numFailEndWindow = 1;
+        int numFailures = 1;
+        //fail at the specified window; no retries; so the dispatcher should stop having written one window; but having checkpointed the other
+        //thanks to a very small checkpoint frequency threshold
+        TimeoutTestConsumer tConsumer = new TimeoutTestConsumer(timeTakenForDataEventInMs,timeTakenForControlEventInMs,
+                numFailCheckpointEvent,numFailDataEvent,numFailEndWindow,numFailures);
+
+        HashMap<Long, List<RegisterResponseEntry>> schemaMap =
+                new HashMap<Long, List<RegisterResponseEntry>>();
+
+        short srcId=1;
+        List<RegisterResponseEntry> l1 = new ArrayList<RegisterResponseEntry>();
+        l1.add(new RegisterResponseEntry(1L, srcId,SOURCE1_SCHEMA_STR));
+
+        schemaMap.put(1L, l1);
+
+        Map<Long, IdNamePair> sourcesMap = new HashMap<Long, IdNamePair>();
+        List<String> sources = new ArrayList<String>();
+        for (int i = 1; i <= 1; ++i)
+        {
+            IdNamePair sourcePair = new IdNamePair((long)i, "source" + i);
+            sources.add(sourcePair.getName());
+            sourcesMap.put(sourcePair.getId(), sourcePair);
+        }
+
+        long consumerTimeBudgetMs = 60*1000;
+        DatabusV2ConsumerRegistration consumerReg = new DatabusV2ConsumerRegistration(tConsumer, sources, null);
+        List<DatabusV2ConsumerRegistration> allRegistrations =  Arrays.asList(consumerReg);
+        //Single threaded execution of consumer
+        MultiConsumerCallback mConsumer = new MultiConsumerCallback(allRegistrations,Executors.newFixedThreadPool(1),
+                consumerTimeBudgetMs, new StreamConsumerCallbackFactory(null, null), null, null, null);
+
+        /* Generate events **/
+        Vector<DbusEvent> srcTestEvents = new Vector<DbusEvent>();
+        Vector<Short> srcIdList = new Vector<Short> ();
+        srcIdList.add(srcId);
+
+        DbusEventGenerator evGen = new DbusEventGenerator(15000,srcIdList);
+        Assert.assertTrue(evGen.generateEvents(numEvents, maxWindowSize, 512, payloadSize,true, srcTestEvents) > 0);
+
+        int totalSize=0; int maxSize=0;
+        for (DbusEvent e : srcTestEvents)
+        {
+            totalSize += e.size();
+            maxSize = (e.size() > maxSize) ? e.size():maxSize;
+        }
+
+        /* Source configuration */
+        double thresholdChkptPct = 5.0;
+        DatabusSourcesConnection.Config conf = new DatabusSourcesConnection.Config();
+        conf.setCheckpointThresholdPct(thresholdChkptPct);
+        conf.getDispatcherRetries().setMaxRetryNum(0);
+        conf.setFreeBufferThreshold(maxSize);
+        conf.setConsumerTimeBudgetMs(consumerTimeBudgetMs);
+        int freeBufferThreshold = conf.getFreeBufferThreshold();
+        DatabusSourcesConnection.StaticConfig connConfig = conf.build();
+
+        //make buffer large enough to hold data; the control events are large that contain checkpoints
+        int producerBufferSize = totalSize*2 + numCheckpoints*10*maxSize*5 + freeBufferThreshold;
+        int individualBufferSize = producerBufferSize;
+        int indexSize = producerBufferSize / 10;
+        int stagingBufferSize = producerBufferSize;
+
+        /*Event Buffer creation */
+        TestGenericDispatcherEventBuffer dataEventsBuffer=
+            new TestGenericDispatcherEventBuffer(
+                getConfig(producerBufferSize, individualBufferSize, indexSize ,
+                          stagingBufferSize, AllocationPolicy.HEAP_MEMORY,
+                          QueuePolicy.BLOCK_ON_WRITE));
+
+        List<DatabusSubscription> subs = DatabusSubscription.createSubscriptionList(sources);
+        /* Generic Dispatcher creation */
+        InMemoryPersistenceProvider cpPersister = new InMemoryPersistenceProvider();
+        BootstrapDispatcher dispatcher = new BootstrapDispatcher("bootstrapPartialWindowCheckpointPersistence",
+                connConfig,
+                subs,
+                cpPersister,
+                dataEventsBuffer,
+                mConsumer,
+                null, //relaypuller
+                null, //mbean server
+                null, //ClientImpl
+                null  //registrationId
+                );
+        dispatcher.setSchemaIdCheck(false);
+
+        BootstrapCheckpointHandler cptHandler = new BootstrapCheckpointHandler("source1");
+        long sinceScn=15000L;
+        long startTsNsecs = System.nanoTime();
+        final Checkpoint initCheckpoint = cptHandler.createInitialBootstrapCheckpoint(null, sinceScn);
+        initCheckpoint.setBootstrapStartNsecs(startTsNsecs);
+        initCheckpoint.setBootstrapStartScn(0L);
+
+        /* Launch writer */
+        //numBootstrapCheckpoint - number of checkpoints before writing end of period
+        int numBootstrapCheckpoint=4;
+        DbusEventAppender eventProducer = new DbusEventAppender(srcTestEvents, dataEventsBuffer,numBootstrapCheckpoint,null) ;
+        //simulate bootstrap server; use this checkpoint as init checkpoint
+        eventProducer.setBootstrapCheckpoint(initCheckpoint);
+        Thread tEmitter = new Thread(eventProducer);
+      //be generous ; use worst case for num control events
+        long waitTimeMs  = (numEvents*timeTakenForDataEventInMs + numEvents*timeTakenForControlEventInMs) * 4;
+
+        tEmitter.start();
+        tEmitter.join(waitTimeMs);
+
+
+        /* Launch dispatcher */
+        Thread tDispatcher = new Thread(dispatcher);
+        tDispatcher.start();
+
+        /* Now initialize this  state machine */
+        dispatcher.enqueueMessage(SourcesMessage.createSetSourcesIdsMessage(sourcesMap.values()));
+        dispatcher.enqueueMessage(SourcesMessage.createSetSourcesSchemasMessage(schemaMap));
+
+        //expect dispatcher to fail - at end of window
+        tDispatcher.join(waitTimeMs);
+
+        Assert.assertFalse(tEmitter.isAlive());
+        Assert.assertFalse(tDispatcher.isAlive());
+
+        LOG.info("tConsumer: " + tConsumer);
+        HashMap<List<String>,Checkpoint> cps = cpPersister.getCheckpoints();
+        Assert.assertTrue(cps.size() > 0);
+        for (Map.Entry<List<String>,Checkpoint> i : cps.entrySet())
+        {
+            Checkpoint cp = i.getValue();
+            LOG.info("checkpoint="+ cp);
+            Assert.assertEquals(cp.getConsumptionMode(), DbusClientMode.BOOTSTRAP_SNAPSHOT);
+            //check if progress has been made during bootstrap
+            Assert.assertTrue(cp.getSnapshotOffset() > 0);
+            //these two values should be unchanged during the course of bootstrap
+            Assert.assertEquals(sinceScn,cp.getBootstrapSinceScn().longValue());
+            Assert.assertEquals(startTsNsecs,cp.getBootstrapStartNsecs());
+            //the tsNsec normally udpdated by client at end of window should be a no-op during bootstrap
+            Assert.assertEquals(Checkpoint.UNSET_TS_NSECS,cp.getTsNsecs());
+            //the scn passed to consumers during onCheckpoint should be the sinceSCN and not any other interim value
+            Assert.assertEquals(cp.getBootstrapSinceScn().longValue(),tConsumer.getLastSeenCheckpointScn());
+        }
+        log.info("end\n");
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+public TestDispatcher(String name,
+                          DatabusSourcesConnection.StaticConfig connConfig,
+                          List<DatabusSubscription> subsList,
+                          CheckpointPersistenceProvider checkpointPersistor,
+                          DbusEventBuffer dataEventsBuffer,
+                          MultiConsumerCallback asyncCallback,
+                          boolean isRelayDispatcher) {
+        super(name, connConfig, subsList, checkpointPersistor, dataEventsBuffer,
+                asyncCallback);
+        _isRelayDispatcher = isRelayDispatcher;
+    }
+=======
+public TestDispatcher(String name,
+                          DatabusSourcesConnection.StaticConfig connConfig,
+                          List<DatabusSubscription> subsList,
+                          CheckpointPersistenceProvider checkpointPersistor,
+                          DbusEventBuffer dataEventsBuffer,
+                          MultiConsumerCallback asyncCallback,
+                          boolean isRelayDispatcher) {
+        super(name, connConfig, subsList, checkpointPersistor, dataEventsBuffer,
+                asyncCallback);
+        _isRelayDispatcher = isRelayDispatcher;
+        //disable schemaIdCheck at onStartSource() by default, in the interest of many unit tests written without paying attention to same schemaIds being present in events
+        _schemaIdCheck=false;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+public TimeoutTestConsumer(long timeoutMs,long controlEventTimeoutInMs,int failCheckPoint,int failData,int failEndWindow,int numFailureTimes)
+    {
+        _timeoutInMs = timeoutMs;
+        _controlEventTimeoutInMs = controlEventTimeoutInMs;
+        _failCheckPoint = failCheckPoint;
+        _failData = failData;
+        _failEndWindow=failEndWindow;
+        _storeCheckpoint = 0;
+        _storeData = 0;
+        _countData = 0;
+        _countCheckPoint = 0;
+        _countEndWindow = 0;
+        _countFailureTimes = 0;
+        _numFailureTimes = numFailureTimes;
+        _events = new HashSet<Integer>();
+        _curWindowCount = 0;
+        _curDataCount = 0;
+        _curCkptCount = 0;
+    }
+=======
+public TimeoutTestConsumer(long timeoutMs, long controlEventTimeoutInMs, int failCheckPoint,
+                               int failData, int failEndWindow, int numFailureTimes)
+    {
+        _timeoutInMs = timeoutMs;
+        _controlEventTimeoutInMs = controlEventTimeoutInMs;
+        _failCheckPoint = failCheckPoint;
+        _failData = failData;
+        _failEndWindow=failEndWindow;
+        _storeCheckpoint = 0;
+        _storeData = 0;
+        _countData = 0;
+        _countCheckPoint = 0;
+        _countEndWindow = 0;
+        _countFailureTimes = 0;
+        _numFailureTimes = numFailureTimes;
+        _events = new HashSet<Integer>();
+        _curWindowCount = 0;
+        _curDataCount = 0;
+        _curCkptCount = 0;
+        if (failCheckPoint == 0 && failData == 0 && failEndWindow == 0)
+        {
+          Assert.assertEquals("Can't fail without specifying at least one non-zero failure type.",
+                              0, numFailureTimes);
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+    int checkPointIntervalMs = 200;
+=======
+    final int checkPointIntervalMs = 75;
+    final long delayMs = 31;
+    final int numAttemptedWrites = 7;
+    // We should write at 0, 31, 62, 93, 123, 155, 186, but only at at 0, 93, 155
+    // Persistent provider clock: 0              75           150            225
+    // checkpoint store clock     0    31   62       93  123      155  186
+    final int expectedActualStores = 3;
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-api/src/test/java/com/linkedin/databus/client/pub/TestClusterCheckpointPersistenceProvider.java;<<<<<<< MINE
+    try
+    {
+      ClusterCheckpointPersistenceProvider ccp = new ClusterCheckpointPersistenceProvider(
+          id, conf);
+      long delayMs = 50;
+      int numAttemptedWrites = 100;
+      int numActualStores = 0;
+      int expectedActualStores = (delayMs >= checkPointIntervalMs) ? numAttemptedWrites
+          : (int) ((numAttemptedWrites / (checkPointIntervalMs / delayMs)));
+      for (int i = 0; i < numAttemptedWrites; ++i)
+      {
+        cp.setWindowScn(startWindowScn + i);
+        ccp.storeCheckpoint(sources, cp);
+        Checkpoint newCp = ccp.loadCheckpoint(sources);
+        // cp integrity checks
+        Assert.assertTrue(newCp != null);
+        Assert.assertTrue(newCp.getWindowOffset() == cp
+            .getWindowOffset());
+        Assert.assertTrue(newCp.getConsumptionMode() == cp
+            .getConsumptionMode());
+        // skipped store test;
+        if (newCp.getWindowScn() == cp.getWindowScn())
+        {
+          numActualStores++;
+        }
+        Thread.sleep(delayMs);
+      }
+      LOG.warn("Num actual stores=" + numActualStores
+          + " Num expected stores=" + expectedActualStores);
+      Assert.assertTrue((numActualStores == expectedActualStores)
+          || (numActualStores == expectedActualStores + 1));
+    }
+    finally
+    {
+      ClusterCheckpointPersistenceProvider.close(clusterName);
+=======
+    try
+    {
+      TestFrequencyCPP ccp = new TestFrequencyCPP(id, conf);
+      for (int i = 0; i < numAttemptedWrites; ++i)
+      {
+        cp.setWindowScn(startWindowScn + i);
+        ccp.storeCheckpoint(sources, cp);
+        Checkpoint newCp = ccp.getStoredCheckpoint();
+        // cp integrity checks
+        Assert.assertTrue(newCp != null);
+        Assert.assertTrue(newCp.getWindowOffset() == cp
+            .getWindowOffset());
+        Assert.assertTrue(newCp.getConsumptionMode() == cp
+            .getConsumptionMode());
+        // skipped store test;
+        Thread.sleep(delayMs);
+      }
+      Assert.assertEquals(ccp.getnStores(), expectedActualStores);
+    }
+    finally
+    {
+      ClusterCheckpointPersistenceProvider.close(clusterName);
+>>>>>>> YOURS

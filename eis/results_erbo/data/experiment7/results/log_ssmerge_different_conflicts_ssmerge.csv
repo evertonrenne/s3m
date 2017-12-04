@@ -1,0 +1,87 @@
+file;ssmergeConf
+/experiment_ambrose/projects/ambrose/revisions/rev_abe0afe_682cd4a/rev_abe0afe-682cd4a/pig/src/main/java/com/twitter/ambrose/service/impl/SugiyamaLayoutTransformer.java;<<<<<<< MINE
+=======
+@Override
+  public Collection<DAGNode> transform(Collection<DAGNode> nodes) {
+    Flow flow = new Flow("sample flow", new Props());
+
+    if(nodes.size() == 1) {
+      flow.addDependencies(nodes.iterator().next().getName(), new ArrayList<String>());
+    } else {
+      for(DAGNode node : nodes) {
+        for(String successor : node.getSuccessorNames()) {
+          flow.addDependencies(successor, Arrays.asList(node.getName()));
+        }
+      }
+    }
+
+    flow.validateFlow(); // this sets levels
+    flow.printFlow();
+    if (!flow.isLayedOut()) {
+      DagLayout layout = new SugiyamaLayout(flow);
+      layout.setLayout();
+    }
+
+    for(DAGNode node : nodes) {
+      FlowNode flowNode = flow.getFlowNode(node.getName());
+
+      // invert X/Y if we're rendering in landscape
+      if (landscape) {
+        node.setX(flowNode.getY());
+        node.setY(flowNode.getX());
+      }
+      else {
+        node.setX(flowNode.getX());
+        node.setY(flowNode.getY());
+      }
+
+      node.setDagLevel(flowNode.getLevel());
+    }
+
+    return nodes;
+  }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_104bf38_e5f05a2/rev_104bf38-e5f05a2/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+=======
+@SuppressWarnings("deprecation")
+  private void addMapReduceJobState(PigJob pigJob) {
+    JobClient jobClientLocal = getJobClient();
+
+    try {
+      String id = pigJob.getId();
+      RunningJob runningJob = null;
+      try {
+    	  runningJob = jobClientLocal.getJob(id);
+      } catch (Exception e) {
+    	  log.warn("Exception while querying job status for jobId=" + id +" message: " + e.getMessage());
+    	  log.debug(e);
+    	  return;
+      }
+      
+      if (runningJob == null) {
+          log.warn("Couldn't find job status for jobId=" + id);
+          return;
+      }
+      
+      Properties jobConfProperties = getJobConfFromFile(runningJob);
+
+      JobID jobID = null;
+      try {
+        jobID = runningJob.getID();
+      } catch (NullPointerException e) {
+        log.warn("Couldn't get jobID for runningJob.");
+        return;
+      }
+      
+      TaskReport[] mapTaskReport = jobClientLocal.getMapTaskReports(jobID);
+      TaskReport[] reduceTaskReport = jobClientLocal.getReduceTaskReports(jobID);
+      if (jobConfProperties != null && jobConfProperties.size() > 0) {
+        pigJob.setConfiguration(jobConfProperties);
+      }
+      pigJob.setMapReduceJobState(
+          new MapReduceJobState(runningJob, mapTaskReport, reduceTaskReport));
+    } catch (IOException e) {
+      log.warn("Error occurred when retrieving job progress info. ", e);
+    }
+  }
+>>>>>>> YOURS

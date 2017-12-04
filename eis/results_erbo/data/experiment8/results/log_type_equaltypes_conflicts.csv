@@ -1,0 +1,17 @@
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04/metrics-spring/src/main/java/com/yammer/metrics/spring/config/AnnotationDrivenBeanDefinitionParser.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_84e7871_fc81e04/rev_84e7871-fc81e04/metrics-spring/src/main/java/com/yammer/metrics/spring/config/AnnotationDrivenBeanDefinitionParser.java;MethodDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedRequestDirector.java;FieldDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedClientConnManager.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-httpclient/src/main/java/com/yammer/metrics/httpclient/InstrumentedHttpClient.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;FieldDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;ConstructorDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/main/java/com/yammer/metrics/stats/ExponentiallyDecayingSample.java;FieldDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_8d25559_b18eb9b/rev_8d25559-b18eb9b/metrics-core/src/test/java/com/yammer/metrics/stats/tests/ExponentiallyDecayingSampleTest.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_a29c81a_c3041c6/rev_a29c81a-c3041c6/metrics-servlets/src/test/java/com/codahale/metrics/servlets/MetricsServletTest.java;ImportDeclaration
+/experiment/projects/dropwizard-metrics/revisions/rev_ce7cdff_48140b7/rev_ce7cdff-48140b7/metrics-core/src/main/java/com/codahale/metrics/JmxReporter.java;FieldDeclaration

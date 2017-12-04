@@ -1,0 +1,304 @@
+file;ssmergeConf
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+public static String getConcatedTypeNameValues(Query query, List<String> typeNames, String typeName) {
+        Set<String> queryTypeNames = query.getTypeNames();
+        if (queryTypeNames != null && queryTypeNames.size() > 0) {
+            List<String> allNames = new ArrayList<String>(queryTypeNames);
+            for (String name : typeNames) {
+                if (!allNames.contains(name)) {
+                    allNames.add(name);
+                }
+            }
+            return getConcatedTypeNameValues(allNames, typeName);
+        } else {
+            return getConcatedTypeNameValues(typeNames, typeName);
+        }
+    }
+=======
+public static String getConcatedTypeNameValues(Query query, List<String> typeNames, String typeName) {
+		Set<String> queryTypeNames = query.getTypeNames();
+		if (queryTypeNames != null && queryTypeNames.size() > 0) {
+			List<String> allNames = new ArrayList<String>(queryTypeNames);
+			for (String name : typeNames) {
+				if (!allNames.contains(name)) {
+					allNames.add(name);
+				}
+			}
+			return getConcatedTypeNameValues(allNames, typeName);
+		} else {
+			return getConcatedTypeNameValues(typeNames, typeName);
+		}
+	}
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/TCollectorUDPWriter.java;<<<<<<< MINE
+@Override
+    protected void  sendOutput(String metricLine) throws IOException {
+        try {
+            this.out.writeBytes("put " + metricLine + "\n"); 
+        } catch (IOException e) {
+            log.error("error writing result to the output stream", e);
+            throw e;
+        }
+    }
+=======
+@Override
+    protected void  sendOutput (String metricLine) throws IOException {
+        DatagramPacket  packet;
+        byte[]          data;
+        String          formattedLine;
+
+        formattedLine = metricLine + "\n";
+
+        data = formattedLine.getBytes("UTF-8");
+        packet = new DatagramPacket(data, 0, data.length, this.address);
+
+        this.dgSocket.send(packet);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/TCollectorUDPWriter.java;<<<<<<< MINE
+@Override
+    protected void  finishOutput() throws IOException {
+        try {
+            this.out.flush();
+        } catch (IOException e) {
+            log.error("flush failed");
+            throw e;
+        }
+
+            // Read and log the response from the server for diagnostic purposes.
+
+        InputStreamReader socketInputStream = new InputStreamReader(socket.getInputStream());
+        BufferedReader bufferedSocketInputStream = new BufferedReader(socketInputStream);
+        String line;
+        while (socketInputStream.ready() && (line = bufferedSocketInputStream.readLine()) != null) {
+            log.warn("OpenTSDB says: " + line); 
+        }
+    }
+=======
+@Override
+    protected void  finishOutput() throws IOException {
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter.java;<<<<<<< MINE
+protected abstract void prepareSender() throws LifecycleException;
+=======
+protected void  prepareSender() throws LifecycleException {
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter.java;<<<<<<< MINE
+protected abstract void shutdownSender() throws LifecycleException;
+=======
+protected void  shutdownSender() throws LifecycleException {
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter.java;<<<<<<< MINE
+protected abstract void startOutput() throws IOException;
+=======
+protected void  startOutput() throws IOException {
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter.java;<<<<<<< MINE
+protected abstract void finishOutput() throws IOException;
+=======
+protected void  finishOutput() throws IOException {
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter.java;<<<<<<< MINE
+String addTags(String resultString) throws UnknownHostException {
+        resultString = addTag(resultString, "host", java.net.InetAddress.getLocalHost().getHostName());
+        if (tags != null)
+            for (Map.Entry<String, String> tagEntry : tags.entrySet()) {
+                resultString = addTag(resultString, tagEntry.getKey(), tagEntry.getValue());
+            }
+        return resultString;
+    }
+=======
+String addTags(String resultString) throws UnknownHostException {
+        if ( addHostnameTag ) {
+            resultString = addTag(resultString, "host", java.net.InetAddress.getLocalHost().getHostName());
+        }
+
+        if (tags != null) {
+            // Add the constant tag names and values.
+            for (Map.Entry<String, String> tagEntry : tags.entrySet()) {
+                resultString = addTag(resultString, tagEntry.getKey(), tagEntry.getValue());
+            }
+        }
+
+        return resultString;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter.java;<<<<<<< MINE
+String addTag(String resultString, String tagName, String tagValue) {
+
+        String tagFormat = " %s=%s";
+        resultString += String.format(tagFormat, JmxUtils.cleanupStr(tagName), JmxUtils.cleanupStr(tagValue));
+        return resultString;
+    }
+=======
+String addTag(String resultString, String tagName, String tagValue) {
+
+        String tagFormat = " %s=%s";
+        resultString += String.format(tagFormat, sanitizeString(tagName), sanitizeString(tagValue));
+        return resultString;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter.java;<<<<<<< MINE
+List<String> resultParser(Result result) throws UnknownHostException {
+        List<String> resultStrings = new LinkedList<String>();
+        Map<String, Object> values = result.getValues();
+        if (values == null)
+            return resultStrings;
+
+        String attributeName = result.getAttributeName();
+        String className = result.getClassNameAlias() == null ? result.getClassName() : result.getClassNameAlias();
+        if (values.containsKey(attributeName) && values.size() == 1) {
+            if ( JmxUtils.isNumeric(values.get(attributeName)) ) {
+                String resultString = getResultString(className, attributeName, (long)(result.getEpoch()/1000L), values.get(attributeName));
+                resultString = addTags(resultString);
+                if (getTypeNames().size() > 0) {
+                    resultString = addTag(resultString, StringUtils.join(getTypeNames(), ""), getConcatedTypeNameValues(result.getTypeName()));
+                }
+                resultStrings.add(resultString);
+            }
+            else {
+                log.debug("discarding non-numeric value for attribute {}; value={}", attributeName,
+                          values.get(attributeName));
+            }
+        } else {
+            for (Map.Entry<String, Object> valueEntry: values.entrySet() ) {
+                if ( JmxUtils.isNumeric(valueEntry.getValue()) ) {
+                    String resultString = getResultString(className, attributeName, (long)(result.getEpoch()/1000L), valueEntry.getValue(), tagName, valueEntry.getKey());
+                    resultString = addTags(resultString);
+                    if (getTypeNames().size() > 0) {
+                        resultString = addTag(resultString, StringUtils.join(getTypeNames(), ""), getConcatedTypeNameValues(result.getTypeName()));
+                    }
+                    resultStrings.add(resultString);
+                }
+                else {
+                    log.debug("discarding non-numeric value for attribute {}; value={}", attributeName,
+                              valueEntry.getValue());
+                }
+            }
+        }
+        return resultStrings;
+    }
+=======
+List<String> resultParser(Result result) throws UnknownHostException {
+        List<String> resultStrings = new LinkedList<String>();
+        Map<String, Object> values = result.getValues();
+        if (values == null)
+            return resultStrings;
+
+        String attributeName = result.getAttributeName();
+        String className = result.getClassNameAlias() == null ? result.getClassName() : result.getClassNameAlias();
+        if (values.containsKey(attributeName) && values.size() == 1) {
+            if ( JmxUtils.isNumeric(values.get(attributeName)) ) {
+                String metricName = this.metricNameStrategy.formatName(result);
+                String resultString = getResultString(metricName, (long)(result.getEpoch()/1000L), values.get(attributeName));
+                resultString = addTags(resultString);
+                if (getTypeNames().size() > 0) {
+                    resultString = this.addTypeNamesTags(result, resultString);
+                }
+                resultStrings.add(resultString);
+            }
+            else {
+                log.debug("discarding non-numeric value for attribute {}; value={}", attributeName,
+                          values.get(attributeName));
+            }
+        } else {
+            for (Map.Entry<String, Object> valueEntry: values.entrySet() ) {
+                if ( JmxUtils.isNumeric(valueEntry.getValue()) ) {
+                    String metricName = this.metricNameStrategy.formatName(result);
+                    String resultString = getResultString(metricName, (long)(result.getEpoch()/1000L), valueEntry.getValue());
+                    resultString = addTag(resultString, tagName, valueEntry.getKey());
+                    resultString = addTags(resultString);
+
+                    if (getTypeNames().size() > 0) {
+                        resultString = this.addTypeNamesTags(result, resultString);
+                    }
+                    resultStrings.add(resultString);
+                }
+                else {
+                    log.debug("discarding non-numeric value for attribute {}; value={}", attributeName,
+                              valueEntry.getValue());
+                }
+            }
+        }
+        return resultStrings;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBGenericWriter.java;<<<<<<< MINE
+@Override
+    public void start() throws LifecycleException {
+        host = (String) this.getSettings().get(HOST);
+        port = (Integer) this.getSettings().get(PORT);
+        tags = (Map<String, String>) this.getSettings().get("tags");
+        tagName = this.getStringSetting("tagName", "type");
+
+        this.prepareSender();
+    }
+=======
+@Override
+    public void start() throws LifecycleException {
+        host = (String) this.getSettings().get(HOST);
+        port = (Integer) this.getSettings().get(PORT);
+        tags = (Map<String, String>) this.getSettings().get("tags");
+
+        tagName            = this.getStringSetting("tagName", "type");
+        mergeTypeNamesTags = this.getBooleanSetting("mergeTypeNamesTags", DEFAULT_MERGE_TYPE_NAMES_TAGS);
+        addHostnameTag     = this.getBooleanSetting("addHostnameTag", this.getAddHostnameTagDefault());
+
+        this.setupNamingStrategies();
+        this.prepareSender();
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/model/output/OpenTSDBWriterTests.java;<<<<<<< MINE
+protected void	validateMergedTypeNameValues (List<String> result, boolean mergedInd) {
+		if ( mergedInd ) {
+			assertEquals(1, result.size());
+			assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+			assertTrue(result.get(0).matches(".*\\btype=x-att1-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bTypeGroupNameMissing=x-type-x_x-group-x_x-name-x\\b.*"));
+		}
+		else {
+			assertEquals(1, result.size());
+			assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+			assertTrue(result.get(0).matches(".*\\btype=x-att1-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bType=x-type-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bGroup=x-group-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bName=x-name-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bMissing=(\\s.*|$)"));
+		}
+	}
+=======
+protected void	validateMergedTypeNameValues (List<String> result, boolean mergedInd) {
+		LOG.info("result string = {}", result.get(0));
+		if ( mergedInd ) {
+			assertEquals(1, result.size());
+			assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+			assertTrue(result.get(0).matches(".*\\btype=x-att1-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bTypeGroupNameMissing=x-type-x_x-group-x_x-name-x\\b.*"));
+		}
+		else {
+			assertEquals(1, result.size());
+			assertTrue(result.get(0).matches("^X-DOMAIN.PKG.CLASS-X\\.X-ATT-X 0 120021.*"));
+			assertTrue(result.get(0).matches(".*\\btype=x-att1-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bType=x-type-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bGroup=x-group-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bName=x-name-x\\b.*"));
+			assertTrue(result.get(0).matches(".*\\bMissing=(\\s.*|$)"));
+		}
+	}
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_a0fcb00_86b58a8/rev_a0fcb00-86b58a8/jmxtrans-core/src/test/java/com/googlecode/jmxtrans/JmxTransformerIT.java;<<<<<<< MINE
+		jmxTransDummyApp = new JmxTransDummyApp("integration-test.json");
+		jmxTransDummyApp.start();
+=======
+		JmxTransConfiguration configuration = new JmxTransConfiguration();
+		configuration.setRunPeriod(1);
+		configuration.setProcessConfigFile(file("integration-test.json"));
+		Injector injector = JmxTransModule.createInjector(configuration);
+		jmxTransformer = injector.getInstance(JmxTransformer.class);
+		jmxTransformer.start();
+>>>>>>> YOURS

@@ -1,0 +1,25 @@
+revision;file;leftContent;rightContent;conflict
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_75ff5b5_3275939/rev_75ff5b5-3275939.revisions;/src/main/java/org/elasticsearch/index/query/QueryBuilder.java;BytesReference buildAsBytes(XContentType contentType) throws ElasticsearchException;;BytesReferencebuildAsBytes(XContentTypecontentType);;
+    BytesReference buildAsBytes(XContentType contentType) throws ElasticsearchException;
+
+    /**
+     * Create a {@link Query} based on this QueryBuilder
+     * @param parseContext additional information needed to construct the queries
+     * @return the {@link Query}
+     * @throws QueryParsingException
+     * @throws IOException
+     */
+    Query toQuery(QueryParseContext parseContext) throws QueryParsingException, IOException;
+=======
+    BytesReference buildAsBytes(XContentType contentType);
+
+
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_61e9461_59d9f7e/rev_61e9461-59d9f7e.revisions;/src/main/java/org/elasticsearch/index/query/TemplateQueryBuilder.java;public static final String NAME = "template";;private Template template;;
+    /** Name to reference this type of query. */
+    public static final String NAME = "template";
+
+=======
+    /** Template to fill. */
+    private Template template;
+
+

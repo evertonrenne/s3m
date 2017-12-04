@@ -1,0 +1,4436 @@
+revision;file;nodeIdentifier1;;nodeIdentifier2;conflict
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/ProgrammignLanguage.java;RubyArray step_matches(String step_name, String formatted_step_name);RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable;
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name);
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+}=======
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable;
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/ProgrammignLanguage.java;void load_code_file(String file) throws Throwable;void load_code_file(String file) throws Throwable;
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name);
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+}=======
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable;
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/ProgrammignLanguage.java;void begin_scenario() throws Throwable;void begin_scenario() throws Throwable;
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name);
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+}=======
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable;
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/ProgrammignLanguage.java;void end_scenario() throws Throwable;void end_scenario() throws Throwable;
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name);
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+}=======
+package cuke4duke.internal.language;
+
+import org.jruby.RubyArray;
+
+public interface ProgrammignLanguage {
+    RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable;
+
+    void load_code_file(String file) throws Throwable;
+
+    void begin_scenario() throws Throwable;
+
+    void end_scenario() throws Throwable;
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;protected final LanguageMixin languageMixin;protected final LanguageMixin languageMixin;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;private List<StepDefinition> stepDefinitions;private List<StepDefinition> stepDefinitions;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;private List<Hook> befores;private List<Hook> befores;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;private List<Hook> afters;private List<Hook> afters;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public AbstractProgrammingLanguage(LanguageMixin languageMixin) ;public AbstractProgrammingLanguage(LanguageMixin languageMixin) ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;final public RubyArray step_matches(String step_name, String formatted_step_name) ;final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) ;public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public final void begin_scenario() throws Throwable ;public final void begin_scenario() throws Throwable ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;protected void clearHooksAndStepDefinitions() ;protected void clearHooksAndStepDefinitions() ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public final void end_scenario() throws Throwable ;public final void end_scenario() throws Throwable ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public void addBeforeHook(Hook before) ;public void addBeforeHook(Hook before) ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public void addStepDefinition(StepDefinition stepDefinition) ;public void addStepDefinition(StepDefinition stepDefinition) ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public void addAfterHook(Hook after) ;public void addAfterHook(Hook after) ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;protected abstract void prepareScenario() throws Throwable;protected abstract void prepareScenario() throws Throwable;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public abstract void cleanupScenario() throws Throwable;public abstract void cleanupScenario() throws Throwable;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public void availableStepDefinition(String regexp_source, String file_colon_line) ;public void availableStepDefinition(String regexp_source, String file_colon_line) ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50.revisions;/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractProgrammingLanguage.java;public void invokedStepDefinition(String regexp_source, String file_colon_line) ;public void invokedStepDefinition(String regexp_source, String file_colon_line) ;
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.*;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+}=======
+package cuke4duke.internal.language;
+
+import cuke4duke.internal.JRuby;
+import org.jruby.RubyArray;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractProgrammingLanguage implements ProgrammignLanguage {
+    protected final LanguageMixin languageMixin;
+    private List<StepDefinition> stepDefinitions;
+    private List<Hook> befores;
+    private List<Hook> afters;
+
+    public AbstractProgrammingLanguage(LanguageMixin languageMixin) {
+        this.languageMixin = languageMixin;
+    }
+
+    final public RubyArray step_matches(String step_name, String formatted_step_name) throws Throwable {
+        return JRuby.newArray(step_match_list(step_name, formatted_step_name));
+    }
+
+    public abstract void load_code_file(String file) throws Throwable;
+
+    public final List<IRubyObject> step_match_list(String step_name, String formatted_step_name) throws Throwable {
+        List<IRubyObject> matches = new ArrayList<IRubyObject>();
+        for(StepDefinition stepDefinition : stepDefinitions){
+            List<StepArgument> arguments = stepDefinition.arguments_from(step_name);
+            if(arguments != null){
+                matches.add(languageMixin.create_step_match(stepDefinition, step_name, formatted_step_name, arguments));
+            }
+        }
+        return matches;
+    }
+
+    public final void begin_scenario() throws Throwable {
+        prepareScenario();
+        for(Hook before : befores){
+            before.invoke("before", null);
+        }
+    }
+
+    protected void clearHooksAndStepDefinitions() {
+        befores = new ArrayList<Hook>();
+        stepDefinitions = new ArrayList<StepDefinition>();
+        afters = new ArrayList<Hook>();
+    }
+
+    public final void end_scenario() throws Throwable {
+        for(Hook after : afters){
+            after.invoke("after", null);
+        }
+        cleanupScenario();
+    }
+
+    public void addBeforeHook(Hook before) {
+        befores.add(before);
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    public void addAfterHook(Hook after) {
+        afters.add(after);
+    }
+
+    protected abstract void prepareScenario() throws Throwable;
+
+    public abstract void cleanupScenario() throws Throwable;
+
+    public void availableStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.available_step_definition(regexp_source, file_colon_line);
+    }
+
+    public void invokedStepDefinition(String regexp_source, String file_colon_line) {
+        languageMixin.invoked_step_definition(regexp_source, file_colon_line);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;private RubyObject hook;private RubyObject hook;
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;private int order;private int order;
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;private final TagExpression tagExpression;private final TagExpression tagExpression;
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) ;public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) ;
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;@Override    public void execute(ScenarioResult scenarioResult) throws Throwable ;@Override    public void execute(ScenarioResult scenarioResult) throws Throwable ;
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;@Override    public boolean matches(Collection<String> tags) ;@Override    public boolean matches(Collection<String> tags) ;
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_697c16f_df04a2b/rev_697c16f-df04a2b.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;@Override    public int getOrder() ;@Override    public int getOrder() ;
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;private RubyObject hook;private RubyObject hook;
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;private int order;private int order;
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;private final TagExpression tagExpression;private final TagExpression tagExpression;
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) ;public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) ;
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;@Override    public void execute(ScenarioResult scenarioResult) throws Throwable ;@Override    public void execute(ScenarioResult scenarioResult) throws Throwable ;
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;@Override    public boolean matches(Collection<String> tags) ;@Override    public boolean matches(Collection<String> tags) ;
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df04a2b_697c16f/rev_df04a2b-697c16f.revisions;/jruby/src/main/java/cucumber/runtime/jruby/JRubyHookDefinition.java;@Override    public int getOrder() ;@Override    public int getOrder() ;
+package cucumber.runtime.jruby;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+import gherkin.TagExpression;
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+}=======
+package cucumber.runtime.jruby;
+
+import static java.util.Arrays.asList;
+import gherkin.TagExpression;
+
+import java.util.Collection;
+
+import org.jruby.RubyObject;
+import org.jruby.runtime.builtin.IRubyObject;
+
+import cucumber.runtime.HookDefinition;
+import cucumber.runtime.ScenarioResult;
+
+public class JRubyHookDefinition implements HookDefinition {
+
+    private RubyObject hook;
+    private int order;
+    private final TagExpression tagExpression;
+
+    public JRubyHookDefinition(String[] tagExpressions, RubyObject hook) {
+        tagExpression = new TagExpression(asList(tagExpressions));
+        this.order = 0;
+        this.hook = hook;
+    }
+
+    @Override
+    public void execute(ScenarioResult scenarioResult) throws Throwable {
+        IRubyObject[] jrybyArgs = new IRubyObject[0];
+        hook.callMethod("execute", jrybyArgs);
+    }
+
+    @Override
+    public boolean matches(Collection<String> tags) {
+        return tagExpression.eval(tags);
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05.revisions;/examples/java-calculator/src/main/java/cucumber/examples/java/calculator/DateCalculator.java;private Date now;private Date now;
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+public class DateCalculator {
+	
+	private Date now;
+
+	public DateCalculator(Date now) {
+		super();
+		this.now = now;
+	}
+
+	public String isDateInThePast(Date date) {
+		if(date.before(now))
+			return "yes";
+		else
+			return "no";
+	}
+	
+	
+
+}=======
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+public class DateCalculator {
+    private Date now;
+
+    public DateCalculator(Date now) {
+        this.now = now;
+    }
+
+    public String isDateInThePast(Date date) {
+        return (date.before(now)) ? "yes" : "no";
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05.revisions;/examples/java-calculator/src/main/java/cucumber/examples/java/calculator/DateCalculator.java;public DateCalculator(Date now) ;public DateCalculator(Date now) ;
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+public class DateCalculator {
+	
+	private Date now;
+
+	public DateCalculator(Date now) {
+		super();
+		this.now = now;
+	}
+
+	public String isDateInThePast(Date date) {
+		if(date.before(now))
+			return "yes";
+		else
+			return "no";
+	}
+	
+	
+
+}=======
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+public class DateCalculator {
+    private Date now;
+
+    public DateCalculator(Date now) {
+        this.now = now;
+    }
+
+    public String isDateInThePast(Date date) {
+        return (date.before(now)) ? "yes" : "no";
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05.revisions;/examples/java-calculator/src/main/java/cucumber/examples/java/calculator/DateCalculator.java;public String isDateInThePast(Date date) ;public String isDateInThePast(Date date) ;
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+public class DateCalculator {
+	
+	private Date now;
+
+	public DateCalculator(Date now) {
+		super();
+		this.now = now;
+	}
+
+	public String isDateInThePast(Date date) {
+		if(date.before(now))
+			return "yes";
+		else
+			return "no";
+	}
+	
+	
+
+}=======
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+public class DateCalculator {
+    private Date now;
+
+    public DateCalculator(Date now) {
+        this.now = now;
+    }
+
+    public String isDateInThePast(Date date) {
+        return (date.before(now)) ? "yes" : "no";
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05.revisions;/examples/java-calculator/src/test/java/cucumber/examples/java/calculator/DateStepdefs.java;String result;private String result;
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+import cucumber.annotation.DateFormat;
+import cucumber.annotation.en.Given;
+import cucumber.annotation.en.Then;
+import cucumber.annotation.en.When;
+import static org.junit.Assert.*;
+
+public class DateStepdefs {
+
+    String result;
+    private DateCalculator calculator;
+
+    @Given("^today is (.+)$")
+    public void today_is_(@DateFormat("yyyy-MM-dd") Date date) {
+        calculator = new DateCalculator(date);
+    }
+
+    @Then("^the result should be (.+)$")
+    public void the_result_should_be_(String expectedResult) {
+        assertEquals(expectedResult, result);
+    }
+
+    @When("^I ask if (.+) in in the past$")
+    public void I_ask_how_many_days_ago_was(Date date) {
+        result = calculator.isDateInThePast(date);
+    }
+}=======
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+import cucumber.annotation.DateFormat;
+import cucumber.annotation.en.Given;
+import cucumber.annotation.en.Then;
+import cucumber.annotation.en.When;
+import static org.junit.Assert.*;
+
+public class DateStepdefs {
+
+    private String result;
+    private DateCalculator calculator;
+
+    @Given("^today is (.+)$")
+    public void today_is(@DateFormat("yyyy-MM-dd") Date date) {
+        calculator = new DateCalculator(date);
+    }
+
+    @When("^I ask if (.+) is in the past$")
+    public void I_ask_if_date_is_in_the_past(Date date) {
+        result = calculator.isDateInThePast(date);
+    }
+
+    @Then("^the result should be (.+)$")
+    public void the_result_should_be(String expectedResult) {
+        assertEquals(expectedResult, result);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_addf7a9_199dc05/rev_addf7a9-199dc05.revisions;/examples/java-calculator/src/test/java/cucumber/examples/java/calculator/DateStepdefs.java;private DateCalculator calculator;private DateCalculator calculator;
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+import cucumber.annotation.DateFormat;
+import cucumber.annotation.en.Given;
+import cucumber.annotation.en.Then;
+import cucumber.annotation.en.When;
+import static org.junit.Assert.*;
+
+public class DateStepdefs {
+
+    String result;
+    private DateCalculator calculator;
+
+    @Given("^today is (.+)$")
+    public void today_is_(@DateFormat("yyyy-MM-dd") Date date) {
+        calculator = new DateCalculator(date);
+    }
+
+    @Then("^the result should be (.+)$")
+    public void the_result_should_be_(String expectedResult) {
+        assertEquals(expectedResult, result);
+    }
+
+    @When("^I ask if (.+) in in the past$")
+    public void I_ask_how_many_days_ago_was(Date date) {
+        result = calculator.isDateInThePast(date);
+    }
+}=======
+package cucumber.examples.java.calculator;
+
+import java.util.Date;
+
+import cucumber.annotation.DateFormat;
+import cucumber.annotation.en.Given;
+import cucumber.annotation.en.Then;
+import cucumber.annotation.en.When;
+import static org.junit.Assert.*;
+
+public class DateStepdefs {
+
+    private String result;
+    private DateCalculator calculator;
+
+    @Given("^today is (.+)$")
+    public void today_is(@DateFormat("yyyy-MM-dd") Date date) {
+        calculator = new DateCalculator(date);
+    }
+
+    @When("^I ask if (.+) is in the past$")
+    public void I_ask_if_date_is_in_the_past(Date date) {
+        result = calculator.isDateInThePast(date);
+    }
+
+    @Then("^the result should be (.+)$")
+    public void the_result_should_be(String expectedResult) {
+        assertEquals(expectedResult, result);
+    }
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_442c4ed_4439178/rev_442c4ed-4439178.revisions;/core/src/test/java/cucumber/runtime/RuntimeTest.java;@Test    public void should_throw_cucumer_exception_if_no_backends_are_found() throws Exception ;@Test    public void should_throw_cucumer_exception_if_no_backends_are_found() throws Exception ;
+    @Test
+    public void should_throw_cucumer_exception_if_no_backends_are_found() throws Exception {
+        try {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            new Runtime(new ClasspathResourceLoader(classLoader), classLoader, Collections.<Backend>emptyList(),
+                    new RuntimeOptions(new Properties()));
+            fail("A CucumberException should have been thrown");
+        } catch (CucumberException e) {
+            assertEquals("No backends were found. Please make sure you have a backend module on your CLASSPATH.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void should_add_passed_result_to_the_summary_counter() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Reporter reporter = mock(Reporter.class);
+        StepDefinitionMatch match = mock(StepDefinitionMatch.class);
+
+        Runtime runtime = createRuntimeWithMockedGlue(match, "--monochrome");
+        runtime.buildBackendWorlds(reporter, Collections.<Tag>emptySet());
+        runStep(reporter, runtime);
+        runtime.disposeBackendWorlds();
+        runtime.printSummary(new PrintStream(baos));
+
+        assertThat(baos.toString(), startsWith(String.format(
+                "1 Scenarios (1 passed)%n" +
+                "1 Steps (1 passed)%n")));
+    }
+
+    @Test
+    public void should_add_pending_result_to_the_summary_counter() throws Throwable {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Reporter reporter = mock(Reporter.class);
+        StepDefinitionMatch match = createExceptionThrowingMatch(new PendingException());
+
+        Runtime runtime = createRuntimeWithMockedGlue(match, "--monochrome");
+        runtime.buildBackendWorlds(reporter, Collections.<Tag>emptySet());
+        runStep(reporter, runtime);
+        runtime.disposeBackendWorlds();
+        runtime.printSummary(new PrintStream(baos));
+
+        assertThat(baos.toString(), startsWith(String.format(
+                "1 Scenarios (1 pending)%n" +
+                "1 Steps (1 pending)%n")));
+    }
+
+    @Test
+    public void should_add_failed_result_to_the_summary_counter() throws Throwable {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Reporter reporter = mock(Reporter.class);
+        StepDefinitionMatch match = createExceptionThrowingMatch(new Exception());
+
+        Runtime runtime = createRuntimeWithMockedGlue(match, "--monochrome");
+        runtime.buildBackendWorlds(reporter, Collections.<Tag>emptySet());
+        runStep(reporter, runtime);
+        runtime.disposeBackendWorlds();
+        runtime.printSummary(new PrintStream(baos));
+
+        assertThat(baos.toString(), startsWith(String.format(
+                "1 Scenarios (1 failed)%n" +
+                "1 Steps (1 failed)%n")));
+    }
+
+    @Test
+    public void should_add_ambiguous_match_as_failed_result_to_the_summary_counter() throws Throwable {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Reporter reporter = mock(Reporter.class);
+
+        Runtime runtime = createRuntimeWithMockedGlueWithAmbiguousMatch("--monochrome");
+        runtime.buildBackendWorlds(reporter, Collections.<Tag>emptySet());
+        runStep(reporter, runtime);
+        runtime.disposeBackendWorlds();
+        runtime.printSummary(new PrintStream(baos));
+
+        assertThat(baos.toString(), startsWith(String.format(
+                "1 Scenarios (1 failed)%n" +
+                "1 Steps (1 failed)%n")));
+    }
+
+    @Test
+    public void should_add_skipped_result_to_the_summary_counter() throws Throwable {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Reporter reporter = mock(Reporter.class);
+        StepDefinitionMatch match = createExceptionThrowingMatch(new Exception());
+
+        Runtime runtime = createRuntimeWithMockedGlue(match, "--monochrome");
+        runtime.buildBackendWorlds(reporter, Collections.<Tag>emptySet());
+        runStep(reporter, runtime);
+        runStep(reporter, runtime);
+        runtime.disposeBackendWorlds();
+        runtime.printSummary(new PrintStream(baos));
+
+        assertThat(baos.toString(), startsWith(String.format(
+                "1 Scenarios (1 failed)%n" +
+                "2 Steps (1 failed, 1 skipped)%n")));
+    }
+
+    @Test
+    public void should_add_undefined_result_to_the_summary_counter() throws Throwable {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Reporter reporter = mock(Reporter.class);
+
+        Runtime runtime = createRuntimeWithMockedGlue(null, "--monochrome");
+        runtime.buildBackendWorlds(reporter, Collections.<Tag>emptySet());
+        runStep(reporter, runtime);
+        runtime.disposeBackendWorlds();
+        runtime.printSummary(new PrintStream(baos));
+
+        assertThat(baos.toString(), startsWith(String.format(
+                "1 Scenarios (1 undefined)%n" +
+                "1 Steps (1 undefined)%n")));
+    }
+
+    @Test
+    public void should_fail_the_scenario_if_before_fails() throws Throwable {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Reporter reporter = mock(Reporter.class);
+        StepDefinitionMatch match = mock(StepDefinitionMatch.class);
+        HookDefinition hook = createExceptionThrowingHook();
+
+        Runtime runtime = createRuntimeWithMockedGlue(match, hook, true, "--monochrome");
+        runtime.buildBackendWorlds(reporter, Collections.<Tag>emptySet());
+        runtime.runBeforeHooks(reporter, Collections.<Tag>emptySet());
+        runStep(reporter, runtime);
+        runtime.disposeBackendWorlds();
+        runtime.printSummary(new PrintStream(baos));
+
+        assertThat(baos.toString(), startsWith(String.format(
+                "1 Scenarios (1 failed)%n" +
+                "1 Steps (1 skipped)%n")));
+   }
+
+    @Test
+    public void should_fail_the_scenario_if_after_fails() throws Throwable {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Reporter reporter = mock(Reporter.class);
+        StepDefinitionMatch match = mock(StepDefinitionMatch.class);
+        HookDefinition hook = createExceptionThrowingHook();
+
+        Runtime runtime = createRuntimeWithMockedGlue(match, hook, false, "--monochrome");
+        runtime.buildBackendWorlds(reporter, Collections.<Tag>emptySet());
+        runStep(reporter, runtime);
+        runtime.runAfterHooks(reporter, Collections.<Tag>emptySet());
+        runtime.disposeBackendWorlds();
+        runtime.printSummary(new PrintStream(baos));
+
+        assertThat(baos.toString(), startsWith(String.format(
+                "1 Scenarios (1 failed)%n" +
+                "1 Steps (1 passed)%n")));
+   }
+
+    private StepDefinitionMatch createExceptionThrowingMatch(Exception exception) throws Throwable {
+        StepDefinitionMatch match = mock(StepDefinitionMatch.class);
+        doThrow(exception).when(match).runStep((I18n)any());
+        return match;
+    }
+
+    private HookDefinition createExceptionThrowingHook() throws Throwable {
+        HookDefinition hook = mock(HookDefinition.class);
+        when(hook.matches(anyCollectionOf(Tag.class))).thenReturn(true);
+        doThrow(new Exception()).when(hook).execute((Scenario)any());
+        return hook;
+    }
+
+    public void runStep(Reporter reporter, Runtime runtime) {
+        Step step = mock(Step.class);
+        I18n i18n = mock(I18n.class);
+        runtime.runStep("<uri>", step, reporter, i18n);
+    }
+
+=======
+    @Test
+    public void should_throw_cucumer_exception_if_no_backends_are_found() throws Exception {
+        try {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            new Runtime(new ClasspathResourceLoader(classLoader), classLoader, Collections.<Backend>emptyList(),
+                    new RuntimeOptions(new Properties()));
+            fail("A CucumberException should have been thrown");
+        } catch (CucumberException e) {
+            assertEquals("No backends were found. Please make sure you have a backend module on your CLASSPATH.", e.getMessage());
+        }
+    }
+
+
+

@@ -1,0 +1,78 @@
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+=======
+    /**
+     * Add the hostname tag "host" with the name of the host by default since OpenTSDB otherwise does not have this
+     * information.
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+=======
+    /**
+     * Prepare for sending metrics.
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+=======
+    /**
+     * Shutdown the sender as it will no longer be used to send metrics.
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+=======
+		clean = clean.replace("/", "_");
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+=======
+	 * Given a typeName string, create a Map with every key and value in the typeName.
+	 * For example:
+	 *
+	 * typeName=name=PS Eden Space,type=MemoryPool
+	 *
+	 * Returns a Map with the following key/value pairs (excluding the quotes):
+	 *
+	 *  "name"  =>  "PS Eden Space"
+	 *  "type"  =>  "MemoryPool"
+	 *
+	 * @param typeNameStr
+	 *            the type name str
+	 * @return Map<String, String> of type-name-key / value pairs.
+	 */
+	public static Map<String, String>   getTypeNameValueMap (String typeNameStr) {
+		if ( typeNameStr == null ) {
+			return  java.util.Collections.EMPTY_MAP;
+		}
+
+		HashMap result = new HashMap();
+		String[] tokens = typeNameStr.split(",");
+
+		for (String oneToken : tokens) {
+			if ( oneToken.length() > 0 ) {
+				String[] keyValue = splitTypeNameValue(oneToken);
+				result.put(keyValue[0], keyValue[1]);
+			}
+		}
+		return result;
+	}
+
+	/**
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/util/JmxConnectionFactory.java;<<<<<<< MINE
+=======
+            conn.getMBeanServerConnection().getMBeanCount();
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/util/JmxUtilsTests.java;<<<<<<< MINE
+=======
+ * @author Arthur Naseef Date: 02/23/2014
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b/src/com/googlecode/jmxtrans/model/output/LibratoWriter.java;<<<<<<< MINE
+=======
+		this.httpUserAgent =
+				"jmxtrans-standalone/1 " + "(" +
+						System.getProperty("java.vm.name") + "/" + System.getProperty("java.version") + "; " +
+						System.getProperty("os.name") + "-" + System.getProperty("os.arch") + "/" + System.getProperty("os.version")
+						+ ")";
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_fe2250d_92e252b/rev_fe2250d-92e252b/src/com/googlecode/jmxtrans/model/output/LibratoWriter.java;<<<<<<< MINE
+=======
+			urlConnection.setRequestProperty("User-Agent", httpUserAgent);
+>>>>>>> YOURS

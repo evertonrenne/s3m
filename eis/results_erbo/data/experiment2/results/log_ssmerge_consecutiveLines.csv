@@ -1,0 +1,43 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_7bfd794_666efaf/rev_7bfd794-666efaf;/src/com/googlecode/jmxtrans/model/output/KeyOutWriter;validateSetup(Query);		String fileStr = (String) this.getSettings().get("outputFile");
+		if (fileStr == null) {
+			throw new ValidationException("You must specify an outputFile setting.", query);
+		}
+		// Check if we've already created a logger for this file. If so, use it.
+		if (loggers.containsKey(fileStr)) {
+			logger = loggers.get(fileStr);
+			return;
+		}
+		// need to create a logger
+		try {
+			logger = initLogger(fileStr);
+			loggers.put(fileStr, logger);
+		} catch (IOException e) {
+			throw new ValidationException("Failed to setup log4j", query);
+		};		String fileStr = (String) this.getSettings().get("outputFile");
+		if (fileStr == null) {
+			throw new ValidationException("You must specify an outputFile setting.", query);
+		}
+		// Check if we've already created a logger for this file. If so, use it.
+		if (loggers.containsKey(fileStr)) {
+			logger = loggers.get(fileStr);
+			return;
+		}
+		// need to create a logger
+		try {
+			logger = loggers.putIfAbsent(fileStr, initLogger(fileStr));
+		} catch (IOException e) {
+			throw new ValidationException("Failed to setup log4j", query);
+		};		logger = getLogger(query);
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_a0fcb00_86b58a8/rev_a0fcb00-86b58a8;/jmxtrans-core/src/test/java/com/googlecode/jmxtrans/JmxTransformerIT;startJmxTrans();		jmxTransDummyApp = new JmxTransDummyApp("integration-test.json");
+		jmxTransDummyApp.start();;		JmxTransConfiguration configuration = new JmxTransConfiguration();
+		configuration.setRunPeriod(1);
+		configuration.setJsonFile(file("integration-test.json"));
+		Injector injector = JmxTransModule.createInjector(configuration);
+		jmxTransformer = injector.getInstance(JmxTransformer.class);
+		jmxTransformer.start();;		JmxTransConfiguration configuration = new JmxTransConfiguration();
+		configuration.setRunPeriod(1);
+		configuration.setProcessConfigFile(file("integration-test.json"));
+		Injector injector = JmxTransModule.createInjector(configuration);
+		jmxTransformer = injector.getInstance(JmxTransformer.class);
+		jmxTransformer.start();

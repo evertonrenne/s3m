@@ -1,0 +1,3506 @@
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f46d555_e134bf0/rev_f46d555-e134bf0/src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java;<<<<<<< MINE
+=======
+    /**
+     * 	Attempt to add the output of the given {@link BeanPropertyWriter} in the given {@link ObjectNode}.
+     * 	Otherwise, add the default schema {@link JsonNode} in place of the writer's output
+     * 
+     * @param writer Bean property serializer to use to create schema value
+     * @param propertiesNode Node which the given property would exist within
+     * @param provider Provider that can be used for accessing dynamic aspects of serialization
+     * 	processing
+     * 	
+     *  {@link BeanPropertyFilter#depositSchemaProperty(BeanPropertyWriter, ObjectNode, SerializerProvider)}
+     */
+    public static void depositSchemaProperty(BeanPropertyWriter writer, ObjectNode propertiesNode, SerializerProvider provider)
+    {
+        JavaType propType = writer.getSerializationType();
+
+        // 03-Dec-2010, tatu: SchemaAware REALLY should use JavaType, but alas it doesn't...
+        Type hint = (propType == null) ? writer.getGenericPropertyType() : propType.getRawClass();
+        JsonNode schemaNode;
+        // Maybe it already has annotated/statically configured serializer?
+        JsonSerializer<Object> ser = writer.getSerializer();
+
+        try {
+            if (ser == null) { // nope
+                Class<?> serType = writer.getRawSerializationType();
+                if (serType == null) {
+                    serType = writer.getPropertyType();
+                }
+                ser = provider.findValueSerializer(serType, writer);
+            }
+            boolean isOptional = !BeanSerializerBase.isPropertyRequired(writer, provider);
+            if (ser instanceof SchemaAware) {
+                schemaNode =  ((SchemaAware) ser).getSchema(provider, hint, isOptional) ;
+            } else {  
+                schemaNode = JsonSchema.getDefaultSchemaNode(); 
+            }
+        } catch (JsonMappingException e) {
+            schemaNode = JsonSchema.getDefaultSchemaNode(); 
+            // TODO: handle in better way (why not throw?)
+        }
+        propertiesNode.put(writer.getName(), schemaNode);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/node/ObjectNode.java;<<<<<<< MINE
+
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/cfg/HandlerInstantiator.java;<<<<<<< MINE
+=======
+
+    /**
+     * Method called to construct a NamingStrategy instance used for specified
+     * class.
+     * 
+     * @since 2.1
+     */
+    public PropertyNamingStrategy namingStrategyInstance(MapperConfig<?> config,
+            Annotated annotated, Class<?> implClass) {
+        return null;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/cfg/BaseSettings.java;<<<<<<< MINE
+=======
+
+    /**
+     * Explicitly default {@link Base64Variant} to use for handling
+     * binary data (<code>byte[]</code>), used with data formats
+     * that use base64 encoding (like JSON, CSV).
+     * 
+     * @since 2.1
+     */
+    protected final Base64Variant _defaultBase64;
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/cfg/BaseSettings.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/cfg/MapperConfig.java;<<<<<<< MINE
+=======
+
+    /**
+     * Method called during deserialization if Base64 encoded content
+     * needs to be decoded. Default version just returns default Jackson
+     * uses, which is modified-mime which does not add linefeeds (because
+     * those would have to be escaped in JSON strings); but this can
+     * be configured on {@link ObjectWriter}.
+     */
+    public Base64Variant getBase64Variant() {
+        return _base.getBase64Variant();
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/cfg/MapperConfigBase.java;<<<<<<< MINE
+=======
+
+    /**
+     * Method for constructing and returning a new instance with different
+     * default {@link Base64Variant} to use with base64-encoded binary values.
+     */
+    public abstract T with(Base64Variant base64);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/annotation/JsonNaming.java;<<<<<<< MINE
+=======
+package com.fasterxml.jackson.databind.annotation;
+
+import java.lang.annotation.*;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+
+/**
+ * Annotation that can be used to indicate a {@link PropertyNamingStrategy}
+ * to use for annotated class. Overrides the global (default) strategy.
+ * 
+ * @since 2.1
+ */
+@Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@com.fasterxml.jackson.annotation.JacksonAnnotation
+public @interface JsonNaming
+{
+    public Class<? extends PropertyNamingStrategy> value();
+}>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Method for finding {@link PropertyNamingStrategy} for given
+     * class, if any specified by annotations; and if so, either return
+     * a {@link PropertyNamingStrategy} instance, or Class to use for
+     * creating instance
+     * 
+     * @return Sub-class or instance of {@link PropertyNamingStrategy}, if one
+     *   is specified for given class; null if not.
+     * 
+     * @since 2.1
+     */
+    public Object findNamingStrategy(AnnotatedClass ac) {
+        return null;
+    }    
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java;<<<<<<< MINE
+   
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java;<<<<<<< MINE
+=======
+
+    /**
+     * Factory method for constructing {@link ObjectWriter} that will
+     * use specified Base64 encoding variant for Base64-encoded binary data.
+     * 
+     * @since 2.1
+     */
+    public ObjectWriter writer(Base64Variant defaultBase64) {
+        return new ObjectWriter(this, getSerializationConfig().with(defaultBase64));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java;<<<<<<< MINE
+=======
+
+    /**
+     * Factory method for constructing {@link ObjectReader} that will
+     * use specified Base64 encoding variant for Base64-encoded binary data.
+     * 
+     * @since 2.1
+     */
+    public ObjectReader reader(Base64Variant defaultBase64) {
+        return new ObjectReader(this, getDeserializationConfig().with(defaultBase64));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java;<<<<<<< MINE
+    
+    /**
+     * Method called during deserialization if Base64 encoded content
+     * needs to be decoded. Default version just returns default Jackson
+     * uses, which is modified-mime which does not add linefeeds (because
+     * those would have to be escaped in JSON strings).
+     */
+    public Base64Variant getBase64Variant() {
+        return Base64Variants.getDefaultVariant();
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d2cdd7_2a4f66b/rev_8d2cdd7-2a4f66b/src/test/java/com/fasterxml/jackson/databind/ser/TestSimpleTypes.java;<<<<<<< MINE
+
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_70c2de9_152c17d/rev_70c2de9-152c17d/src/main/java/com/fasterxml/jackson/databind/ser/impl/SimpleBeanPropertyFilter.java;<<<<<<< MINE
+	/**
+	 * Factory method to construct filter that filters out all properties <b>except</b>
+	 * ones includes in set
+	 */
+	public static SimpleBeanPropertyFilter filterOutAllExcept(Set<String> properties) {
+		return new FilterExceptFilter(properties);
+	}
+
+	public static SimpleBeanPropertyFilter filterOutAllExcept(String... propertyArray) {
+		HashSet<String> properties = new HashSet<String>(propertyArray.length);
+		Collections.addAll(properties, propertyArray);
+		return new FilterExceptFilter(properties);
+	}
+
+	public static SimpleBeanPropertyFilter serializeAllExcept(Set<String> properties) {
+		return new SerializeExceptFilter(properties);
+	}
+
+	public static SimpleBeanPropertyFilter serializeAllExcept(String... propertyArray) {
+		HashSet<String> properties = new HashSet<String>(propertyArray.length);
+		Collections.addAll(properties, propertyArray);
+		return new SerializeExceptFilter(properties);
+	}
+=======
+    /**
+     * Factory method to construct filter that filters out all properties <b>except</b>
+     * ones includes in set
+     */
+    public static SimpleBeanPropertyFilter filterOutAllExcept(Set<String> properties) {
+        return new FilterExceptFilter(properties);
+    }
+
+    public static SimpleBeanPropertyFilter filterOutAllExcept(String... propertyArray) {
+        HashSet<String> properties = new HashSet<String>(propertyArray.length);
+        Collections.addAll(properties, propertyArray);
+        return new FilterExceptFilter(properties);
+    }
+
+    public static SimpleBeanPropertyFilter serializeAllExcept(Set<String> properties) {
+        return new SerializeExceptFilter(properties);
+    }
+
+    public static SimpleBeanPropertyFilter serializeAllExcept(String... propertyArray) {
+        HashSet<String> properties = new HashSet<String>(propertyArray.length);
+        Collections.addAll(properties, propertyArray);
+        return new SerializeExceptFilter(properties);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7d0445b_184cae3/rev_7d0445b-184cae3/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_3261453_d9c92cd/rev_3261453-d9c92cd/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java;<<<<<<< MINE
+                
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_3261453_d9c92cd/rev_3261453-d9c92cd/src/test/java/com/fasterxml/jackson/databind/introspect/TestPropertyConflicts.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_64319ad_87e4661/rev_64319ad-87e4661/src/main/java/com/fasterxml/jackson/databind/deser/std/MapDeserializer.java;<<<<<<< MINE
+=======
+    /**
+     * Turns out that these are expensive enough to create so that caching
+     * does make sense.
+     *<p>
+     * IMPORTANT: but, note, that instances CAN NOT BE CACHED if there is
+     * a value type deserializer; this caused an issue with 2.4.4 of
+     * JAXB Annotations (failing a test).
+     * It is also possible that some other settings could make deserializers
+     * un-cacheable; but on the other hand, caching can make a big positive
+     * difference with performance... so it's a hard choice.
+     * 
+     * @since 2.4.4
+     */
+    @Override
+    public boolean isCachable() {
+        return (_valueTypeDeserializer == null) && (_ignorableProperties == null);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_603991b_7d4201c/rev_603991b-7d4201c/src/main/java/com/fasterxml/jackson/databind/deser/std/UntypedObjectDeserializer.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_603991b_7d4201c/rev_603991b-7d4201c/src/main/java/com/fasterxml/jackson/databind/deser/std/UntypedObjectDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_603991b_7d4201c/rev_603991b-7d4201c/src/test/java/com/fasterxml/jackson/databind/deser/TestUntypedDeserialization.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_603991b_7d4201c/rev_603991b-7d4201c/src/test/java/com/fasterxml/jackson/databind/deser/TestUntypedDeserialization.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_54b2a5f_7d5c50b/rev_54b2a5f-7d5c50b/src/main/java/com/fasterxml/jackson/databind/util/EnumValues.java;<<<<<<< MINE
+    public SerializableString serializedValueFor(Enum<?> key) {
+        return _textual[key.ordinal()];
+    }
+
+    public Collection<SerializableString> values() {
+        return Arrays.asList(_textual);
+    }
+
+    /**
+     * Convenience accessor for getting raw Enum instances.
+     * 
+     * @since 2.6
+     */
+    public List<Enum<?>> enums() {
+        return Arrays.asList(_values);
+    }
+=======
+    /**
+     * Convenience accessor for getting raw Enum instances.
+     * 
+     * @since 2.6
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<Enum<?>> enums() {
+        return (Collection<Enum<?>>) _values.keySet();
+    }
+
+    public SerializableString serializedValueFor(Enum<?> key) { return _values.get(key); }
+    public Collection<SerializableString> values() { return _values.values(); }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f4ef389_7db1f44/rev_f4ef389-7db1f44/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java;<<<<<<< MINE
+    private final boolean _isAnnotationBundle(Annotation ann) {
+        return (_annotationIntrospector != null) && _annotationIntrospector.isAnnotationBundle(ann);
+    }
+
+=======
+    private final boolean _isAnnotationBundle(Annotation ann) {
+        return (_annotationIntrospector != null) && _annotationIntrospector.isAnnotationBundle(ann);
+    }
+
+    /**
+     * Helper method that gets methods declared in given class; usually a simple thing,
+     * but sometimes (as per [databind#785]) more complicated, depending on classloader
+     * setup.
+     *
+     * @since 2.4.7
+     */
+    protected Method[] _findClassMethods(Class<?> cls)
+    {
+        try {
+            return cls.getDeclaredMethods();
+        } catch (final NoClassDefFoundError ex) {
+            // One of the methods had a class that was not found in the cls.getClassLoader.
+            // Maybe the developer was nice and has a different class loader for this context.
+            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            if(loader == null){
+                // Nope... this is going to end poorly
+                throw ex;
+            }
+            final Class<?> contextClass;
+            try {
+                contextClass = loader.loadClass(cls.getName());
+            } catch (ClassNotFoundException e) {
+                // !!! TODO: 08-May-2015, tatu: Chain appropriately once we have JDK7 as baseline
+                //ex.addSuppressed(e); Not until 1.7
+               throw ex;
+            }
+            return contextClass.getDeclaredMethods(); // Cross fingers
+        }
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2abf5a3_5f09320/rev_2abf5a3-5f09320/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2abf5a3_5f09320/rev_2abf5a3-5f09320/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2abf5a3_5f09320/rev_2abf5a3-5f09320/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2abf5a3_5f09320/rev_2abf5a3-5f09320/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2abf5a3_5f09320/rev_2abf5a3-5f09320/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2abf5a3_5f09320/rev_2abf5a3-5f09320/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2abf5a3_5f09320/rev_2abf5a3-5f09320/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2abf5a3_5f09320/rev_2abf5a3-5f09320/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2abf5a3_5f09320/rev_2abf5a3-5f09320/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_945c545_a23ff9f/rev_945c545-a23ff9f/src/main/java/com/fasterxml/jackson/databind/deser/std/StdDelegatingDeserializer.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f4f71b9_2eafcdf/rev_f4f71b9-2eafcdf/src/test/java/com/fasterxml/jackson/databind/module/customenumkey/KeyEnum.java;<<<<<<< MINE
+=======
+package com.fasterxml.jackson.databind.module.customenumkey;
+
+/**
+ */
+public enum KeyEnum {
+    replacements,
+    rootDirectory,
+    licenseString
+}>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f4f71b9_2eafcdf/rev_f4f71b9-2eafcdf/src/test/java/com/fasterxml/jackson/databind/module/customenumkey/TestEnum.java;<<<<<<< MINE
+=======
+/******************************************************************************
+ * * This data and information is proprietary to, and a valuable trade secret
+ * * of, Basis Technology Corp.  It is given in confidence by Basis Technology
+ * * and may only be used as permitted under the license agreement under which
+ * * it has been distributed, and in no other way.
+ * *
+ * * Copyright (c) 2015 Basis Technology Corporation All rights reserved.
+ * *
+ * * The technical data and information provided herein are provided with
+ * * `limited rights', and the computer software provided herein is provided
+ * * with `restricted rights' as those terms are defined in DAR and ASPR
+ * * 7-104.9(a).
+ ******************************************************************************/
+
+package com.fasterxml.jackson.databind.module.customenumkey;
+
+/**
+ *
+ */
+public enum TestEnum {
+    RED("red"),
+    GREEN("green");
+
+    private final String code;
+
+    TestEnum(String code) {
+        this.code = code;
+    }
+
+    public static TestEnum lookup(String lower) {
+        for (TestEnum item : values()) {
+            if (item.code().equals(lower)) {
+                return item;
+            }
+        }
+        throw new IllegalArgumentException("Invalid code " + lower);
+        }
+
+    public String code() {
+        return code;
+    }
+}>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/AsArraySerializerBase.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/AsArraySerializerBase.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/AsArraySerializerBase.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/AsArraySerializerBase.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/AsArraySerializerBase.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/CollectionSerializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/ObjectArraySerializer.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/NumberSerializers.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java;<<<<<<< MINE
+    
+    /**
+     * @deprecated Since 2.5
+     */
+    @Deprecated
+    public static JsonSerializer<Object> getStdKeySerializer(JavaType keyType) {
+        return getStdKeySerializer(null, keyType.getRawClass(), true);
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+=======
+    /**
+     * Unique key we use to store a temporary lock, to prevent infinite recursion
+     * when resolving content converters (see [databind#357]).
+     *<p>
+     * NOTE: may need to revisit this if nested content converters are needed; if so,
+     * may need to create per-call lock object. But let's start with a simpler
+     * solution for now.
+     *
+     * @since 2.7
+     */
+    private final static Object CONVERTING_CONTENT_CONVERTER_LOCK = new Object();
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Default implementation specifies no format. This behavior is usually
+     * overriden by custom serializers.
+     */
+    @Override
+    public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+        throws JsonMappingException
+    {
+        visitor.expectAnyFormat(typeHint);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+=======
+
+    /**
+     * Helper method that calls necessary visit method(s) to indicate that the
+     * underlying JSON type is JSON String.
+     *
+     * @since 2.7
+     */
+    protected void visitStringFormat(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+            throws JsonMappingException {
+        if (visitor != null) {
+            /*JsonStringFormatVisitor v2 =*/ visitor.expectStringFormat(typeHint);
+        }
+    }
+
+    /**
+     * Helper method that calls necessary visit method(s) to indicate that the
+     * underlying JSON type is JSON String, but that there is a more refined
+     * logical type
+     *
+     * @since 2.7
+     */
+    protected void visitStringFormat(JsonFormatVisitorWrapper visitor, JavaType typeHint,
+            JsonValueFormat format)
+        throws JsonMappingException
+    {
+        if (visitor != null) {
+            JsonStringFormatVisitor v2 = visitor.expectStringFormat(typeHint);
+            if (v2 != null) {
+                v2.format(format);
+            }
+        }
+    }
+
+    /**
+     * Helper method that calls necessary visit method(s) to indicate that the
+     * underlying JSON type is JSON Integer number.
+     *
+     * @since 2.7
+     */
+    protected void visitIntFormat(JsonFormatVisitorWrapper visitor, JavaType typeHint,
+            NumberType numberType)
+        throws JsonMappingException
+    {
+        if (visitor != null) {
+            JsonIntegerFormatVisitor v2 = visitor.expectIntegerFormat(typeHint);
+            if (v2 != null) {
+                if (numberType != null) {
+                    v2.numberType(numberType);
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper method that calls necessary visit method(s) to indicate that the
+     * underlying JSON type is JSON Integer number, but that there is also a further
+     * format restriction involved.
+     *
+     * @since 2.7
+     */
+    protected void visitIntFormat(JsonFormatVisitorWrapper visitor, JavaType typeHint,
+            NumberType numberType, JsonValueFormat format)
+        throws JsonMappingException
+    {
+        if (visitor != null) {
+            JsonIntegerFormatVisitor v2 = visitor.expectIntegerFormat(typeHint);
+            if (v2 != null) {
+                if (numberType != null) {
+                    v2.numberType(numberType);
+                }
+                if (format != null) {
+                    v2.format(format);
+                }
+            }
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+            
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java;<<<<<<< MINE
+=======
+
+    /**
+     * Helper method that may be used to find if this deserializer has specific
+     * {@link JsonFormat} settings, either via property, or through type-specific
+     * defaulting.
+     *
+     * @param typeForDefaults Type (erased) used for finding default format settings, if any
+     *
+     * @since 2.7
+     */
+    protected JsonFormat.Value findFormatOverrides(SerializerProvider provider,
+            BeanProperty prop, Class<?> typeForDefaults)
+    {
+        if (prop != null) {
+            return prop.findPropertyFormat(provider.getConfig(), typeForDefaults);
+        }
+        // even without property or AnnotationIntrospector, may have type-specific defaults
+        return provider.getDefaultPropertyFormat(typeForDefaults);
+    }
+
+    /**
+     * Convenience method that uses {@link #findFormatOverrides} to find possible
+     * defaults and/of overrides, and then calls <code>JsonFormat.Value.getFeature(...)</code>
+     * to find whether that feature has been specifically marked as enabled or disabled.
+     * 
+     * @param typeForDefaults Type (erased) used for finding default format settings, if any
+     *
+     * @since 2.7
+     */
+    protected Boolean findFormatFeature(SerializerProvider provider,
+            BeanProperty prop, Class<?> typeForDefaults, JsonFormat.Feature feat)
+    {
+        JsonFormat.Value format = findFormatOverrides(provider, prop, typeForDefaults);
+        if (format != null) {
+            return format.getFeature(feat);
+        }
+        return null;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/MapSerializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/MapSerializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/MapSerializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/MapProperty.java;<<<<<<< MINE
+    /**
+     * @deprecated since 2.4
+     */
+    @Deprecated // since 2.4
+    public MapProperty(TypeSerializer typeSer) {
+        this(typeSer, null);
+    }
+    
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/AtomicReferenceSerializer.java;<<<<<<< MINE
+=======
+
+    /*
+    /**********************************************************
+    /* Helper methods
+    /**********************************************************
+     */
+    
+    /**
+     * Helper method that encapsulates logic of retrieving and caching required
+     * serializer.
+     */
+    private final JsonSerializer<Object> _findCachedSerializer(SerializerProvider provider,
+            Class<?> type) throws JsonMappingException
+    {
+        JsonSerializer<Object> ser = _dynamicSerializers.serializerFor(type);
+        if (ser == null) {
+            ser = _findSerializer(provider, type, _property);
+            if (_unwrapper != null) {
+                ser = ser.unwrappingSerializer(_unwrapper);
+            }
+            _dynamicSerializers = _dynamicSerializers.newWith(type, ser);
+        }
+        return ser;
+    }
+
+    private final JsonSerializer<Object> _findSerializer(SerializerProvider provider,
+            Class<?> type, BeanProperty prop) throws JsonMappingException
+    {
+        return provider.findTypedValueSerializer(type, true, prop);
+    }
+
+    private final JsonSerializer<Object> _findSerializer(SerializerProvider provider,
+        JavaType type, BeanProperty prop) throws JsonMappingException
+    {
+        return provider.findTypedValueSerializer(type, true, prop);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdJdkSerializers.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StringSerializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StringSerializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StaticListSerializerBase.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/EnumSerializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/EnumSerializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/StdArraySerializers.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/std/ClassSerializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/VirtualBeanPropertyWriter.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/BasicSerializerFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/BasicSerializerFactory.java;<<<<<<< MINE
+    
+    /**
+     * Helper method used to encapsulate details of annotation-based type coercion
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends JavaType> T modifyTypeByAnnotation(SerializationConfig config,
+            Annotated a, T type)
+    {
+        // first: let's check class for the instance itself:
+        Class<?> superclass = config.getAnnotationIntrospector().findSerializationType(a);
+        if (superclass != null) {
+            try {
+                type = (T) type.widenBy(superclass);
+            } catch (IllegalArgumentException iae) {
+                throw new IllegalArgumentException("Failed to widen type "+type+" with concrete-type annotation (value "+superclass.getName()+"), method '"+a.getName()+"': "+iae.getMessage());
+            }
+        }
+        return modifySecondaryTypesByAnnotation(config, a, type);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <T extends JavaType> T modifySecondaryTypesByAnnotation(SerializationConfig config,
+            Annotated a, T type)
+    {
+        AnnotationIntrospector intr = config.getAnnotationIntrospector();
+        // then key class
+        if (type.isContainerType()) {
+            Class<?> keyClass = intr.findSerializationKeyType(a, type.getKeyType());
+            if (keyClass != null) {
+                // illegal to use on non-Maps
+                if (!(type instanceof MapType)) {
+                    throw new IllegalArgumentException("Illegal key-type annotation: type "+type+" is not a Map type");
+                }
+                try {
+                    type = (T) ((MapType) type).widenKey(keyClass);
+                } catch (IllegalArgumentException iae) {
+                    throw new IllegalArgumentException("Failed to narrow key type "+type+" with key-type annotation ("+keyClass.getName()+"): "+iae.getMessage());
+                }
+            }
+            
+            // and finally content class; only applicable to structured types
+            Class<?> cc = intr.findSerializationContentType(a, type.getContentType());
+            if (cc != null) {
+                try {
+                    type = (T) type.widenContentsBy(cc);
+                } catch (IllegalArgumentException iae) {
+                    throw new IllegalArgumentException("Failed to narrow content type "+type+" with content-type annotation ("+cc.getName()+"): "+iae.getMessage());
+                }
+            }
+        }
+        return type;
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/BeanSerializerFactory.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java;<<<<<<< MINE
+=======
+    /**
+     * Accessor used to find out "default value" to use for comparing values to
+     * serialize, to determine whether to exclude value from serialization with
+     * inclusion type of {@link com.fasterxml.jackson.annotation.JsonInclude.Include#NON_DEFAULT}.
+     *<p>
+     * Default logic is such that for primitives and wrapper types for primitives, expected
+     * defaults (0 for `int` and `java.lang.Integer`) are returned; for Strings, empty String,
+     * and for structured (Maps, Collections, arrays) and reference types, criteria
+     * {@link com.fasterxml.jackson.annotation.JsonInclude.Include#NON_DEFAULT}
+     * is used.
+     *
+     * @since 2.7
+     */
+    protected Object getDefaultValue(JavaType type)
+    {
+        // 06-Nov-2015, tatu: Returning null is fine for Object types; but need special
+        //   handling for primitives since they are never passed as nulls.
+        Class<?> cls = type.getRawClass();
+
+        Class<?> prim = ClassUtil.primitiveType(cls);
+        if (prim != null) {
+            return ClassUtil.defaultValue(prim);
+        }
+        if (type.isContainerType() || type.isReferenceType()) {
+            return JsonInclude.Include.NON_EMPTY;
+        }
+        if (cls == String.class) {
+            return "";
+        }
+        return null;
+    }
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/PropertyWriter.java;<<<<<<< MINE
+=======
+    private static final long serialVersionUID = 1L;
+
+    protected PropertyWriter(PropertyMetadata md) {
+        super(md);
+    }
+
+    protected PropertyWriter(BeanPropertyDefinition propDef) {
+        super(propDef.getMetadata());
+    }
+
+    protected PropertyWriter(PropertyWriter base) {
+        super(base);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/PropertyWriter.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java;<<<<<<< MINE
+    /**
+     * Marker we use to indicate case where we have done format lookup,
+     * but found nothing; marker used to avoid having to repeat such lookups.
+     *
+     * @since 2.6
+     */
+    protected final static JsonFormat.Value NO_FORMAT = new JsonFormat.Value();
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java;<<<<<<< MINE
+    
+    /**
+     * Additional information about property
+     *
+     * @since 2.3
+     */
+    protected final PropertyMetadata _metadata;
+
+    /**
+     * Lazily accessed value for per-property format override definition.
+     * 
+     * @since 2.6
+     */
+    protected transient JsonFormat.Value _format;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ser/BeanPropertyWriter.java;<<<<<<< MINE
+    /**
+     * Note: will be defined in {@link BeanProperty}; as of now is not yet.
+     *<p>
+     * TODO: move to {@link BeanProperty} in near future, once all standard
+     * implementations define it.
+     * 
+     * @since 2.5
+     */
+    public boolean isVirtual() { return false; }
+    
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/jsontype/TypeIdResolver.java;<<<<<<< MINE
+=======
+    /**
+     * Method called for error-reporting and diagnostics purposes.
+     * 
+     * @since 2.7 -- but since 2.5 has existed in {@link com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase}
+     */
+    public String getDescForKnownTypeIds();
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java;<<<<<<< MINE
+=======
+    /**
+     * Specific override for this instance (from proper, or global per-type overrides)
+     * to indicate whether single value may be taken to mean an unwrapped one-element array
+     * or not. If null, left to global defaults.
+     *
+     * @since 2.7
+     */
+    protected final Boolean _unwrapSingle;
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java;<<<<<<< MINE
+=======
+    /**
+     * @since 2.7
+     */
+    protected PrimitiveArrayDeserializers(PrimitiveArrayDeserializers<?> base,
+            Boolean unwrapSingle) {
+        super(base._valueClass);
+        _unwrapSingle = unwrapSingle;
+    }
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java;<<<<<<< MINE
+=======
+    /**
+     * @since 2.7
+     */
+    protected abstract PrimitiveArrayDeserializers<?> withResolved(Boolean unwrapSingle);
+
+    @Override
+    public JsonDeserializer<?> createContextual(DeserializationContext ctxt,
+            BeanProperty property) throws JsonMappingException
+    {
+        Boolean unwrapSingle = findFormatFeature(ctxt, property, _valueClass,
+                JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        if (unwrapSingle == _unwrapSingle) {
+            return this;
+        }
+        return withResolved(unwrapSingle);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java;<<<<<<< MINE
+=======
+        protected BooleanDeser(BooleanDeser base, Boolean unwrapSingle) {
+            super(base, unwrapSingle);
+        }
+
+        @Override
+        protected PrimitiveArrayDeserializers<?> withResolved(Boolean unwrapSingle) {
+            return new BooleanDeser(this, unwrapSingle);
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java;<<<<<<< MINE
+=======
+        protected ByteDeser(ByteDeser base, Boolean unwrapSingle) {
+            super(base, unwrapSingle);
+        }
+
+        @Override
+        protected PrimitiveArrayDeserializers<?> withResolved(Boolean unwrapSingle) {
+            return new ByteDeser(this, unwrapSingle);
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java;<<<<<<< MINE
+=======
+        protected IntDeser(IntDeser base, Boolean unwrapSingle) {
+            super(base, unwrapSingle);
+        }
+
+        @Override
+        protected PrimitiveArrayDeserializers<?> withResolved(Boolean unwrapSingle) {
+            return new IntDeser(this, unwrapSingle);
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java;<<<<<<< MINE
+=======
+        protected LongDeser(LongDeser base, Boolean unwrapSingle) {
+            super(base, unwrapSingle);
+        }
+
+        @Override
+        protected PrimitiveArrayDeserializers<?> withResolved(Boolean unwrapSingle) {
+            return new LongDeser(this, unwrapSingle);
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/PrimitiveArrayDeserializers.java;<<<<<<< MINE
+=======
+        protected DoubleDeser(DoubleDeser base, Boolean unwrapSingle) {
+            super(base, unwrapSingle);
+        }
+
+        @Override
+        protected PrimitiveArrayDeserializers<?> withResolved(Boolean unwrapSingle) {
+            return new DoubleDeser(this, unwrapSingle);
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/EnumSetDeserializer.java;<<<<<<< MINE
+=======
+    /**
+     * Specific override for this instance (from proper, or global per-type overrides)
+     * to indicate whether single value may be taken to mean an unwrapped one-element array
+     * or not. If null, left to global defaults.
+     *
+     * @since 2.7
+     */
+    protected final Boolean _unwrapSingle;
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/EnumSetDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/EnumSetDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/StdDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/StdDeserializer.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Helper method that may be used to find if this deserializer has specific
+     * {@link JsonFormat} settings, either via property, or through type-specific
+     * defaulting.
+     *
+     * @param typeForDefaults Type (erased) used for finding default format settings, if any
+     *
+     * @since 2.7
+     */
+    protected JsonFormat.Value findFormatOverrides(DeserializationContext ctxt,
+            BeanProperty prop, Class<?> typeForDefaults)
+    {
+        if (prop != null) {
+            return prop.findPropertyFormat(ctxt.getConfig(), typeForDefaults);
+        }
+        // even without property or AnnotationIntrospector, may have type-specific defaults
+        return ctxt.getDefaultPropertyFormat(typeForDefaults);
+    }
+
+    /**
+     * Convenience method that uses {@link #findFormatOverrides} to find possible
+     * defaults and/of overrides, and then calls
+     * <code>JsonFormat.Value.getFeature(feat)</code>
+     * to find whether that feature has been specifically marked as enabled or disabled.
+     * 
+     * @param typeForDefaults Type (erased) used for finding default format settings, if any
+     *
+     * @since 2.7
+     */
+    protected Boolean findFormatFeature(DeserializationContext ctxt,
+            BeanProperty prop, Class<?> typeForDefaults, JsonFormat.Feature feat)
+    {
+        JsonFormat.Value format = findFormatOverrides(ctxt, prop, typeForDefaults);
+        if (format != null) {
+            return format.getFeature(feat);
+        }
+        return null;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/StringCollectionDeserializer.java;<<<<<<< MINE
+=======
+    /**
+     * Specific override for this instance (from proper, or global per-type overrides)
+     * to indicate whether single value may be taken to mean an unwrapped one-element array
+     * or not. If null, left to global defaults.
+     *
+     * @since 2.7
+     */
+    protected final Boolean _unwrapSingle;
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/AtomicReferenceDeserializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/ObjectArrayDeserializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/ObjectArrayDeserializer.java;<<<<<<< MINE
+=======
+    /**
+     * Specific override for this instance (from proper, or global per-type overrides)
+     * to indicate whether single value may be taken to mean an unwrapped one-element array
+     * or not. If null, left to global defaults.
+     *
+     * @since 2.7
+     */
+    protected final Boolean _unwrapSingle;
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/ObjectArrayDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java;<<<<<<< MINE
+=======
+    /**
+     * Specific override for this instance (from proper, or global per-type overrides)
+     * to indicate whether single value may be taken to mean an unwrapped one-element array
+     * or not. If null, left to global defaults.
+     *
+     * @since 2.7
+     */
+    protected final Boolean _unwrapSingle;
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/StringArrayDeserializer.java;<<<<<<< MINE
+   
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java;<<<<<<< MINE
+=======
+    /**
+     * Specific override for this instance (from proper, or global per-type overrides)
+     * to indicate whether single value may be taken to mean an unwrapped one-element array
+     * or not. If null, left to global defaults.
+     *
+     * @since 2.7
+     */
+    protected final Boolean _unwrapSingle;
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/DateDeserializers.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/DateDeserializers.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/std/ContainerDeserializerBase.java;<<<<<<< MINE
+    /**
+     * @deprecated Since 2.3 use one that takes {@link JavaType}
+     */
+    @Deprecated
+    protected ContainerDeserializerBase(Class<?> selfType) {
+        super(selfType);
+    }
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/impl/FieldProperty.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/impl/ReadableObjectId.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Allow access to the resolver in case anybody wants to use it directly, for
+     * examples from 
+     * {@link com.fasterxml.jackson.databind.deser.DefaultDeserializationContext#tryToResolveUnresolvedObjectId}.
+     *
+     * @return The registered resolver
+     * 
+     * @since 2.7
+     */
+    public ObjectIdResolver getResolver() {
+        return _resolver;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerFactory.java;<<<<<<< MINE
+=======
+
+
+    public abstract JsonDeserializer<?> createEnumDeserializer(DeserializationContext ctxt,
+            JavaType type, BeanDescription beanDesc)
+        throws JsonMappingException;
+
+    /**
+     * @since 2.7
+     */
+    public abstract JsonDeserializer<?> createReferenceDeserializer(DeserializationContext ctxt,
+            ReferenceType type, BeanDescription beanDesc)
+        throws JsonMappingException;
+    
+    /**
+     * Method called to create and return a deserializer that can construct
+     * JsonNode(s) from JSON content.
+     */
+    public abstract JsonDeserializer<?> createTreeDeserializer(DeserializationConfig config,
+            JavaType type, BeanDescription beanDesc)
+        throws JsonMappingException;
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/DefaultDeserializationContext.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Overridable factory method to create a new instance of ReadableObjectId or its
+     * subclass. It is meant to be overridden when custom ReadableObjectId is
+     * needed for {@link #tryToResolveUnresolvedObjectId}.
+     * Default implementation simply constructs default {@link ReadableObjectId} with
+     * given <code>key</code>.
+     * 
+     * @param key The key to associate with the new ReadableObjectId
+     * @return New ReadableObjectId instance
+     *
+     * @since 2.7
+     */
+    protected ReadableObjectId createReadableObjectId(IdKey key) {
+        return new ReadableObjectId(key);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+=======
+    /**
+     * Helper method called for rare case of pointing to {@link JsonToken#VALUE_NULL}
+     * token. While this is most often an erroneous condition, there is one specific
+     * case with XML handling where polymorphic type with no properties is exposed
+     * as such, and should be handled same as empty Object.
+     *
+     * @since 2.7
+     */
+    protected Object deserializeFromNull(JsonParser p, DeserializationContext ctxt)
+        throws IOException
+    {
+        // 17-Dec-2015, tatu: Highly specialized case, mainly to support polymorphic
+        //   "empty" POJOs deserialized from XML, where empty XML tag synthesizes a
+        //   `VALUE_NULL` token.
+        if (p.requiresCustomCodec()) { // not only XML module, but mostly it...
+            @SuppressWarnings("resource")
+            TokenBuffer tb = new TokenBuffer(p, ctxt);
+            tb.writeEndObject();
+            JsonParser p2 = tb.asParser(p);
+            p2.nextToken(); // to point to END_OBJECT
+            // note: don't have ObjectId to consider at this point, so:
+            Object ob = _vanillaProcessing ? vanillaDeserialize(p2, ctxt, JsonToken.END_OBJECT)
+                    : deserializeFromObject(p2, ctxt);
+            p2.close();
+            return ob;
+        }
+        throw ctxt.mappingException(handledType());
+    }
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/ValueInstantiator.java;<<<<<<< MINE
+=======
+
+    /**
+     * Method that can be used to determine what is the type of array delegate
+     * type to use, if any; if no delegates are used, will return null. If
+     * non-null type is returned, deserializer will bind JSON into specified
+     * type (using standard deserializer for that type), and pass that to
+     * instantiator.
+     */
+    public JavaType getArrayDelegateType(DeserializationConfig config) { return null; }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/ValueInstantiator.java;<<<<<<< MINE
+=======
+    /**
+     * Method to called to create value instance from JSON Array using
+     * an intermediate "delegate" value to pass to createor method
+     */
+    public Object createUsingArrayDelegate(DeserializationContext ctxt, Object delegate) throws IOException {
+        throw ctxt.mappingException("Can not instantiate value of type %s using delegate",
+                getValueTypeDesc());
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Deserializer that is used iff array-delegate-based creator
+     * is to be used for deserializing from JSON Object.
+     */
+    protected JsonDeserializer<Object> _arrayDelegateDeserializer;
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/Deserializers.java;<<<<<<< MINE
+=======
+    // // // Scalar types first:
+
+    /**
+     * Method called to locate deserializer for specified {@link java.lang.Enum} type.
+     * 
+     * @param type Type of {@link java.lang.Enum} instances to deserialize
+     * @param config Configuration in effect
+     * @param beanDesc Definition of the enumeration type that contains class annotations and
+     *    other information typically needed for building deserializers
+     * 
+     * @return Deserializer to use for the type; or null if this provider does not know how to construct it
+     */
+    public JsonDeserializer<?> findEnumDeserializer(Class<?> type,
+            DeserializationConfig config, BeanDescription beanDesc)
+        throws JsonMappingException;
+
+    /**
+     * Method called to locate deserializer for specified JSON tree node type.
+     * 
+     * @param nodeType Specific type of JSON tree nodes to deserialize
+     *  (subtype of {@link com.fasterxml.jackson.databind.JsonNode})
+     * @param config Configuration in effect
+     * 
+     * @return Deserializer to use for the type; or null if this provider does not know how to construct it
+     */
+    public JsonDeserializer<?> findTreeNodeDeserializer(Class<? extends JsonNode> nodeType,
+            DeserializationConfig config, BeanDescription beanDesc)
+        throws JsonMappingException;
+
+    /**
+     * Method called to locate deserializer for specified value type which does not belong to any other
+     * category (not an Enum, Collection, Map, Array, reference value or tree node)
+     * 
+     * @param type Bean type to deserialize
+     * @param config Configuration in effect
+     * @param beanDesc Definition of the enumeration type that contains class annotations and
+     *    other information typically needed for building deserializers
+     * 
+     * @return Deserializer to use for the type; or null if this provider does not know how to construct it
+     */
+    public JsonDeserializer<?> findBeanDeserializer(JavaType type,
+            DeserializationConfig config, BeanDescription beanDesc)
+        throws JsonMappingException;
+    
+    // // // Then container types
+    
+    /**
+     * Method called to locate deserializer for value that is of referential
+     * type,
+     * 
+     * @param refType Specific referential type to deserialize
+     * @param config Configuration in effect
+     * @param beanDesc Definition of the reference type that contains class annotations and
+     *    other information typically needed for building deserializers
+     * @param contentTypeDeserializer Possible type deserializer for referenced value
+     * @param contentDeserializer Value deserializer to use for referenced value, if indicated
+     *    by property annotation
+     * 
+     * @return Deserializer to use for the type; or null if this provider does not know how to construct it
+     */
+    public JsonDeserializer<?> findReferenceDeserializer(ReferenceType refType,
+            DeserializationConfig config, BeanDescription beanDesc,
+            TypeDeserializer contentTypeDeserializer, JsonDeserializer<?> contentDeserializer)
+        throws JsonMappingException;
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/Deserializers.java;<<<<<<< MINE
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/Deserializers.java;<<<<<<< MINE
+    
+    /**
+     * Method called to locate deserializer for specified {@link java.lang.Enum} type.
+     * 
+     * @param type Type of {@link java.lang.Enum} instances to deserialize
+     * @param config Configuration in effect
+     * @param beanDesc Definition of the enumeration type that contains class annotations and
+     *    other information typically needed for building deserializers
+     * 
+     * @return Deserializer to use for the type; or null if this provider does not know how to construct it
+     */
+    public JsonDeserializer<?> findEnumDeserializer(Class<?> type,
+            DeserializationConfig config, BeanDescription beanDesc)
+        throws JsonMappingException;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/Deserializers.java;<<<<<<< MINE
+    
+    /**
+     * Method called to locate deserializer for specified JSON tree node type.
+     * 
+     * @param nodeType Specific type of JSON tree nodes to deserialize
+     *  (subtype of {@link com.fasterxml.jackson.databind.JsonNode})
+     * @param config Configuration in effect
+     * 
+     * @return Deserializer to use for the type; or null if this provider does not know how to construct it
+     */
+    public JsonDeserializer<?> findTreeNodeDeserializer(Class<? extends JsonNode> nodeType,
+            DeserializationConfig config, BeanDescription beanDesc)
+        throws JsonMappingException;
+    
+    /**
+     * Method called to locate deserializer for specified value type which does not belong to any other
+     * category (not an Enum, Collection, Map, Array or tree node)
+     * 
+     * @param type Bean type to deserialize
+     * @param config Configuration in effect
+     * @param beanDesc Definition of the enumeration type that contains class annotations and
+     *    other information typically needed for building deserializers
+     * 
+     * @return Deserializer to use for the type; or null if this provider does not know how to construct it
+     */
+    public JsonDeserializer<?> findBeanDeserializer(JavaType type,
+            DeserializationConfig config, BeanDescription beanDesc)
+        throws JsonMappingException;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/Deserializers.java;<<<<<<< MINE
+
+=======
+        
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/Deserializers.java;<<<<<<< MINE
+
+=======
+        
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/Deserializers.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java;<<<<<<< MINE
+        
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/deser/SettableBeanProperty.java;<<<<<<< MINE
+    /**
+     * Additional optional property metadata, such as whether
+     * property is required, and whether there is additional
+     * human-readable description
+     * 
+     * @since 2.3
+     */
+    protected final PropertyMetadata _metadata;
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/ClassUtil.java;<<<<<<< MINE
+=======
+    private final static Class<?> CLS_OBJECT = Object.class;
+
+    /*
+    /**********************************************************
+    /* Simple factory methods
+    /**********************************************************
+     */
+
+    /**
+     * @since 2.7
+     */
+    public static <T> Iterator<T> emptyIterator() {
+        return Collections.emptyIterator();
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/ClassUtil.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/ClassUtil.java;<<<<<<< MINE
+=======
+
+    /*
+    /**********************************************************
+    /* Caching access to class metadata, added in 2.7
+    /**********************************************************
+     */
+
+    /* 17-Sep-2015, tatu: Although access methods should not be significant
+     *   problems for most proper usage, they may become problematic if
+     *   ObjectMapper has to be re-created; and especially so on Android.
+     *   So let's do somewhat aggressive caching.
+     */
+
+    private final static LRUMap<Class<?>,ClassMetadata> sCached = new LRUMap<Class<?>,ClassMetadata>(48, 48);    
+
+    /**
+     * @since 2.7
+     */
+    public static String getPackageName(Class<?> cls) {
+        return _getMetadata(cls).getPackageName();
+    }
+
+    /**
+     * @since 2.7
+     */
+    public static boolean hasEnclosingMethod(Class<?> cls) {
+        return _getMetadata(cls).hasEnclosingMethod();
+    }
+
+    /**
+     * @since 2.7
+     */
+    public static Field[] getDeclaredFields(Class<?> cls) {
+        return _getMetadata(cls).getDeclaredFields();
+    }
+
+    /**
+     * @since 2.7
+     */
+    public static Method[] getDeclaredMethods(Class<?> cls) {
+        return _getMetadata(cls).getDeclaredMethods();
+    }
+
+    /**
+     * @since 2.7
+     */
+    public static Annotation[] findClassAnnotations(Class<?> cls) {
+        return _getMetadata(cls).getDeclaredAnnotations();
+    }
+
+    /**
+     * @since 2.7
+     */
+    public static Ctor[] getConstructors(Class<?> cls) {
+        return _getMetadata(cls).getConstructors();
+    }
+
+    // // // Then methods that do NOT cache access but were considered
+    // // // (and could be added to do caching if it was proven effective)
+
+    /**
+     * @since 2.7
+     */
+    public static Class<?> getDeclaringClass(Class<?> cls) {
+        // Caching does not seem worthwhile, as per profiling
+        return isObjectOrPrimitive(cls) ? null : cls.getDeclaringClass();
+    }
+
+    /**
+     * @since 2.7
+     */
+    public static Type getGenericSuperclass(Class<?> cls) {
+        return cls.getGenericSuperclass();
+    }
+
+    /**
+     * @since 2.7
+     */
+    public static Type[] getGenericInterfaces(Class<?> cls) {
+        return _getMetadata(cls).getGenericInterfaces();
+    }
+    
+    /**
+     * @since 2.7
+     */
+    public static Class<?> getEnclosingClass(Class<?> cls) {
+        // Caching does not seem worthwhile, as per profiling
+        return isObjectOrPrimitive(cls) ? null : cls.getEnclosingClass();
+    }
+
+    
+    private static Class<?>[] _interfaces(Class<?> cls) {
+        return _getMetadata(cls).getInterfaces();
+    }
+
+    private static ClassMetadata _getMetadata(Class<?> cls)
+    {
+        ClassMetadata md = sCached.get(cls);
+        if (md == null) {
+            md = new ClassMetadata(cls);
+            // tiny optimization, but in case someone concurrently constructed it,
+            // let's use that instance, to reduce extra concurrent work.
+            ClassMetadata old = sCached.putIfAbsent(cls, md);
+            if (old != null) {
+                md = old;
+            }
+        }
+        return md;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/ClassUtil.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Method that can be used to find primitive type for given class if (but only if)
+     * it is either wrapper type or primitive type; returns `null` if type is neither.
+     *
+     * @since 2.7
+     */
+    public static Class<?> primitiveType(Class<?> type)
+    {
+        if (type.isPrimitive()) {
+            return type;
+        }
+        
+        if (type == Integer.class) {
+            return Integer.TYPE;
+        }
+        if (type == Long.class) {
+            return Long.TYPE;
+        }
+        if (type == Boolean.class) {
+            return Boolean.TYPE;
+        }
+        if (type == Double.class) {
+            return Double.TYPE;
+        }
+        if (type == Float.class) {
+            return Float.TYPE;
+        }
+        if (type == Byte.class) {
+            return Byte.TYPE;
+        }
+        if (type == Short.class) {
+            return Short.TYPE;
+        }
+        if (type == Character.class) {
+            return Character.TYPE;
+        }
+        return null;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/ClassUtil.java;<<<<<<< MINE
+
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/ClassUtil.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * @since 2.7
+     */
+    public static boolean isObjectOrPrimitive(Class<?> cls) {
+        return (cls == CLS_OBJECT) || cls.isPrimitive();
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/ISO8601Utils.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/ISO8601Utils.java;<<<<<<< MINE
+=======
+
+    /**
+     * Returns the index of the first character in the string that is not a digit, starting at offset.
+     */
+    private static int indexOfNonDigit(String string, int offset) {
+        for (int i = offset; i < string.length(); i++) {
+            char c = string.charAt(i);
+            if (c < '0' || c > '9') return i;
+        }
+        return string.length();
+    }
+
+    public static void main(String[] args)
+    {
+        final int REPS = 250000;
+        while (true) {
+            long start = System.currentTimeMillis();
+            int resp = test1(REPS, 3);
+            long msecs = System.currentTimeMillis() - start;
+            System.out.println("Pow ("+resp+") -> "+msecs+" ms");
+
+            start = System.currentTimeMillis();
+            resp = test2(REPS, 3);
+            msecs = System.currentTimeMillis() - start;
+            System.out.println("Iter ("+resp+") -> "+msecs+" ms");
+        }
+    }
+
+    static int test1(int reps, int pow)
+    {
+        int resp = 3;
+        while (--reps >= 0) {
+            resp = (int) Math.pow(10, pow);
+        }
+        return resp;
+    }
+
+    static int test2(int reps, int pow)
+    {
+        int resp = 3;
+        while (--reps >= 0) {
+            resp = 10;
+            int p = pow;
+
+            while (--p > 0) {
+                resp *= 10;
+            }
+        }
+        return resp;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/SimpleBeanPropertyDefinition.java;<<<<<<< MINE
+
+    /**
+     * @since 2.2 Use {@link #construct} instead
+     */
+    @Deprecated
+    public SimpleBeanPropertyDefinition(AnnotatedMember member, String name) {
+        this(member, new PropertyName(name), null, null, null);
+    }
+
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/SimpleBeanPropertyDefinition.java;<<<<<<< MINE
+=======
+    
+    /**
+     * @since 2.7
+     */
+    public static SimpleBeanPropertyDefinition construct(MapperConfig<?> config,
+            AnnotatedMember member, PropertyName name, PropertyMetadata metadata,
+            JsonInclude.Value inclusion) {
+          return new SimpleBeanPropertyDefinition(member, name,
+                  (config == null) ? null : config.getAnnotationIntrospector(),
+                          metadata, inclusion);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java;<<<<<<< MINE
+=======
+
+    /**
+     * Explicit override for leniency, if specified.
+     *<p>
+     * Can not be `final` because {@link #setLenient(boolean)} returns
+     * `void`.
+     *
+     * @since 2.7
+     */
+    protected Boolean _lenient;
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/util/StdDateFormat.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Need to override since we need to keep track of leniency locally,
+     * and not via underlying {@link Calendar} instance like base class
+     * does.
+     */
+    @Override // since 2.7
+    public void setLenient(boolean enabled) {
+        Boolean newValue = enabled;
+        if (_lenient != newValue) {
+            _lenient = newValue;
+            // and since leniency settings may have been used:
+            _clearFormats();
+        }
+    }
+
+    @Override // since 2.7
+    public boolean isLenient() {
+        if (_lenient == null) {
+            // default is, I believe, true
+            return true;
+        }
+        return _lenient.booleanValue();
+    }
+
+    /*
+    /**********************************************************
+    /* Public API, parsing
+    /**********************************************************
+     */
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/Annotated.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/Annotated.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/Annotated.java;<<<<<<< MINE
+    public final <A extends Annotation> boolean hasAnnotation(Class<A> acls) {
+        return getAnnotation(acls) != null;
+    }
+=======
+    public abstract boolean hasAnnotation(Class<?> acls);
+
+    /**
+     * @since 2.7
+     */
+    public abstract boolean hasOneOf(Class<? extends Annotation>[] annoClasses);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/Annotated.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java;<<<<<<< MINE
+
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedParameter.java;<<<<<<< MINE
+    /**
+     * Accessor for annotations; all annotations associated with parameters
+     * are properly passed and accessible.
+     */
+    @Override
+    public <A extends Annotation> A getAnnotation(Class<A> acls)
+    {
+        return (_annotations == null) ? null : _annotations.get(acls);
+    }
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedWithParams.java;<<<<<<< MINE
+    public abstract Type getGenericParameterType(int index);
+=======
+    /**
+     * @since 2.7
+     */
+    public abstract JavaType getParameterType(int index);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedWithParams.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedConstructor.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedConstructor.java;<<<<<<< MINE
+
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedConstructor.java;<<<<<<< MINE
+    // note: copied verbatim from AnnotatedMethod; hard to generalize
+    /**
+     * As per [JACKSON-468], we need to also allow declaration of local
+     * type bindings; mostly it will allow defining bounds.
+     */
+    @Override
+    public JavaType getType(TypeBindings bindings)
+    {
+        return getType(bindings, _constructor.getTypeParameters());
+    }
+    
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java;<<<<<<< MINE
+=======
+    @SuppressWarnings("unchecked")
+    private final static Class<? extends Annotation>[] ANNOTATIONS_TO_INFER_SER = (Class<? extends Annotation>[])
+            new Class<?>[] {
+        JsonSerialize.class,
+        JsonView.class,
+        JsonFormat.class,
+        JsonTypeInfo.class,
+        JsonRawValue.class,
+        JsonUnwrapped.class,
+        JsonBackReference.class,
+        JsonManagedReference.class
+    };
+
+    @SuppressWarnings("unchecked")
+    private final static Class<? extends Annotation>[] ANNOTATIONS_TO_INFER_DESER = (Class<? extends Annotation>[])
+            new Class<?>[] {
+        JsonDeserialize.class,
+        JsonView.class,
+        JsonFormat.class,
+        JsonTypeInfo.class,
+        JsonUnwrapped.class,
+        JsonBackReference.class,
+        JsonManagedReference.class
+    };
+
+    private static final Java7Support _jdk7Helper;
+    static {
+        Java7Support x = null;
+        try {
+            x = Java7Support.class.newInstance();
+        } catch (Throwable t) {
+            // 24-Nov-2015, tatu: Should we log or not?
+            java.util.logging.Logger.getLogger(JacksonAnnotationIntrospector.class.getName())
+                .warning("Unable to load JDK7 annotation types; will have to skip");
+        }
+        _jdk7Helper = x;
+    }
+    
+    /**
+     * Since introspection of annotation types is a performance issue in some
+     * use cases (rare, but do exist), let's try a simple cache to reduce
+     * need for actual meta-annotation introspection.
+     *<p>
+     * Non-final only because it needs to be re-created after deserialization.
+     *
+     * @since 2.7
+     */
+    protected transient LRUMap<Class<?>,Boolean> _annotationsInside = new LRUMap<Class<?>,Boolean>(48, 48);
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java;<<<<<<< MINE
+
+    /**
+     * @deprecated (since 2.3) Use {@link #findFilterId(Annotated)} instead
+     */
+    @Deprecated
+    @Override
+    public Object findFilterId(AnnotatedClass ac) {
+        return _findFilterId(ac);
+    }
+    
+=======
+ 
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java;<<<<<<< MINE
+
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedMember.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationIntrospectorPair.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/BeanPropertyDefinition.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/BasicBeanDescription.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotationMap.java;<<<<<<< MINE
+=======
+    public boolean has(Class<?> cls)
+    {
+        if (_annotations == null) {
+            return false;
+        }
+        return _annotations.containsKey(cls);
+    }
+
+    /**
+     * Helper method that can be used for a "bulk" check to see if at least
+     * one of given annotation types is included within this map.
+     *
+     * @since 2.7
+     */
+    public boolean hasOneOf(Class<? extends Annotation>[] annoClasses) {
+        if (_annotations != null) {
+            for (int i = 0, end = annoClasses.length; i < end; ++i) {
+                if (_annotations.containsKey(annoClasses[i])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/BasicClassIntrospector.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedMethod.java;<<<<<<< MINE
+    /**
+     * As per [JACKSON-468], we need to also allow declaration of local
+     * type bindings; mostly it will allow defining bounds.
+     */
+    @Override
+    public JavaType getType(TypeBindings bindings) {
+        return getType(bindings, _method.getTypeParameters());
+    }
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedMethod.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/node/MissingNode.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/node/ArrayNode.java;<<<<<<< MINE
+    public ArrayNode(JsonNodeFactory nc) { super(nc); }
+=======
+    public ArrayNode(JsonNodeFactory nf) {
+        super(nf);
+        _children = new ArrayList<JsonNode>();
+    }
+
+    /**
+     * @since 2.7
+     */
+    public ArrayNode(JsonNodeFactory nf, List<JsonNode> children) {
+        super(nf);
+        _children = children;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeBase.java;<<<<<<< MINE
+=======
+    private final static TypeBindings NO_BINDINGS = TypeBindings.emptyBindings();
+    private final static JavaType[] NO_TYPES = new JavaType[0];
+
+    protected final JavaType _superClass;
+
+    protected final JavaType[] _superInterfaces;
+    
+    /**
+     * Bindings in effect for this type instance; possibly empty.
+     * Needed when resolving types declared in members of this type
+     * (if any).
+     *
+     * @since 2.7
+     */
+    protected final TypeBindings _bindings;
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeBase.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeBase.java;<<<<<<< MINE
+=======
+
+    /**
+     * Internal helper method used to figure out nominal super-class for
+     * deprecated factory methods / constructors, where we are not given
+     * properly resolved supertype hierarchy.
+     * Will basically give `JavaType` for `java.lang.Object` for classes
+     * other than `java.lafgn.Object`; null for others.
+     *
+     * @since 2.7
+     */
+    protected static JavaType _bogusSuperClass(Class<?> cls) {
+        Class<?> parent = cls.getSuperclass();
+        if (parent == null) {
+            return null;
+        }
+        return TypeFactory.unknownType();
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java;<<<<<<< MINE
+ 
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java;<<<<<<< MINE
+ 
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/MapType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeParser.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/ReferenceType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java;<<<<<<< MINE
+    /**
+     * In case there are resolved type parameters, this field stores reference
+     * to that type. It must be {@link #getRawClass()} or its supertype.
+     * 
+     * @since 2.5
+     */
+    protected final Class<?> _typeParametersFor;
+    
+    /**
+     * Generic type arguments for this type.
+     */
+    protected final JavaType[] _typeParameters;
+
+    /**
+     * Names of generic type arguments for this type; will
+     * match values in {@link #_typeParameters}
+     */
+    protected final String[] _typeNames;
+    
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/SimpleType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/CollectionType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/ArrayType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/ArrayType.java;<<<<<<< MINE
+    
+    /**
+     * Not sure what symbolic name is used internally, if any;
+     * let's follow naming of Collection types here.
+     * Should not really matter since array types have no
+     * super types.
+     */
+    @Override
+    public String containedTypeName(int index) {
+        if (index == 0) return "E";
+        return null;
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/ArrayType.java;<<<<<<< MINE
+    /**
+     * No parameterization for array types themselves; element type
+     * may obviously have parameterization.
+     */
+    @Override
+    public Class<?> getParameterSource() {
+        return null;
+    }
+    
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/ArrayType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeBindings.java;<<<<<<< MINE
+    
+    /**
+     * Marker to use for (temporarily) unbound references.
+     */
+    public final static JavaType UNBOUND = new SimpleType(Object.class);
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeBindings.java;<<<<<<< MINE
+    /**
+     * Factory to use for constructing resolved related types.
+     */
+    protected final TypeFactory _typeFactory;
+    
+    /**
+     * Context type used for resolving all types, if specified. May be null,
+     * in which case {@link #_contextClass} is used instead.
+     */
+    protected final JavaType _contextType;
+=======
+    private final static TypeBindings EMPTY = new TypeBindings(NO_STRINGS, NO_TYPES, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/type/TypeBindings.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ext/OptionalHandlerFactory.java;<<<<<<< MINE
+=======
+
+    private final static String DESERIALIZER_FOR_PATH = "com.fasterxml.jackson.databind.ext.PathDeserializer";
+
+    // // Since 2.7, we will assume DOM classes are always found, both due to JDK 1.6 minimum
+    // // and because Android (and presumably GAE) have these classes
+
+    private final static Class<?> CLASS_DOM_NODE;
+    private final static Class<?> CLASS_DOM_DOCUMENT;
+
+    static {
+        Class<?> doc = null, node = null;
+        try {
+            node = org.w3c.dom.Node.class;
+            doc = org.w3c.dom.Document.class;
+        } catch (Exception e) {
+            // not optimal but will do
+            System.err.println("WARNING: could not load DOM Node and/or Document classes");
+        }
+        CLASS_DOM_NODE = node;
+        CLASS_DOM_DOCUMENT = doc;
+    }
+
+    // // But Java7 type(s) may or may not be; dynamic lookup should be fine, still
+    // // (note: also assume it comes from JDK so that ClassLoader issues with OSGi
+    // // can, I hope, be avoided?)
+    
+    private final static Class<?> CLASS_JAVA7_PATH;
+    static {
+        Class<?> cls = null;
+        try {
+            cls = Class.forName("java.nio.file.Path");
+        } catch (Exception e) {
+            // not optimal but will do
+            System.err.println("WARNING: could not load Java7 Path class");
+        }
+        CLASS_JAVA7_PATH = cls;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ext/OptionalHandlerFactory.java;<<<<<<< MINE
+        
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/cfg/MapperConfig.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/cfg/MapperConfig.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/cfg/MapperConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/cfg/MapperConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/exc/PropertyBindingException.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/exc/PropertyBindingException.java;<<<<<<< MINE
+=======
+    /**
+     * @deprecated Since 2.7
+     */
+    @Deprecated // since 2.7
+    protected PropertyBindingException(String msg, JsonLocation loc,
+            Class<?> referringClass, String propName,
+            Collection<Object> propertyIds)
+    {
+        this(null, msg, loc, referringClass, propName, propertyIds);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/exc/UnrecognizedPropertyException.java;<<<<<<< MINE
+
+    /**
+     * @deprecated Since 2.3, use {@link #getPropertyName} instead.
+     */
+    @Deprecated // since 2.3
+    public String getUnrecognizedPropertyName() {
+        return getPropertyName();
+    }    
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/exc/IgnoredPropertyException.java;<<<<<<< MINE
+=======
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/DatabindContext.java;<<<<<<< MINE
+=======
+    /**
+     * @since 2.7
+     */
+    public abstract JsonFormat.Value getDefaultPropertyFormat(Class<?> baseType);
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AbstractTypeResolver.java;<<<<<<< MINE
+    
+=======
+
+    // !!! 29-Nov-2015, tatu: TODO: mark deprecated in 2.8
+    /**
+     * Older variant of {@link #resolveAbstractType(DeserializationConfig, BeanDescription)};
+     * obsoleted in 2.7, to be deprecated in 2.8
+     */
+    public JavaType resolveAbstractType(DeserializationConfig config,
+            JavaType type) {
+        return null;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+=======
+    /**
+     * Method used to check whether specified class defines a human-readable
+     * description to use for documentation.
+     * There are no further definitions for contents; for example, whether
+     * these may be marked up using HTML (or something like wiki format like Markup)
+     * is not defined.
+     * 
+     * @return Human-readable description, if any.
+     * 
+     * @since 2.7
+     */
+    public String findClassDescription(AnnotatedClass ac) { return null; }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+=======
+    /**
+     * Method called in cases where a class has two methods eligible to be used
+     * for the same logical property, and default logic is not enough to figure
+     * out clear precedence. Introspector may try to choose one to use; or, if
+     * unable, return `null` to indicate it can not resolve the problem.
+     *
+     * @since 2.7
+     */
+    public AnnotatedMethod resolveSetterConflict(MapperConfig<?> config,
+            AnnotatedMethod setter1, AnnotatedMethod setter2) {
+        return null;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+=======
+    /**
+     * Method for efficiently figuring out which if given set of <code>Enum</code> values
+     * have explicitly defined name. Method will overwrite entries in incoming <code>names</code>
+     * array with explicit names found, if any, leaving other entries unmodified.
+     *<p>
+     * Default implementation will simply delegate to {@link #findEnumValue}, which is close
+     * enough, although unfortunately NOT 100% equivalent (as it will also consider <code>name()</code>
+     * to give explicit value).
+     *
+     * @since 2.7
+     */
+    public  String[] findEnumValues(Class<?> enumType, Enum<?>[] enumValues, String[] names) {
+        for (int i = 0, len = enumValues.length; i < len; ++i) {
+            names[i] = findEnumValue(enumValues[i]);
+        }
+        return names;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+=======
+
+    /*
+    /**********************************************************
+    /* Deserialization: type refinements
+    /**********************************************************
+     */
+
+    /**
+     * Method called to find out possible type refinements to use
+     * for deserialization.
+     *
+     * @since 2.7
+     */
+    public JavaType refineDeserializationType(final MapperConfig<?> config,
+            final Annotated a, final JavaType baseType) throws JsonMappingException
+    {
+        JavaType type = baseType;
+        final TypeFactory tf = config.getTypeFactory();
+
+        // 10-Oct-2015, tatu: For 2.7, we'll need to delegate back to
+        //    now-deprecated secondary methods; this because while
+        //    direct sub-class not yet retrofitted may only override
+        //    those methods. With 2.8 or later we may consider removal
+        //    of these methods
+
+        
+        // Ok: start by refining the main type itself; common to all types
+        Class<?> valueClass = findDeserializationType(a, type);
+        if ((valueClass != null) && !type.hasRawClass(valueClass)) {
+            try {
+                type = tf.constructSpecializedType(type, valueClass);
+            } catch (IllegalArgumentException iae) {
+                throw new JsonMappingException(null,
+                        String.format("Failed to narrow type %s with annotation (value %s), from '%s': %s",
+                                type, valueClass.getName(), a.getName(), iae.getMessage()),
+                                iae);
+            }
+        }
+        // Then further processing for container types
+
+        // First, key type (for Maps, Map-like types):
+        if (type.isMapLikeType()) {
+            JavaType keyType = type.getKeyType();
+            Class<?> keyClass = findDeserializationKeyType(a, keyType);
+            if (keyClass != null) {
+                try {
+                    keyType = tf.constructSpecializedType(keyType, keyClass);
+                    type = ((MapLikeType) type).withKeyType(keyType);
+                } catch (IllegalArgumentException iae) {
+                    throw new JsonMappingException(null,
+                            String.format("Failed to narrow key type of %s with concrete-type annotation (value %s), from '%s': %s",
+                                    type, keyClass.getName(), a.getName(), iae.getMessage()),
+                                    iae);
+                }
+            }
+        }
+        JavaType contentType = type.getContentType();
+        if (contentType != null) { // collection[like], map[like], array, reference
+            // And then value types for all containers:
+           Class<?> contentClass = findDeserializationContentType(a, contentType);
+           if (contentClass != null) {
+               try {
+                   contentType = tf.constructSpecializedType(contentType, contentClass);
+                   type = type.withContentType(contentType);
+               } catch (IllegalArgumentException iae) {
+                   throw new JsonMappingException(null,
+                           String.format("Failed to narrow value type of %s with concrete-type annotation (value %s), from '%s': %s",
+                                   type, contentClass.getName(), a.getName(), iae.getMessage()),
+                                   iae);
+               }
+           }
+        }
+        return type;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+=======
+    /**
+     * Method for accessing annotated type definition that a
+     * property can have, to be used as the type for deserialization
+     * instead of the static (declared) type.
+     * Type is usually narrowing conversion (i.e.subtype of declared type).
+     * Declared return type of the method is also considered acceptable.
+     *
+     * @param baseType Assumed type before considering annotations
+     *
+     * @return Class to use for deserialization instead of declared type
+     *
+     * @deprecated Since 2.7 call {@link #refineDeserializationType} instead
+     */
+    @Deprecated
+    public Class<?> findDeserializationType(Annotated am, JavaType baseType) {
+        return null;
+    }
+    
+    /**
+     * Method for accessing additional narrowing type definition that a
+     * method can have, to define more specific key type to use.
+     * It should be only be used with {@link java.util.Map} types.
+     * 
+     * @param baseKeyType Assumed key type before considering annotations
+     *
+     * @return Class specifying more specific type to use instead of
+     *   declared type, if annotation found; null if not
+     *
+     * @deprecated Since 2.7 call {@link #refineDeserializationType} instead
+     */
+    @Deprecated
+    public Class<?> findDeserializationKeyType(Annotated am, JavaType baseKeyType) {
+        return null;
+    }
+
+    /**
+     * Method for accessing additional narrowing type definition that a
+     * method can have, to define more specific content type to use;
+     * content refers to Map values and Collection/array elements.
+     * It should be only be used with Map, Collection and array types.
+     * 
+     * @param baseContentType Assumed content (value) type before considering annotations
+     *
+     * @return Class specifying more specific type to use instead of
+     *   declared type, if annotation found; null if not
+     *
+     * @deprecated Since 2.7 call {@link #refineDeserializationType} instead
+     */
+    @Deprecated
+    public Class<?> findDeserializationContentType(Annotated am, JavaType baseContentType) {
+        return null;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/AnnotationIntrospector.java;<<<<<<< MINE
+=======
+
+    /**
+     * Alternative lookup method that is used to see if annotation has at least one of
+     * annotations of types listed in second argument.
+     *
+     * @since 2.7
+     */
+    protected boolean _hasOneOf(Annotated annotated, Class<? extends Annotation>[] annoClasses) {
+        return annotated.hasOneOf(annoClasses);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/BeanProperty.java;<<<<<<< MINE
+=======
+    /**
+     * Accessor for checking whether there is an actual physical property
+     * behind this property abstraction or not.
+     * 
+     * @since 2.7
+     */
+    public boolean isVirtual();
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/BeanProperty.java;<<<<<<< MINE
+=======
+    /**
+     * Helper method used to look up format settings applicable to this property,
+     * considering both possible per-type configuration settings
+     *
+     * @since 2.7
+     */
+    public JsonFormat.Value findPropertyFormat(MapperConfig<?> config, Class<?> baseType);
+    
+    /**
+     * Convenience method that is roughly equivalent to
+     *<pre>
+     *   return config.getAnnotationIntrospector().findPropertyInclusion(getMember());
+     *</pre>
+     * but also considers global default settings for inclusion
+     *
+     * @since 2.7
+     */
+    public JsonInclude.Value findPropertyInclusion(MapperConfig<?> config, Class<?> baseType);
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/BeanProperty.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java;<<<<<<< MINE
+    
+=======
+
+    /*
+    /**********************************************************
+    /* Serialization features 
+    /**********************************************************
+     */
+
+    /**
+     * Set of {@link SerializationFeature}s enabled.
+     */
+    protected final int _serFeatures;
+
+    /*
+    /**********************************************************
+    /* Generator features: generic, format-specific
+    /**********************************************************
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java;<<<<<<< MINE
+
+    /**
+     * States of {@link com.fasterxml.jackson.core.FormatFeature}s to enable/disable.
+     *
+     * @since 2.7
+     */
+    protected final int _formatWriteFeatures;
+
+    /**
+     * Bitflag of {@link com.fasterxml.jackson.core.FormatFeature}s to enable/disable
+     *
+     * @since 2.7
+     */
+    protected final int _formatWriteFeaturesToChange;
+=======
+
+    /**
+     * States of {@link com.fasterxml.jackson.core.FormatFeature}s to enable/disable.
+     *
+     * @since 2.7
+     */
+    protected final int _formatWriteFeatures;
+
+    /**
+     * Bitflag of {@link com.fasterxml.jackson.core.FormatFeature}s to enable/disable
+     *
+     * @since 2.7
+     */
+    protected final int _formatWriteFeaturesToChange;
+    
+    /*
+    /**********************************************************
+    /* Other configuration
+    /**********************************************************
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java;<<<<<<< MINE
+    /**
+     * Fluent factory method that will construct and return a new configuration
+     * object instance with specified features enabled.
+     *
+     * @since 2.7
+     */
+    public SerializationConfig withFeatures(FormatFeature... features)
+    {
+        int newSet = _formatWriteFeatures;
+        int newMask = _formatWriteFeaturesToChange;
+        for (FormatFeature f : features) {
+            int mask = f.getMask();
+            newSet |= mask;
+            newMask |= mask;
+        }
+        return ((_formatWriteFeatures == newSet) && (_formatWriteFeaturesToChange == newMask)) ? this :
+            new SerializationConfig(this,  _mapperFeatures, _serFeatures,
+                    _generatorFeatures, _generatorFeaturesToChange,
+                    newSet, newMask);
+    }
+
+    /**
+     * Fluent factory method that will construct and return a new configuration
+     * object instance with specified feature disabled.
+     *
+     * @since 2.7
+     */
+    public SerializationConfig without(FormatFeature feature)
+    {
+        int newSet = _formatWriteFeatures & ~feature.getMask();
+        int newMask = _formatWriteFeaturesToChange | feature.getMask();
+        return ((_formatWriteFeatures == newSet) && (_formatWriteFeaturesToChange == newMask)) ? this :
+            new SerializationConfig(this,  _mapperFeatures, _serFeatures,
+                    _generatorFeatures, _generatorFeaturesToChange,
+                    newSet, newMask);
+    }
+
+    /**
+     * Fluent factory method that will construct and return a new configuration
+     * object instance with specified features disabled.
+     *
+     * @since 2.7
+     */
+    public SerializationConfig withoutFeatures(FormatFeature... features)
+    {
+        int newSet = _formatWriteFeatures;
+        int newMask = _formatWriteFeaturesToChange;
+        for (FormatFeature f : features) {
+            int mask = f.getMask();
+            newSet &= ~mask;
+            newMask |= mask;
+        }
+        return ((_formatWriteFeatures == newSet) && (_formatWriteFeaturesToChange == newMask)) ? this :
+            new SerializationConfig(this,  _mapperFeatures, _serFeatures,
+                    _generatorFeatures, _generatorFeaturesToChange,
+                    newSet, newMask);
+    }
+    
+=======
+    /**
+     * Fluent factory method that will construct and return a new configuration
+     * object instance with specified feature disabled.
+     *
+     * @since 2.7
+     */
+    public SerializationConfig without(FormatFeature feature)
+    {
+        int newSet = _formatWriteFeatures & ~feature.getMask();
+        int newMask = _formatWriteFeaturesToChange | feature.getMask();
+        return ((_formatWriteFeatures == newSet) && (_formatWriteFeaturesToChange == newMask)) ? this :
+            new SerializationConfig(this,  _mapperFeatures, _serFeatures,
+                    _generatorFeatures, _generatorFeaturesToChange,
+                    newSet, newMask);
+    }
+
+    /**
+     * Fluent factory method that will construct and return a new configuration
+     * object instance with specified features disabled.
+     *
+     * @since 2.7
+     */
+    public SerializationConfig withoutFeatures(FormatFeature... features)
+    {
+        int newSet = _formatWriteFeatures;
+        int newMask = _formatWriteFeaturesToChange;
+        for (FormatFeature f : features) {
+            int mask = f.getMask();
+            newSet &= ~mask;
+            newMask |= mask;
+        }
+        return ((_formatWriteFeatures == newSet) && (_formatWriteFeaturesToChange == newMask)) ? this :
+            new SerializationConfig(this,  _mapperFeatures, _serFeatures,
+                    _generatorFeatures, _generatorFeaturesToChange,
+                    newSet, newMask);
+    }
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/SerializationConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java;<<<<<<< MINE
+=======
+    /**
+     * Accessor for constructing and returning a {@link SerializerProvider}
+     * instance that may be used for accessing serializers. This is same as
+     * calling {@link #getSerializerProvider}, and calling <code>createInstance</code>
+     * on it.
+     *
+     * @since 2.7
+     */
+    public SerializerProvider getSerializerProviderInstance() {
+        return _serializerProvider(_serializationConfig);
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Convenience method, equivalent to calling:
+     *<pre>
+     *  setPropertyInclusion(JsonInclude.Value.construct(incl, Include.ALWAYS));
+     *</pre>
+     */
+    public ObjectMapper setSerializationInclusion(JsonInclude.Include incl) {
+        setPropertyInclusion(JsonInclude.Value.construct(incl, JsonInclude.Include.USE_DEFAULTS));
+        return this;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JsonSerializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/BeanDescription.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/BeanDescription.java;<<<<<<< MINE
+   
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/BeanDescription.java;<<<<<<< MINE
+=======
+    /**
+     * Accessor for possible description for the bean type, used for constructing
+     * documentation.
+     *
+     * @since 2.7
+     */
+    public String findClassDescription() { return null; }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/BeanDescription.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/BeanDescription.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JavaType.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Copy-constructor used when refining/upgrading type instances.
+     *
+     * @since 2.7
+     */
+    protected JavaType(JavaType base) 
+    {
+        _class = base._class;
+        _hash = base._hash;
+        _valueHandler = base._valueHandler;
+        _typeHandler = base._typeHandler;
+        _asStatic = base._asStatic;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JavaType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JavaType.java;<<<<<<< MINE
+    /**
+     *<p>
+     * Default implementation is just to call {@link #_narrow}, since
+     * underlying type construction is usually identical
+     */
+    protected JavaType _widen(Class<?> superclass) { return _narrow(superclass); }
+
+    public abstract JavaType narrowContentsBy(Class<?> contentClass);
+
+    public abstract JavaType widenContentsBy(Class<?> contentClass);
+    
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JavaType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JavaType.java;<<<<<<< MINE
+=======
+    /**
+     * @since 2.7
+     */
+    public abstract TypeBindings getBindings();
+
+    /**
+     * Method that may be called to find representation of given type
+     * within type hierarchy of this type: either this type (if this
+     * type has given erased type), one of its supertypes that has the
+     * erased types, or null if target is neither this type or any of its
+     * supertypes.
+     *
+     * @since 2.7
+     */
+    public abstract JavaType findSuperType(Class<?> erasedTarget);
+
+    /**
+     * Accessor for finding fully resolved parent class of this type,
+     * if it has one; null if not.
+     *
+     * @since 2.7
+     */
+    public abstract JavaType getSuperClass();
+
+    /**
+     * Accessor for finding fully resolved interfaces this type implements,
+     * if any; empty array if none.
+     *
+     * @since 2.7
+     */
+    public abstract List<JavaType> getInterfaces();
+
+    /**
+     * Method that may be used to find paramaterization this type has for
+     * given type-erased generic target type.
+     *
+     * @since 2.7
+     */
+    public abstract JavaType[] findTypeParameters(Class<?> expType);
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JavaType.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java;<<<<<<< MINE
+=======
+    /*
+    /**********************************************************
+    /* Deserialization features 
+    /**********************************************************
+     */
+
+    /**
+     * Set of {@link DeserializationFeature}s enabled.
+     */
+    protected final int _deserFeatures;
+    
+    /*
+    /**********************************************************
+    /* Parser features: generic, format-specific
+    /**********************************************************
+     */
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java;<<<<<<< MINE
+=======
+    /**
+     * States of {@link com.fasterxml.jackson.core.FormatFeature}s to enable/disable.
+     *
+     * @since 2.7
+     */
+    protected final int _formatReadFeatures;
+
+    /**
+     * Bitflag of {@link com.fasterxml.jackson.core.FormatFeature}s to enable/disable
+     *
+     * @since 2.7
+     */
+    protected final int _formatReadFeaturesToChange;
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/DeserializationConfig.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/PropertyNamingStrategy.java;<<<<<<< MINE
+    
+=======
+
+    /**
+     * Naming convention used in languages like Lisp, where words are in lower-case
+     * letters, separated by hyphens.
+     * See {@link KebabCaseStrategy} for details.
+     * 
+     * @since 2.7
+     */
+    public static final PropertyNamingStrategy KEBAB_CASE = new KebabCaseStrategy();
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/SequenceWriter.java;<<<<<<< MINE
+=======
+    /**
+     * @since 2.7
+     */
+    public SequenceWriter writeAll(Iterable<?> iterable) throws IOException
+    {
+        for (Object value : iterable) {
+            write(value);
+        }
+        return this;
+    }
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/ObjectReader.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java;<<<<<<< MINE
+=======
+    /**
+     * Underlying processor ({@link JsonParser} or {@link JsonGenerator}),
+     * if known.
+     *
+     * @since 2.7
+     */
+    protected Closeable _processor;
+    
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JsonNode.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JsonNode.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/main/java/com/fasterxml/jackson/databind/JsonNode.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/introspect/TestPropertyConflicts.java;<<<<<<< MINE
+     
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/introspect/TestNamingStrategyStd.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/introspect/TestNamingStrategyStd.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/introspect/TestJacksonAnnotationIntrospector.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/introspect/TestJacksonAnnotationIntrospector.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/introspect/TestJacksonAnnotationIntrospector.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/convert/TestConvertingSerializer.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/module/TestTypeModifiers.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/module/TestTypeModifiers.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/type/TestTypeResolution.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java;<<<<<<< MINE
+
+=======
+        
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/type/TestTypeFactory.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/jsonschema/TestGenerateJsonSchema.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/src/test/java/com/fasterxml/jackson/databind/ObjectMapperTest.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b8e2580_1317d3e/rev_b8e2580-1317d3e/attic/MappingIteratorDeserializer.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_37034fc_bacb37f/rev_37034fc-bacb37f/src/test/java/com/fasterxml/jackson/databind/ser/DateSerializationTest.java;<<<<<<< MINE
+=======
+
+    /**
+     * Test to ensure that the default shape is correctly inferred as string or numeric,
+     * when this shape is not explicitly set with a <code>@JsonFormat</code> annotation
+     */
+    public void testDateDefaultShape() throws Exception
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        // No @JsonFormat => default to user config
+        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String json = mapper.writeValueAsString(new DateAsDefaultBean(0L));
+        assertEquals(aposToQuotes("{'date':0}"), json);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        json = mapper.writeValueAsString(new DateAsDefaultBean(0L));
+        assertEquals(aposToQuotes("{'date':'1970-01-01T00:00:00.000+0000'}"), json);
+
+        // Empty @JsonFormat => default to user config
+        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        json = mapper.writeValueAsString(new DateAsDefaultBeanWithEmptyJsonFormat(0L));
+        assertEquals(aposToQuotes("{'date':0}"), json);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        json = mapper.writeValueAsString(new DateAsDefaultBeanWithEmptyJsonFormat(0L));
+        assertEquals(aposToQuotes("{'date':'1970-01-01T00:00:00.000+0000'}"), json);
+
+        // @JsonFormat with Shape.ANY and pattern => STRING shape, regardless of user config
+        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        json = mapper.writeValueAsString(new DateAsDefaultBeanWithPattern(0L));
+        assertEquals(aposToQuotes("{'date':'1970-01-01'}"), json);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        json = mapper.writeValueAsString(new DateAsDefaultBeanWithPattern(0L));
+        assertEquals(aposToQuotes("{'date':'1970-01-01'}"), json);
+
+        // @JsonFormat with Shape.ANY and locale => STRING shape, regardless of user config
+        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        json = mapper.writeValueAsString(new DateAsDefaultBeanWithLocale(0L));
+        assertEquals(aposToQuotes("{'date':'1970-01-01T00:00:00.000+0000'}"), json);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        json = mapper.writeValueAsString(new DateAsDefaultBeanWithLocale(0L));
+        assertEquals(aposToQuotes("{'date':'1970-01-01T00:00:00.000+0000'}"), json);
+
+        // @JsonFormat with Shape.ANY and timezone => STRING shape, regardless of user config
+        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        json = mapper.writeValueAsString(new DateAsDefaultBeanWithTimezone(0L));
+        assertEquals(aposToQuotes("{'date':'1970-01-01T01:00:00.000+0100'}"), json);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        json = mapper.writeValueAsString(new DateAsDefaultBeanWithTimezone(0L));
+        assertEquals(aposToQuotes("{'date':'1970-01-01T01:00:00.000+0100'}"), json);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_e0be428_8d5bd66/rev_e0be428-8d5bd66/src/main/java/com/fasterxml/jackson/databind/ser/std/ReferenceTypeSerializer.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fea0d29_9919f9d/rev_fea0d29-9919f9d/src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java;<<<<<<< MINE
+
+    /**
+     * Type that the builder will produce, target type; as opposed to
+     * `handledType()` which refers to Builder class.
+     *
+     * @since 2.9
+     */
+    protected final JavaType _targetType;
+	
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fea0d29_9919f9d/rev_fea0d29-9919f9d/src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fea0d29_9919f9d/rev_fea0d29-9919f9d/src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fea0d29_9919f9d/rev_fea0d29-9919f9d/src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_93a0b9b_32001a6/rev_93a0b9b-32001a6/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_6b9782b_96eb83b/rev_6b9782b-96eb83b/src/test/java/com/fasterxml/jackson/databind/creators/SingleArgCreatorTest.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_5136650_9c4a7e5/rev_5136650-9c4a7e5/src/main/java/com/fasterxml/jackson/databind/node/TextNode.java;<<<<<<< MINE
+=======
+
+    /*
+    /**********************************************************
+    /* Helper methods
+    /**********************************************************
+     */
+
+    protected void _reportInvalidBase64(Base64Variant b64variant, char ch, int bindex)
+        throws JsonParseException
+    {
+        _reportInvalidBase64(b64variant, ch, bindex, null);
+    }
+
+    /**
+     * @param bindex Relative index within base64 character unit; between 0
+     *   and 3 (as unit has exactly 4 characters)
+     */
+    protected void _reportInvalidBase64(Base64Variant b64variant, char ch, int bindex, String msg)
+        throws JsonParseException
+    {
+        String base;
+        if (ch <= ' ') {
+            base = "Illegal white space character (code 0x"+Integer.toHexString(ch)+") as character #"+(bindex+1)+" of 4-char base64 unit: can only used between units";
+        } else if (b64variant.usesPaddingChar(ch)) {
+            base = "Unexpected padding character ('"+b64variant.getPaddingChar()+"') as character #"+(bindex+1)+" of 4-char base64 unit: padding only legal as 3rd or 4th character";
+        } else if (!Character.isDefined(ch) || Character.isISOControl(ch)) {
+            // Not sure if we can really get here... ? (most illegal xml chars are caught at lower level)
+            base = "Illegal character (code 0x"+Integer.toHexString(ch)+") in base64 content";
+        } else {
+            base = "Illegal character '"+ch+"' (code 0x"+Integer.toHexString(ch)+") in base64 content";
+        }
+        if (msg != null) {
+            base = base + ": " + msg;
+        }
+        throw new JsonParseException(null, base, JsonLocation.NA);
+    }
+
+    protected void _reportBase64EOF() throws JsonParseException {
+        throw new JsonParseException(null, "Unexpected end-of-String when base64 content");
+    }
+>>>>>>> YOURS

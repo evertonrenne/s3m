@@ -1,0 +1,1248 @@
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_1316538_92fb52a/rev_1316538-92fb52a/cuke4duke/src/main/java/cuke4duke/internal/clj/CljStepDefinition.java;<<<<<<< MINE
+    private Method lookupInvokeMethod(int argCount) throws NoSuchMethodException {
+        Class<?>[] parameterTypes = new Class[argCount];
+        for(int i = 0; i < argCount; i++) {
+            parameterTypes[i] = Object.class;
+        }
+        return AFunction.class.getMethod("invoke", parameterTypes);
+=======
+    private Method lookupInvokeMethod(Object[] args) throws NoSuchMethodException {
+        return AFunction.class.getMethod("invoke", getParameterTypes(args));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b05c252_3e66e50/rev_b05c252-3e66e50/cuke4duke/src/main/java/cuke4duke/internal/language/AbstractStepDefinition.java;<<<<<<< MINE
+    public AbstractStepDefinition(ProgrammingLanguage programmingLanguage) {
+=======
+    public AbstractStepDefinition(AbstractProgrammingLanguage programmingLanguage) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8e1d25d_886564f/rev_8e1d25d-886564f/cuke4duke/src/main/java/cuke4duke/internal/JRuby.java;<<<<<<< MINE
+    public static RubyArray newArray(Collection collection) {
+=======
+    public static RubyArray newArray(Collection<?> collection) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_1203598_ebda170/rev_1203598-ebda170/cuke4duke/src/main/java/cuke4duke/internal/ik/IkStepDefinition.java;<<<<<<< MINE
+        if(args instanceof List) {
+=======
+        if(args instanceof List<?>) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_1203598_ebda170/rev_1203598-ebda170/cuke4duke/src/main/java/cuke4duke/internal/JRuby.java;<<<<<<< MINE
+    public static RubyArray newArray(Collection collection) {
+=======
+    public static RubyArray newArray(Collection<?> collection) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+        for (Argument a : getArguments()) {
+            result[n] = transformers.transform(locale, parameterTypes[n++], a.getVal());
+        }
+        if (step.getDocString() != null) {
+=======
+        if (step.getRows() != null) {
+            result[n] = processTable(step, locale, n++);
+        } else if (step.getDocString() != null) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+        if (step.getRows() != null) {
+            result[n] = new Table(step.getRows(), locale);
+=======
+        return result;
+    }
+
+    private Object processTable(Step step, Locale locale, int argIndex) {
+        Table table = new Table(step.getRows(), locale);
+        TableArgumentProcessor tableProcessor = this.stepDefinition.getTableProcessor(argIndex);
+        if (tableProcessor != null) {
+            return tableProcessor.process(table);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+        return result;
+=======
+        return table;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_ed96fe1_0fac5b8/rev_ed96fe1-0fac5b8/spring/src/main/java/cucumber/runtime/java/spring/hooks/SpringTransactionHooks.java;<<<<<<< MINE
+    TransactionStatus txStatus;
+
+    private PlatformTransactionManager txMgr;
+
+    /**
+     * Setter for Dependency Injection - autowiring would rely on too many client-specific details
+     */
+    public void setTxMgr(PlatformTransactionManager txMgr) {
+        this.txMgr = txMgr;
+=======
+    private BeanFactory beanFactory;
+    private String txnManagerBeanName;
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+    }
+    
+    /**
+     * @return the (optional) bean name for the transaction manager to be obtained - if null, attempt will be made to find a transaction manager by bean type
+     */
+    public String getTxnManagerBeanName() {
+        return txnManagerBeanName;
+    }
+    /**
+     * Setter to allow (optional) bean name to be specified for transaction manager bean - if null, attempt will be made to find a transaction manager by bean type
+     * @param txManagerBeanName bean name of transaction manager bean
+     */
+    public void setTxnManagerBeanName(String txnManagerBeanName) {
+        this.txnManagerBeanName = txnManagerBeanName;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+            out = new NiceAppendable(new BufferedWriter(new FileWriter(JS_REPORT_FILENAME)));
+=======
+            bufferedWriter = new BufferedWriter(new FileWriter(htmlReportDir + JS_REPORT_FILENAME));
+            out = new NiceAppendable(bufferedWriter);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+            throw new CucumberException("Unable to create javascript report file: " + JS_REPORT_FILENAME, e);
+=======
+            throw new CucumberException("Unable to create javascript report file: " + htmlReportDir
+                    + JS_REPORT_FILENAME, e);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+        //
+=======
+        try {
+            //TODO should do this stuff only after the last feature.
+            out.append("});");
+            bufferedWriter.close();
+            copyReportFiles();
+        } catch (IOException e) {
+            
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/FormatterFactory.java;<<<<<<< MINE
+            return new HTMLFormatter(appendable);
+=======
+            return new HTMLFormatter();
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+            out = new NiceAppendable(new BufferedWriter(new FileWriter(JS_REPORT_FILENAME)));
+=======
+            bufferedWriter = new BufferedWriter(new FileWriter(htmlReportDir + JS_REPORT_FILENAME));
+            out = new NiceAppendable(bufferedWriter);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+            throw new CucumberException("Unable to create javascript report file: " + JS_REPORT_FILENAME, e);
+=======
+            throw new CucumberException("Unable to create javascript report file: " + htmlReportDir
+                    + JS_REPORT_FILENAME, e);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+        //
+=======
+        try {
+            //TODO should do this stuff only after the last feature.
+            out.append("});");
+            bufferedWriter.close();
+            copyReportFiles();
+        } catch (IOException e) {
+            
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/FormatterFactory.java;<<<<<<< MINE
+            return new HTMLFormatter(appendable);
+=======
+            return new HTMLFormatter();
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        this(System.getProperty("cucumber.glue") != null ? asList(System.getProperty("cucumber.glue").split(",")) : new ArrayList<String>());
+=======
+        this(false);
+    }
+
+    public Runtime(boolean isDryRun) {
+        this(System.getProperty("cucumber.glue") != null ? asList(System.getProperty("cucumber.glue").split(",")) : new ArrayList<String>(), isDryRun);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+    public Runtime(List<String> gluePaths) {
+        this(gluePaths, Resources.instantiateSubclasses(Backend.class, "cucumber.runtime", new Class[0], new Object[0]));
+=======
+    public Runtime(List<String> gluePaths, boolean isDryRun) {
+        this(gluePaths, Resources.instantiateSubclasses(Backend.class, "cucumber.runtime", new Class[0], new Object[0]), isDryRun);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+    public Runtime(List<String> gluePaths, List<Backend> backends) {
+=======
+    public Runtime(List<String> gluePaths, List<Backend> backends, boolean isDryRun) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/GuiceFactoryTest.java;<<<<<<< MINE
+    public void shouldGiveUsNewInstancesForEachScenario() {
+=======
+    public void shouldGiveUsNewInstancesForEachScenario() throws IOException {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_df198fe_2b74d1b/rev_df198fe-2b74d1b/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+        //Look for a cucumber-jruby.properties file and load in the things I might care about
+        Properties props = new Properties();
+        InputStream propsStream = this.getClass().getResourceAsStream("/cucumber-jruby.properties");
+        try {
+            if (propsStream != null) {
+                props.load(propsStream);
+            }
+        } catch (IOException e) {
+            //Oh well?
+        }
+
+        String gemPath = props.getProperty("GEM_PATH");
+        if (gemPath != null && !gemPath.isEmpty()) {
+            jruby.runScriptlet("ENV['GEM_PATH']='" + gemPath + "'");
+        }
+
+        String rubyVersion = props.getProperty("RUBY_VERSION");
+        if ("1.9".equals(rubyVersion)) {
+            jruby.setCompatVersion(CompatVersion.RUBY1_9);
+        }
+=======
+        jruby.setClassLoader(getClass().getClassLoader());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d7255fb_4a9f204/rev_d7255fb-4a9f204/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+        if (parameterTypes != null && parameterTypes.size() != argumentCount) {
+            List<Argument> arguments = createArgumentsForErrorMessage(step);
+            throw new CucumberException("Arity mismatch. Declared parameters: " + parameterTypes + ". Matched arguments: " + arguments);
+=======
+        if (parameterTypes != null) {
+            if (parameterTypes.size() != argumentCount) {
+                List<Argument> arguments = createArgumentsForErrorMessage(step);
+                throw new CucumberException("Arity mismatch. Declared parameters: " + parameterTypes + ". Matched arguments: " + arguments);
+            }
+        } else {
+            // Some backends, like ClojureBackend, don't know the arity and therefore pass in null.
+            parameterTypes = Utils.listOf(argumentCount, new ParameterType(String.class, null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d7255fb_4a9f204/rev_d7255fb-4a9f204/clojure/src/main/java/cucumber/runtime/clojure/ClojureStepDefinition.java;<<<<<<< MINE
+    // Clojure's AFunction.invokeWithArgs doesn't take varargs :-/
+=======
+    // Clojure's IFn.invoke doesn't take varargs :-/
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d7255fb_4a9f204/rev_d7255fb-4a9f204/clojure/src/main/java/cucumber/runtime/clojure/ClojureStepDefinition.java;<<<<<<< MINE
+        return IFn.class.getMethod("invoke", (Class<?>[]) Utils.listOf(args.length, Object.class).toArray());
+=======
+        List<Class<Object>> classes = Utils.listOf(args.length, Object.class);
+        Class<?>[] params = classes.toArray(new Class<?>[classes.size()]);
+        return IFn.class.getMethod("invoke", params);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b57da8b_8c8dc21/rev_b57da8b-8c8dc21/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+            if (propsStream != null) {
+                props.load(propsStream);
+=======
+            ResourceBundle bundle = ResourceBundle.getBundle("cucumber-jruby");
+
+            String gemPath = bundle.getString("GEM_PATH");
+            if (gemPath != null && !gemPath.isEmpty()) {
+                jruby.runScriptlet("ENV['GEM_PATH']='" + gemPath + "'");
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b57da8b_8c8dc21/rev_b57da8b-8c8dc21/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+        String gemPath = props.getProperty("GEM_PATH");
+        if (gemPath != null && !gemPath.isEmpty()) {
+            jruby.runScriptlet("ENV['GEM_PATH']='" + gemPath + "'");
+        }
+
+        String rubyVersion = props.getProperty("RUBY_VERSION");
+        if ("1.9".equals(rubyVersion)) {
+            jruby.setCompatVersion(CompatVersion.RUBY1_9);
+=======
+            String rubyVersion = bundle.getString("RUBY_VERSION");
+            if ("1.9".equals(rubyVersion)) {
+                jruby.setCompatVersion(CompatVersion.RUBY1_9);
+            }
+        } catch (MissingResourceException mre) {
+            //Don't actually care
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b57da8b_8c8dc21/rev_b57da8b-8c8dc21/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+            for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+=======
+            if (gluedPaths.add(gluePath)) {
+                for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/model/CucumberScenario.java;<<<<<<< MINE
+    public void run(Formatter formatter, Reporter reporter, Runtime runtime) {
+        World world = newWorld(runtime);
+        world.buildBackendWorldsAndRunBeforeHooks(reporter);
+        runBackground(formatter, reporter);
+=======
+    public void run(Formatter formatter, Reporter reporter, World world) {
+        world.buildBackendContextAndRunBeforeHooks(reporter, tags());
+        runBackground(formatter, reporter, world);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/model/CucumberScenario.java;<<<<<<< MINE
+        world.runAfterHooksAndDisposeBackendWorlds(reporter);
+=======
+        world.runAfterHooksAndDisposeBackendContext(reporter, tags());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/model/CucumberScenario.java;<<<<<<< MINE
+    public void runBackground(Formatter formatter, Reporter reporter) {
+=======
+    public void runBackground(Formatter formatter, Reporter reporter, World world) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/model/CucumberScenarioOutline.java;<<<<<<< MINE
+    public void run(Formatter formatter, Reporter reporter, Runtime runtime) {
+=======
+    public void run(Formatter formatter, Reporter reporter, World world) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/model/CucumberScenarioOutline.java;<<<<<<< MINE
+                exampleScenario.run(formatter, reporter, runtime);
+=======
+                exampleScenario.run(formatter, reporter, world);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+=======
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one. (heh, except world is being recreated each time!)
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+    public RuntimeWorld(Runtime runtime, Collection<String> tags) {
+=======
+    public RuntimeWorld(Runtime runtime) {
+        //TODO: does the runtime world need to see the runtime?
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+    public void buildBackendWorldsAndRunBeforeHooks(Reporter reporter) {
+=======
+    public void buildBackendContextAndRunBeforeHooks(Reporter reporter, Set<String> tags) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+        runHooks(beforeHooks, reporter);
+=======
+        runHooks(beforeHooks, reporter, tags);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+=======
+    public void runAfterHooksAndDisposeBackendContext(Reporter reporter, Set<String> tags) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+        runHooks(afterHooks, reporter);
+=======
+        runHooks(afterHooks, reporter, tags);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+=======
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter, Set<String> tags) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+            runHookIfTagsMatch(hook, reporter);
+=======
+            runHookIfTagsMatch(hook, reporter, tags);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+=======
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter, Set<String> tags) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+            cucumberTagStatement.run(formatter, reporter, this);
+=======
+            cucumberTagStatement.run(formatter, reporter, world);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/test/java/cucumber/runtime/HookTest.java;<<<<<<< MINE
+        World world = new RuntimeWorld(runtime, TAGS);
+        world.addAfterHook(hook);
+=======
+        //TODO: How do I add an after hook in this case?
+        runtime.getWorld().addAfterHook(hook);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/test/java/cucumber/runtime/HookTest.java;<<<<<<< MINE
+        world.runAfterHooksAndDisposeBackendWorlds(mock(Reporter.class));
+=======
+        runtime.getWorld().runAfterHooksAndDisposeBackendContext(mock(Reporter.class), new HashSet<String>());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/test/java/cucumber/runtime/HookOrderTest.java;<<<<<<< MINE
+        world = new RuntimeWorld(mock(Runtime.class), new ArrayList<String>());
+=======
+        world = new RuntimeWorld(mock(Runtime.class));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/test/java/cucumber/runtime/HookOrderTest.java;<<<<<<< MINE
+        world.buildBackendWorldsAndRunBeforeHooks(mock(Reporter.class));
+=======
+        world.buildBackendContextAndRunBeforeHooks(mock(Reporter.class), new HashSet<String>());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/test/java/cucumber/runtime/HookOrderTest.java;<<<<<<< MINE
+        world.runAfterHooksAndDisposeBackendWorlds(mock(Reporter.class));
+=======
+        world.runAfterHooksAndDisposeBackendContext(mock(Reporter.class), new HashSet<String>());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/test/java/cucumber/runtime/HookOrderTest.java;<<<<<<< MINE
+        world.buildBackendWorldsAndRunBeforeHooks(mock(Reporter.class));
+=======
+        world.buildBackendContextAndRunBeforeHooks(mock(Reporter.class), new HashSet<String>());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/java/src/test/java/cucumber/runtime/java/JavaStepDefinitionTest.java;<<<<<<< MINE
+        fooWorld.buildBackendWorldsAndRunBeforeHooks(reporter);
+=======
+        fooWorld.buildBackendContextAndRunBeforeHooks(reporter, asSet("@foo"));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/java/src/test/java/cucumber/runtime/java/JavaStepDefinitionTest.java;<<<<<<< MINE
+        fooWorld.buildBackendWorldsAndRunBeforeHooks(reporter);
+=======
+        fooWorld.buildBackendContextAndRunBeforeHooks(reporter, asSet("@foo"));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/java/src/test/java/cucumber/runtime/java/JavaStepDefinitionDependencyInjectionTest.java;<<<<<<< MINE
+        backend.buildWorld(NO_GLUE_PATHS, new RuntimeWorld(null, NO_TAGS));
+=======
+        backend.buildWorld(NO_GLUE_PATHS, new RuntimeWorld(null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/java/src/test/java/cucumber/runtime/java/JavaStepDefinitionDependencyInjectionTest.java;<<<<<<< MINE
+        backend.buildWorld(NO_GLUE_PATHS, new RuntimeWorld(null, NO_TAGS));
+=======
+        backend.buildWorld(NO_GLUE_PATHS, new RuntimeWorld(null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/java/src/test/java/cucumber/runtime/java/JavaBackendTest.java;<<<<<<< MINE
+        public void buildBackendWorldsAndRunBeforeHooks(Reporter reporter) {
+=======
+        public void buildBackendContextAndRunBeforeHooks(Reporter reporter, Set<String> tags) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/java/src/test/java/cucumber/runtime/java/JavaBackendTest.java;<<<<<<< MINE
+        public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+=======
+        public void runAfterHooksAndDisposeBackendContext(Reporter reporter, Set<String> tags) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/junit/src/main/java/cucumber/junit/ExecutionUnitRunner.java;<<<<<<< MINE
+        world = cucumberScenario.newWorld(runtime);
+        world.buildBackendWorldsAndRunBeforeHooks(jUnitReporter);
+        cucumberScenario.runBackground(jUnitReporter.getFormatter(), jUnitReporter.getReporter());
+=======
+
+
+        //No tags from the junit side?
+        world.buildBackendContextAndRunBeforeHooks(jUnitReporter, new HashSet<String>());
+        cucumberScenario.runBackground(jUnitReporter.getFormatter(), jUnitReporter.getReporter(), world);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/junit/src/main/java/cucumber/junit/ExecutionUnitRunner.java;<<<<<<< MINE
+        world.runAfterHooksAndDisposeBackendWorlds(jUnitReporter);
+=======
+        world.runAfterHooksAndDisposeBackendContext(jUnitReporter, new HashSet<String>());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_beb39a9_6c0dccd/rev_beb39a9-6c0dccd/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+    public void runStep(String uri, Locale locale, String stepKeyword, String stepName, int line, DataTable dataTable, DocString docString) throws Throwable {
+        List<DataTableRow> dataTableRows = null;
+        if (dataTable != null) {
+            dataTableRows = dataTable.getGherkinRows();
+        }
+
+        world.runUnreportedStep(uri, locale, stepKeyword, stepName, line, dataTableRows, docString);
+=======
+    public void runStep(String uri, Locale locale, String stepKeyword, String stepName, int line) throws Throwable {
+        //TODO: need a way to request running of an additional step!
+        unreportedStepExecutor.runUnreportedStep(uri, locale, stepKeyword, stepName, line);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_34484c4_b25faf5/rev_34484c4-b25faf5/core/src/main/java/cucumber/runtime/UndefinedStepsTracker.java;<<<<<<< MINE
+    private boolean isGivenWhenThenKeyword(String keyword, I18n i18n) {
+=======
+    private boolean isGivenWhenThenKeyword(String keyword, Locale locale) {
+        I18n i18n = new I18n(toIsoCode(locale));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_393837b_d4ffedd/rev_393837b-d4ffedd/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+            try {
+                result[n] = converter.fromString(a.getVal());
+            } finally {
+                if (timeConverter != null) {
+                    timeConverter.removeOnlyFormat();
+                }
+            }
+=======
+            result[n] = converter.fromString(a.getVal());
+            } else {
+                result[n] = a.getVal();
+            }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_f388f5e_5654134/rev_f388f5e-5654134/core/src/main/java/cucumber/runtime/RuntimeOptions.java;<<<<<<< MINE
+            if(formatter instanceof ColorAware) {
+=======
+            if (formatter instanceof ColorAware) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_f388f5e_5654134/rev_f388f5e-5654134/java/src/main/java/cucumber/runtime/java/JavaBackend.java;<<<<<<< MINE
+     * @param glue   where stepdefs and hooks will be added.
+     * @param method a candidate method.
+=======
+     * @param glue          where stepdefs and hooks will be added.
+     * @param method        a candidate method.
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_f388f5e_5654134/rev_f388f5e-5654134/junit/src/main/java/cucumber/junit/DescriptionFactory.java;<<<<<<< MINE
+ *
+=======
+ * <p/>
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_f388f5e_5654134/rev_f388f5e-5654134/openejb/src/main/java/cucumber/runtime/java/openejb/OpenEJBObjectFactory.java;<<<<<<< MINE
+    public void createInstances() {
+=======
+    public void start() {
+        configureLog4J();
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        runHooks(glue.getBeforeHooks(), reporter, tags);
+=======
+        runHooks(glue.getBeforeHooks(), reporter, tags, true);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        runHooks(glue.getAfterHooks(), reporter, tags);
+=======
+        runHooks(glue.getAfterHooks(), reporter, tags, false);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter, Set<Tag> tags) {
+=======
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter, Set<Tag> tags, boolean isBefore) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+            runHookIfTagsMatch(hook, reporter, tags);
+=======
+            runHookIfTagsMatch(hook, reporter, tags, isBefore);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter, Set<Tag> tags) {
+=======
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter, Set<Tag> tags, boolean isBefore) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+                reporter.result(result);
+=======
+                addError(t);
+                if (isBefore) {
+                    reporter.before(result);
+                } else {
+                    reporter.after(result);
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/runtime/FeatureBuilder.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/formatter/UsageFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/formatter/ProgressFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/formatter/JUnitFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/formatter/NullFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/formatter/TestFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/runtime/JdkPatternArgumentMatcherTest.java;<<<<<<< MINE
+        assertEquals(pos1, args.get(0).getOffset());
+=======
+        assertEquals(pos1, (long)args.get(0).getOffset());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/runtime/JdkPatternArgumentMatcherTest.java;<<<<<<< MINE
+        assertEquals(pos2, args.get(1).getOffset());
+=======
+        assertEquals(pos2, (long)args.get(1).getOffset());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void comment(String comment, int line) {
+=======
+            public void comment(String comment, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void tag(String tag, int line) {
+=======
+            public void tag(String tag, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void feature(String keyword, String name, String description, int line) {
+=======
+            public void feature(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void background(String keyword, String name, String description, int line) {
+=======
+            public void background(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void scenario(String keyword, String name, String description, int line) {
+=======
+            public void scenario(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void scenarioOutline(String keyword, String name, String description, int line) {
+=======
+            public void scenarioOutline(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void examples(String keyword, String name, String description, int line) {
+=======
+            public void examples(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void step(String keyword, String name, int line) {
+=======
+            public void step(String keyword, String name, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void row(List<String> cells, int line) {
+=======
+            public void row(List<String> cells, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void docString(String contentType, String string, int line) {
+=======
+            public void docString(String contentType, String string, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/junit/src/main/java/cucumber/junit/JUnitReporter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/main/java/cucumber/runtime/FeatureBuilder.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/main/java/cucumber/formatter/UsageFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/main/java/cucumber/formatter/ProgressFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/main/java/cucumber/formatter/JUnitFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/main/java/cucumber/formatter/NullFormatter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void comment(String comment, int line) {
+=======
+            public void comment(String comment, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void tag(String tag, int line) {
+=======
+            public void tag(String tag, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void feature(String keyword, String name, String description, int line) {
+=======
+            public void feature(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void background(String keyword, String name, String description, int line) {
+=======
+            public void background(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void scenario(String keyword, String name, String description, int line) {
+=======
+            public void scenario(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void scenarioOutline(String keyword, String name, String description, int line) {
+=======
+            public void scenarioOutline(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void examples(String keyword, String name, String description, int line) {
+=======
+            public void examples(String keyword, String name, String description, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void step(String keyword, String name, int line) {
+=======
+            public void step(String keyword, String name, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void row(List<String> cells, int line) {
+=======
+            public void row(List<String> cells, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/core/src/test/java/cucumber/table/TableParser.java;<<<<<<< MINE
+            public void docString(String contentType, String string, int line) {
+=======
+            public void docString(String contentType, String string, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2c84c2b_73efd68/rev_2c84c2b-73efd68/junit/src/main/java/cucumber/junit/JUnitReporter.java;<<<<<<< MINE
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+=======
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/ParameterType.java;<<<<<<< MINE
+    public ParameterType(Type type, String dateFormat) {
+=======
+    public static List<ParameterType> fromMethod(Method method) {
+        List<ParameterType> result = new ArrayList<ParameterType>();
+        Type[] genericParameterTypes = method.getGenericParameterTypes();
+        Annotation[][] annotations = method.getParameterAnnotations();
+        for (int i = 0; i < genericParameterTypes.length; i++) {
+            String dateFormat = null;
+            SingleValueConverter singleValueConverter = null;
+            for (Annotation annotation : annotations[i]) {
+                if (annotation instanceof DateFormat) {
+                    dateFormat = ((DateFormat) annotation).value();
+                }
+                if (annotation instanceof Transform) {
+                    try {
+                        singleValueConverter = ((Transform) annotation).value().newInstance();
+                    } catch (InstantiationException e) {
+                        throw new CucumberException(e);
+                    } catch (IllegalAccessException e) {
+                        throw new CucumberException(e);
+                    }
+                }
+            }
+            result.add(new ParameterType(genericParameterTypes[i], dateFormat, singleValueConverter));
+        }
+        return result;
+    }
+
+    public ParameterType(Type type, String dateFormat, SingleValueConverter singleValueConverter) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/ParameterType.java;<<<<<<< MINE
+    public static List<ParameterType> fromMethod(Method method) {
+        List<ParameterType> result = new ArrayList<ParameterType>();
+        Type[] genericParameterTypes = method.getGenericParameterTypes();
+        Annotation[][] annotations = method.getParameterAnnotations();
+        for (int i = 0; i < genericParameterTypes.length; i++) {
+            String dateFormat = null;
+            for (Annotation annotation : annotations[i]) {
+                if (annotation instanceof DateFormat) {
+                    dateFormat = ((DateFormat) annotation).value();
+                    break;
+=======
+    public Object convert(String value, LocalizedXStreams.LocalizedXStream xStream, Locale locale) {
+        try {
+            xStream.setDateFormat(dateFormat);
+            SingleValueConverter converter;
+            xStream.processAnnotations(getRawType());
+
+            if (singleValueConverter != null) {
+                converter = singleValueConverter;
+            } else {
+                if (getRawType().isEnum()) {
+                    converter = new EnumConverter(locale, (Class<? extends Enum>) getRawType());
+                } else {
+                    converter = xStream.getSingleValueConverter(getRawType());
+                    if (converter == null) {
+                        throw new CucumberException(String.format(
+                                "Don't know how to convert \"%s\" into %s.\n" +
+                                        "Try writing your own converter:\n" +
+                                        "\n" +
+                                        "@%s(%sConverter.class)\n" +
+                                        "public class %s {}\n",
+                                value,
+                                getRawType().getName(),
+                                XStreamConverter.class.getName(),
+                                getRawType().getSimpleName(),
+                                getRawType().getSimpleName()
+                        ));
+                    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/ParameterType.java;<<<<<<< MINE
+            result.add(new ParameterType(genericParameterTypes[i], dateFormat));
+=======
+            return converter.fromString(value);
+        } finally {
+            xStream.unsetDateFormat();
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/ParameterType.java;<<<<<<< MINE
+        return result;
+=======
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+            xStream.processAnnotations(parameterType.getRawType());
+
+            if (parameterType.getDateFormat() != null) {
+                timeConverter = TimeConverter.getInstance(parameterType, locale);
+                timeConverter.setOnlyFormat(parameterType.getDateFormat(), locale);
+                singleValueConverter = timeConverter;
+            } else if (parameterType.getRawType().isEnum()) {
+                singleValueConverter = new EnumConverter(locale, (Class<? extends Enum>) parameterType.getRawType());
+            } else {
+                Converter converter = converterLookup.lookupConverterForType(parameterType.getRawType());
+                if (converter instanceof SingleValueConverter) {
+                    singleValueConverter = (SingleValueConverter) converter;
+                } else {
+                    throw new CucumberException(String.format(
+                            "Don't know how to convert %s into %s.\n" +
+                                    "Try writing your own converter:\n" +
+                                    "\n" +
+                                    "@%s(%sConverter.class)\n" +
+                                    "public class %s {}\n",
+                            a.getVal(),
+                            parameterType.getRawType().getName(),
+                            XStreamConverter.class.getName(),
+                            parameterType.getRawType().getSimpleName(),
+                            parameterType.getRawType().getSimpleName()
+                    ));
+                }
+            }
+            try {
+                result.add(singleValueConverter.fromString(a.getVal()));
+            } finally {
+                if (timeConverter != null) {
+                    timeConverter.removeOnlyFormat();
+                }
+            }
+=======
+            arg = parameterType.convert(a.getVal(), xStream, locale);
+            result.add(arg);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+        if(parameterType == null) {
+=======
+        if (parameterType == null) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+            parameterType = new ParameterType(argumentType, null);
+=======
+            parameterType = new ParameterType(argumentType, null, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/runtime/StepDefinitionMatchTest.java;<<<<<<< MINE
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(Integer.TYPE, null));
+=======
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(Integer.TYPE, null, null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/runtime/StepDefinitionMatchTest.java;<<<<<<< MINE
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(Thing.class, null));
+=======
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(Thing.class, null, null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/runtime/StepDefinitionMatchTest.java;<<<<<<< MINE
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(Thang.class, null));
+=======
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(Thang.class, null, null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/runtime/StepDefinitionMatchTest.java;<<<<<<< MINE
+                    "Don't know how to convert blah into cucumber.runtime.StepDefinitionMatchTest$Thang.\n" +
+=======
+                    "Don't know how to convert \"blah\" into cucumber.runtime.StepDefinitionMatchTest$Thang.\n" +
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/runtime/StepDefinitionMatchTest.java;<<<<<<< MINE
+                            "@com.thoughtworks.xstream.annotations.XStreamConverter(ThangConverter.class)\n" +
+=======
+                            "@cucumber.runtime.xstream.annotations.XStreamConverter(ThangConverter.class)\n" +
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/runtime/StepDefinitionMatchTest.java;<<<<<<< MINE
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(String.class, null));
+=======
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(String.class, null, null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/runtime/StepDefinitionMatchTest.java;<<<<<<< MINE
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(Integer.TYPE, null));
+        when(stepDefinition.getParameterType(1, String.class)).thenReturn(new ParameterType(String.class, null));
+=======
+        when(stepDefinition.getParameterType(0, String.class)).thenReturn(new ParameterType(Integer.TYPE, null, null));
+        when(stepDefinition.getParameterType(1, String.class)).thenReturn(new ParameterType(String.class, null, null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/test/java/cucumber/table/FromDataTableTest.java;<<<<<<< MINE
+        public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+=======
+        public Name transform(String value) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/jython/src/main/java/cucumber/runtime/jython/JythonStepDefinition.java;<<<<<<< MINE
+        return new ParameterType(argumentType, null);
+=======
+        return new ParameterType(argumentType, null, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/jruby/src/main/java/cucumber/runtime/jruby/JRubyStepDefinition.java;<<<<<<< MINE
+        return new ParameterType(argumentType, null);
+=======
+        return new ParameterType(argumentType, null, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/groovy/src/main/java/cucumber/runtime/groovy/GroovyStepDefinition.java;<<<<<<< MINE
+            result.add(new ParameterType(parameterType, null));
+=======
+            result.add(new ParameterType(parameterType, null, null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/ioke/src/main/java/cucumber/runtime/ioke/IokeStepDefinition.java;<<<<<<< MINE
+            return listOf(groupCount, new ParameterType(String.class, null));
+=======
+            return listOf(groupCount, new ParameterType(String.class, null, null));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/rhino/src/main/java/cucumber/runtime/rhino/RhinoStepDefinition.java;<<<<<<< MINE
+        return new ParameterType(argumentType, null);
+=======
+        return new ParameterType(argumentType, null, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9612724_e572769/rev_9612724-e572769/jython/src/main/java/cucumber/runtime/jython/JythonBackend.java;<<<<<<< MINE
+    public void addBeforeHook(PyInstance hookDefinition) {
+        glue.addBeforeHook(new JythonHookDefinition(this, hookDefinition));
+    }
+
+    public void addAfterHook(PyInstance hookDefinition) {
+        glue.addAfterHook(new JythonHookDefinition(this, hookDefinition));
+    }
+
+    public void executeHook(PyInstance hookDefinition, Object[] scenarioResults) {
+        PyObject[] pyArgs = new PyObject[1];
+        pyArgs[0] = pyWorld;
+        hookDefinition.invoke("execute", pyArgs);
+    }
+
+    public void execute(PyInstance stepdef, Object[] args) {
+=======
+    public void execute(PyInstance stepdef, Object[] args) throws Throwable {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d89f488_1499ae8/rev_d89f488-1499ae8/core/src/main/java/cucumber/api/DataTable.java;<<<<<<< MINE
+    void diff(DataTable other) throws TableDiffException {
+=======
+    public void diff(DataTable other) throws TableDiffException {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+            expected.diff(actual);
+=======
+            List<List<String>> other = otherTableWithTwoConsecutiveRowsInserted().raw();
+            table().diff(other);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+            String expectedDiff = "" +
+=======
+            String expected = "" +
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+                    "    + | I just woke up |\n";
+            assertEquals(expectedDiff, e.getMessage());
+=======
+                    "      | Aslak | aslak@email.com      | 123 |\n" +
+                    "      | Joe   | joe@email.com        | 234 |\n" +
+                    "    + | Doe   | joe@email.com        | 234 |\n" +
+                    "    + | Foo   | schnickens@email.net | 789 |\n" +
+                    "      | Bryan | bryan@email.org      | 456 |\n" +
+                    "      | Ni    | ni@email.com         | 654 |\n";
+            assertEquals(expected, e.getMessage());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/main/java/cucumber/runtime/table/TableDiffer.java;<<<<<<< MINE
+        if (delta.getType() == Delta.TYPE.CHANGE || delta.getType() == Delta.TYPE.DELETE) {
+            List<DiffableRow> deletedLines = (List<DiffableRow>) delta.getOriginal().getLines();
+            for (DiffableRow row : deletedLines) {
+                diffTableRows.add(new DataTableRow(row.row.getComments(), row.row.getCells(), row.row.getLine(), Row.DiffType.DELETE));
+            }
+=======
+        markChangedAndDeletedRowsInOriginalAsMissing(diffTableRows, delta);
+        markChangedAndInsertedRowsInRevisedAsNew(diffTableRows, delta);
+    }
+
+    private void markChangedAndDeletedRowsInOriginalAsMissing(List<DataTableRow> diffTableRows, Delta delta) {
+        List<DiffableRow> deletedLines = (List<DiffableRow>) delta.getOriginal().getLines();
+        for (DiffableRow row : deletedLines) {
+            diffTableRows.add(new DataTableRow(row.row.getComments(), row.row.getCells(), row.row.getLine(), Row.DiffType.DELETE));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+    private static boolean isPending(Throwable t) {
+=======
+    public static boolean isPending(Throwable t) {
+        if (t == null) {
+            return false;
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/main/java/cucumber/runtime/Env.java;<<<<<<< MINE
+                value = System.getProperty(key);
+                if (value == null) {
+                    try {
+                        value = ResourceBundle.getBundle(bundleName).getString(key);
+                    } catch (MissingResourceException ignore) {
+                    }
+=======
+                try {
+                    value = ResourceBundle.getBundle(bundleName).getString(key);
+                } catch (MissingResourceException ignore) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/junit/src/main/java/cucumber/runtime/junit/JUnitReporter.java;<<<<<<< MINE
+        return Result.UNDEFINED == result || error instanceof PendingException;
+=======
+        return Result.UNDEFINED == result || isPending(error);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_c87e2e2_3be4969/rev_c87e2e2-3be4969/examples/java-webbit-websockets-selenium/src/main/java/cucumber/examples/java/websockets/TemperatureServer.java;<<<<<<< MINE
+        webServer = WebServers.createWebServer(port);
+=======
+        webServer = WebServers.createWebServer(Executors.newSingleThreadExecutor(), new InetSocketAddress(port), URI.create("http://localhost:" + port));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_39e2432_6045294/rev_39e2432-6045294/core/src/test/java/cucumber/runtime/TestHelper.java;<<<<<<< MINE
+    static CucumberFeature feature(final String path, final String source) throws IOException {
+=======
+    public static CucumberFeature feature(final String path, final String source) throws IOException {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_442c4ed_4439178/rev_442c4ed-4439178/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        this.resourceLoader = resourceLoader;
+        this.classLoader = classLoader;
+=======
+        this(resourceLoader, classLoader, backends, runtimeOptions, null);
+    }
+
+    public Runtime(ResourceLoader resourceLoader, ClassLoader classLoader, Collection<? extends Backend> backends,
+            RuntimeOptions runtimeOptions, RuntimeGlue optionalGlue) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_442c4ed_4439178/rev_442c4ed-4439178/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        this.runtimeOptions = runtimeOptions;
+        this.glue = optionalGlue != null ? optionalGlue : new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader));
+        this.summaryCounter = new SummaryCounter(runtimeOptions.isMonochrome());
+=======
+        this.runtimeOptions = runtimeOptions;
+        this.glue = optionalGlue != null ? optionalGlue : new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_517487c_10ba032/rev_517487c-10ba032/junit/src/test/java/cucumber/runtime/junit/CucumberTest.java;<<<<<<< MINE
+    @Test
+=======
+    @Test
+    public void testThatParsingErrorsIsNicelyReported() throws Exception {
+        try {
+            new Cucumber(LexerErrorFeature.class);
+            fail("Expecting error");
+        } catch (CucumberException e) {
+            assertEquals("Error parsing feature file cucumber/runtime/error/lexer_error.feature", e.getMessage());
+        }
+    }
+
+    @Test(expected = CucumberException.class)
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_c4f6c53_9cc482e/rev_c4f6c53-9cc482e/core/src/main/java/cucumber/runtime/xstream/LocalizedXStreams.java;<<<<<<< MINE
+                    timeConverters.add(timeConverter);
+=======
+                    timeConverters.get().add(timeConverter);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_c4f6c53_9cc482e/rev_c4f6c53-9cc482e/core/src/main/java/cucumber/runtime/xstream/LocalizedXStreams.java;<<<<<<< MINE
+            for (TimeConverter timeConverter : timeConverters) {
+=======
+            for (TimeConverter timeConverter : timeConverters.get()) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_c4f6c53_9cc482e/rev_c4f6c53-9cc482e/core/src/main/java/cucumber/runtime/xstream/LocalizedXStreams.java;<<<<<<< MINE
+            timeConverters.clear();
+=======
+            timeConverters.get().clear();
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/main/java/cucumber/runtime/groovy/GroovyBackend.java;<<<<<<< MINE
+        world = worldClosure == null ? new Object() : worldClosure.call();
+=======
+        world = new GroovyWorld();
+        for (Closure closure : worldClosures) {
+            world.registerWorld(closure.call());
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/main/java/cucumber/runtime/groovy/GroovyBackend.java;<<<<<<< MINE
+        if (worldClosure != null) throw new CucumberException("World is already set");
+        worldClosure = closure;
+=======
+        worldClosures.add(closure);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/test/java/cucumber/runtime/groovy/GroovyBackendTest.java;<<<<<<< MINE
+    public void builds_world_by_calling_closure() {
+        backend.registerWorld(closure);
+=======
+    public void should_build_world_by_calling_the_closure() {
+        backend.registerWorld(new MethodClosure(this, "worldClosureCall"));
+        backend.buildWorld();
+
+        GroovyWorld groovyWorld = backend.getGroovyWorld();
+        assertEquals(1, groovyWorld.worldsCount());
+    }
+
+    @Test
+    public void should_build_world_object_even_if_closure_world_was_not_added() {
+        assertNull(backend.getGroovyWorld());
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/test/java/cucumber/runtime/groovy/GroovyBackendTest.java;<<<<<<< MINE
+        verify(closure).call();
+=======
+        assertEquals(0, backend.getGroovyWorld().worldsCount());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/test/java/cucumber/runtime/groovy/GroovyBackendTest.java;<<<<<<< MINE
+    public void builds_default_wold_if_wold_closer_does_not_set() {
+=======
+    public void should_clean_up_worlds_after_dispose() {
+        backend.registerWorld(new MethodClosure(this, "worldClosureCall"));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/test/java/cucumber/runtime/groovy/GroovyBackendTest.java;<<<<<<< MINE
+    @Test(expected = CucumberException.class)
+    public void raises_exception_for_two_wolds() {
+        backend.registerWorld(closure);
+        backend.registerWorld(closure);
+=======
+    @SuppressWarnings("UnusedDeclaration")
+    private AnotherCustomWorld worldClosureCall() {
+        return new AnotherCustomWorld();
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_950172a_fd317c3/rev_950172a-fd317c3/core/src/main/java/cucumber/runtime/model/CucumberScenario.java;<<<<<<< MINE
+        formatter.endOfScenarioLifeCycle((Scenario) getGherkinModel());
+        runtime.disposeBackendWorlds();
+=======
+        try {
+            formatter.endOfScenarioLifeCycle((Scenario) getGherkinModel());
+        } catch (Throwable ignore) {
+            // IntelliJ has its own formatter which doesn't yet implement this.
+        }
+        runtime.disposeBackendWorlds(createScenarioDesignation());
+    }
+
+    private String createScenarioDesignation() {
+        return cucumberFeature.getPath() + ":" + Integer.toString(scenario.getLine()) + " # " +
+                scenario.getKeyword() + ": " + scenario.getName();
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_062758b_636471a/rev_062758b-636471a/junit/src/test/java/cucumber/runtime/junit/FeatureRunnerTest.java;<<<<<<< MINE
+        final TimeService timeServiceStub = new TimeService() {
+            @Override
+            public long time() {
+                return 0l;
+            }
+        };
+        final Runtime runtime = new Runtime(resourceLoader, classLoader, asList(mock(Backend.class)), runtimeOptions, timeServiceStub, glue);
+        return new FeatureRunner(cucumberFeature, runtime, new JUnitReporter(runtime.getEventBus(), false, junitOption));
+    }
+
+
+    @Test
+    public void should_populate_descriptions_with_stable_unique_ids() throws Exception {
+        CucumberFeature cucumberFeature = TestPickleBuilder.parseFeature("path/test.feature", "" +
+            "Feature: feature name\n" +
+            "  Background:\n" +
+            "    Given background step\n" +
+            "  Scenario: A\n" +
+            "    Then scenario name\n" +
+            "  Scenario: B\n" +
+            "    Then scenario name\n" +
+            "  Scenario Outline: C\n" +
+            "    Then scenario <name>\n" +
+            "  Examples:\n" +
+            "    | name |\n" +
+            "    | C    |\n" +
+            "    | D    |\n" +
+            "    | E    |\n"
+
+        );
+
+        FeatureRunner runner = createFeatureRunner(cucumberFeature);
+        FeatureRunner rerunner = createFeatureRunner(cucumberFeature);
+
+        Set<Description> descriptions = new HashSet<Description>();
+        assertDescriptionIsUnique(runner.getDescription(), descriptions);
+        assertDescriptionIsPredictable(runner.getDescription(), descriptions);
+        assertDescriptionIsPredictable(rerunner.getDescription(), descriptions);
+
+    }
+
+    @Test
+    public void should_not_create_step_descriptions_by_default() throws Exception {
+        CucumberFeature cucumberFeature = TestPickleBuilder.parseFeature("path/test.feature", "" +
+            "Feature: feature name\n" +
+            "  Background:\n" +
+            "    Given background step\n" +
+            "  Scenario: A\n" +
+            "    Then scenario name\n" +
+            "  Scenario: B\n" +
+            "    Then scenario name\n" +
+            "  Scenario Outline: C\n" +
+            "    Then scenario <name>\n" +
+            "  Examples:\n" +
+            "    | name |\n" +
+            "    | C    |\n" +
+            "    | D    |\n" +
+            "    | E    |\n"
+
+        );
+
+        FeatureRunner runner = createFeatureRunner(cucumberFeature);
+
+        Description feature = runner.getDescription();
+        Description scenarioA = feature.getChildren().get(0);
+        assertTrue(scenarioA.getChildren().isEmpty());
+        Description scenarioB = feature.getChildren().get(1);
+        assertTrue(scenarioB.getChildren().isEmpty());
+        Description scenarioC0 = feature.getChildren().get(2);
+        assertTrue(scenarioC0.getChildren().isEmpty());
+        Description scenarioC1 = feature.getChildren().get(3);
+        assertTrue(scenarioC1.getChildren().isEmpty());
+        Description scenarioC2 = feature.getChildren().get(4);
+        assertTrue(scenarioC2.getChildren().isEmpty());
+    }
+
+    @Test
+    public void step_descriptions_can_be_turned_on() throws Exception {
+        CucumberFeature cucumberFeature = TestPickleBuilder.parseFeature("path/test.feature", "" +
+            "Feature: feature name\n" +
+            "  Background:\n" +
+            "    Given background step\n" +
+            "  Scenario: A\n" +
+            "    Then scenario name\n" +
+            "  Scenario: B\n" +
+            "    Then scenario name\n" +
+            "  Scenario Outline: C\n" +
+            "    Then scenario <name>\n" +
+            "  Examples:\n" +
+            "    | name |\n" +
+            "    | C    |\n" +
+            "    | D    |\n" +
+            "    | E    |\n"
+
+        );
+
+        FeatureRunner runner = createFeatureRunner(cucumberFeature, "--step-notifications");
+
+        Description feature = runner.getDescription();
+        Description scenarioA = feature.getChildren().get(0);
+        assertEquals(2, scenarioA.getChildren().size());
+        Description scenarioB = feature.getChildren().get(1);
+        assertEquals(2, scenarioB.getChildren().size());
+        Description scenarioC0 = feature.getChildren().get(2);
+        assertEquals(2, scenarioC0.getChildren().size());
+        Description scenarioC1 = feature.getChildren().get(3);
+        assertEquals(2, scenarioC1.getChildren().size());
+        Description scenarioC2 = feature.getChildren().get(4);
+        assertEquals(2, scenarioC2.getChildren().size());
+    }
+
+    private static void assertDescriptionIsUnique(Description description, Set<Description> descriptions) {
+        // Note: JUnit uses the the serializable parameter as the unique id when comparing Descriptions
+        assertTrue(descriptions.add(description));
+        for (Description each : description.getChildren()) {
+            assertDescriptionIsUnique(each, descriptions);
+        }
+    }
+
+    private static void assertDescriptionIsPredictable(Description description, Set<Description> descriptions) {
+        assertTrue(descriptions.contains(description));
+        for (Description each : description.getChildren()) {
+            assertDescriptionIsPredictable(each, descriptions);
+        }
+=======
+        when(glue.getTracker()).thenReturn(new UndefinedStepsTracker());
+        final Runtime runtime = new Runtime(resourceLoader, classLoader, asList(mock(Backend.class)), runtimeOptions, new StopWatch.Stub(0l), glue);
+        FormatterSpy formatterSpy = new FormatterSpy();
+        FeatureRunner runner = new FeatureRunner(cucumberFeature, runtime, new JUnitReporter(formatterSpy, formatterSpy, false, new JUnitOptions(Collections.<String>emptyList())));
+        runner.run(mock(RunNotifier.class));
+        return formatterSpy.toString();
+>>>>>>> YOURS

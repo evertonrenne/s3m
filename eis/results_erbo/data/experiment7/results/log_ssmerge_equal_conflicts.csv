@@ -1,0 +1,99 @@
+file;ssmergeConf;linedbasedConf
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;<<<<<<< MINE
+
+    DAGTransformer dagTransformer = new SugiyamaLayoutTransformer(true);
+    dagTransformer.transform(nodes);
+=======
+    for (DAGNode node : nodes) {
+      // useful if we need to read a file, add a field, output and re-generate
+      node.setRuntime("pig");
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+
+    DAGTransformer dagTransformer = new SugiyamaLayoutTransformer(true);
+    dagTransformer.transform(nodes);
+=======
+    for (DAGNode node : nodes) {
+      // useful if we need to read a file, add a field, output and re-generate
+      node.setRuntime("pig");
+    }
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_311fb3e_0974c60/rev_311fb3e-0974c60/common/src/test/java/com/twitter/ambrose/service/impl/InMemoryStatsServiceTest.java;<<<<<<< MINE
+  public void testGetAllEvents() throws IOException {
+    for(WorkflowEvent event : testEvents) {
+=======
+  public void testGetAllEvents() throws IOException {
+    for(Event event : testEvents) {
+>>>>>>> YOURS;<<<<<<< MINE
+  public void testGetAllEvents() throws IOException {
+    for(WorkflowEvent event : testEvents) {
+=======
+  public void testGetAllEvents() throws IOException {
+    for(Event event : testEvents) {
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_311fb3e_0974c60/rev_311fb3e-0974c60/common/src/test/java/com/twitter/ambrose/service/impl/InMemoryStatsServiceTest.java;<<<<<<< MINE
+  public void testGetEventsSince() throws IOException {
+    for(WorkflowEvent event : testEvents) {
+=======
+  public void testGetEventsSince() throws IOException {
+    for(Event event : testEvents) {
+>>>>>>> YOURS;<<<<<<< MINE
+  public void testGetEventsSince() throws IOException {
+    for(WorkflowEvent event : testEvents) {
+=======
+  public void testGetEventsSince() throws IOException {
+    for(Event event : testEvents) {
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+      List<DAGNode> successorNodeList = Lists.newArrayList();
+=======
+      List<DAGNode<? extends Job>> successorNodeList = Lists.newArrayList();
+>>>>>>> YOURS;<<<<<<< MINE
+      List<DAGNode> successorNodeList = Lists.newArrayList();
+=======
+      List<DAGNode<? extends Job>> successorNodeList = Lists.newArrayList();
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_104bf38_e5f05a2/rev_104bf38-e5f05a2/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+    log.info("jobStartedNotification - scriptId " + scriptId + "jobId " + assignedJobId);
+
+=======
+>>>>>>> YOURS;<<<<<<< MINE
+    log.info("jobStartedNotification - scriptId " + scriptId + "jobId " + assignedJobId);
+
+=======
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_104bf38_e5f05a2/rev_104bf38-e5f05a2/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+    Workflow workflow = new Workflow(scriptId, workflowVersion, jobs);
+    try {
+      outputStatsData(workflow);
+    } catch (IOException e) {
+      log.error("Exception outputting workflow", e);
+=======
+    if (workflowVersion == null) {
+      log.warn("scriptFingerprint not set for this script - not saving stats." );
+    } else {
+      Workflow workflow = new Workflow(scriptId, workflowVersion, jobs);
+
+      try {
+        outputStatsData(workflow);
+      } catch (IOException e) {
+        log.error("Exception outputting workflow", e);
+      }
+>>>>>>> YOURS;<<<<<<< MINE
+    Workflow workflow = new Workflow(scriptId, workflowVersion, jobs);
+    try {
+      outputStatsData(workflow);
+    } catch (IOException e) {
+      log.error("Exception outputting workflow", e);
+=======
+    if (workflowVersion == null) {
+      log.warn("scriptFingerprint not set for this script - not saving stats." );
+    } else {
+      Workflow workflow = new Workflow(scriptId, workflowVersion, jobs);
+
+      try {
+        outputStatsData(workflow);
+      } catch (IOException e) {
+        log.error("Exception outputting workflow", e);
+      }
+>>>>>>> YOURS

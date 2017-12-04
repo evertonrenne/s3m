@@ -1,0 +1,4 @@
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_37833de_497bc19/rev_37833de-497bc19/src/main/java/com/netflix/astyanax/serializers/SerializerPackageImpl.java;<<<<<<< MINE
+        this.keySerializer = type.getSerializer();
+=======
+>>>>>>> YOURS

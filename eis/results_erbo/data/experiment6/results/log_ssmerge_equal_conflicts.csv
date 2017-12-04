@@ -1,0 +1,853 @@
+file;ssmergeConf;linedbasedConf
+/home/ramdisk/experiment6/projects/databus/revisions/rev_3744018_5eec32f/rev_3744018-5eec32f/databus2-relay/databus2-relay-impl/src/test/java/com/linkedin/databus2/relay/TestDatabusRelayMain.java;<<<<<<< MINE
+			relay1.getInboundEventStatisticsCollector();//force merge of stats;
+
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn: "+ stats2.getMaxScn() +
+							  "; source relay max scn:" + stats.getMaxScn());
+					return stats2.getMaxScn() == stats.getMaxScn();
+				}
+			}, "chained relay caught up", 25000, log);
+
+			Assert.assertEquals(stats2.getNumSysEvents(), firstGenWindows);
+			Assert.assertEquals(stats2.getMinScn(), stats.getMinScn());
+			Assert.assertEquals(stats2.getNumDataEvents(), firstGenDataEvents);
+
+=======
+		
+		
+>>>>>>> YOURS;<<<<<<< MINE
+			relay1.getInboundEventStatisticsCollector();//force merge of stats;
+
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn: "+ stats2.getMaxScn() +
+							  "; source relay max scn:" + stats.getMaxScn());
+					return stats2.getMaxScn() == stats.getMaxScn();
+				}
+			}, "chained relay caught up", 25000, log);
+
+			Assert.assertEquals(stats2.getNumSysEvents(), firstGenWindows);
+			Assert.assertEquals(stats2.getMinScn(), stats.getMinScn());
+			Assert.assertEquals(stats2.getNumDataEvents(), firstGenDataEvents);
+
+=======
+		
+		
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_3744018_5eec32f/rev_3744018-5eec32f/databus2-relay/databus2-relay-impl/src/test/java/com/linkedin/databus2/relay/TestDatabusRelayMain.java;<<<<<<< MINE
+			relay3.getInboundEventStatisticsCollector();//force merge of stats;
+
+			// wait until client got all events or for maxTimeout;
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn:" + stats2.getMaxScn() +
+							"; master relay max scn:" + stats3.getMaxScn());
+					return stats2.getMaxScn() == stats3.getMaxScn();
+				}
+			}, "chained relay caught up with new master", 30000, log);
+=======
+		
+			Thread.sleep(35000);
+>>>>>>> YOURS;<<<<<<< MINE
+			relay3.getInboundEventStatisticsCollector();//force merge of stats;
+
+			// wait until client got all events or for maxTimeout;
+			TestUtil.assertWithBackoff(new ConditionCheck() {
+				@Override
+				public boolean check() {
+					final DbusEventsTotalStats stats2 = relay2
+							.getInboundEventStatisticsCollector().getTotalStats();
+					log.debug("chained relay max scn:" + stats2.getMaxScn() +
+							"; master relay max scn:" + stats3.getMaxScn());
+					return stats2.getMaxScn() == stats3.getMaxScn();
+				}
+			}, "chained relay caught up with new master", 30000, log);
+=======
+		
+			Thread.sleep(35000);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    this(registrations, executorService, timeBudgetMs, callbackFactory, null, null);
+=======
+    this(registrations, executorService, timeBudgetMs, callbackFactory, null, null, null);
+>>>>>>> YOURS;<<<<<<< MINE
+    this(registrations, executorService, timeBudgetMs, callbackFactory, null, null);
+=======
+    this(registrations, executorService, timeBudgetMs, callbackFactory, null, null, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> checkpointCallable =
+          _callbackFactory.createCheckpointCallable(curNanos, checkpointScn, _loggingConsumer, null);
+      _currentBatch.add(checkpointCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> checkpointCallable =
+          _callbackFactory.createCheckpointCallable(curNanos, checkpointScn, _loggingConsumer, false);
+      _currentBatch.add(checkpointCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> checkpointCallable =
+          _callbackFactory.createCheckpointCallable(curNanos, checkpointScn, _loggingConsumer, null);
+      _currentBatch.add(checkpointCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> checkpointCallable =
+          _callbackFactory.createCheckpointCallable(curNanos, checkpointScn, _loggingConsumer, false);
+      _currentBatch.add(checkpointCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> dataEventCallable =
+          _callbackFactory.createDataEventCallable(curNanos, e, eventDecoder, _loggingConsumer, null);
+      _currentBatch.add(dataEventCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> dataEventCallable =
+          _callbackFactory.createDataEventCallable(curNanos, e, eventDecoder, _loggingConsumer, false);
+      _currentBatch.add(dataEventCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> dataEventCallable =
+          _callbackFactory.createDataEventCallable(curNanos, e, eventDecoder, _loggingConsumer, null);
+      _currentBatch.add(dataEventCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> dataEventCallable =
+          _callbackFactory.createDataEventCallable(curNanos, e, eventDecoder, _loggingConsumer, false);
+      _currentBatch.add(dataEventCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endWindowCallable =
+          _callbackFactory.createEndDataEventSequenceCallable(curNanos, endScn, _loggingConsumer, null);
+      _currentBatch.add(endWindowCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endWindowCallable =
+          _callbackFactory.createEndDataEventSequenceCallable(curNanos, endScn, _loggingConsumer, false);
+      _currentBatch.add(endWindowCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endWindowCallable =
+          _callbackFactory.createEndDataEventSequenceCallable(curNanos, endScn, _loggingConsumer, null);
+      _currentBatch.add(endWindowCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endWindowCallable =
+          _callbackFactory.createEndDataEventSequenceCallable(curNanos, endScn, _loggingConsumer, false);
+      _currentBatch.add(endWindowCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endSourceCallable =
+          _callbackFactory.createEndSourceCallable(curNanos, source, sourceSchema, _loggingConsumer, null);
+      _currentBatch.add(endSourceCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endSourceCallable =
+          _callbackFactory.createEndSourceCallable(curNanos, source, sourceSchema, _loggingConsumer, false);
+      _currentBatch.add(endSourceCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endSourceCallable =
+          _callbackFactory.createEndSourceCallable(curNanos, source, sourceSchema, _loggingConsumer, null);
+      _currentBatch.add(endSourceCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endSourceCallable =
+          _callbackFactory.createEndSourceCallable(curNanos, source, sourceSchema, _loggingConsumer, false);
+      _currentBatch.add(endSourceCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> rollbackCallable =
+          _callbackFactory.createRollbackCallable(curNanos, startScn, _loggingConsumer, null);
+      _currentBatch.add(rollbackCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> rollbackCallable =
+          _callbackFactory.createRollbackCallable(curNanos, startScn, _loggingConsumer, false);
+      _currentBatch.add(rollbackCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> rollbackCallable =
+          _callbackFactory.createRollbackCallable(curNanos, startScn, _loggingConsumer, null);
+      _currentBatch.add(rollbackCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> rollbackCallable =
+          _callbackFactory.createRollbackCallable(curNanos, startScn, _loggingConsumer, false);
+      _currentBatch.add(rollbackCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startWindowCallable =
+          _callbackFactory.createStartDataEventSequenceCallable(curNanos, startScn, _loggingConsumer, null);
+      _currentBatch.add(startWindowCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startWindowCallable =
+          _callbackFactory.createStartDataEventSequenceCallable(curNanos, startScn, _loggingConsumer, false);
+      _currentBatch.add(startWindowCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startWindowCallable =
+          _callbackFactory.createStartDataEventSequenceCallable(curNanos, startScn, _loggingConsumer, null);
+      _currentBatch.add(startWindowCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startWindowCallable =
+          _callbackFactory.createStartDataEventSequenceCallable(curNanos, startScn, _loggingConsumer, false);
+      _currentBatch.add(startWindowCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startSourceCallable =
+          _callbackFactory.createStartSourceCallable(curNanos, source, sourceSchema, _loggingConsumer, null);
+      _currentBatch.add(startSourceCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startSourceCallable =
+          _callbackFactory.createStartSourceCallable(curNanos, source, sourceSchema, _loggingConsumer, false);
+      _currentBatch.add(startSourceCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startSourceCallable =
+          _callbackFactory.createStartSourceCallable(curNanos, source, sourceSchema, _loggingConsumer, null);
+      _currentBatch.add(startSourceCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startSourceCallable =
+          _callbackFactory.createStartSourceCallable(curNanos, source, sourceSchema, _loggingConsumer, false);
+      _currentBatch.add(startSourceCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startConsumptionCallable =
+          _callbackFactory.createStartConsumptionCallable(curNanos, _loggingConsumer, null);
+      _currentBatch.add(startConsumptionCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startConsumptionCallable =
+          _callbackFactory.createStartConsumptionCallable(curNanos, _loggingConsumer, false);
+      _currentBatch.add(startConsumptionCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startConsumptionCallable =
+          _callbackFactory.createStartConsumptionCallable(curNanos, _loggingConsumer, null);
+      _currentBatch.add(startConsumptionCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> startConsumptionCallable =
+          _callbackFactory.createStartConsumptionCallable(curNanos, _loggingConsumer, false);
+      _currentBatch.add(startConsumptionCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endConsumptionCallable =
+          _callbackFactory.createEndConsumptionCallable(curNanos, _loggingConsumer, null);
+      _currentBatch.add(endConsumptionCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endConsumptionCallable =
+          _callbackFactory.createEndConsumptionCallable(curNanos, _loggingConsumer, false);
+      _currentBatch.add(endConsumptionCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endConsumptionCallable =
+          _callbackFactory.createEndConsumptionCallable(curNanos, _loggingConsumer, null);
+      _currentBatch.add(endConsumptionCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> endConsumptionCallable =
+          _callbackFactory.createEndConsumptionCallable(curNanos, _loggingConsumer, false);
+      _currentBatch.add(endConsumptionCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/main/java/com/linkedin/databus/client/consumer/MultiConsumerCallback.java;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> onErrorCallable =
+          _callbackFactory.createOnErrorCallable(curNanos, err, _loggingConsumer, null);
+      _currentBatch.add(onErrorCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> onErrorCallable =
+          _callbackFactory.createOnErrorCallable(curNanos, err, _loggingConsumer, false);
+      _currentBatch.add(onErrorCallable);
+    }
+>>>>>>> YOURS;<<<<<<< MINE
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> onErrorCallable =
+          _callbackFactory.createOnErrorCallable(curNanos, err, _loggingConsumer, null);
+      _currentBatch.add(onErrorCallable);
+    }
+=======
+    if (_loggingConsumer != null)
+    {
+      ConsumerCallable<ConsumerCallbackResult> onErrorCallable =
+          _callbackFactory.createOnErrorCallable(curNanos, err, _loggingConsumer, false);
+      _currentBatch.add(onErrorCallable);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            statsCollector,
+            null);
+=======
+            new StreamConsumerCallbackFactory(consumerStatsCollector, unifiedStatsCollector),
+            consumerStatsCollector,
+            unifiedStatsCollector,
+            null);
+>>>>>>> YOURS;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            statsCollector,
+            null);
+=======
+            new StreamConsumerCallbackFactory(consumerStatsCollector, unifiedStatsCollector),
+            consumerStatsCollector,
+            unifiedStatsCollector,
+            null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+>>>>>>> YOURS;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+>>>>>>> YOURS;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            null,
+            null);
+=======
+            new StreamConsumerCallbackFactory(null, null),
+            null,
+            null,
+            null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-common/src/test/java/com/linkedin/databus/client/consumer/TestMultiConsumerCallback.java;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            statsCollector,
+            null);
+=======
+            new StreamConsumerCallbackFactory(consumerStatsCollector, unifiedStatsCollector),
+            consumerStatsCollector,
+            unifiedStatsCollector,
+            null);
+>>>>>>> YOURS;<<<<<<< MINE
+            new StreamConsumerCallbackFactory(),
+            statsCollector,
+            null);
+=======
+            new StreamConsumerCallbackFactory(consumerStatsCollector, unifiedStatsCollector),
+            consumerStatsCollector,
+            unifiedStatsCollector,
+            null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+>>>>>>> YOURS;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                    1000,new StreamConsumerCallbackFactory(),null, null);
+=======
+                    1000, new StreamConsumerCallbackFactory(null, null), null, null, null);
+>>>>>>> YOURS;<<<<<<< MINE
+                    1000,new StreamConsumerCallbackFactory(),null, null);
+=======
+                    1000, new StreamConsumerCallbackFactory(null, null), null, null, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                    1000,new StreamConsumerCallbackFactory(),null, null);
+=======
+                    1000, new StreamConsumerCallbackFactory(null, null), null, null, null);
+>>>>>>> YOURS;<<<<<<< MINE
+                    1000,new StreamConsumerCallbackFactory(),null, null);
+=======
+                    1000, new StreamConsumerCallbackFactory(null, null), null, null, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+            //Single threaded execution of consumer
+            MultiConsumerCallback mConsumer = new MultiConsumerCallback(allRegistrations,Executors.newFixedThreadPool(1),
+                    consumerTimeBudgetMs,new StreamConsumerCallbackFactory(),null, null);
+=======
+            final UnifiedClientStats unifiedStats = new UnifiedClientStats(0, "test", "test.unified");
+            // single-threaded execution of consumer
+            MultiConsumerCallback mConsumer =
+                new MultiConsumerCallback(allRegistrations,
+                                          Executors.newFixedThreadPool(1),
+                                          consumerTimeBudgetMs,
+                                          new StreamConsumerCallbackFactory(null, unifiedStats),
+                                          null,
+                                          unifiedStats,
+                                          null);
+>>>>>>> YOURS;<<<<<<< MINE
+            //Single threaded execution of consumer
+            MultiConsumerCallback mConsumer = new MultiConsumerCallback(allRegistrations,Executors.newFixedThreadPool(1),
+                    consumerTimeBudgetMs,new StreamConsumerCallbackFactory(),null, null);
+
+
+=======
+            final UnifiedClientStats unifiedStats = new UnifiedClientStats(0, "test", "test.unified");
+            // single-threaded execution of consumer
+            MultiConsumerCallback mConsumer =
+                new MultiConsumerCallback(allRegistrations,
+                                          Executors.newFixedThreadPool(1),
+                                          consumerTimeBudgetMs,
+                                          new StreamConsumerCallbackFactory(null, unifiedStats),
+                                          null,
+                                          unifiedStats,
+                                          null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+            TestDispatcher<DatabusCombinedConsumer> dispatcher = new TestDispatcher<DatabusCombinedConsumer>("rollBackcheck",
+                    connConfig,
+                    subs,
+                    new InMemoryPersistenceProvider(),
+                    dataEventsBuffer,
+                    mConsumer,
+                    bootstrapCheckpointsPerWindow == 0);
+=======
+            TestDispatcher<DatabusCombinedConsumer> dispatcher =
+                new TestDispatcher<DatabusCombinedConsumer>("rollBackcheck",
+                                                            connConfig,
+                                                            subs,
+                                                            new InMemoryPersistenceProvider(),
+                                                            dataEventsBuffer,
+                                                            mConsumer,
+                                                            bootstrapCheckpointsPerWindow == 0);
+>>>>>>> YOURS;<<<<<<< MINE
+            TestDispatcher<DatabusCombinedConsumer> dispatcher = new TestDispatcher<DatabusCombinedConsumer>("rollBackcheck",
+                    connConfig,
+                    subs,
+                    new InMemoryPersistenceProvider(),
+                    dataEventsBuffer,
+                    mConsumer,
+                    bootstrapCheckpointsPerWindow == 0);
+=======
+            TestDispatcher<DatabusCombinedConsumer> dispatcher =
+                new TestDispatcher<DatabusCombinedConsumer>("rollBackcheck",
+                                                            connConfig,
+                                                            subs,
+                                                            new InMemoryPersistenceProvider(),
+                                                            dataEventsBuffer,
+                                                            mConsumer,
+                                                            bootstrapCheckpointsPerWindow == 0);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                consumerTimeBudgetMs,new StreamConsumerCallbackFactory(),null, null);
+
+
+=======
+                consumerTimeBudgetMs, new StreamConsumerCallbackFactory(null, null), null, null, null);
+>>>>>>> YOURS;<<<<<<< MINE
+                consumerTimeBudgetMs,new StreamConsumerCallbackFactory(),null, null);
+
+
+=======
+                consumerTimeBudgetMs, new StreamConsumerCallbackFactory(null, null), null, null, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS;<<<<<<< MINE
+                        new StreamConsumerCallbackFactory(),
+                        null,
+                        null);
+=======
+                        new StreamConsumerCallbackFactory(null, null),
+                        null,
+                        null,
+                        null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                consumerTimeBudgetMs,new StreamConsumerCallbackFactory(),null, null);
+
+
+=======
+                consumerTimeBudgetMs, new StreamConsumerCallbackFactory(null, null), null, null, null);
+>>>>>>> YOURS;<<<<<<< MINE
+                consumerTimeBudgetMs,new StreamConsumerCallbackFactory(),null, null);
+
+
+=======
+                consumerTimeBudgetMs, new StreamConsumerCallbackFactory(null, null), null, null, null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+                                    new StreamConsumerCallbackFactory(),
+                                    callbackStats,
+                                    null);
+=======
+                                    new StreamConsumerCallbackFactory(callbackStats, unifiedStats),
+                                    callbackStats,
+                                    unifiedStats,
+                                    null);
+>>>>>>> YOURS;<<<<<<< MINE
+                                    new StreamConsumerCallbackFactory(),
+                                    callbackStats,
+                                    null);
+=======
+                                    new StreamConsumerCallbackFactory(callbackStats, unifiedStats),
+                                    callbackStats,
+                                    unifiedStats,
+                                    null);
+>>>>>>> YOURS
+/home/ramdisk/experiment6/projects/databus/revisions/rev_378fe05_120c5f8/rev_378fe05-120c5f8/databus-client/databus-client-http/src/test/java/com/linkedin/databus/client/TestGenericDispatcher.java;<<<<<<< MINE
+              new MultiConsumerCallback(
+                      allRegistrations,
+                      Executors.newFixedThreadPool(2),
+                      1000,
+                      new StreamConsumerCallbackFactory(),
+                      callbackStats,
+                      null);
+=======
+          new MultiConsumerCallback(allRegistrations,
+                                    Executors.newFixedThreadPool(2),
+                                    1000,
+                                    new StreamConsumerCallbackFactory(callbackStats, unifiedStats),
+                                    callbackStats,
+                                    unifiedStats,
+                                    null);
+>>>>>>> YOURS;<<<<<<< MINE
+              new MultiConsumerCallback(
+                      allRegistrations,
+                      Executors.newFixedThreadPool(2),
+                      1000,
+                      new StreamConsumerCallbackFactory(),
+                      callbackStats,
+                      null);
+=======
+          new MultiConsumerCallback(allRegistrations,
+                                    Executors.newFixedThreadPool(2),
+                                    1000,
+                                    new StreamConsumerCallbackFactory(callbackStats, unifiedStats),
+                                    callbackStats,
+                                    unifiedStats,
+                                    null);
+>>>>>>> YOURS

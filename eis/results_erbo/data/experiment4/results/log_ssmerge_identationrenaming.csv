@@ -1,0 +1,5 @@
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_ed96fe1_0fac5b8/rev_ed96fe1-0fac5b8;/spring/src/main/java/cucumber/runtime/java/spring/hooks/SpringTransactionHooks;setTxMgr(PlatformTransactionManager);;public void setTxMgr(PlatformTransactionManager txMgr) {
+       this.txMgr = txMgr;
+    };public void setTxMgr(PlatformTransactionManager txMgr) {
+        this.txMgr = txMgr;
+    }

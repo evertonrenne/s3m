@@ -1,0 +1,984 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53;/pig/src/main/java/com/twitter/ambrose/service/DAGNode;setX(Double);;;public void setX(Double x) { this.x = x; }
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53;/pig/src/main/java/com/twitter/ambrose/service/DAGNode;setY(Double);;;public void setY(Double y) { this.y = y; }
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520;/common/src/main/java/com/twitter/ambrose/util/JSONUtil;toJson(Object);;;public static String toJson(Object object) throws IOException {
+    StringWriter writer = new StringWriter();
+    writeJson(writer, object);
+    return writer.toString();
+  }
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520;/common/src/main/java/com/twitter/ambrose/util/JSONUtil;toObject(String,TypeReference<T>);;;public static <T> T toObject(String json, TypeReference<T> type) throws IOException {
+    return mapper.readValue(json, type);
+  }
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520;/common/src/main/java/com/twitter/ambrose/util/JSONUtil;readFile(String);    }
+    finally {;;    } finally {
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520;/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService;flushJsonToDisk();;;
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520;/common/src/main/java/com/twitter/ambrose/service/impl/InMemoryStatsService;flushJsonToDisk();;;
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520;/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener;addMapReduceJobState(PigJob);  private void addMapReduceJobState(PigJob pigJob)  {;;  private void addMapReduceJobState(PigJob pigJob) {
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher;HiveMapReduceJobState(String,RunningJob,int,int);;;public HiveMapReduceJobState(String jobIdStr, RunningJob rj, int totalMapTasks,
+                int totalReduceTasks) throws IOException {
+
+            setJobId(jobIdStr);
+            setJobName(rj.getJobName());
+            setTrackingURL(rj.getTrackingURL());
+            setComplete(rj.isComplete());
+            setSuccessful(rj.isSuccessful());
+            setMapProgress(rj.mapProgress());
+            setReduceProgress(rj.reduceProgress());
+            setTotalMappers(totalMapTasks);
+            setTotalReducers(totalReduceTasks);
+        }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher;update(RunningJob);;;public boolean update(RunningJob rj) throws IOException {
+
+            boolean complete = rj.isComplete();
+            boolean successful = rj.isSuccessful();
+            float mapProgress = rj.mapProgress();
+            float reduceProgress = rj.reduceProgress();
+
+            boolean update = !(isComplete() == complete
+                    && isSuccessful() == successful
+                    && AmbroseHiveUtil.isEqual(getMapProgress(), mapProgress)
+                    && AmbroseHiveUtil.isEqual(getReduceProgress(), reduceProgress));
+            
+            if (update) {
+                setComplete(complete);
+                setSuccessful(successful);
+                setMapProgress(mapProgress);
+                setReduceProgress(reduceProgress);
+            }
+            return update;
+        }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher;getProgress();;;public int getProgress() {
+            float result =((getMapProgress() + getReduceProgress()) * 100) / 2;
+            return (int)result;
+        }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher;AmbroseHiveStatPublisher();;;public AmbroseHiveStatPublisher() throws IOException {
+        Configuration conf = SessionState.get().getConf();
+        this.jobClient = new JobClient(new JobConf(conf));
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher;run(Map<String,Double>,String);;;@Override
+    public void run(Map<String, Double> counterValues, String jobIdStr) {
+        if (init) {
+            init(jobIdStr);
+            init = false;
+        }
+        //send job statistics to the Ambrose server
+        send(jobIdStr, counterValues);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher;init(String);;;private void init(String jobIDStr) {
+        try {
+            jobId = JobID.forName(jobIDStr);
+            rj = jobClient.getJob(jobId);
+            nodeId = AmbroseHiveUtil.getNodeIdFromJob(SessionState.get().getConf(), rj);
+            totalMapTasks = jobClient.getMapTaskReports(jobId).length;
+            totalReduceTasks = jobClient.getReduceTaskReports(jobId).length;
+        }
+        catch (IOException e) {
+            LOG.error("Error getting running job for id : " + jobIDStr, e);
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher;send(String,Map<String,Double>);;;private void send(String jobIDStr, Map<String, Double> counterValues) {
+       
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        Configuration conf = SessionState.get().getConf();
+        String queryId = AmbroseHiveUtil.getHiveQueryId(conf);
+        Map<String, DAGNode<Job>> nodeIdToDAGNode = reporter.getNodeIdToDAGNode();
+
+        DAGNode<Job> dagNode = nodeIdToDAGNode.get(nodeId);
+        if (dagNode == null) {
+            LOG.warn("jobStartedNotification - unrecorgnized operator name found for " + "jobId "
+                    + jobIDStr);
+            return;
+        }
+        HiveJob job = (HiveJob) dagNode.getJob();
+        //a job has been started
+        if (job.getId()== null) {
+            //job identifier on GUI
+            job.setId(AmbroseHiveUtil.asDisplayId(queryId, jobIDStr, nodeId));
+            reporter.addJobIdToNodeId(jobIDStr, nodeId);
+            reporter.pushEvent(queryId, new Event.JobStartedEvent(dagNode));
+        }
+        try {
+
+            boolean update = false;
+            if (jobProgress == null) {
+                jobProgress = new HiveMapReduceJobState(jobIDStr, rj, totalMapTasks, totalReduceTasks);
+                update = true;
+            }
+            else {
+                update = jobProgress.update(rj);
+            }
+            
+            if (update && !reporter.getCompletedJobIds().contains(jobIDStr)) {
+                reporter.addJobIdToProgress(jobIDStr, jobProgress.getProgress());
+                job.setMapReduceJobState(jobProgress);
+                pushWorkflowProgress(queryId, reporter);
+                reporter.pushEvent(queryId, new Event.JobProgressEvent(dagNode));
+                if (jobProgress.isComplete()) {
+                    reporter.addCompletedJobIds(jobIDStr);
+                    job.setJobStats(counterValues, jobProgress.getTotalMappers(),
+                            jobProgress.getTotalReducers());
+                    job.setConfiguration(((HiveConf) conf).getAllProperties());
+                    reporter.addJob(job);
+                    reporter.pushEvent(queryId, new Event.JobFinishedEvent(dagNode));
+                }
+            }
+        }
+        catch (IOException e) {
+            LOG.error("Error getting job info!", e);
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveStatPublisher;pushWorkflowProgress(String,HiveProgressReporter);;;private void pushWorkflowProgress(String queryId, HiveProgressReporter reporter) {
+        eventData.put(WorkflowProgressField.workflowProgress,
+                Integer.toString(reporter.getOverallProgress()));
+        reporter.pushEvent(queryId, new Event.WorkflowProgressEvent(eventData));
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;HiveJob(String[],String[]);;;public HiveJob(String[] aliases, String[] features) {
+        super();
+        this.aliases = aliases;
+        this.features = features;
+        // TODO: inputInfoList and outputInfoList?
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;HiveJob(String,String[],String[],MapReduceJobState,Map<String,CounterGroup>);;;@JsonCreator
+    public HiveJob(@JsonProperty("id") String id, 
+            @JsonProperty("aliases") String[] aliases,
+            @JsonProperty("features") String[] features,
+            @JsonProperty("mapReduceJobState") MapReduceJobState mapReduceJobState,
+            @JsonProperty("counterGroupMap") Map<String, CounterGroup> counterGroupMap) {
+        this(aliases, features);
+        setId(id);
+        this.mapReduceJobState = mapReduceJobState;
+        this.counterGroupMap = counterGroupMap;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;getAliases();;;public String[] getAliases() {
+        return aliases;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;getFeatures();;;public String[] getFeatures() {
+        return features;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;getMapReduceJobState();;;public MapReduceJobState getMapReduceJobState() {
+        return mapReduceJobState;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;setMapReduceJobState(MapReduceJobState);;;public void setMapReduceJobState(MapReduceJobState mapReduceJobState) {
+        this.mapReduceJobState = mapReduceJobState;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;getCounterGroupInfo(String);;;public CounterGroup getCounterGroupInfo(String name) {
+        return counterGroupMap == null ? null : counterGroupMap.get(name);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;setJobStats(Map<String,Double>,int,int);;;@JsonIgnore
+    public void setJobStats(Map<String, Double> counterNameToValue, int totalMappers,
+            int totalReducers) {
+        counterGroupMap = AmbroseHiveUtil.counterGroupInfoMap(counterNameToValue);
+
+        // job metrics
+        Map<String, Number> metrics = new HashMap<String, Number>();
+        metrics.put("numberMaps", totalMappers);
+        metrics.put("numberReduces", totalReducers);
+        metrics.put("avgMapTime",
+                getCounterValue(counterNameToValue, MetricsCounter.SLOTS_MILLIS_MAPS)
+                        / totalMappers);
+        metrics.put("avgMapTime",
+                getCounterValue(counterNameToValue, MetricsCounter.SLOTS_MILLIS_REDUCES)
+                        / totalReducers);
+        metrics.put("bytesWritten",
+                getCounterValue(counterNameToValue, MetricsCounter.FILE_BYTES_WRITTEN));
+        metrics.put("hdfsBytesWritten",
+                getCounterValue(counterNameToValue, MetricsCounter.HDFS_BYTES_WRITTEN));
+        metrics.put("mapInputRecords",
+                getCounterValue(counterNameToValue, MetricsCounter.MAP_INPUT_RECORDS));
+        metrics.put("mapOutputRecords",
+                getCounterValue(counterNameToValue, MetricsCounter.MAP_OUTPUT_RECORDS));
+        metrics.put("proactiveSpillCountRecs",
+                getCounterValue(counterNameToValue, MetricsCounter.SPILLED_RECORDS));
+        metrics.put("reduceInputRecords",
+                getCounterValue(counterNameToValue, MetricsCounter.REDUCE_INPUT_RECORDS));
+        metrics.put("reduceOutputRecords",
+                getCounterValue(counterNameToValue, MetricsCounter.REDUCE_OUTPUT_RECORDS));
+        setMetrics(metrics);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;mixinJsonAnnotations();;;public static void mixinJsonAnnotations() {
+        LOG.info("Mixing in JSON annotations for HiveJob and Job into Job");
+        JSONUtil.mixinAnnotatons(Job.class, AnnotationMixinClass.class);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveJob;getCounterValue(Map<String,Double>,MetricsCounter);;;private Double getCounterValue(Map<String, Double> counterNameToValue, MetricsCounter hjc) {
+        String [] keys = MetricsCounter.get(hjc);
+        return (counterNameToValue.get(keys[0]) == null) ?
+                counterNameToValue.get(keys[1]) : counterNameToValue.get(keys[0]);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHivePreHook;run(HookContext);;;@Override
+    public void run(HookContext hookContext) throws Exception {
+
+        String queryId = AmbroseHiveUtil.getHiveQueryId(hookContext.getConf());
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        HiveDAGTransformer transformer = new HiveDAGTransformer(hookContext);
+       
+        //conditional tasks may be filtered out by Hive at runtime. We them as
+        //'complete'
+        Map<String, DAGNode<Job>> nodeIdToDAGNode = reporter.getNodeIdToDAGNode();
+        sendFilteredJobsStatus(queryId, nodeIdToDAGNode);
+        if (transformer.getTotalMRJobs() == 0) {
+            return;
+        }
+
+        waitBetween(hookContext, queryId);
+
+        nodeIdToDAGNode = transformer.getNodeIdToDAGNode();
+        reporter.setNodeIdToDAGNode(nodeIdToDAGNode);
+        reporter.setTotalMRJobs(transformer.getTotalMRJobs());
+        reporter.sendDagNodeNameMap(queryId, nodeIdToDAGNode);
+
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHivePreHook;waitBetween(HookContext,String);;;private void waitBetween(HookContext hookContext, String queryId) {
+
+        Configuration conf = hookContext.getConf();
+        boolean justStarted = conf.getBoolean(SCRIPT_STARTED_PARAM, true);
+        if (justStarted) {
+            conf.setBoolean(SCRIPT_STARTED_PARAM, false);
+        }
+        else {
+            // sleeping between workflows
+            int sleepTimeMs = conf.getInt(WF_BETWEEN_SLEEP_SECS_PARAM, 10);
+            try {
+
+                LOG.info("One workflow complete, sleeping for " + sleepTimeMs
+                        + " sec(s) before moving to the next one if exists. Hit ctrl-c to exit.");
+                Thread.sleep(sleepTimeMs * 1000L);
+                HiveProgressReporter.get().saveEventStack();
+                HiveProgressReporter.reset();
+            }
+            catch (InterruptedException e) {
+                LOG.warn("Sleep interrupted", e);
+            }
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHivePreHook;sendFilteredJobsStatus(String,Map<String,DAGNode<Job>>);;;private void sendFilteredJobsStatus(String queryId, Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        
+        if (nodeIdToDAGNode == null) {
+            return;
+        }
+        
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        Map<WorkflowProgressField, String> eventData = 
+            new HashMap<Event.WorkflowProgressField, String>(1);
+
+        int skipped = 0;
+        for (DAGNode<Job> dagNode : nodeIdToDAGNode.values()) {
+            Job job = dagNode.getJob();
+            // filtered jobs don't have assigned jobId
+            if (job.getId() != null) {
+                continue;
+            }
+            String nodeId = dagNode.getName();
+            job.setId(AmbroseHiveUtil.asDisplayId(queryId, "filtered out", nodeId));
+            reporter.addJobIdToProgress(nodeId, 100);
+            reporter.pushEvent(queryId, new Event.JobFinishedEvent(dagNode));
+            skipped++;
+        }
+        // sleep so that all these events will be visible on GUI before going on
+        try {
+            Thread.sleep(skipped * 1000L);
+        }
+        catch (InterruptedException e) {
+            LOG.warn("Sleep interrupted", e);
+        }
+
+        eventData.put(WorkflowProgressField.workflowProgress,
+                Integer.toString(reporter.getOverallProgress()));
+        reporter.pushEvent(queryId, new Event.WorkflowProgressEvent(eventData));
+
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFailHook;run(HookContext);;;@Override
+    public void run(HookContext hookContext) throws Exception {
+
+        HiveConf conf = hookContext.getConf();
+        Properties allConfProps = conf.getAllProperties();
+        String queryId = AmbroseHiveUtil.getHiveQueryId(conf);
+
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+
+        List<TaskRunner> completeTaskList = hookContext.getCompleteTaskList();
+        Field _taskResultField = accessTaskResultField();
+        for (TaskRunner taskRunner : completeTaskList) {
+            TaskResult taskResult = (TaskResult) _taskResultField.get(taskRunner);
+            //get non-running, failed jobs
+            if (!taskResult.isRunning() && taskResult.getExitVal() != 0) {
+                Task<? extends Serializable> task = taskRunner.getTask();
+                String nodeId = AmbroseHiveUtil.getNodeIdFromNodeName(conf, task.getId());
+                DAGNode<Job> dagNode = reporter.getDAGNodeFromNodeId(nodeId);
+                HiveJob job = (HiveJob) dagNode.getJob();
+                job.setConfiguration(allConfProps);
+                MapReduceJobState mrJobState = getJobState(job);
+                mrJobState.setSuccessful(false);
+                reporter.addJob((Job) job);
+                reporter.pushEvent(queryId, new Event.JobFailedEvent(dagNode));
+            }
+        }
+        
+        reporter.restoreEventStack();
+        String sleepTime = System.getProperty(POST_SCRIPT_SLEEP_SECS_PARAM, "10");
+        try {
+            int sleepTimeSeconds = Integer.parseInt(sleepTime);
+
+            LOG.info("Script failed but sleeping for " + sleepTimeSeconds
+                    + " seconds to keep the HiveStats REST server running. Hit ctrl-c to exit.");
+            
+            Thread.sleep(sleepTimeSeconds * 1000L);
+            reporter.stopServer();
+
+        }
+        catch (NumberFormatException e) {
+            LOG.warn(POST_SCRIPT_SLEEP_SECS_PARAM + " param is not a valid number, not sleeping: "
+                    + sleepTime);
+        }
+        catch (InterruptedException e) {
+            LOG.warn("Sleep interrupted", e);
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFailHook;accessTaskResultField();;;private Field accessTaskResultField() {
+        Field field = null;
+        try {
+            field = TaskRunner.class.getDeclaredField("result");
+            field.setAccessible(true);
+        }
+        catch (Exception e) {
+            LOG.fatal("Can't access to TaskResult at " + TaskRunner.class.getName() + "!");
+            throw new RuntimeException("Incompatible Hive API found!", e);
+        }
+        return field;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFailHook;getJobState(HiveJob);;;private MapReduceJobState getJobState(HiveJob job) {
+        MapReduceJobState jobState = job.getMapReduceJobState();
+        if (jobState != null) {
+            return jobState;
+        }
+        //if job fails immediately right after its submission 
+        jobState = new MapReduceJobState();
+        jobState.setJobId(job.getId());
+        return jobState;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;HiveProgressReporter();;;@SuppressWarnings("unchecked")
+    private HiveProgressReporter() {
+        service = new InMemoryStatsService();
+        server = new ScriptStatusServer(service, service);
+        init();
+        server.start();
+        initInternal();
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;init();;;private void init() {
+        jobIdToProgress = new ConcurrentHashMap<String, Integer>();
+        jobIdToNodeId = new ConcurrentHashMap<String, String>();
+        jobs = new CopyOnWriteArrayList<Job>();
+        completedJobIds = new CopyOnWriteArraySet<String>();
+        totalMRJobs = 0;
+        workflowVersion = null;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;initInternal();;;@SuppressWarnings("unchecked")
+    private void initInternal() {
+        try {
+            Field eventMapField = 
+                AmbroseHiveUtil.getInternalField(InMemoryStatsService.class, "eventMap");
+            _eventMap = (SortedMap<Integer, Event<?>>) eventMapField.get(service);
+        }
+        catch (Exception e) {
+            LOG.fatal("Can't access to eventMap/dagNodeNameMap fields at "
+                    + InMemoryStatsService.class.getName() + "!");
+            throw new RuntimeException("Incompatible Hive API found!", e);
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;get();;;public static HiveProgressReporter get() {
+        return INSTANCE;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;reset();;;public static void reset() {
+        INSTANCE.init();
+        INSTANCE._eventMap.clear();
+        INSTANCE.nodeIdToDAGNode= new ConcurrentSkipListMap<String, DAGNode<Job>>();
+        INSTANCE.sendDagNodeNameMap(null, INSTANCE.nodeIdToDAGNode);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;getNodeIdToDAGNode();;;public Map<String, DAGNode<Job>> getNodeIdToDAGNode() {
+        return nodeIdToDAGNode;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;setNodeIdToDAGNode(Map<String,DAGNode<Job>>);;;public void setNodeIdToDAGNode(Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        this.nodeIdToDAGNode = nodeIdToDAGNode;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;addJobIdToProgress(String,int);;;public void addJobIdToProgress(String jobID, int progressUpdate) {
+        jobIdToProgress.put(jobID, progressUpdate);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;getJobIdToNodeId();;;public Map<String, String> getJobIdToNodeId() {
+        return jobIdToNodeId;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;addJobIdToNodeId(String,String);;;public void addJobIdToNodeId(String jobId, String nodeId) {
+        jobIdToNodeId.put(jobId, nodeId);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;getDAGNodeFromNodeId(String);;;public DAGNode<Job> getDAGNodeFromNodeId(String nodeId) {
+        return nodeIdToDAGNode.get(nodeId);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;getOverallProgress();;;public synchronized int getOverallProgress() {
+        int sum = 0;
+        for (int progress : jobIdToProgress.values()) {
+            sum += progress;
+        }
+        return sum / totalMRJobs;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;addJob(Job);;;public void addJob(Job job) {
+        jobs.add(job);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;getJobs();;;public List<Job> getJobs() {
+        return jobs;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;getWorkflowVersion();;;public String getWorkflowVersion() {
+        return workflowVersion;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;setWorkflowVersion(String);;;public void setWorkflowVersion(String workflowVersion) {
+        this.workflowVersion = workflowVersion;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;pushEvent(String,Event<?>);;;public void pushEvent(String queryId, Event<?> event) {
+        try {
+            service.pushEvent(queryId, event);
+        }
+        catch (IOException e) {
+            LOG.error("Couldn't send event to StatsWriteService!", e);
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;saveEventStack();;;public void saveEventStack() {
+        allEvents.putAll(_eventMap);
+        allDagNodes.putAll(service.getDagNodeNameMap(null));
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;restoreEventStack();;;public void restoreEventStack() {
+        _eventMap.putAll(allEvents);
+        service.getDagNodeNameMap(null).putAll(allDagNodes);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;sendDagNodeNameMap(String,Map<String,DAGNode<Job>>);;;public void sendDagNodeNameMap(String queryId, Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        try {
+            service.sendDagNodeNameMap(queryId, nodeIdToDAGNode);
+        }
+        catch (IOException e) {
+            LOG.error("Couldn't send DAGNode information to server!", e);
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;flushJsonToDisk();;;public void flushJsonToDisk() {
+        try {
+            service.flushJsonToDisk();
+        }
+        catch (IOException e) {
+            LOG.warn("Couldn't write json to disk", e);
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;stopServer();;;public void stopServer() {
+        LOG.info("Stopping Ambrose Server...");
+        server.stop();
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;setTotalMRJobs(int);;;public void setTotalMRJobs(int totalMRJobs) {
+        this.totalMRJobs = totalMRJobs;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;getCompletedJobIds();;;public Set<String> getCompletedJobIds() {
+        return completedJobIds;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveProgressReporter;addCompletedJobIds(String);;;public void addCompletedJobIds(String jobID) {
+        completedJobIds.add(jobID);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;AmbroseHiveUtil();;;private AmbroseHiveUtil() {
+        throw new AssertionError("shouldn't be instantiated!");
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;getJobTrackerURL(String,HiveConf);;;public static String getJobTrackerURL(String jobID, HiveConf conf) {
+        String jt = conf.get("mapred.job.tracker");
+        String jth = conf.get("mapred.job.tracker.http.address");
+        String[] jtparts = null;
+        String[] jthttpParts = null;
+        if (jt.equalsIgnoreCase("local")) {
+            jtparts = new String[2];
+            jtparts[0] = "local";
+            jtparts[1] = "";
+        }
+        else {
+            jtparts = jt.split(":");
+        }
+        if (jth.contains(":")) {
+            jthttpParts = jth.split(":");
+        }
+        else {
+            jthttpParts = new String[2];
+            jthttpParts[0] = jth;
+            jthttpParts[1] = "";
+        }
+        return jtparts[0] + ":" + jthttpParts[1] + "/jobdetails.jsp?jobid=" + jobID + "&refresh=30";
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;counterGroupInfoMap(Map<String,Double>);;;public static Map<String, CounterGroup> counterGroupInfoMap(
+            Map<String, Double> counterNameToValue) {
+
+        Counters counters = new Counters();
+        for (Map.Entry<String, ? extends Number> entry : counterNameToValue.entrySet()) {
+
+            String[] cNames = entry.getKey().split("::");
+            String groupName = cNames[0];
+            String counterName = cNames[1];
+            Counter counter = counters.findCounter(groupName, counterName);
+            counter.setValue(entry.getValue().longValue());
+        }
+        return CounterGroup.counterGroupInfoMap(counters);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;asDisplayId(String,String,String);;;public static String asDisplayId(String queryId, String jobIDStr, String nodeId) {
+        String stageName = nodeId.substring(0, nodeId.indexOf('_'));
+        String wfIdLastPart = queryId.substring(queryId.lastIndexOf('-') + 1, queryId.length());
+        String displayJobId = String.format(jobIDStr + " (%s, query-id: ...%s)", 
+                stageName, wfIdLastPart);
+        return displayJobId;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;getNodeIdFromNodeName(Configuration,String);;;public static String getNodeIdFromNodeName(Configuration conf, String nodeName) {
+        return nodeName + "_" + getHiveQueryId(conf);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;getNodeIdFromJob(Configuration,RunningJob);;;public static String getNodeIdFromJob(Configuration conf, RunningJob runningJob) {
+        return getNodeIdFromJobName(conf, runningJob.getJobName());
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;getNodeIdFromJobName(Configuration,String);;;private static String getNodeIdFromJobName(Configuration conf, String jobName) {
+        Matcher matcher = STAGEID_PATTERN.matcher(jobName);
+        if (matcher.find()) {
+            return getNodeIdFromNodeName(conf, matcher.group(1));
+        }
+        return null;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;getHiveQueryId(Configuration);;;public static String getHiveQueryId(Configuration conf) {
+        return HiveConf.getVar(conf, ConfVars.HIVEQUERYID);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;getJobTmpDir(Configuration);;;public static String getJobTmpDir(Configuration conf) {
+        String fsNameVar = HiveConf.getVar(conf, ConfVars.HADOOPFS);
+        String fsName = fsNameVar.substring(0, fsNameVar.length() - 1);
+        return fsName + HiveConf.getVar(conf, ConfVars.SCRATCHDIR, "");
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;getJobTmpLocalDir(Configuration);;;public static String getJobTmpLocalDir(Configuration conf) {
+        String fsNameVar = HiveConf.getVar(conf, ConfVars.HADOOPFS);
+        String fsName = fsNameVar.substring(0, fsNameVar.length() - 1);
+        return fsName + HiveConf.getVar(conf, ConfVars.LOCALSCRATCHDIR, "");
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;getInternalField(Class<?>,String);;;public static Field getInternalField(Class<?> clazz, String fieldName)
+            throws Exception {
+        Field field = clazz.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveUtil;isEqual(float,float);;;public static boolean isEqual(float f1, float f2) {
+        final float delta = 0.001f;
+        return (Math.abs(f1 - f2) < delta) ? true : false;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/MetricsCounter;MetricsCounter(int);;;private MetricsCounter(int type) {
+        this.type = type;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/MetricsCounter;get(MetricsCounter);;;public static String[] get(MetricsCounter hjc) {
+        return lookup.get(hjc);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/MetricsCounter;createLookupKeys(MetricsCounter);;;private static String[] createLookupKeys(MetricsCounter hjc) {
+        switch (hjc.type) {
+        //Job counter (type-1)
+        case 1 : return new String[]{
+                JOB_COUNTER + "::" + hjc.name(),
+                JOB_COUNTER_YARN + "::" + hjc.name()
+                };
+        //Task counter (type-2)
+        case 2 : return new String[]{
+                TASK_COUNTER + "::" + hjc.name(),
+                TASK_COUNTER_YARN + "::" + hjc.name()
+                };
+        //Filesystem counter (type-3)
+        case 3 : return new String[]{
+                FS_COUNTER + "::" + hjc.name(),
+                FS_COUNTER_YARN + "::" + hjc.name()
+                };
+        default : return null;
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;HiveDAGTransformer(HookContext);;;public HiveDAGTransformer(HookContext hookContext) {
+
+        conf = hookContext.getConf();
+        tmpDir = AmbroseHiveUtil.getJobTmpDir(conf);
+        localTmpDir = AmbroseHiveUtil.getJobTmpLocalDir(conf);
+        queryPlan = hookContext.getQueryPlan();
+        allTasks = Utilities.getMRTasks(queryPlan.getRootTasks());
+        if (!allTasks.isEmpty()) {
+            createNodeIdToDAGNode();
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;getNodeIdToDAGNode();;;public Map<String, DAGNode<Job>> getNodeIdToDAGNode() {
+        return nodeIdToDAGNode;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;getTotalMRJobs();;;public int getTotalMRJobs() {
+        return allTasks.size();
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;createNodeIdToDAGNode();;;private void createNodeIdToDAGNode() {
+
+        // creates DAGNodes: each node represents a MR job
+        nodeIdToDAGNode = new ConcurrentSkipListMap<String, DAGNode<Job>>();
+        for (Task<? extends Serializable> task : allTasks) {
+            if (task.getWork() instanceof MapredWork) {
+                DAGNode<Job> dagNode = asDAGNode(task);
+                nodeIdToDAGNode.put(dagNode.getName(), dagNode);
+            }
+        }
+
+        // get job dependencies
+        Map<String, List<String>> nodeIdToDependencies = getNodeIdToDependencies();
+
+        // wire DAGNodes
+        for (Map.Entry<String, List<String>> entry : nodeIdToDependencies.entrySet()) {
+            String nodeId = entry.getKey();
+            List<String> successorIds = entry.getValue();
+            DAGNode<Job> dagNode = nodeIdToDAGNode.get(nodeId);
+            List<DAGNode<? extends Job>> dagSuccessors = new ArrayList<DAGNode<? extends Job>>(
+                    successorIds.size());
+
+            for (String sId : successorIds) {
+                DAGNode<Job> successor = nodeIdToDAGNode.get(sId);
+                dagSuccessors.add(successor);
+            }
+            dagNode.setSuccessors(dagSuccessors);
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;asDAGNode(Task<?extendsSerializable>);;;private DAGNode<Job> asDAGNode(Task<? extends Serializable> task) {
+
+        MapredWork mrWork = (MapredWork) task.getWork();
+        List<String> indexTableAliases = getAllJobAliases(mrWork.getPathToAliases());
+        String[] features = getFeatures(mrWork.getAllOperators(), task.getTaskTag());
+        String[] displayAliases = getDisplayAliases(indexTableAliases);
+
+        // DAGNode's name of a workflow is unique among all workflows in a
+        DAGNode<Job> dagNode = new DAGNode<Job>(
+                AmbroseHiveUtil.getNodeIdFromNodeName(conf, task.getId()),
+                new HiveJob(displayAliases, features));
+        // init empty successors
+        dagNode.setSuccessors(new ArrayList<DAGNode<? extends Job>>());
+        return dagNode;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;getDisplayAliases(List<String>);;;private String[] getDisplayAliases(List<String> indexTableAliases) {
+        if (indexTableAliases.isEmpty()) {
+            return EMPTY_ARR;
+        }
+        Set<String> result = new HashSet<String>();
+        for (String alias : indexTableAliases) {
+            if (alias.startsWith(tmpDir) || alias.startsWith(localTmpDir)) {
+                result.add(TEMP_JOB_ID);
+            }
+            else if (alias.contains("subquery")) {
+                Matcher m = SUBQUERY_ALIAS.matcher(alias);
+                String dot = "";
+                StringBuilder sb = new StringBuilder();
+                while (m.find()) {
+                    sb.append(dot);
+                    dot = ".";
+                    sb.append(m.group(1));
+                }
+                result.add(sb.toString());
+            }
+            else if (!alias.contains(":")) {
+                result.add(alias);
+            }
+            else {
+                String[] parts = alias.split(":");
+                if (parts.length == 2) {
+                    result.add(parts[1]);
+                }
+                else {
+                    result.add(PENDING_JOB);
+                }
+            }
+        }
+        return result.toArray(new String[result.size()]);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;getFeatures(List<Operator<?>>,int);;;private String[] getFeatures(List<Operator<?>> ops, int taskTagId) {
+        if (ops == null) {
+            return EMPTY_ARR;
+        }
+        Set<String> features = new HashSet<String>();
+        for (Operator<?> op : ops) {
+            OperatorType opType = op.getType();
+            // some operators are discarded
+            if (!skipType(opType)) {
+                features.add(opType.toString());
+            }
+        }
+
+        // if taskTag is other than 'NO_TAG', include it in the feature list
+        if (taskTagId == Task.NO_TAG) {
+            return features.toArray(new String[features.size()]);
+        }
+        String[] result = features.toArray(new String[features.size() + 1]);
+        result[result.length - 1] = TaskTag.get(taskTagId);
+        return result;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;skipType(OperatorType);;;private boolean skipType(OperatorType opType) {
+        return (opType == OperatorType.FILESINK || 
+                opType == OperatorType.REDUCESINK || 
+                opType == OperatorType.TABLESCAN);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;getAllJobAliases(LinkedHashMap<String,ArrayList<String>>);;;private List<String> getAllJobAliases(LinkedHashMap<String, ArrayList<String>> pathToAliases) {
+        if (pathToAliases == null || pathToAliases.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<String> result = new ArrayList<String>();
+        for (List<String> aliases : pathToAliases.values()) {
+            if (aliases != null && !aliases.isEmpty()) {
+                result.addAll(aliases);
+            }
+        }
+        return result;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;getNodeIdToDependencies();;;private Map<String, List<String>> getNodeIdToDependencies() {
+        Map<String, List<String>> result = new ConcurrentHashMap<String, List<String>>();
+        try {
+            Graph stageGraph = queryPlan.getQueryPlan().getStageGraph();
+            if (stageGraph == null) {
+                return result;
+            }
+            List<Adjacency> adjacencies = stageGraph.getAdjacencyList();
+            if (adjacencies == null) {
+                return result;
+            }
+            for (Adjacency adj : adjacencies) {
+                String nodeId = AmbroseHiveUtil.getNodeIdFromNodeName(conf, adj.getNode());
+                if (!nodeIdToDAGNode.containsKey(nodeId)) {
+                    continue;
+                }
+                List<String> children = adj.getChildren();
+                if (children == null || children.isEmpty()) {
+                    return result; // TODO check!
+                }
+                List<String> filteredAdjacencies = getMRAdjacencies(children, nodeIdToDAGNode);
+                result.put(nodeId, filteredAdjacencies);
+            }
+        }
+        catch (IOException e) {
+            LOG.error("Couldn't get queryPlan!", e);
+        }
+        return result;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/HiveDAGTransformer;getMRAdjacencies(List<String>,Map<String,DAGNode<Job>>);;;private List<String> getMRAdjacencies(List<String> adjChildren,
+            Map<String, DAGNode<Job>> nodeIdToDAGNode) {
+        List<String> result = new ArrayList<String>();
+        for (String nodeName : adjChildren) {
+            String nodeId = AmbroseHiveUtil.getNodeIdFromNodeName(conf, nodeName);
+            if (nodeIdToDAGNode.containsKey(nodeId)) {
+                result.add(nodeId);
+            }
+        }
+        return result;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/TaskTag;TaskTag(int);;;private TaskTag(int id) {
+        this.id = id;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/TaskTag;getId();;;public int getId() {
+        return id;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/TaskTag;get(int);;;public static String get(int code) {
+        return lookup.get(code);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFinishHook;AmbroseHiveFinishHook();;;public AmbroseHiveFinishHook() {
+        lastCmd = getLastCmd();
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFinishHook;preDriverRun(HiveDriverRunHookContext);;;@Override
+    public void preDriverRun(HiveDriverRunHookContext hookContext) throws Exception {}
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFinishHook;postDriverRun(HiveDriverRunHookContext);;;@Override
+    public void postDriverRun(HiveDriverRunHookContext hookContext) {
+
+        Configuration conf = hookContext.getConf();
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        String workflowVersion = reporter.getWorkflowVersion();
+
+        String queryId = AmbroseHiveUtil.getHiveQueryId(conf);
+        if (workflowVersion == null) {
+            LOG.warn("ScriptFingerprint not set for this script - not saving stats.");
+        }
+        else {
+            Workflow workflow = new Workflow(queryId, workflowVersion, reporter.getJobs());
+            outputStatsData(workflow);
+            reporter.flushJsonToDisk();
+        }
+        displayStatistics();
+
+        if (!isLastCommandProcessed(hookContext)) {
+            return;
+        }
+        
+        reporter.restoreEventStack();
+        String sleepTime = System.getProperty(POST_SCRIPT_SLEEP_SECS_PARAM, "10");
+        try {
+            int sleepTimeSeconds = Integer.parseInt(sleepTime);
+
+            LOG.info("Script complete but sleeping for " + sleepTimeSeconds
+                    + " seconds to keep the HiveStats REST server running. Hit ctrl-c to exit.");
+            Thread.sleep(sleepTimeSeconds * 1000L);
+            reporter.stopServer();
+
+        }
+        catch (NumberFormatException e) {
+            LOG.warn(POST_SCRIPT_SLEEP_SECS_PARAM + " param is not a valid number, not sleeping: "
+                    + sleepTime);
+        }
+        catch (InterruptedException e) {
+            LOG.warn("Sleep interrupted", e);
+        }
+
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFinishHook;outputStatsData(Workflow);;;private void outputStatsData(Workflow workflowInfo) {
+        try {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Collected stats for script:\n" + Workflow.toJSON(workflowInfo));
+            }
+        }
+        catch (IOException e) {
+            LOG.error("Error while outputting workflowInfo", e);
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFinishHook;displayStatistics();;;private void displayStatistics() {
+        HiveProgressReporter reporter = HiveProgressReporter.get();
+        Map<String, String> jobIdToNodeId = reporter.getJobIdToNodeId();
+        LOG.info("MapReduce Jobs Launched: ");
+        List<MapRedStats> lastMapRedStats = SessionState.get().getLastMapRedStatsList();
+        for (int i = 0; i < lastMapRedStats.size(); i++) {
+            MapRedStats mrStats = lastMapRedStats.get(i);
+            String jobId = mrStats.getJobId();
+            String nodeId = jobIdToNodeId.get(jobId);
+            StringBuilder sb = new StringBuilder();
+            sb.append("Job ").append(i)
+              .append(" (")
+              .append(jobId)
+              .append(", ")
+              .append(nodeId)
+              .append("): ")
+              .append(mrStats);
+            LOG.info(sb.toString());
+        }
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFinishHook;isLastCommandProcessed(HiveDriverRunHookContext);;;private boolean isLastCommandProcessed(HiveDriverRunHookContext hookContext) {
+        String currentCmd = hookContext.getCommand();
+        currentCmd = StringUtils.trim(currentCmd.replaceAll("\\n", ""));
+        if (currentCmd.equals(lastCmd)) {
+            return true;
+        }
+        return false;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/main/java/com/twitter/ambrose/hive/AmbroseHiveFinishHook;getLastCmd();;;private String getLastCmd() {
+        CliSessionState cliss = (CliSessionState) SessionState.get();
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new File(cliss.fileName));
+        }
+        catch (FileNotFoundException e) {
+            LOG.error("Can't find Hive script", e);
+        }
+        if (scanner == null) {
+            return null;
+        }
+        Pattern delim = Pattern.compile(";");
+        scanner.useDelimiter(delim);
+        String lastLine = null;
+        while (scanner.hasNext()) {
+            String line = StringUtils.trim(scanner.next().replaceAll("\\n", ""));
+            if (line.length() != 0 && !line.startsWith("--")) {
+                lastLine = line;
+            }
+        }
+        return lastLine;
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/test/java/com/twitter/ambrose/model/HiveJobTest;setUp();;;@Before
+    public void setUp() throws Exception {
+        Map<String, Number> metrics = new HashMap<String, Number>();
+        metrics.put("somemetric", 6);
+        Properties properties = new Properties();
+        properties.setProperty("someprop", "propvalue");
+        String[] aliases = new String[] { "alias1" };
+        String[] features = new String[] { "feature1" };
+        hiveJob = new HiveJob(aliases, features);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/test/java/com/twitter/ambrose/model/HiveJobTest;testHiveJobRoundTrip();;;@Test
+    public void testHiveJobRoundTrip() throws IOException {
+        doTestRoundTrip(hiveJob);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/test/java/com/twitter/ambrose/model/HiveJobTest;doTestRoundTrip(HiveJob);;;private void doTestRoundTrip(HiveJob expected) throws IOException {
+        String asJson = expected.toJson();
+        Job asJobAgain = Job.fromJson(asJson);
+
+        // assert that if we get a HiveJob without having to ask for it
+        // explicitly
+        assertTrue(asJobAgain instanceof HiveJob);
+        assertJobEquals(expected, (HiveJob) asJobAgain);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/test/java/com/twitter/ambrose/model/HiveJobTest;testDAGNodeHiveJobRoundTrip();;;@Test
+    public void testDAGNodeHiveJobRoundTrip() throws IOException {
+        DAGNode<HiveJob> node = new DAGNode<HiveJob>("dag name", hiveJob);
+        doTestRoundTrip(node);
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/test/java/com/twitter/ambrose/model/HiveJobTest;testFromJson();;;@Test
+    public void testFromJson() throws IOException {
+        String json = 
+        "{" +
+        "  \"type\" : \"JOB_STARTED\"," +
+        "  \"payload\" : {" +
+        "    \"name\" : \"Stage-1_user_20130723105858_3f0d530c-34a6-4bb9-8964-22c4ea289895\"," +
+        "    \"job\" : {" +
+        "      \"runtime\" : \"hive\"," +
+        "      \"id\" : \"job_201307231015_0004 (Stage-1, query-id: ...22c4ea289895)\"," +
+        "      \"aliases\" : [ \"src\" ]," +
+        "      \"features\" : [ \"SELECT\", \"FILTER\" ]" +
+        "    }," +
+        "    \"successorNames\" : [ ]" +
+        "  }," +
+        "  \"id\" : 1," +
+        "  \"timestamp\" : 1374569908714" +
+        "}, {" +
+        "  \"type\" : \"WORKFLOW_PROGRESS\"," +
+        "  \"payload\" : {" +
+        "    \"workflowProgress\" : \"0\"" +
+        "  }," +
+        "  \"id\" : 2," +
+        "  \"timestamp\" : 1374569908754" +
+        "}";
+      
+        Event<?> event = Event.fromJson(json);
+        @SuppressWarnings("unchecked")
+        HiveJob job = ((DAGNode<HiveJob>) event.getPayload()).getJob();
+        assertEquals("job_201307231015_0004 (Stage-1, query-id: ...22c4ea289895)", job.getId());
+        assertArrayEquals(new String[] { "src" }, job.getAliases());
+        assertArrayEquals(new String[] { "SELECT", "FILTER" },
+                job.getFeatures());
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/test/java/com/twitter/ambrose/model/HiveJobTest;doTestRoundTrip(DAGNode<HiveJob>);;;private void doTestRoundTrip(DAGNode<HiveJob> expected) throws IOException {
+        String asJson = expected.toJson();
+        DAGNode<? extends Job> asDAGNodeAgain = DAGNode.fromJson(asJson);
+        assertEquals(expected.getName(), asDAGNodeAgain.getName());
+        assertNotNull(asDAGNodeAgain.getJob());
+
+        // assert that it's an instance of HiveJob
+        assertNotNull(asDAGNodeAgain.getJob() instanceof HiveJob);
+
+        assertJobEquals(expected.getJob(), (HiveJob) asDAGNodeAgain.getJob());
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_01f0331_a35dfeb/rev_01f0331-a35dfeb;/hive/src/test/java/com/twitter/ambrose/model/HiveJobTest;assertJobEquals(HiveJob,HiveJob);;;public static void assertJobEquals(HiveJob expected, HiveJob found) {
+        assertEquals(expected.getId(), found.getId());
+        assertArrayEquals(expected.getAliases(), found.getAliases());
+        assertArrayEquals(expected.getFeatures(), found.getFeatures());
+        assertEquals(expected.getMetrics(), found.getMetrics());
+        assertEquals(expected.getConfiguration(), found.getConfiguration());
+    }
+/experiment_ambrose/projects/ambrose/revisions/rev_104bf38_e5f05a2/rev_104bf38-e5f05a2;/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener;launchCompletedNotification(String,int);    Workflow workflow = new Workflow(scriptId, workflowVersion, jobs);
+    try {
+      outputStatsData(workflow);
+    } catch (IOException e) {
+      log.error("Exception outputting workflow", e);;
+    if (workflowVersion == null) {
+      log.warn("scriptFingerprint not set for this script - not saving stats." );
+    } else {
+      Workflow workflow = new Workflow(scriptId, workflowVersion, jobs);
+
+      try {
+        outputStatsData(workflow);
+      } catch (IOException e) {
+        log.error("Exception outputting workflow", e);
+      };    if (workflowVersion == null) {
+      log.warn("scriptFingerprint not set for this script - not saving stats." );
+    } else {
+      Workflow workflow = new Workflow(scriptId, workflowVersion, jobs);
+
+      try {
+        outputStatsData(workflow);
+      } catch (IOException e) {
+        log.error("Exception outputting workflow", e);
+      }
+/experiment_ambrose/projects/ambrose/revisions/rev_24fc935_6383000/rev_24fc935-6383000;/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener;initialPlanNotification(String,MROperPlan);;;public void initialPlanNotification(String scriptId, MROperPlan plan) {
+    initialPlanNotification(scriptId, (OperatorPlan<?>) plan);
+  }

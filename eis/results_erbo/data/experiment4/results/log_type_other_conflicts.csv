@@ -1,0 +1,196 @@
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_1316538_92fb52a/rev_1316538-92fb52a/cuke4duke/src/main/java/cuke4duke/internal/jvmclass/ClassAnalyzer.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/core/src/main/java/cucumber/runtime/StepDefinition.java;<<<<<<< MINE
+=======
+
+    /**
+     * 
+     * @param argIndex
+     *            : index of the argument
+     * @return the {@link TableArgumentProcessor} associated with the argument
+     *         at argIndex or null if there's none
+     */
+    TableArgumentProcessor getTableProcessor(int argIndex);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/java/src/main/java/cucumber/annotation/TableProcessorInfo.java;<<<<<<< MINE
+=======
+package cucumber.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import cucumber.runtime.TableArgumentProcessor;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.PARAMETER})
+public @interface TableProcessorInfo {
+    Class<? extends TableArgumentProcessor> processorClass();
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/java/src/main/java/cucumber/annotation/JavaBeanClass.java;<<<<<<< MINE
+=======
+package cucumber.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import cucumber.runtime.java.JavaBeanTableProcessor;
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+@TableProcessorInfo(processorClass=JavaBeanTableProcessor.class)
+public @interface JavaBeanClass {
+    Class<?> value();
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_ed96fe1_0fac5b8/rev_ed96fe1-0fac5b8/spring/src/test/java/cucumber/runtime/java/spring/hooks/SpringTransactionHooksTest.java;<<<<<<< MINE
+    private SpringTransactionHooks target;
+
+    @Mock
+    private PlatformTransactionManager mockedPlatformTransactionManager;
+
+    @Before
+    public void setUp() {
+        target = new SpringTransactionHooks();
+        target.setTxMgr(mockedPlatformTransactionManager);
+    }
+
+    @Test
+    public void shouldObtainOrStartTransactionInBeforeHook() {
+        final SimpleTransactionStatus dummyTxStatus = new SimpleTransactionStatus();
+        when(mockedPlatformTransactionManager.getTransaction(isA(TransactionDefinition.class))).thenReturn(dummyTxStatus);
+
+        target.rollBackBeforeHook();
+
+        assertSame(target.txStatus, dummyTxStatus);
+    }
+
+    @Test
+    public void shouldTriggerTransactionRollbackInAfterHook() {
+        final SimpleTransactionStatus dummyTxStatus = new SimpleTransactionStatus();
+        target.txStatus = dummyTxStatus;
+
+        mockedPlatformTransactionManager.rollback(dummyTxStatus);
+
+        verify(mockedPlatformTransactionManager).rollback(dummyTxStatus);
+    }
+=======
+    private SpringTransactionHooks target;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/main/java/cucumber/runtime/java/guice/GuiceFactory.java;<<<<<<< MINE
+=======
+    public GuiceFactory() throws IOException {
+        this(loadCucumberGuiceProperties());
+    }
+
+    GuiceFactory(Properties properties) throws IOException {
+        String guiceModuleClassName = properties.getProperty("guiceModule");
+        if (guiceModuleClassName == null) {
+            this.modules = emptyList();
+        } else {
+            this.modules = new ModuleInstantiator().instantiate(guiceModuleClassName);
+        }
+    }
+
+    private static Properties loadCucumberGuiceProperties() throws IOException {
+        Properties properties = new Properties();
+        InputStream inputStream = GuiceFactory.class.getClassLoader().getResourceAsStream("cucumber-guice.properties");
+        if (inputStream != null) {
+            try {
+                properties.load(inputStream);
+            } finally {
+                inputStream.close();
+            }
+        }
+        return properties;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/java/src/test/java/cucumber/runtime/java/JavaStepDefinitionTest.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/java/src/test/java/cucumber/runtime/java/JavaBackendTest.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/api/Transform.java;<<<<<<< MINE
+=======
+package cucumber.api;
+
+import cucumber.runtime.xstream.converters.SingleValueConverter;
+
+import java.lang.annotation.ElementType;
+
+@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+@java.lang.annotation.Target({ElementType.PARAMETER})
+@java.lang.annotation.Documented
+/**
+ * Step definition parameters can be annotated with this annotation to give full
+ * control over how a step argument gets converted to an object. Although the
+ * annotation value can be a {@link SingleValueConverter} it is recommended to
+ * use a {@link Transformer} subclass instead.
+ *
+ * @see Transformer
+ */
+public @interface Transform {
+    Class<? extends SingleValueConverter> value();
+}>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_6e7e1b3_f9cad32/rev_6e7e1b3-f9cad32/core/src/main/java/cucumber/runtime/formatter/JUnitFormatter.java;<<<<<<< MINE
+            
+=======
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_062758b_636471a/rev_062758b-636471a/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+=======
+    static {
+        Arrays.sort(PENDING_EXCEPTIONS);
+    }
+
+    private static final Object DUMMY_ARG = new Object();
+    private static final byte ERRORS = 0x1;
+
+    private final Stats stats;
+    final UndefinedStepsTracker undefinedStepsTracker;
+
+    private final Glue glue;
+>>>>>>> YOURS

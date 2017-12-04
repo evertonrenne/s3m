@@ -1,0 +1,187 @@
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/model/Query.java;<<<<<<< MINE
+=======
+    public void setTypeNames(Set<String> typeNames) {
+        this.typeNames = typeNames;
+    }
+
+    /**
+     * The list of type names used in a JMX bean string when querying with a wildcard
+     * which is used to expose the actual type name value to the key string. e.g. for this JMX name
+     *
+     * typeName=name=PS Eden Space,type=MemoryPool
+     *
+     * If you add a typeName("name"), then it'll retrieve 'PS Eden Space' from the string
+     */
+    public Set<String> getTypeNames() {
+        return typeNames;
+    }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_40a421a_96cc548/rev_40a421a-96cc548/src/com/googlecode/jmxtrans/util/JmxUtils.java;<<<<<<< MINE
+
+    /**
+   	 * Given a typeName string, get the first match from the typeNames setting.
+   	 * In other words, suppose you have:
+   	 *
+   	 * typeName=name=PS Eden Space,type=MemoryPool
+   	 *
+   	 * If you addTypeName("name"), then it'll retrieve 'PS Eden Space' from the string
+   	 */
+    public static String getConcatedTypeNameValues(Query query, List<String> typeNames, String typeName) {
+        Set<String> queryTypeNames = query.getTypeNames();
+        if (queryTypeNames != null && queryTypeNames.size() > 0) {
+            List<String> allNames = new ArrayList<String>(queryTypeNames);
+            for (String name : typeNames) {
+                if (!allNames.contains(name)) {
+                    allNames.add(name);
+                }
+            }
+            return getConcatedTypeNameValues(allNames, typeName);
+        } else {
+            return getConcatedTypeNameValues(typeNames, typeName);
+        }
+    }
+=======
+
+	/**
+	 * Given a typeName string, get the first match from the typeNames setting.
+	 * In other words, suppose you have:
+	 *
+	 * typeName=name=PS Eden Space,type=MemoryPool
+	 *
+	 * If you addTypeName("name"), then it'll retrieve 'PS Eden Space' from the
+	 * string
+	 */
+	public static String getConcatedTypeNameValues(Query query, List<String> typeNames, String typeName) {
+		Set<String> queryTypeNames = query.getTypeNames();
+		if (queryTypeNames != null && queryTypeNames.size() > 0) {
+			List<String> allNames = new ArrayList<String>(queryTypeNames);
+			for (String name : typeNames) {
+				if (!allNames.contains(name)) {
+					allNames.add(name);
+				}
+			}
+			return getConcatedTypeNameValues(allNames, typeName);
+		} else {
+			return getConcatedTypeNameValues(typeNames, typeName);
+		}
+	}
+
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/src/com/googlecode/jmxtrans/model/output/OpenTSDBWriter.java;<<<<<<< MINE
+=======
+
+    /**
+     * Start the output for the results of a Query to OpenTSDB.
+     */
+    @Override
+    protected void  startOutput() throws IOException {
+        try {
+            this.out = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            log.error("error getting the output stream", e);
+            throw e;
+        }
+    }
+
+    /**
+     * Send a single metric to the server.
+     *
+     * @param   metricLine - the line containing the metric name, value, and tags for a single metric; excludes the
+     *          "put" keyword expected by OpenTSDB and the trailing newline character.
+     */
+    @Override
+    protected void  sendOutput (String metricLine) throws IOException {
+        try {
+            this.out.writeBytes("put " + metricLine + "\n"); 
+        } catch (IOException e) {
+            log.error("error writing result to the output stream", e);
+            throw e;
+        }
+    }
+
+    /**
+     * Finish the output for a single Query, flushing all data to the server and logging the server's response.
+     */
+    @Override
+    protected void  finishOutput () throws IOException {
+        try {
+            this.out.flush();
+        } catch (IOException e) {
+            log.error("flush failed");
+            throw e;
+        }
+
+            // Read and log the response from the server for diagnostic purposes.
+
+        InputStreamReader socketInputStream = new InputStreamReader(socket.getInputStream());
+        BufferedReader bufferedSocketInputStream = new BufferedReader(socketInputStream);
+        String line;
+        while (socketInputStream.ready() && (line = bufferedSocketInputStream.readLine()) != null) {
+            log.warn("OpenTSDB says: " + line); 
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment2/projects/jmxtrans/revisions/rev_1a750dd_4d726a9/rev_1a750dd-4d726a9/test/com/googlecode/jmxtrans/util/JmxUtilsTests.java;<<<<<<< MINE
+=======
+
+	@Test
+	public void testGetTypeNameValueMap () {
+		assertEquals(java.util.Collections.EMPTY_MAP, JmxUtils.getTypeNameValueMap(null));
+		assertEquals(java.util.Collections.EMPTY_MAP, JmxUtils.getTypeNameValueMap(""));
+		assertEquals(makeMap("x-key1-x", ""), JmxUtils.getTypeNameValueMap("x-key1-x"));
+		assertEquals(makeMap("x-key1-x", "", "x-key2-x", ""),
+		             JmxUtils.getTypeNameValueMap("x-key1-x,x-key2-x"));
+		assertEquals(makeMap("x-key1-x", "x-value1-x"),
+		             JmxUtils.getTypeNameValueMap("x-key1-x=x-value1-x"));
+		assertEquals(makeMap("x-key1-x", "x-value1-x", "y-key2-y", "y-value2-y"),
+		             JmxUtils.getTypeNameValueMap("x-key1-x=x-value1-x,y-key2-y=y-value2-y"));
+		assertEquals(
+			makeMap("x-key1-x", "x-value1-x", "y-key2-y", "y-value2-y", "z-key3-z", "z-value3-z"),
+			JmxUtils.getTypeNameValueMap("x-key1-x=x-value1-x,y-key2-y=y-value2-y,z-key3-z=z-value3-z"));
+		assertEquals(
+			makeMap("x-key1-x", "x-value1-x", "y-key2-y", "", "yy-key2.5-yy", "a=1",
+			        "z-key3-z", "z-value3-z"),
+			JmxUtils.getTypeNameValueMap(
+				"x-key1-x=x-value1-x,y-key2-y,yy-key2.5-yy=a=1,z-key3-z=z-value3-z"));
+	}
+
+
+	@Test
+	public void testGetConcatenatedTypeNameValues () {
+		assertNull(JmxUtils.getConcatedTypeNameValues(null, "a=1"));
+		assertNull(JmxUtils.getConcatedTypeNameValues(Collections.EMPTY_LIST, "a=1"));
+		assertEquals("", JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x"), ""));
+		assertEquals("", JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x", "y-key2-y"), ""));
+		assertEquals("x-value1-x",
+		             JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x"), "x-key1-x=x-value1-x"));
+		assertEquals("", JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x"), "y-key2-y=y-value2-y"));
+		assertEquals("x-value1-x_y-value2-y",
+		             JmxUtils.getConcatedTypeNameValues(Arrays.asList("x-key1-x", "y-key2-y"),
+		                                                "x-key1-x=x-value1-x,y-key2-y=y-value2-y"));
+	}
+
+	/**
+	 * Convenience method for creating a Map for comparison.
+	 */
+	protected Map<String, String>   makeMap (String... keysAndValues) {
+		Map<String, String> result;
+		int                 cur;
+
+		result = new HashMap<String, String>();
+
+		cur = 0;
+		while ( cur < keysAndValues.length ) {
+			if ( cur < keysAndValues.length - 1 ) {
+				result.put(keysAndValues[cur], keysAndValues[cur + 1]);
+				cur += 2;
+			}
+			else {
+				result.put(keysAndValues[cur], "");
+				cur++;
+			}
+		}
+
+		return	result;
+	}
+>>>>>>> YOURS

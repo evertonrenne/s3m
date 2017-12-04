@@ -1,0 +1,136 @@
+revision;file;methodsignature;leftbody;basebody;rightbody
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_359b66f_d36ff5d/rev_359b66f-d36ff5d;/cuke4duke/src/main/java/cuke4duke/internal/ik/IkStepDefinition;invokeWithJavaArgs(Object[]);        Object multilineArg;
+
+        // TODO: Change Cucumber API so that we get an additional argument
+        // telling us whether or not we have a multiline argument. Needed
+        // to support multiline Strings.
+        if(args.length > 0 && (args[args.length-1] instanceof Table)) {
+            multilineArg = args[args.length-1];
+        } else {
+            multilineArg = ioke.nil;
+        }
+
+        // TODO: catch expectation failures and resignal correctly
+        List<Runtime.RescueInfo> pendingRescues = new ArrayList<Runtime.RescueInfo>();
+        IokeObject rr = IokeObject.as(((Message)IokeObject.data(ioke.mimic)).sendTo(ioke.mimic, ioke.ground, ioke.rescue), ioke.ground);
+        List<Object> conds = new ArrayList();
+        final IokeObject pendingCondition = IokeObject.as(IokeObject.getCellChain(ioke.condition,
+                                                                                  ioke.message,
+                                                                                  ioke.ground,
+                                                                                  "Pending"), ioke.ground);
+        conds.add(pendingCondition);
+        pendingRescues.add(new Runtime.RescueInfo(rr, conds, pendingRescues, ioke.getBindIndex()));
+        ioke.registerRescues(pendingRescues);
+        try {
+            invoke.sendTo(msg, iokeStepDefObject, iokeStepDefObject, multilineArg);
+        } catch(ControlFlow.Rescue e) {
+            if(e.getRescue().token == pendingRescues) {
+                throw JRuby.cucumberPending("TODO");
+                //                throw (Exception)(e.getCondition().getCell(ioke.message, ioke.ground, "rootException"));
+            } else {
+                throw e;
+            }
+        } finally {
+            ioke.unregisterRescues(pendingRescues);
+        };        Object multilineArg;
+
+        // TODO: Change Cucumber API so that we get an additional argument
+        // telling us whether or not we have a multiline argument. Needed
+        // to support multiline Strings.
+        if(args[args.length-1] instanceof Table) {
+            multilineArg = args[args.length-1];
+        } else {
+            multilineArg = ioke.nil;
+        }
+        invoke.sendTo(msg, iokeStepDefObject, iokeStepDefObject, multilineArg);;        invoke.sendTo(msg, iokeStepDefObject, iokeStepDefObject, multilineArg(args));
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_fb029a2_9fd0062/rev_fb029a2-9fd0062;/cuke4duke/src/main/java/cuke4duke/internal/jvmclass/ClassLanguage;ClassLanguage(ClassLanguageMixin,StepMother,List<ClassAnalyzer>);        String className = System.getProperty("cuke4duke.objectFactory");
+        if(className == null) {
+            throw new RuntimeException("Missing system property: cuke4duke.objectFactory");
+        }
+        Class<?> ofc = Thread.currentThread().getContextClassLoader().loadClass(className);
+        Constructor<?> ctor = ofc.getConstructor();
+        try {
+            objectFactory = (ObjectFactory) ctor.newInstance();
+            objectFactory.addStepMother(stepMother);
+            objectFactory.addClass(DefaultJavaTransforms.class);
+        } catch(InvocationTargetException e) {
+            throw e.getTargetException();;        String className = System.getProperty("cuke4duke.objectFactory");
+        if(className == null) {
+            throw new RuntimeException("Missing system property: cuke4duke.objectFactory");
+        }
+        Class<?> ofc = Thread.currentThread().getContextClassLoader().loadClass(className);
+        Constructor<?> ctor = ofc.getConstructor();
+        try {
+            objectFactory = (ObjectFactory) ctor.newInstance();
+            objectFactory.addStepMother(stepMother);
+        } catch(InvocationTargetException e) {
+            throw e.getTargetException();;        objectFactory = createObjectFactory();
+        objectFactory.addStepMother(stepMother);
+        for(ClassAnalyzer analyzer : analyzers){
+            for(Class<?> clazz : analyzer.alwaysLoad()){
+                objectFactory.addClass(clazz);
+            }
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_71f83bb_46294e4/rev_71f83bb-46294e4;/core/src/main/java/cucumber/runtime/World;dispose();        List<HookDefinition> hooks = new ArrayList<HookDefinition>();
+        for (Backend backend : backends) {
+            backend.disposeWorld();
+            hooks.addAll(backend.getAfterHooks());            
+        }
+        Collections.sort(hooks, new HookComparator(false));
+        for (HookDefinition hook : hooks) {
+            runHookMaybe(hook);            ;        for (Backend backend : backends) {
+            backend.disposeWorld();
+            List<HookDefinition> hooks = backend.getAfterHooks();
+            for (HookDefinition hook : hooks) {
+                runHookMaybe(hook);
+            };        for (Backend backend : backends) {            
+            List<HookDefinition> hooks = backend.getAfterHooks();
+            for (HookDefinition hook : hooks) {
+                runHookMaybe(hook);
+            }
+            backend.disposeWorld();
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_6b11cde_59b5d96/rev_6b11cde-59b5d96;/core/src/main/java/cucumber/cli/Main;main(String[]);        FormatterFactory formatterReporterFactory = new FormatterFactory();
+        Formatter formatter = formatterReporterFactory.createFormatter(format, System.out);
+        runner.run(filesOrDirs, filters, formatter, formatterReporterFactory.reporter(formatter));;        PrettyFormatter prettyFormatter = new PrettyFormatter(System.out, false, true);
+        runner.run(filesOrDirs, filters, prettyFormatter, prettyFormatter);;        PrettyFormatter prettyFormatter = new PrettyFormatter(System.out, false, true);
+        runtime.run(filesOrDirs, filters, prettyFormatter, prettyFormatter);
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b0f48d2_321c656/rev_b0f48d2-321c656;/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend;buildWorld(List<String>,World);            if (gluedPaths.add(gluePath)) {
+                for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                    runScriptlet(resource);
+                };            for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                runScriptlet(resource);;            for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                if (loadedResources.add(resource.getPath())) {
+                    runScriptlet(resource);
+                }
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b0f48d2_321c656/rev_b0f48d2-321c656;/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend;buildWorld(List<String>,World);            if (gluedPaths.add(gluePath)) {
+                for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                    runScriptlet(resource);
+                };            for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                runScriptlet(resource);;            for (Resource resource : resourceLoader.resources(gluePath, ".rb")) {
+                if (loadedResources.add(resource.getPath())) {
+                    runScriptlet(resource);
+                }
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_2ac08a8_c591426/rev_2ac08a8-c591426;/core/src/test/java/cucumber/runtime/formatter/CucumberPrettyFormatterTest;runFeatureWithPrettyFormatter(CucumberFeature,Map<String,String>);private String runFeatureWithPrettyFormatter(final CucumberFeature feature, final Map<String, String> stepsToLocation) throws IOException {
+        final RuntimeOptions runtimeOptions = new RuntimeOptions("");
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(classLoader);
+        final RuntimeGlue glue = createMockedRuntimeGlueThatMatchesTheSteps(stepsToLocation);
+        final Runtime runtime = new Runtime(resourceLoader, classLoader, asList(mock(Backend.class)), runtimeOptions, glue);;private String runFeatureWithPrettyFormatter(final CucumberFeature feature, final Map<String, String> stepsToLocation) throws IOException {
+        final RuntimeOptions runtimeOptions = new RuntimeOptions(new Env());
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final ClasspathResourceLoader resourceLoader = new ClasspathResourceLoader(classLoader);
+        final RuntimeGlue glue = createMockedRuntimeGlueThatMatchesTheSteps(stepsToLocation);
+        final Runtime runtime = new Runtime(resourceLoader, classLoader, asList(mock(Backend.class)), runtimeOptions, glue);;private String runFeatureWithPrettyFormatter(final CucumberFeature feature, final Map<String, String> stepsToLocation) throws Throwable {
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_3745fd6_ae0b2e2/rev_3745fd6-ae0b2e2;/core/src/main/java/cucumber/runtime/ParameterInfo;fromMethod(Method);            boolean transposed = false;
+            Transformer transformer = null;;            Transformer transformer = null;;            Transformer<?> transformer = null;
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_950172a_fd317c3/rev_950172a-fd317c3;/core/src/main/java/cucumber/runtime/model/CucumberScenario;run(Formatter,Reporter,Runtime);        formatter.endOfScenarioLifeCycle((Scenario) getGherkinModel());
+        runtime.disposeBackendWorlds();;        try {
+            formatter.endOfScenarioLifeCycle((Scenario) getGherkinModel());
+        } catch (Throwable ignore) {
+            // IntelliJ has its own formatter which doesn't yet implement this.
+        }
+        runtime.disposeBackendWorlds();;        try {
+            formatter.endOfScenarioLifeCycle((Scenario) getGherkinModel());
+        } catch (Throwable ignore) {
+            // IntelliJ has its own formatter which doesn't yet implement this.
+        }
+        runtime.disposeBackendWorlds(createScenarioDesignation());

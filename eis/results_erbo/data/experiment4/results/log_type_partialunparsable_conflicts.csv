@@ -1,0 +1,355 @@
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_56c5899_75037c8/rev_56c5899-75037c8/cucumber-maven-plugin/src/main/java/cucumber/mojo/CucumberMojo.java;<<<<<<< MINE
+    @Override
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b339f00_326f52b/rev_b339f00-326f52b/cuke4duke-maven-plugin/src/main/java/cuke4duke/mojo/CucumberMojo.java;<<<<<<< MINE
+    /**
+     * @parameter expression="${cucumber.bin}"
+     */
+    private File cucumberBin;
+
+    @SuppressWarnings({"unchecked"})
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b339f00_326f52b/rev_b339f00-326f52b/cuke4duke-maven-plugin/src/main/java/cuke4duke/mojo/AbstractJRubyMojo.java;<<<<<<< MINE
+    /**
+     * Installs gems. Each string must follow one of the following patterns:
+     *
+     * <ul>
+     *   <li>name</li>
+     *   <li>name:version</li>
+     *   <li>name:version:github</li>
+     * </ul>
+     */
+    @SuppressWarnings({"unchecked"})
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_1203598_ebda170/rev_1203598-ebda170/cuke4duke/src/main/java/cuke4duke/internal/ik/IkStepDefinition.java;<<<<<<< MINE
+=======
+    @SuppressWarnings("unchecked")
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_e314593_125bc72/rev_e314593-125bc72/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+=======
+        } else {
+            for (Argument a : getArguments()) {
+                result[n] = transformers.transform(locale, parameterTypes[n++], a.getVal());
+            }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+=======
+        if (firstFeature) {
+            out.append("$(document).ready(function() {").append("var ")
+                    .append(JS_FORMATTER_VAR).append(" = new CucumberHTML.DOMFormatter($('.cucumber-report'));");
+            firstFeature = false;
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_044a692_e28a394/rev_044a692-e28a394/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+=======
+        if (firstFeature) {
+            out.append("$(document).ready(function() {").append("var ")
+                    .append(JS_FORMATTER_VAR).append(" = new CucumberHTML.DOMFormatter($('.cucumber-report'));");
+            firstFeature = false;
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/core/src/main/java/cucumber/runtime/World.java;<<<<<<< MINE
+=======
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+=======
+        this.isDryRun = isDryRun;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/core/src/main/java/cucumber/cli/Main.java;<<<<<<< MINE
+=======
+            } else if (arg.equals("--dry-run") || arg.equals("-d")) {
+                isDryRun = true;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_a90a684_618a766/rev_a90a684-618a766/guice/src/test/java/cucumber/runtime/java/guice/GuiceFactoryTest.java;<<<<<<< MINE
+    @Ignore("Needs to be fixed")
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7d3b639_f6064ca/rev_7d3b639-f6064ca/examples/java-calculator/src/test/java/cucumber/examples/java/calculator/RpnCalculatorStepdefs.java;<<<<<<< MINE
+	private RpnCalculator calc;
+=======
+    private RpnCalculator calc;
+    private List<ScenarioMovement> stepDefmovements;
+
+    @Given("^a calculator I just turned on$")
+    public void a_calculator_I_just_turned_on() {
+        calc = new RpnCalculator();
+    }
+
+    @When("^I add (\\d+) and (\\d+)$")
+    public void adding(int arg1, int arg2) {
+        calc.push(arg1);
+        calc.push(arg2);
+        calc.push("+");
+    }
+
+    @Then("^the result is (\\d+)$")
+    public void the_result_is(double expected) {
+        assertEquals(expected, calc.value());
+    }
+
+    @Before({"~@foo"})
+    public void before() {
+        System.out.println("Runs before scenarios *not* tagged with @foo");
+    }
+
+    @After
+    public void after() {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d7255fb_4a9f204/rev_d7255fb-4a9f204/core/src/main/java/cucumber/runtime/StepDefinitionMatch.java;<<<<<<< MINE
+=======
+        if (xStream == null) {
+            throw new NullPointerException("xStream");
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b57da8b_8c8dc21/rev_b57da8b-8c8dc21/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+        } catch (IOException e) {
+            //Oh well?
+        }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b57da8b_8c8dc21/rev_b57da8b-8c8dc21/jruby/src/main/java/cucumber/runtime/jruby/JRubyBackend.java;<<<<<<< MINE
+=======
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/RuntimeWorld.java;<<<<<<< MINE
+        this.tags = tags;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+=======
+
+        this.world = new RuntimeWorld(this);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+=======
+    /**
+     * This is where the first entry happens. World should be passed along through this through the various scopes
+     *
+     * @param featurePaths
+     * @param filters
+     * @param formatter
+     * @param reporter
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+=======
+    /**
+     * This is the second entry to running features
+     *
+     * @param featurePaths
+     * @param dotCucumber
+     * @throws IOException
+     */
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        World world = new RuntimeWorld(this, NO_TAGS);
+=======
+        //TODO: ensure that tagging still works
+        //World world = new RuntimeWorld(this, NO_TAGS);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7eaa16a_547331e/rev_7eaa16a-547331e/junit/src/main/java/cucumber/junit/ExecutionUnitRunner.java;<<<<<<< MINE
+=======
+
+        this.world = runtime.getWorld();
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_beb39a9_6c0dccd/rev_beb39a9-6c0dccd/java/src/test/java/cucumber/runtime/java/JavaBackendTest.java;<<<<<<< MINE
+        public void buildBackendWorldsAndRunBeforeHooks(Reporter reporter) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void runUnreportedStep(String file, Locale locale, String stepKeyword, String stepName, int line, List<DataTableRow> dataTableRows, DocString docString) throws Throwable {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d623c28_2a400fe/rev_d623c28-2a400fe/examples/java-helloworld/src/test/java/cucumber/examples/java/helloworld/RunCukesTest.java;<<<<<<< MINE
+=======
+@Cucumber.Options(format = {"pretty", "html:target/cucumber"})
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/formatter/ProgressFormatter.java;<<<<<<< MINE
+=======
+    public void before(HookResult result) {
+        handleHook(result, true);
+    }
+
+    @Override
+    public void after(HookResult result) {
+        handleHook(result, false);
+    }
+
+    private void handleHook(HookResult result, boolean before) {
+        if (result.getStatus().equals(Result.FAILED)) {
+            if (!monochrome) {
+                ANSI_ESCAPES.get(result.getStatus()).appendTo(out);
+            }
+            if (before) {
+                out.append("B");
+            } else {
+                out.append("A");
+            }
+            if (!monochrome) {
+                AnsiEscapes.RESET.appendTo(out);
+            }
+        }
+    }
+
+    @Override
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9531933_3f8f171/rev_9531933-3f8f171/core/src/main/java/cucumber/formatter/HTMLFormatter.java;<<<<<<< MINE
+=======
+    public void before(HookResult result) {
+        writeToJsReport("before", result);
+    }
+
+    @Override
+    public void after(HookResult result) {
+        writeToJsReport("after", result);
+    }
+
+    @Override
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/converters/LocalizedXStreams.java;<<<<<<< MINE
+=======
+
+            // Must be lower priority than the ones above, but higher than xstream's built-in ReflectionConverter
+            converterRegistry.registerConverter(new SingleValueConverterWrapperExt(new ClassWithStringConstructorConverter()), XStream.PRIORITY_LOW);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_d55b7c6_20cdb63/rev_d55b7c6-20cdb63/core/src/main/java/cucumber/runtime/ParameterType.java;<<<<<<< MINE
+=======
+        this.singleValueConverter = singleValueConverter;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+=======
+        expected.diff(actual);
+    }
+
+    @Test(expected = TableDiffException.class)
+    public void should_diff_when_consecutive_deleted_lines() {
+        try {
+            List<List<String>> other = otherTableWithTwoConsecutiveRowsDeleted().raw();
+            table().diff(other);
+        } catch (TableDiffException e) {
+            String expected = "" +
+                    "Tables were not identical:\n" +
+                    "      | Aslak | aslak@email.com | 123 |\n" +
+                    "    - | Joe   | joe@email.com   | 234 |\n" +
+                    "    - | Bryan | bryan@email.org | 456 |\n" +
+                    "      | Ni    | ni@email.com    | 654 |\n";
+            assertEquals(expected, e.getMessage());
+            throw e;
+        }
+
+    }
+
+    @Test(expected = TableDiffException.class)
+    public void should_diff_when_consecutive_changed_lines() {
+        try {
+            List<List<String>> other = otherTableWithTwoConsecutiveRowsChanged().raw();
+            table().diff(other);
+        } catch (TableDiffException e) {
+            String expected = "" +
+                    "Tables were not identical:\n" +
+                    "      | Aslak | aslak@email.com  | 123 |\n" +
+                    "    - | Joe   | joe@email.com    | 234 |\n" +
+                    "    - | Bryan | bryan@email.org  | 456 |\n" +
+                    "    + | Joe   | joe@NOSPAM.com   | 234 |\n" +
+                    "    + | Bryan | bryan@NOSPAM.org | 456 |\n" +
+                    "      | Ni    | ni@email.com     | 654 |\n";
+            assertEquals(expected, e.getMessage());
+            throw e;
+        }
+
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/test/java/cucumber/runtime/table/TableDifferTest.java;<<<<<<< MINE
+=======
+    @Test(expected = TableDiffException.class)
+    public void should_diff_when_consecutive_inserted_lines() {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/main/java/cucumber/runtime/table/TableDiffer.java;<<<<<<< MINE
+=======
+                // skipping lines involved in a delta
+                if (delta.getType() == Delta.TYPE.CHANGE || delta.getType() == Delta.TYPE.DELETE) {
+                    i += delta.getOriginal().getLines().size() - 1;
+                } else {
+                    diffTableRows.add(orig.getGherkinRows().get(i));
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_8848117_fd0cd8b/rev_8848117-fd0cd8b/core/src/main/java/cucumber/runtime/table/TableDiffer.java;<<<<<<< MINE
+=======
+    }
+
+    private void markChangedAndInsertedRowsInRevisedAsNew(List<DataTableRow> diffTableRows, Delta delta) {
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_442c4ed_4439178/rev_442c4ed-4439178/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+=======
+        this.resourceLoader = resourceLoader;
+        this.classLoader = classLoader;
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_442c4ed_4439178/rev_442c4ed-4439178/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        this.runtimeOptions = runtimeOptions;
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b7d2505_d90c7af/rev_b7d2505-d90c7af/core/src/main/java/cucumber/runtime/model/CucumberScenarioOutline.java;<<<<<<< MINE
+                if (text.isEmpty()) {
+                    throw new CucumberException("Step generated from scenario outline '" + token + "' is empty");
+                }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/main/java/cucumber/runtime/groovy/GroovyBackend.java;<<<<<<< MINE
+=======
+        body.setResolveStrategy(Closure.DELEGATE_FIRST);
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_7f4f543_1cd5727/rev_7f4f543-1cd5727/groovy/src/test/java/cucumber/runtime/groovy/GroovyBackendTest.java;<<<<<<< MINE
+=======
+
+        backend.disposeWorld();
+
+        assertNull(backend.getGroovyWorld());
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_b66c765_0ac2df0/rev_b66c765-0ac2df0/core/src/main/java/cucumber/runtime/RuntimeOptions.java;<<<<<<< MINE
+        if (!parsedJunitOptions.isEmpty()) {
+            junitOptions.clear();
+            junitOptions.addAll(parsedJunitOptions);
+        }
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_280113e_9ec2d0f/rev_280113e-9ec2d0f/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        Glue glue = optionalGlue != null ? optionalGlue : new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader));
+=======
+        this.stopWatch = stopWatch;
+        this.glue = optionalGlue != null ? optionalGlue : new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader, runtimeOptions.getConverters()));
+>>>>>>> YOURS
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_062758b_636471a/rev_062758b-636471a/core/src/main/java/cucumber/runtime/Runtime.java;<<<<<<< MINE
+        Glue glue = optionalGlue != null ? optionalGlue : new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader, runtimeOptions.getConverters()));
+=======
+        this.stopWatch = stopWatch;
+        if (optionalGlue == null) {
+            this.undefinedStepsTracker = new UndefinedStepsTracker();
+            this.glue = new RuntimeGlue(undefinedStepsTracker, new LocalizedXStreams(classLoader));
+        } else {
+            this.undefinedStepsTracker = optionalGlue.getTracker();
+            this.glue = optionalGlue;
+        }
+>>>>>>> YOURS

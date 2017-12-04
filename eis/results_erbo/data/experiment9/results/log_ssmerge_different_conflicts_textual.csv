@@ -1,0 +1,3126 @@
+file;linedbasedConf
+/experiment_results/projects/async-http-client/revisions/rev_93cb819_31e901c/rev_93cb819-31e901c/src/main/java/com/ning/http/client/AsyncHttpClient.java;<<<<<<< MINE
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+=======
+import java.util.concurrent.Executors;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_2834878_62be117/rev_2834878-62be117/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_2834878_62be117/rev_2834878-62be117/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+import java.io.FileInputStream;
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_2834878_62be117/rev_2834878-62be117/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+import java.io.InputStream;
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_2834878_62be117/rev_2834878-62be117/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_12fb5f5_d53a698/rev_12fb5f5-d53a698/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;<<<<<<< MINE
+import static org.testng.Assert.assertNotNull;
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_1b2aa0f_9f3b7a4/rev_1b2aa0f-9f3b7a4/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+import java.nio.charset.Charset;
+=======
+import java.security.NoSuchAlgorithmException;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_50d4966_0f933aa/rev_50d4966-0f933aa/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        String url = uri.toString();
+=======
+        String url = uri.getScheme() + "://" + uri.getAuthority();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_50d4966_0f933aa/rev_50d4966-0f933aa/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+            url = url.substring(0,url.length() -1) + ":" + port;
+=======
+            url += ":" + port;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_50d4966_0f933aa/rev_50d4966-0f933aa/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        return url.substring(0,url.indexOf(":", 9) + String.valueOf(port).length() +1);
+=======
+        return url;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/util/AuthenticatorUtils.java;<<<<<<< MINE
+=======
+import com.ning.http.client.ProxyServer;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/util/AuthenticatorUtils.java;<<<<<<< MINE
+=======
+    public static String computeBasicAuthentication(ProxyServer proxyServer) {
+        String s = proxyServer.getPrincipal() + ":" + proxyServer.getPassword();
+        return "Basic " + Base64.encode(s.getBytes());
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/util/SslUtils.java;<<<<<<< MINE
+        if (config.keyStoreLocation == null) {
+=======
+        if (config.keyStoreLocation == null || config.trustStoreLocation != null) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/Response.java;<<<<<<< MINE
+=======
+
+    /**
+     * Return true if the response's status has been computed by an {@link AsyncHandler}
+     * @return true if the response's status has been computed by an {@link AsyncHandler}
+     */
+    public boolean hasResponseStatus();
+
+    /**
+     * Return true if the response's headers has been computed by an {@link AsyncHandler} It will return false if the
+     * either {@link com.ning.http.client.AsyncHandler#onStatusReceived(HttpResponseStatus)}
+     * or {@link AsyncHandler#onHeadersReceived(HttpResponseHeaders)} returned {@link com.ning.http.client.AsyncHandler.STATE#ABORT}
+     * @return true if the response's headers has been computed by an {@link AsyncHandler}
+     */
+    public boolean hasResponseHeaders();
+
+    /**
+     * Return true if the response's body has been computed by an {@link AsyncHandler}. It will return false if the
+     * either {@link com.ning.http.client.AsyncHandler#onStatusReceived(HttpResponseStatus)}
+     * or {@link AsyncHandler#onHeadersReceived(HttpResponseHeaders)} returned {@link com.ning.http.client.AsyncHandler.STATE#ABORT}
+     * @return true if the response's body has been computed by an {@link AsyncHandler}
+     */
+    public boolean hasResponseBody();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestType.java;<<<<<<< MINE
+    OPTIONS
+=======
+    OPTIONS,
+    CONNECT
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/Request.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/Request.java;<<<<<<< MINE
+=======
+
+    /**
+     * Return Per request configuration.
+     *
+     * @return Per request configuration.
+     */
+    public PerRequestConfig getPerRequestConfig();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncCompletionHandlerBase.java;<<<<<<< MINE
+=======
+ *
+ * <strong>NOTE:<strong> Sending another asynchronous request from an {@link AsyncHandler} must be done using
+ * another thread to avoid potential deadlock inside the {@link com.ning.http.client.AsyncHttpProvider}
+ *
+ * The recommended way is to use the {@link java.util.concurrent.ExecutorService} from the {@link com.ning.http.client.AsyncHttpClientConfig}:
+ * {@code
+ *         &#64;Override
+ *         public Response onCompleted(Response response) throws Exception
+ *         &#123;
+ *             asyncHttpClient.getConfig().executorService().execute(new Runnable()
+ *             &#123;
+ *                 public void run()
+ *                 &#123;
+ *                     asyncHttpClient.prepareGet(...);
+ *                 &#125;
+ *             &#125;);
+ *            return response;
+ *         &#125;
+ * }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/PerRequestConfig.java;<<<<<<< MINE
+=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client;
+
+/**
+ * Per request configuration.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestConfig {
+    private final ProxyServer proxyServer;
+    private int requestTimeoutInMs;
+
+    public PerRequestConfig() {
+        this(null, 0);
+    }
+    
+    public PerRequestConfig(ProxyServer proxyServer, int requestTimeoutInMs) {
+        this.proxyServer = proxyServer;
+        this.requestTimeoutInMs = requestTimeoutInMs;
+    }
+
+    public ProxyServer getProxyServer() {
+        return proxyServer;
+    }
+
+    public int getRequestTimeoutInMs() {
+        return requestTimeoutInMs;
+    }
+
+    public void setRequestTimeoutInMs(int requestTimeoutInMs) {
+        this.requestTimeoutInMs = requestTimeoutInMs;
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncHttpClient.java;<<<<<<< MINE
+=======
+     * Prepare an HTTP client CONNECT request.
+     * @param url A well formed URL.
+     * @return {@link RequestBuilder}
+     */
+    public BoundRequestBuilder prepareConnect(String url) {
+        return requestBuilder(RequestType.CONNECT, url);
+    }
+
+    /**
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/HttpResponseBodyPart.java;<<<<<<< MINE
+=======
+import java.io.IOException;
+import java.io.OutputStream;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/HttpResponseBodyPart.java;<<<<<<< MINE
+=======
+    /**
+     * Write the available bytes to the {@link java.io.OutputStream}
+     * @param outputStream
+     * @throws IOException
+     * @return The number of bytes written
+     */
+    abstract public int writeTo(OutputStream outputStream) throws IOException;
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncHandler.java;<<<<<<< MINE
+=======
+ * <strong>NOTE:<strong> Sending another asynchronous request from an {@link AsyncHandler} must be done using
+ * another thread to avoid potential deadlock inside the {@link com.ning.http.client.AsyncHttpProvider}
+ *
+ * The recommended way is to use the {@link java.util.concurrent.ExecutorService} from the {@link com.ning.http.client.AsyncHttpClientConfig}:
+ * {@code
+ *         &#64;Override
+ *         public T onCompleted() throws Exception
+ *         &#123;
+ *             asyncHttpClient.getConfig().executorService().execute(new Runnable()
+ *             &#123;
+ *                 public void run()
+ *                 &#123;
+ *                     asyncHttpClient.prepareGet(...);
+ *                 &#125;
+ *             &#125;);
+ *            return T;
+ *         &#125;
+ * }
+ *
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestBuilderBase.java;<<<<<<< MINE
+=======
+        private PerRequestConfig perRequestConfig;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestBuilderBase.java;<<<<<<< MINE
+=======
+                this.perRequestConfig = prototype.getPerRequestConfig();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestBuilderBase.java;<<<<<<< MINE
+=======
+        public PerRequestConfig getPerRequestConfig() {
+            return perRequestConfig;
+        }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/RequestBuilderBase.java;<<<<<<< MINE
+=======
+    public T setPerRequestConfig(PerRequestConfig perRequestConfig) {
+        request.perRequestConfig = perRequestConfig;
+        return derived.cast(this);
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncCompletionHandler.java;<<<<<<< MINE
+=======
+ * <strong>NOTE:<strong> Sending another asynchronous request from an {@link AsyncHandler} must be done using
+ * another thread to avoid potential deadlock inside the {@link com.ning.http.client.AsyncHttpProvider}
+ *
+ * The recommended way is to use the {@link java.util.concurrent.ExecutorService} from the {@link com.ning.http.client.AsyncHttpClientConfig}:
+ * {@code
+ *         &#64;Override
+ *         public T onCompleted(Response response) throws Exception
+ *         &#123;
+ *             asyncHttpClient.getConfig().executorService().execute(new Runnable()
+ *             &#123;
+ *                 public void run()
+ *                 &#123;
+ *                     asyncHttpClient.prepareGet(...);
+ *                 &#125;
+ *             &#125;);
+ *            return T;
+ *         &#125;
+ * }
+ *
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+        private ScheduledExecutorService reaper = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+=======
+        private ScheduledExecutorService reaper = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(),
+                new ThreadFactory() {
+                    public Thread newThread(Runnable r) {
+                        return new Thread(r, "AsyncHttpClient-Reaper");
+                    }
+                });
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;<<<<<<< MINE
+=======
+    private final String principal;
+    private final String password;
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;<<<<<<< MINE
+    public ProxyServer(final Protocol protocol, final String host, final int port) {
+=======
+    public ProxyServer(final Protocol protocol, final String host, final int port, String principal, String password) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;<<<<<<< MINE
+=======
+        this.principal = principal;
+        this.password = password;
+    }
+
+    public ProxyServer(final String host, final int port, String principal, String password) {
+        this(Protocol.HTTP, host, port, principal, password);
+    }
+
+    public ProxyServer(final Protocol protocol, final String host, final int port) {
+        this(protocol, host, port, null, null);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;<<<<<<< MINE
+        this(Protocol.HTTP, host, port);
+=======
+        this(Protocol.HTTP, host, port, null, null);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/ProxyServer.java;<<<<<<< MINE
+=======
+    public String getPrincipal() {
+        return principal;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+    private final static String HEADERS_NOT_COMPUTED = "Response's headers hasn't been computed by your AsyncHandler.";
+    private final static String BODY_NOT_COMPUTED = "Response's body hasn't been computed by your AsyncHandler.";
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+        checkBodyParts(); 
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+        checkBodyParts();
+        
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+    private void checkBodyParts() {
+        if (bodyParts == null && bodyParts.size() > 0) {
+            throw new IllegalStateException(BODY_NOT_COMPUTED);
+        }
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+        if (headers == null ) {
+            throw new IllegalStateException(HEADERS_NOT_COMPUTED);
+        }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+        if (headers == null ) {
+            throw new IllegalStateException();
+        }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+        if (headers == null ) {
+            throw new IllegalStateException(HEADERS_NOT_COMPUTED);
+        }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+         if (headers == null ) {
+            throw new IllegalStateException(HEADERS_NOT_COMPUTED);
+        }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+        if (headers == null ) {
+            throw new IllegalStateException(HEADERS_NOT_COMPUTED);
+        }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncResponse.java;<<<<<<< MINE
+=======
+    /**
+     * {@inheritDoc}
+     */
+    /* @Override */
+    public boolean hasResponseStatus() {
+        return (bodyParts != null ? true : false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    /* @Override */
+    public boolean hasResponseHeaders() {
+        return (headers != null ? true : false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    /* @Override */
+    public boolean hasResponseBody() {
+        return (bodyParts != null && bodyParts.size() > 0 ? true : false);
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+=======
+import java.util.concurrent.atomic.AtomicLong;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+    private final HttpRequest nettyRequest;
+=======
+    private HttpRequest nettyRequest;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+    private Future<Object> reaperFuture;
+    private boolean inDigestAuth;
+    
+=======
+    private Future<?> reaperFuture;
+    private final AtomicBoolean inAuth = new AtomicBoolean(false);
+    private final AtomicBoolean statusReceived = new AtomicBoolean(false);
+    private final AtomicLong touch = new AtomicLong(System.currentTimeMillis());
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+     * Is the Future still valid
+     */
+    public boolean hasExpired(){
+        return ((System.currentTimeMillis() - touch.get()) > responseTimeoutInMs );
+    }
+
+    /**
+=======
+     * Is the Future still valid
+     *
+     * @return <code>true</code> iff response has expired and should be terminated.
+     */
+    public boolean hasExpired(){
+        return responseTimeoutInMs != -1 && ((System.currentTimeMillis() - touch.get()) > responseTimeoutInMs);
+    }
+
+    /**
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+=======
+    protected final void setNettyRequest(HttpRequest nettyRequest) {
+        this.nettyRequest = nettyRequest;
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+    public void setReaperFuture(Future<Object> reaperFuture) {
+=======
+    public void setReaperFuture(Future<?> reaperFuture) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+    public boolean isInDigestAuth() {
+        return inDigestAuth;
+=======
+    public boolean isInAuth() {
+        return inAuth.get();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+    public void setInDigestAuth(boolean inDigestAuth) {
+        this.inDigestAuth = inDigestAuth;
+=======
+    public boolean getAndSetAuth(boolean inDigestAuth) {
+        return inAuth.getAndSet(inDigestAuth);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyResponseFuture.java;<<<<<<< MINE
+=======
+
+    public boolean getAndSetStatusReceived(boolean sr) {
+        return statusReceived.getAndSet(sr);
+    }
+
+    protected void touch() {
+        touch.set(System.currentTimeMillis());
+    }
+
+    @Override
+    public String toString() {
+        return "NettyResponseFuture{" +
+                "latch=" + latch +
+                ", isDone=" + isDone +
+                ", isCancelled=" + isCancelled +
+                ", asyncHandler=" + asyncHandler +
+                ", responseTimeoutInMs=" + responseTimeoutInMs +
+                ", request=" + request +
+                ", nettyRequest=" + nettyRequest +
+                ", content=" + content +
+                ", uri=" + uri +
+                ", keepAlive=" + keepAlive +
+                ", httpResponse=" + httpResponse +
+                ", exEx=" + exEx +
+                ", redirectCount=" + redirectCount +
+                ", reaperFuture=" + reaperFuture +
+                ", inAuth=" + inAuth +
+                ", statusReceived=" + statusReceived +
+                ", touch=" + touch +
+                '}';
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+import com.ning.http.client.PerRequestConfig;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    private final Logger log = LogManager.getLogger(NettyAsyncHttpProvider.class);
+=======
+    private final static String HTTP_HANDLER = "httpHandler";
+    private final static String SSL_HANDLER = "sslHandler";
+
+    private final static Logger log = LogManager.getLogger(NettyAsyncHttpProvider.class);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        super(new HashedWheelTimer(), 0, 0, config.getIdleConnectionTimeoutInMs(), TimeUnit.MILLISECONDS) ;
+=======
+        super(new HashedWheelTimer(), 0, 0, config.getIdleConnectionTimeoutInMs(), TimeUnit.MILLISECONDS);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    void configure(final boolean useSSL, final ConnectListener<?> cl){
+=======
+    void configure(final boolean useSSL, final ConnectListener<?> cl) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                if (useSSL){
+                    try{
+=======
+                if (useSSL) {
+                    try {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                        if (sslEngine == null){
+=======
+                        if (sslEngine == null) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                        pipeline.addLast("ssl", new SslHandler(sslEngine));
+                    } catch (Throwable ex){
+=======
+                        pipeline.addLast(SSL_HANDLER, new SslHandler(sslEngine));
+                    } catch (Throwable ex) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                            
+                pipeline.addLast("codec", new HttpClientCodec());
+=======
+
+                pipeline.addLast(HTTP_HANDLER, new HttpClientCodec());
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+            return future;                                               
+=======
+            return future;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+            } catch (ConnectException ex){
+=======
+            } catch (ConnectException ex) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                URI uri = createUri(request.getRawUrl());
+                HttpRequest nettyRequest = buildRequest(config,request,uri);
+=======
+                URI uri = createUri(request.getRawUrl().replace(" ","%20"));
+                HttpRequest nettyRequest = buildRequest(config, request, uri, true);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                if (future == null){
+=======
+                if (future == null) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                            nettyRequest, config.getRequestTimeoutInMs());
+=======
+                            nettyRequest, requestTimeout(config, request.getPerRequestConfig()));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        if (!channel.isConnected()){
+=======
+        if (!channel.isConnected()) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        channel.write(nettyRequest).addListener(new ProgressListener(true,future.getAsyncHandler()));
+=======
+        channel.write(nettyRequest).addListener(new ProgressListener(true, future.getAsyncHandler()));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    writeFuture.addListener(new ProgressListener(false,future.getAsyncHandler()));
+=======
+                    writeFuture.addListener(new ProgressListener(false, future.getAsyncHandler()));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    writeFuture.addListener(new ProgressListener(false,future.getAsyncHandler()) {
+                         public void operationComplete(ChannelFuture cf) {
+                             region.releaseExternalResources();
+                             super.operationComplete(cf);
+=======
+                    writeFuture.addListener(new ProgressListener(false, future.getAsyncHandler()) {
+                        public void operationComplete(ChannelFuture cf) {
+                            region.releaseExternalResources();
+                            super.operationComplete(cf);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    private final static HttpRequest buildRequest(AsyncHttpClientConfig config,Request request, URI uri) throws IOException{
+        return construct(config, request, new HttpMethod(request.getType().toString()), uri);
+=======
+    private final static HttpRequest buildRequest(AsyncHttpClientConfig config, Request request, URI uri, boolean allowConnect) throws IOException {
+
+        String method = request.getType().toString();
+        if (allowConnect && ((request.getProxyServer() != null || config.getProxyServer() != null) && "https".equalsIgnoreCase(uri.getScheme()))) {
+            method = HttpMethod.CONNECT.toString();
+        }
+        return construct(config, request, new HttpMethod(method), uri);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        } else if (path.length() == 0 ) {
+=======
+        } else if (path.length() == 0) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        StringBuilder path = new StringBuilder(uri.getPath());
+        if (uri.getQuery() != null) {
+            path.append("?").append(uri.getRawQuery());
+        }
+
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        if (config.getProxyServer() != null || request.getProxyServer() != null) {
+            nettyRequest = new DefaultHttpRequest(HttpVersion.HTTP_1_1, m, uri.toString());
+=======
+        if (m.equals(HttpMethod.CONNECT)) {
+            uri = URI.create(new StringBuilder(uri.getHost())
+                    .append(":")
+                    .append(getPort(uri)).toString());
+            nettyRequest = new DefaultHttpRequest(HttpVersion.HTTP_1_0, m, uri.toString());
+        } else if (config.getProxyServer() != null || request.getProxyServer() != null) {
+            nettyRequest = new DefaultHttpRequest(HttpVersion.HTTP_1_1, m, uri.getPath());
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+            StringBuilder path = new StringBuilder(uri.getRawPath());
+            if (uri.getQuery() != null) {
+                path.append("?").append(uri.getRawQuery());
+            }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        FluentCaseInsensitiveStringsMap h = request.getHeaders();
+        if (h != null) {
+            for (String name : h.keySet()) {
+                if (!"host".equalsIgnoreCase(name)) {
+                    for (String value : h.get(name)) {
+                        nettyRequest.addHeader(name, value);
+=======
+        if (!m.equals(HttpMethod.CONNECT)) {
+            FluentCaseInsensitiveStringsMap h = request.getHeaders();
+            if (h != null) {
+                for (String name : h.keySet()) {
+                    if (!"host".equalsIgnoreCase(name)) {
+                        for (String value : h.get(name)) {
+                            nettyRequest.addHeader(name, value);
+                        }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+            if (config.isCompressionEnabled()) {
+                nettyRequest.setHeader(HttpHeaders.Names.ACCEPT_ENCODING, HttpHeaders.Values.GZIP);
+            }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                                   AuthenticatorUtils.computeBasicAuthentication(realm));
+=======
+                            AuthenticatorUtils.computeBasicAuthentication(realm));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                                           AuthenticatorUtils.computeDigestAuthentication(realm));
+=======
+                                    AuthenticatorUtils.computeDigestAuthentication(realm));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    throw new IllegalStateException("Invalie AuthType");
+=======
+                    throw new IllegalStateException(String.format("Invalid Authentication %s", realm.toString()));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        if (config.getProxyServer() != null || request.getProxyServer() != null) {
+=======
+        ProxyServer proxyServer = config.getProxyServer() != null ? config.getProxyServer() : request.getProxyServer();
+        if (proxyServer != null) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+            if (proxyServer.getPrincipal() != null) {
+                nettyRequest.setHeader(HttpHeaders.Names.PROXY_AUTHORIZATION, AuthenticatorUtils.computeBasicAuthentication(proxyServer));
+            }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        if (config.isCompressionEnabled()) {
+            nettyRequest.setHeader(HttpHeaders.Names.ACCEPT_ENCODING, HttpHeaders.Values.GZIP);
+        }
+
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    nettyRequest.setHeader(HttpHeaders.Names.CONTENT_TYPE,"application/x-www-form-urlencoded");
+=======
+                    nettyRequest.setHeader(HttpHeaders.Names.CONTENT_TYPE, "application/x-www-form-urlencoded");
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    throw new IOException(String.format("File %s is not a file, is hidden or doesn't exist",file.getAbsolutePath()));
+=======
+                    throw new IOException(String.format("File %s is not a file, is hidden or doesn't exist", file.getAbsolutePath()));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+
+        if (nettyRequest.getHeader(HttpHeaders.Names.CONTENT_TYPE) == null) {
+            nettyRequest.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=utf-8");
+        }
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        return new NettyAsyncResponse(status,headers,bodyParts);
+=======
+        return new NettyAsyncResponse(status, headers, bodyParts);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        return doConnect(request,asyncHandler, null);
+=======
+        return doConnect(request, asyncHandler, null);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        doConnect(request,f.getAsyncHandler(),f);
+=======
+        doConnect(request, f.getAsyncHandler(), f);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    private <T> Future<T> doConnect(final Request request, final AsyncHandler<T> asyncHandler, NettyResponseFuture<T> f) throws IOException{
+        
+        if (isClose.get()){
+           throw new IOException("Closed"); 
+=======
+    private <T> Future<T> doConnect(final Request request, final AsyncHandler<T> asyncHandler, NettyResponseFuture<T> f) throws IOException {
+
+        if (isClose.get()) {
+            throw new IOException("Closed");
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                if (config.getMaxConnectionPerHost() == -1) {
+=======
+                if (config.getMaxConnectionPerHost() != -1) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                HttpRequest nettyRequest = buildRequest(config,request,uri);
+=======
+                HttpRequest nettyRequest = buildRequest(config, request, uri, false);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    f = new NettyResponseFuture<T>(uri, request, asyncHandler,
+                                                   nettyRequest, config.getRequestTimeoutInMs());
+=======
+                    f = new NettyResponseFuture<T>(uri, request, asyncHandler, nettyRequest, requestTimeout(config, request.getPerRequestConfig()));
+                } else {
+                    f.setNettyRequest(nettyRequest);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    executeRequest(channel, config,f,nettyRequest);
+=======
+                    executeRequest(channel, config, f, nettyRequest);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    connectionsPool.remove(channel);                    
+=======
+                    connectionsPool.remove(channel);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        ConnectListener<T> c = new ConnectListener.Builder<T>(config, request, asyncHandler,f).build();
+        configure(uri.getScheme().compareToIgnoreCase("https") == 0, c);
+=======
+        ConnectListener<T> c = new ConnectListener.Builder<T>(config, request, asyncHandler, f).build();
+
+
+        boolean useSSl = uri.getScheme().compareToIgnoreCase("https") == 0
+                && (request.getProxyServer() == null
+                || !request.getProxyServer().getProtocolAsString().equals("https"));
+        configure(useSSl, c);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        try{
+=======
+        try {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        } catch (Throwable t){
+=======
+        } catch (Throwable t) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        openChannels.add(channelFuture.getChannel());        
+=======
+        openChannels.add(channelFuture.getChannel());
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+    private static int requestTimeout(AsyncHttpClientConfig config, PerRequestConfig perRequestConfig) {
+        int result;
+        if (perRequestConfig != null) {
+            int prRequestTimeout = perRequestConfig.getRequestTimeoutInMs();
+            result = (prRequestTimeout != 0 ? prRequestTimeout : config.getRequestTimeoutInMs());
+        } else {
+            result = config.getRequestTimeoutInMs();
+        }
+        return result;
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        
+        for (Entry<String,Channel> e: connectionsPool.entrySet()) {
+=======
+
+        for (Entry<String, Channel> e : connectionsPool.entrySet()) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        } else if ( !(ctx.getAttachment() instanceof NettyResponseFuture<?>))   {
+=======
+        } else if (!(ctx.getAttachment() instanceof NettyResponseFuture<?>)) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        NettyResponseFuture<?> future = (NettyResponseFuture<?>) ctx.getAttachment();
+=======
+        final NettyResponseFuture<?> future = (NettyResponseFuture<?>) ctx.getAttachment();
+        future.touch();
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        
+        try{
+=======
+
+        try {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+                int statusCode = response.getStatus().getCode();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                if (response.getStatus().getCode() == 401
+=======
+                if (statusCode == 401
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                        && !future.isInDigestAuth()) {
+=======
+                        && !future.getAndSetAuth(true)) {
+
+                    Realm realm = new Realm.RealmBuilder().clone(request.getRealm())
+                            .parseWWWAuthenticateHeader(wwwAuth)
+                            .setUri(URI.create(request.getUrl()).getPath())
+                            .setMethodName(request.getType().toString())
+                            .setScheme(Realm.AuthScheme.DIGEST)
+                            .build();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    Realm realm =  new Realm.RealmBuilder().clone(request.getRealm())
+                                                           .parseWWWAuthenticateHeader(wwwAuth)
+                                                           .setUri(URI.create(request.getUrl()).getPath())
+                                                           .setMethodName(request.getType().toString())
+                                                           .setScheme(Realm.AuthScheme.DIGEST)
+                                                           .build();
+                    
+                    // If authentication fail, we don't want to end up here again.
+                    future.setInDigestAuth(true);
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+
+                    //Cache our current connection so we don't have to re-open it.
+                    markAsDoneAndCacheConnection(future, ctx.getChannel(), false);
+                    RequestBuilder builder = new RequestBuilder(future.getRequest());
+
+                    execute(builder.setRealm(realm).build(), future);
+                    return;
+                }
+
+                String proxyAuth = response.getHeader(HttpHeaders.Names.PROXY_AUTHENTICATE);
+                if (statusCode == 407
+                        && proxyAuth != null
+                        && future.getRequest().getRealm() != null
+                        && !future.getAndSetAuth(true)) {
+
+                    log.debug("Sending proxy authentication to %s", request.getUrl());
+
+                    //Cache our current connection so we don't have to re-open it.
+                    markAsDoneAndCacheConnection(future, ctx.getChannel(), false);
+                    execute(future.getRequest(), future);
+                    return;
+                }
+
+                if (future.getNettyRequest().getMethod().equals(HttpMethod.CONNECT)
+                        && statusCode == 200) {
+
+                    log.debug("Connected to %s", request.getUrl());
+
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    execute(builder.build(), future);
+=======
+                    execute(builder.setRealm(realm).build(), future);
+                    return;
+                }
+
+                String proxyAuth = response.getHeader(HttpHeaders.Names.PROXY_AUTHENTICATE);
+                if (statusCode == 407
+                        && proxyAuth != null
+                        && future.getRequest().getRealm() != null
+                        && !future.getAndSetAuth(true)) {
+
+                    log.debug("Sending proxy authentication to %s", request.getUrl());
+
+                    //Cache our current connection so we don't have to re-open it.
+                    markAsDoneAndCacheConnection(future, ctx.getChannel(), false);
+                    execute(future.getRequest(), future);
+                    return;
+                }
+
+                if (future.getNettyRequest().getMethod().equals(HttpMethod.CONNECT)
+                        && statusCode == 200) {
+
+                    log.debug("Connected to %s", request.getUrl());
+
+                    //Cache our current connection so we don't have to re-open it.
+                    markAsDoneAndCacheConnection(future, ctx.getChannel(), false);
+                    RequestBuilder builder = new RequestBuilder(future.getRequest());
+                    try {
+                        ChannelPipeline p = ctx.getChannel().getPipeline();
+                        if (p.get(HTTP_HANDLER) != null) {
+                            p.remove(HTTP_HANDLER);
+                        }
+
+                        if (request.getUrl().startsWith("https")) {
+
+                            SSLEngine sslEngine = config.getSSLEngine();
+                            if (sslEngine == null) {
+                                sslEngine = SslUtils.getSSLEngine();
+                            }
+
+                            if (p.get(SSL_HANDLER) == null) {
+                                p.addFirst(HTTP_HANDLER, new HttpClientCodec());
+                                p.addFirst(SSL_HANDLER, new SslHandler(sslEngine));
+                            } else {
+                                p.addAfter(SSL_HANDLER, HTTP_HANDLER, new HttpClientCodec());
+                            }
+
+                        } else {
+                            p.addFirst(HTTP_HANDLER, new HttpClientCodec());
+                        }
+
+                    } catch (Throwable ex) {
+                        future.abort(ex);
+                    }
+
+                    execute(builder.build(), future);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                        && (response.getStatus().getCode() == 302 || response.getStatus().getCode() == 301) ){
+=======
+                        && (statusCode == 302 || statusCode == 301)) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                        execute(builder.setUrl(newUrl).build(),future);
+=======
+                        execute(builder.setUrl(newUrl).build(), future);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                if (log.isDebugEnabled()){
+=======
+                if (log.isDebugEnabled()) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                if (updateStatusAndInterrupt(handler, new ResponseStatus(future.getURI(),response, this))) {
+=======
+                if (!future.getAndSetStatusReceived(true) && updateStatusAndInterrupt(handler, new ResponseStatus(future.getURI(), response, this))) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                } else if (updateHeadersAndInterrupt(handler, new ResponseHeaders(future.getURI(),response, this))) {
+=======
+                } else if (updateHeadersAndInterrupt(handler, new ResponseHeaders(future.getURI(), response, this))) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                        updateBodyAndInterrupt(handler, new ResponseBodyPart(future.getURI(),response, this));
+=======
+                        updateBodyAndInterrupt(handler, new ResponseBodyPart(future.getURI(), response, this));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    if (chunk.isLast() || updateBodyAndInterrupt(handler, new ResponseBodyPart(future.getURI(),null, this,chunk))) {
+=======
+                    if (chunk.isLast() || updateBodyAndInterrupt(handler, new ResponseBodyPart(future.getURI(), null, this, chunk))) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        } catch (Exception t){
+=======
+        } catch (Exception t) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                finishUpdate(future,ctx);
+=======
+                finishUpdate(future, ctx);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+            if (future!= null && !future.isDone() && !future.isCancelled()){
+=======
+            if (future != null && !future.isDone() && !future.isCancelled()) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        if (future.getKeepAlive()){
+=======
+        if (future.getKeepAlive()) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                connectionsPerHost.put(getBaseUrl(future.getURI()),connectionPerHost);
+=======
+                connectionsPerHost.put(getBaseUrl(future.getURI()), connectionPerHost);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    private String getBaseUrl(URI uri){
+=======
+    private String getBaseUrl(URI uri) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+            port = uri.getScheme().equals("http")? 80: 443 ;
+=======
+            port = uri.getScheme().equals("http") ? 80 : 443;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    private void closeChannel(ChannelHandlerContext ctx) {
+=======
+    private static void closeChannel(ChannelHandlerContext ctx) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        try{
+=======
+        try {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        } catch (Exception ex){
+=======
+        } catch (Exception ex) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+            if (future!= null){
+=======
+            if (future != null) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    future.getAsyncHandler().onThrowable(cause);
+=======
+                    future.abort(cause);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        if (log.isDebugEnabled()){
+=======
+        if (log.isDebugEnabled()) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+     *
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    private static byte[] readFully(InputStream in, int[] lengthWrapper) throws IOException
+    {
+=======
+
+    private static byte[] readFully(InputStream in, int[] lengthWrapper) throws IOException {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+    private static byte[] doubleUp(byte[] b)
+    {
+=======
+    private static byte[] doubleUp(byte[] b) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        byte[] b2 = new byte[len+len];
+        System.arraycopy(b,0,b2,0,len);
+=======
+        byte[] b2 = new byte[len + len];
+        System.arraycopy(b, 0, b2, 0, len);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                ProgressAsyncHandler.class.cast(asyncHandler).onContentWriteProgess(amount,current,total);
+=======
+                ProgressAsyncHandler.class.cast(asyncHandler).onContentWriteProgess(amount, current, total);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+=======
+import org.jboss.netty.buffer.ChannelBuffer;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+=======
+import java.io.IOException;
+import java.io.OutputStream;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+=======
+import java.util.concurrent.atomic.AtomicReference;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+=======
+    private final AtomicReference<byte[]> bytes = new AtomicReference(null);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+    public  ResponseBodyPart(URI uri, HttpResponse response, AsyncHttpProvider<HttpResponse>  provider, HttpChunk chunk) {
+=======
+    public ResponseBodyPart(URI uri, HttpResponse response, AsyncHttpProvider<HttpResponse> provider, HttpChunk chunk) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+        this.response = response;        
+=======
+        this.response = response;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+=======
+     *
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+        if (chunk != null) {
+            return chunk.getContent().array();
+        } else {
+            return response.getContent().array();
+=======
+
+        if (bytes.get() != null) {
+            return bytes.get();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+=======
+
+        ChannelBuffer b = chunk != null ? chunk.getContent() : response.getContent();
+        int read = b.readableBytes();
+        byte[] rb = new byte[read];
+        b.readBytes(rb);
+        bytes.set(rb);
+        return bytes.get();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/main/java/com/ning/http/client/providers/ResponseBodyPart.java;<<<<<<< MINE
+=======
+    public int writeTo(OutputStream outputStream) throws IOException {
+        ChannelBuffer b = chunk != null ? chunk.getContent() : response.getContent();
+        int read = b.readableBytes();
+        b.readBytes(outputStream, read);
+        return read;
+    }
+
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;<<<<<<< MINE
+=======
+    public void asyncProviderEncodingTest2() throws Throwable {
+        NettyAsyncHttpProvider p = new NettyAsyncHttpProvider(new AsyncHttpClientConfig.Builder().build());
+        Request request = new RequestBuilder(RequestType.GET).setUrl("http://foo.com/foo.html")
+                .addQueryParameter("q", "a b")
+                .build();
+
+        NettyResponseFuture <?> responseFuture = (NettyResponseFuture<?>)p.execute(request, new AsyncCompletionHandlerAdapter(){});
+        String url = responseFuture.getNettyRequest().getUri();
+        Assert.assertEquals(url, "/foo.html?q=a%20b");
+    }
+
+    @Test(groups = {"standalone", "async"})
+    public void emptyRequestURI() throws Throwable {
+        NettyAsyncHttpProvider p = new NettyAsyncHttpProvider(new AsyncHttpClientConfig.Builder().build());
+        Request request = new RequestBuilder(RequestType.GET).setUrl("http://foo.com")
+                .build();
+
+        NettyResponseFuture <?> responseFuture = (NettyResponseFuture<?>)p.execute(request, new AsyncCompletionHandlerAdapter(){});
+        responseFuture.get();
+        String url = responseFuture.getNettyRequest().getUri();
+        Assert.assertEquals(url, "/");
+    }
+
+    @Test(groups = {"standalone", "async"})
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/BasicHttpsTest.java;<<<<<<< MINE
+    public void multipleJavaDotDeadWrongKeystoreTest() throws Throwable {
+        ClassLoader cl = getClass().getClassLoader();
+        // override system properties
+        URL keystoreUrl = cl.getResource("ssltest-keystore.jks");
+        System.setProperty("javax.net.ssl.keyStore",keystoreUrl.toString());
+
+        AsyncHttpClient c = new AsyncHttpClient();
+
+        String body = "hello there";
+
+        // once
+        Response response = c.preparePost("https://atmosphere.dev.java.net:443/")
+                .setBody(body)
+                .execute().get(TIMEOUT, TimeUnit.SECONDS);
+
+        assertNull(response);
+    }
+
+    @Test(groups = "online")
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/PerRequestTimeoutTest.java;<<<<<<< MINE
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package com.ning.http.client.async;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.PerRequestConfig;
+import com.ning.http.client.Response;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+/**
+ * Per request timeout configuration test.
+ *
+ * @author Hubert Iwaniuk
+ */
+public class PerRequestTimeoutTest extends AbstractBasicTest {
+    @Override
+    public AbstractHandler configureHandler() throws Exception {
+        return new SlowHandler();
+    }
+
+    private class SlowHandler extends AbstractHandler {
+        private static final String MSG = "Enough is enough.";
+
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            try {
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+                Thread.sleep(3000);
+                response.getOutputStream().print(MSG);
+                response.getOutputStream().flush();
+            } catch (InterruptedException e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(100);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalDefaultPerRequestInfiniteTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        PerRequestConfig requestConfig = new PerRequestConfig();
+        requestConfig.setRequestTimeoutInMs(-1);
+        Future<Response> responseFuture =
+                client.prepareGet(getTargetUrl()).setPerRequestConfig(requestConfig).execute();
+        try {
+            Response response = responseFuture.get();
+            assertNotNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        }
+    }
+
+    @Test(groups = "standalone")
+    public void testGlobalRequestTimeout() throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(100).build());
+        Future<Response> responseFuture = client.prepareGet(getTargetUrl()).execute();
+        try {
+            Response response = responseFuture.get(2000, TimeUnit.MILLISECONDS);
+            assertNull(response);
+            client.close();
+        } catch (InterruptedException e) {
+            fail("Interrupted.", e);
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof TimeoutException);
+            assertEquals(e.getCause().getMessage(), "Request timed out.");
+        } catch (TimeoutException e) {
+            fail("Timeout.", e);
+        }
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ProxyTest.java;<<<<<<< MINE
+        assertEquals(resp.getHeader("target"), target);
+=======
+        assertEquals(resp.getHeader("target"), "/");
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ProxyTest.java;<<<<<<< MINE
+        assertEquals(resp.getHeader("target"), target);
+=======
+        assertEquals(resp.getHeader("target"), "/");
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ProxyTest.java;<<<<<<< MINE
+        assertEquals(resp.getHeader("target"), target);
+=======
+        assertEquals(resp.getHeader("target"), "/");
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;<<<<<<< MINE
+=======
+import com.ning.http.client.AsyncHandler;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;<<<<<<< MINE
+=======
+import com.ning.http.client.HttpResponseBodyPart;
+import com.ning.http.client.HttpResponseHeaders;
+import com.ning.http.client.HttpResponseStatus;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;<<<<<<< MINE
+=======
+import java.io.FileOutputStream;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;<<<<<<< MINE
+=======
+import static org.testng.Assert.assertNull;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_ee371ed_7fb4fa1/rev_ee371ed-7fb4fa1/src/test/java/com/ning/http/client/async/ZeroCopyFileTest.java;<<<<<<< MINE
+=======
+
+    @Test(groups = "standalone")
+    public void zeroCopyFileTest() throws IOException, ExecutionException, TimeoutException, InterruptedException, URISyntaxException {
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        ClassLoader cl = getClass().getClassLoader();
+        // override system properties
+        URL url = cl.getResource("SimpleTextFile.txt");
+        File file = new File(url.toURI());
+
+        File tmp = new File(System.getProperty("java.io.tmpdir") + File.separator + "zeroCopy.txt");
+        final FileOutputStream stream = new FileOutputStream(tmp);
+        Future<Response> f = client.preparePost("http://127.0.0.1:" + port1 + "/").setBody(file).execute(new AsyncHandler<Response>() {
+            public void onThrowable(Throwable t) {
+            }
+
+            public STATE onBodyPartReceived(HttpResponseBodyPart bodyPart) throws Exception {
+                bodyPart.writeTo(stream);
+                return STATE.CONTINUE;
+            }
+
+            public STATE onStatusReceived(HttpResponseStatus responseStatus) throws Exception {
+                return STATE.CONTINUE;              }
+
+            public STATE onHeadersReceived(HttpResponseHeaders headers) throws Exception {
+                return STATE.CONTINUE;              }
+
+            public Response onCompleted() throws Exception {
+                return null;
+            }
+        });
+        Response resp = f.get();
+        stream.close();        
+        assertNull(resp);
+        assertEquals(file.length(), tmp.length());
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0efa8eb_777802b/rev_0efa8eb-777802b/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;<<<<<<< MINE
+import com.ning.http.client.providers.netty.NettyAsyncHttpProviderConfig;
+=======
+import com.ning.http.client.providers.netty.NettyAsyncHttpProvider;
+import com.ning.http.client.providers.netty.NettyAsyncHttpProviderConfig;
+import com.ning.http.client.providers.netty.NettyResponseFuture;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0efa8eb_777802b/rev_0efa8eb-777802b/src/test/java/com/ning/http/client/async/RemoteSiteTest.java;<<<<<<< MINE
+import com.ning.http.client.providers.NettyAsyncHttpProvider;
+=======
+import com.ning.http.client.providers.netty.NettyAsyncHttpProvider;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_8a125e0_5d41e01/rev_8a125e0-5d41e01/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+     * Because some implementation of the ThreadSchedulingService do not clean up cancel task until it runs
+     * them, we wrap the task with the future so when the NettyResponseFuture cancels the reaper future
+=======
+     * Because some implementation of the ThreadSchedulingService do not clean up cancel task until they try to run
+     * them, we wrap the task with the future so the when the NettyResponseFuture cancel the reaper future
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_8a125e0_5d41e01/rev_8a125e0-5d41e01/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+     * the memory will only be released after the request timeout period which can be arbitrary long.
+=======
+     * the memory referenced this way will only be released after the request timeout period which can be arbitrary long.
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_bb61cd4_be7ae9a/rev_bb61cd4-be7ae9a/src/main/java/com/ning/http/client/RequestBuilderBase.java;<<<<<<< MINE
+=======
+    public T setQueryParameters(FluentStringsMap parameters){
+        if (parameters == null) {
+            request.queryParams = null;
+        } else {
+            request.queryParams = new FluentStringsMap(parameters);
+        }
+        return derived.cast(this);
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_bb61cd4_be7ae9a/rev_bb61cd4-be7ae9a/src/main/java/com/ning/http/client/RequestBuilder.java;<<<<<<< MINE
+=======
+    public RequestBuilder setQueryParameters(FluentStringsMap parameters) {
+        return super.setQueryParameters(parameters);
+    }
+
+    @Override
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+    private final HostnameVerifier hostnameVerifier;
+=======
+    private final int ioThreadMultiplier;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+                                  boolean removeQueryParamOnRedirect,
+                                  HostnameVerifier hostnameVerifier) {
+=======
+                                  boolean removeQueryParamOnRedirect,
+                                  int ioThreadMultiplier) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+        this.hostnameVerifier = hostnameVerifier;
+=======
+        this.ioThreadMultiplier = ioThreadMultiplier;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+    /**
+     * Return true if one of the {@link java.util.concurrent.ExecutorService} has been shutdown.
+     * @return true if one of the {@link java.util.concurrent.ExecutorService} has been shutdown.
+     */
+    public boolean isClosed(){
+        return applicationThreadPool.isShutdown() || reaper.isShutdown();
+    }
+
+    /**
+     * Return the {@link HostnameVerifier}
+     * @return the {@link HostnameVerifier}
+     */
+    public HostnameVerifier getHostnameVerifier() {
+        return hostnameVerifier;
+    }
+=======
+    /***
+     *
+     * @return number to multiply by availableProcessors() that will determine # of NioWorkers to use
+     */
+    public int getIoThreadMultiplier() {
+        return ioThreadMultiplier;
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_0ff3ce5_95fc68b/rev_0ff3ce5-95fc68b/src/main/java/com/ning/http/client/AsyncHttpClientConfig.java;<<<<<<< MINE
+        private HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+
+            public boolean verify( String s, SSLSession sslSession ) {
+                return true;
+            }
+        };
+=======
+        private int ioThreadMultiplier = 2;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_c3651ee_4d2ab70/rev_c3651ee-4d2ab70/src/main/java/com/ning/http/client/RequestBuilderBase.java;<<<<<<< MINE
+        buildedUrl.append(uri.getRawPath());
+=======
+        if (uri.getRawPath() != null) {
+            buildedUrl.append(uri.getRawPath());
+        } else {
+            // AHC-96
+            // Let's try to derive it
+            if (url.indexOf("://") == -1) {
+                String s = buildedUrl.toString();
+                url = s + url.substring(uri.getScheme().length() + 1);
+                return buildUrl(url);
+            } else {
+                throw new IllegalArgumentException("Invalid url " + uri.toString());
+            }
+        }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_c3651ee_4d2ab70/rev_c3651ee-4d2ab70/src/test/java/com/ning/http/client/async/AsyncProvidersBasicTest.java;<<<<<<< MINE
+
+    protected String getBrokenTargetUrl() {
+        return String.format("http:127.0.0.1:%d/foo/test", port1);
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void invalidUri() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(null);
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getBrokenTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+=======
+
+    protected String getBrokenTargetUrl() {
+        return String.format("http:127.0.0.1:%d/foo/test", port1);
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void invalidUri() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(null);
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getBrokenTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+
+    @Test(groups = {"standalone", "default_provider"})
+    public void asyncHttpClientConfigBeanTest() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(new AsyncHttpClientConfigBean().setUserAgent("test"));
+        AsyncHttpClient.BoundRequestBuilder builder = c.prepareGet(getTargetUrl());
+        Response r = c.executeRequest(builder.build()).get();
+        assertEquals(200, r.getStatusCode());
+    }
+
+    @Test(groups = {"default_provider", "async"})
+    public void bodyAsByteTest() throws Throwable {
+        final AsyncHttpClient client = getAsyncHttpClient(new Builder().build());
+        Response r = client.prepareGet(getTargetUrl()).execute().get();
+
+        assertEquals(r.getStatusCode(), 200);
+        assertEquals(r.getResponseBodyAsBytes(), new byte[]{});
+
+        client.close();
+    }
+
+    @Test(groups = {"default_provider", "async"})
+    public void mirrorByteTest() throws Throwable {
+        final AsyncHttpClient client = getAsyncHttpClient(new AsyncHttpClientConfig.Builder().build());
+        Response r = client.preparePost(getTargetUrl()).setBody("MIRROR").execute().get();
+
+        assertEquals(r.getStatusCode(), 200);
+        assertEquals(new String(r.getResponseBodyAsBytes(), "UTF-8"), "MIRROR");
+
+        client.close();
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_230933c_49c29c4/rev_230933c-49c29c4/src/main/java/com/ning/http/client/AsyncHandler.java;<<<<<<< MINE
+     * Invoked as soon as the HTTP headers has been received. Can potentially be invoked more than once if a broken server
+     * sent trailing headers.
+=======
+     * Invoked as soon as the HTTP headers has been received. Can potentially be invoked morethan once if a broken server
+     * sent trailling headers.
+     *
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyResponseFuture.java;<<<<<<< MINE
+=======
+    private boolean allowConnect = false;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyResponseFuture.java;<<<<<<< MINE
+=======
+    public void setReuseChannel(boolean reuseChannel) {
+        this.reuseChannel = reuseChannel;
+    }
+
+    public boolean isConnectAllowed() {
+        return allowConnect;
+    }
+
+    public void setConnectAllowed(boolean allowConnect) {
+        this.allowConnect = allowConnect;
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyResponseFuture.java;<<<<<<< MINE
+
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+        } else {
+            List<String> auth = request.getHeaders().get(HttpHeaders.Names.PROXY_AUTHORIZATION);
+            if (auth != null && auth.size() > 0 && auth.get(0).startsWith("NTLM")) {
+                nettyRequest.addHeader(HttpHeaders.Names.PROXY_AUTHORIZATION, auth.get(0));
+            }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                nettyRequest.setHeader(HttpHeaders.Names.PROXY_AUTHORIZATION,
+                        AuthenticatorUtils.computeBasicAuthentication(proxyServer));
+=======
+                if (proxyServer.getNtlmDomain() != null) {
+
+                    List<String> auth = request.getHeaders().get(HttpHeaders.Names.PROXY_AUTHORIZATION);
+                    if (!(auth != null && auth.size() > 0 && auth.get(0).startsWith("NTLM"))) {
+                        try {
+                            String msg = ntlmEngine.generateType1Msg(proxyServer.getNtlmDomain(),
+                                    proxyServer.getHost());
+                            nettyRequest.setHeader(HttpHeaders.Names.PROXY_AUTHORIZATION, "NTLM " + msg);
+                        } catch (NTLMEngineException e) {
+                            IOException ie = new IOException();
+                            ie.initCause(e);
+                            throw ie;
+                        }
+                    }
+                } else {
+                    nettyRequest.setHeader(HttpHeaders.Names.PROXY_AUTHORIZATION,
+                            AuthenticatorUtils.computeBasicAuthentication(proxyServer));
+                }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+            HttpRequest nettyRequest = buildRequest(config, request, uri, false, bufferedBytes);
+=======
+            HttpRequest nettyRequest = buildRequest(config, request, uri, f == null ? false : f.isConnectAllowed(), bufferedBytes);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+                nettyRequest = buildRequest(config, request, uri, f.isConnectAllowed(), bufferedBytes);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+        	if (request.getInetAddress() != null) {
+        		channelFuture = bootstrap.connect(new InetSocketAddress(request.getInetAddress(), AsyncHttpProviderUtils.getPort(uri)));
+        	}
+        	else if (proxyServer == null || avoidProxy) {
+=======
+            if (request.getInetAddress() != null) {
+                channelFuture = bootstrap.connect(new InetSocketAddress(request.getInetAddress(), AsyncHttpProviderUtils.getPort(uri)));
+            } else if (proxyServer == null || avoidProxy) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    if (!proxyAuth.contains("Kerberos") && (proxyAuth.contains("NTLM") || (proxyAuth.contains("Negotiate")))) {
+                        newRealm = ntlmChallenge(proxyAuth, request, proxyServer, headers, realm, future);
+=======
+
+                    if (!proxyAuth.contains("Kerberos") && (proxyAuth.get(0).contains("NTLM") || (proxyAuth.contains("Negotiate")))) {
+                        newRealm = ntlmProxyChallenge(proxyAuth, request, proxyServer, headers, realm, future);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    nextRequest(builder.setHeaders(headers).setRealm(newRealm).build(), future);
+=======
+                    Request req = builder.setHeaders(headers).setRealm(newRealm).build();
+                    future.setReuseChannel(true);
+                    future.setConnectAllowed(true);
+                    nextRequest(req, future);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    nextRequest(builder.build(), future);
+=======
+                    Request req = builder.build();
+                    future.setReuseChannel(true);
+                    future.setConnectAllowed(false);
+                    nextRequest(req, future);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+    private Realm ntlmProxyChallenge(List<String> wwwAuth,
+                                     Request request,
+                                     ProxyServer proxyServer,
+                                     FluentCaseInsensitiveStringsMap headers,
+                                     Realm realm,
+                                     NettyResponseFuture<?> future) throws NTLMEngineException {
+        future.getAndSetAuth(false);
+        headers.remove(HttpHeaders.Names.PROXY_AUTHORIZATION);
+
+        if (wwwAuth.get(0).startsWith("NTLM ")) {
+            String serverChallenge = wwwAuth.get(0).trim().substring("NTLM ".length());
+            String challengeHeader = ntlmEngine.generateType3Msg(proxyServer.getPrincipal(),
+                    proxyServer.getPassword(),
+                    proxyServer.getNtlmDomain(),
+                    proxyServer.getHost(),
+                    serverChallenge);
+            headers.add(HttpHeaders.Names.PROXY_AUTHORIZATION, "NTLM " + challengeHeader);
+        }
+        Realm newRealm;
+        Realm.RealmBuilder realmBuilder;
+        if (realm != null) {
+            realmBuilder = new Realm.RealmBuilder().clone(realm);
+        } else {
+            realmBuilder = new Realm.RealmBuilder();
+        }
+        newRealm = realmBuilder//.setScheme(realm.getAuthScheme())
+                .setUri(URI.create(request.getUrl()).getPath())
+                .setMethodName(request.getMethod())
+                .build();
+
+        return newRealm;
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/jdk/JDKAsyncHttpProvider.java;<<<<<<< MINE
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/main/java/com/ning/http/client/providers/jdk/JDKAsyncHttpProvider.java;<<<<<<< MINE
+                    ChannelBuffer b = ChannelBuffers.dynamicBuffer(lenght);
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/test/java/com/ning/http/client/async/grizzly/GrizzlyByteBufferCapacityTest.java;<<<<<<< MINE
+=======
+import org.testng.annotations.Test;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d4e7833_3407e5c/rev_d4e7833-3407e5c/src/test/java/com/ning/http/client/async/grizzly/GrizzlyByteBufferCapacityTest.java;<<<<<<< MINE
+=======
+    @Test(groups = {"standalone", "default_provider"}, enabled=false)
+    public void basicByteBufferTest() throws Throwable {
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d81c72d_ed2cd62/rev_d81c72d-ed2cd62/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+        protected void onHttpHeaderError(final HttpHeader httpHeader,
+                                         final FilterChainContext ctx,
+                                         final Throwable t) throws IOException {
+=======
+        protected void onHttpHeaderError(final HttpHeader httpHeader,
+                                   final FilterChainContext ctx,
+                                   final Throwable t) throws IOException {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/util/AuthenticatorUtils.java;<<<<<<< MINE
+=======
+        if (realm.getOpaque() != null && realm.getOpaque() != null && realm.getOpaque().equals("") == false)
+            construct(builder, "opaque", realm.getOpaque());
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/websocket/DefaultWebSocketListener.java;<<<<<<< MINE
+=======
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright (c) 2011 Oracle and/or its affiliates. All rights reserved.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common Development
+ * and Distribution License("CDDL") (collectively, the "License").  You
+ * may not use this file except in compliance with the License.  You can
+ * obtain a copy of the License at
+ * https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
+ * or packager/legal/LICENSE.txt.  See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing the software, include this License Header Notice in each
+ * file and include the License file at packager/legal/LICENSE.txt.
+ *
+ * GPL Classpath Exception:
+ * Oracle designates this particular file as subject to the "Classpath"
+ * exception as provided by Oracle in the GPL Version 2 section of the License
+ * file that accompanied this code.
+ *
+ * Modifications:
+ * If applicable, add the following below the License Header, with the fields
+ * enclosed by brackets [] replaced by your own identifying information:
+ * "Portions Copyright [year] [name of copyright owner]"
+ *
+ * Contributor(s):
+ * If you wish your version of this file to be governed by only the CDDL or
+ * only the GPL Version 2, indicate your decision by adding "[Contributor]
+ * elects to include this software in this distribution under the [CDDL or GPL
+ * Version 2] license."  If you don't indicate a single choice of license, a
+ * recipient has the option to distribute your version of this file under
+ * either the CDDL, the GPL Version 2 or to extend the choice of license to
+ * its licensees as provided above.  However, if you add GPL Version 2 code
+ * and therefore, elected the GPL Version 2 license, then the option applies
+ * only if the new code is made subject to such option by the copyright
+ * holder.
+ */
+package com.ning.http.client.websocket;
+
+/**
+ * Default WebSocketListener implementation.  Most methods are no-ops.  This 
+ * allows for quick override customization without clutter of methods that the
+ * developer isn't interested in dealing with.
+ * 
+ * @since 1.7.0
+ */
+public class DefaultWebSocketListener implements  WebSocketByteListener, WebSocketTextListener, WebSocketPingListener, WebSocketPongListener {
+
+    protected WebSocket webSocket;
+    
+    // -------------------------------------- Methods from WebSocketByteListener
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onMessage(byte[] message) {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onFragment(byte[] fragment, boolean last) {
+    }
+
+    
+    // -------------------------------------- Methods from WebSocketPingListener
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onPing(byte[] message) {
+    }
+
+    
+    // -------------------------------------- Methods from WebSocketPongListener
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onPong(byte[] message) {
+    }
+    
+    
+    // -------------------------------------- Methods from WebSocketTextListener
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onMessage(String message) {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onFragment(String fragment, boolean last) {
+    }
+    
+    
+    // ------------------------------------------ Methods from WebSocketListener
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onOpen(WebSocket websocket) {
+        this.webSocket = websocket;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onClose(WebSocket websocket) {
+        this.webSocket = null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onError(Throwable t) {
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/websocket/WebSocket.java;<<<<<<< MINE
+=======
+     * Returns <code>true</code> if the WebSocket is open/connected.
+     *
+     * @return <code>true</code> if the WebSocket is open/connected.
+     */
+    boolean isOpen();
+
+    /**
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;<<<<<<< MINE
+=======
+    private final String opaque;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;<<<<<<< MINE
+                  String domain, String enc, String host, boolean messageType2Received) {
+=======
+                  String domain, String enc, String host, boolean messageType2Received,
+                  String opaque) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;<<<<<<< MINE
+=======
+        this.opaque = opaque;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;<<<<<<< MINE
+=======
+    public String getOpaque() {
+        return opaque;
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;<<<<<<< MINE
+=======
+        private String opaque = "";
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;<<<<<<< MINE
+=======
+        public String getOpaque() {
+            return this.opaque;
+        }
+
+        public RealmBuilder setOpaque(String opaque) {
+            this.opaque = opaque;
+            return this;
+        }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;<<<<<<< MINE
+=======
+            setOpaque(match(headerLine, "opaque"));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;<<<<<<< MINE
+=======
+            setOpaque(clone.getOpaque());
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/Realm.java;<<<<<<< MINE
+                    messageType2Received);
+=======
+                    messageType2Received,
+                    opaque);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+            Protocol p = (ctx.getPipeline().get(HttpClientCodec.class) != null ? httpProtocol : webSocketProtocol);
+            p.onClose(ctx, e);
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                        final Realm nr = newRealm;
+=======
+                        final Realm nr = new Realm.RealmBuilder().clone(newRealm)
+                                .setUri(request.getUrl()).build();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    boolean redirectEnabled = request.isRedirectEnabled() ? true : config.isRedirectEnabled();
+=======
+                    boolean redirectEnabled = request.isRedirectOverrideSet() ? request.isRedirectEnabled() : config.isRedirectEnabled();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/netty/NettyWebSocket.java;<<<<<<< MINE
+=======
+    public boolean isOpen() {
+        return channel.isOpen();
+    }
+
+    @Override
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+import org.glassfish.grizzly.impl.FutureImpl;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+import org.glassfish.grizzly.utils.Futures;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+import java.util.concurrent.CountDownLatch;
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+import java.util.concurrent.atomic.AtomicReference;
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+    protected void initializeTransport(AsyncHttpClientConfig clientConfig) {
+=======
+    protected void initializeTransport(final AsyncHttpClientConfig clientConfig) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+                                if (context.isWSRequest) {
+                                    return clientConfig.getWebSocketIdleTimeoutInMs();
+                                }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+                    createConnectionCompletionHandler(request, requestFuture, null, null, connectHandler));
+=======
+                    createConnectionCompletionHandler(request, requestFuture, connectHandler));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+            final AtomicReference<Connection> connectionRef =
+                    new AtomicReference<Connection>();
+            final CountDownLatch latch = new CountDownLatch(1);
+=======
+            FutureImpl<Connection> future = Futures.createSafeFuture();
+            CompletionHandler<Connection> ch = Futures.toCompletionHandler(future,
+                    createConnectionCompletionHandler(request, requestFuture, null));
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+                        createConnectionCompletionHandler(request,
+                                requestFuture,
+                                connectionRef,
+                                latch,
+                                null));
+                latch.await(cTimeout, TimeUnit.MILLISECONDS);
+=======
+                        ch);
+                return future.get(cTimeout, TimeUnit.MILLISECONDS);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+                        createConnectionCompletionHandler(request,
+                                                          requestFuture,
+                                                          connectionRef,
+                                                          null,
+                                                          null));
+                latch.await();
+=======
+                        ch);
+                return future.get();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+            return connectionRef.get();
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+                                                                        final AtomicReference<Connection> connectionReference,
+                                                                        final CountDownLatch latch,
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+                    if (latch != null) {
+                        latch.countDown();
+                    }
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+                    if (latch != null) {
+                        latch.countDown();
+                    }
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+                    if (connectionReference != null) {
+                        connectionReference.set(connection);
+                    }
+                    if (latch != null) {
+                        latch.countDown();
+                    }
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+        public boolean isOpen() {
+            return gWebSocket.isConnected();
+        }
+
+        @Override
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/netty/NettyByteMessageTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2010-2011 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.netty;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.websocket.TextMessageTest;
+
+public class NettyByteMessageTest extends TextMessageTest {
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        return ProviderUtil.nettyProvider(config);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/netty/NettyTextMessageTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2010-2011 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.netty;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.websocket.TextMessageTest;
+
+public class NettyTextMessageTest extends TextMessageTest {
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        return ProviderUtil.nettyProvider(config);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/TextMessageTest.java;<<<<<<< MINE
+=======
+    public void onTimeoutCloseTest() throws Throwable {
+        AsyncHttpClient c = getAsyncHttpClient(new AsyncHttpClientConfig.Builder().build());
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicReference<String> text = new AtomicReference<String>("");
+
+        WebSocket websocket = c.prepareGet(getTargetUrl())
+                .execute(new WebSocketUpgradeHandler.Builder().addWebSocketListener(new WebSocketListener() {
+
+                    @Override
+                    public void onOpen(com.ning.http.client.websocket.WebSocket websocket) {
+                    }
+
+                    @Override
+                    public void onClose(com.ning.http.client.websocket.WebSocket websocket) {
+                        text.set("OnClose");
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        t.printStackTrace();
+                        latch.countDown();
+                    }
+                }).build()).get();
+
+        latch.await();
+        assertEquals(text.get(), "OnClose");
+    }
+
+    @Test(timeOut = 60000)
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/AbstractBasicTest.java;<<<<<<< MINE
+=======
+        public WebSocketHandler(){
+            _webSocketFactory.setMaxIdleTime(10000);
+        }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/AbstractBasicTest.java;<<<<<<< MINE
+        port1 = 8080;
+=======
+        port1 = findFreePort();
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/grizzly/GrizzlyByteMessageTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2010-2011 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.grizzly;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.providers.grizzly.GrizzlyAsyncHttpProvider;
+import com.ning.http.client.websocket.ByteMessageTest;
+
+public class GrizzlyByteMessageTest extends ByteMessageTest {
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        if (config == null) {
+            config = new AsyncHttpClientConfig.Builder().build();
+        }
+        return new AsyncHttpClient(new GrizzlyAsyncHttpProvider(config), config);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_3c1e8ae_b4616f2/rev_3c1e8ae-b4616f2/src/test/java/com/ning/http/client/websocket/grizzly/GrizzlyTextMessageTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2010-2011 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.grizzly;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.providers.grizzly.GrizzlyAsyncHttpProvider;
+import com.ning.http.client.websocket.ByteMessageTest;
+
+public class GrizzlyTextMessageTest extends ByteMessageTest {
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        if (config == null) {
+            config = new AsyncHttpClientConfig.Builder().build();
+        }
+        return new AsyncHttpClient(new GrizzlyAsyncHttpProvider(config), config);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/util/AsyncHttpProviderUtils.java;<<<<<<< MINE
+        if (scheme == null || !scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https")) {
+=======
+        if (scheme == null || !scheme.equalsIgnoreCase("http")
+                && !scheme.equalsIgnoreCase("https")
+                && !scheme.equals("ws")
+                && !scheme.equals("wss")) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/util/AsyncHttpProviderUtils.java;<<<<<<< MINE
+                    + ", must be equal (ignoring case) to 'http' or 'https'");
+=======
+                    + ", must be equal (ignoring case) to 'ws, 'wss', 'http', or 'https'");
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+            } else if(request.getLocalAddress() != null) {
+                remoteAddress = new InetSocketAddress(request.getLocalAddress(), 0);
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+            channelFuture = bootstrap.connect(remoteAddress);
+=======
+            if(request.getLocalAddress() != null){
+                channelFuture = bootstrap.connect(remoteAddress, new InetSocketAddress(request.getLocalAddress(), 0));
+            }else{
+                channelFuture = bootstrap.connect(remoteAddress);
+            }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+    private boolean redirect(Request request,
+                             NettyResponseFuture<?> future,
+                             HttpResponse response,
+                             final ChannelHandlerContext ctx) throws Exception {
+
+        int statusCode = response.getStatus().getCode();
+        boolean redirectEnabled = request.isRedirectOverrideSet() ? request.isRedirectEnabled() : config.isRedirectEnabled();
+        if (redirectEnabled && (statusCode == 302
+                || statusCode == 301
+                || statusCode == 303
+                || statusCode == 307)) {
+
+            if (future.incrementAndGetCurrentRedirectCount() < config.getMaxRedirects()) {
+                // We must allow 401 handling again.
+                future.getAndSetAuth(false);
+
+                String location = response.getHeader(HttpHeaders.Names.LOCATION);
+                URI uri = AsyncHttpProviderUtils.getRedirectUri(future.getURI(), location);
+                boolean stripQueryString = config.isRemoveQueryParamOnRedirect();
+                if (!uri.toString().equalsIgnoreCase(future.getURI().toString())) {
+                    final RequestBuilder nBuilder = stripQueryString ?
+                            new RequestBuilder(future.getRequest()).setQueryParameters(null)
+                            : new RequestBuilder(future.getRequest());
+
+                    if (!(statusCode < 302 || statusCode > 303)
+                            && !(statusCode == 302
+                            && config.isStrict302Handling())) {
+                        nBuilder.setMethod("GET");
+                    }
+                    final URI initialConnectionUri = future.getURI();
+                    final boolean initialConnectionKeepAlive = future.getKeepAlive();
+                    future.setURI(uri);
+                    String newUrl = uri.toString();
+                    if (request.getUrl().startsWith(WEBSOCKET)) {
+                        newUrl = newUrl.replace(HTTP, WEBSOCKET);
+                    }
+
+                    log.debug("Redirecting to {}", newUrl);
+                    for (String cookieStr : future.getHttpResponse().getHeaders(HttpHeaders.Names.SET_COOKIE)) {
+                        Cookie c = AsyncHttpProviderUtils.parseCookie(cookieStr);
+                        nBuilder.addOrReplaceCookie(c);
+                    }
+
+                    for (String cookieStr : future.getHttpResponse().getHeaders(HttpHeaders.Names.SET_COOKIE2)) {
+                        Cookie c = AsyncHttpProviderUtils.parseCookie(cookieStr);
+                        nBuilder.addOrReplaceCookie(c);
+                    }
+
+                    AsyncCallable ac = new AsyncCallable(future) {
+                        public Object call() throws Exception {
+                            if (initialConnectionKeepAlive && ctx.getChannel().isReadable() &&
+                                    connectionsPool.offer(AsyncHttpProviderUtils.getBaseUrl(initialConnectionUri), ctx.getChannel())) {
+                                return null;
+                            }
+                            finishChannel(ctx);
+                            return null;
+                        }
+                    };
+
+                    if (response.isChunked()) {
+                        // We must make sure there is no bytes left before executing the next request.
+                        ctx.setAttachment(ac);
+                    } else {
+                        ac.call();
+                    }
+                    nextRequest(nBuilder.setUrl(newUrl).build(), future);
+                    return true;
+                }
+            } else {
+                throw new MaxRedirectException("Maximum redirect reached: " + config.getMaxRedirects());
+            }
+        }
+        return false;
+    }
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    boolean redirectEnabled = request.isRedirectOverrideSet() ? request.isRedirectEnabled() : config.isRedirectEnabled();
+                    if (redirectEnabled && (statusCode == 302
+                            || statusCode == 301
+                            || statusCode == 303
+                            || statusCode == 307)) {
+
+                        if (future.incrementAndGetCurrentRedirectCount() < config.getMaxRedirects()) {
+                            // We must allow 401 handling again.
+                            future.getAndSetAuth(false);
+
+                            String location = response.getHeader(HttpHeaders.Names.LOCATION);
+                            URI uri = AsyncHttpProviderUtils.getRedirectUri(future.getURI(), location);
+                            boolean stripQueryString = config.isRemoveQueryParamOnRedirect();
+                            if (!uri.toString().equalsIgnoreCase(future.getURI().toString())) {
+                                final RequestBuilder nBuilder = stripQueryString ?
+                                        new RequestBuilder(future.getRequest()).setQueryParameters(null)
+                                        : new RequestBuilder(future.getRequest());
+
+                                if (!(statusCode < 302 || statusCode > 303)
+                                        && !(statusCode == 302
+                                        && config.isStrict302Handling())) {
+                                    nBuilder.setMethod("GET");
+                                }
+                                final URI initialConnectionUri = future.getURI();
+                                final boolean initialConnectionKeepAlive = future.getKeepAlive();
+                                future.setURI(uri);
+                                final String newUrl = uri.toString();
+
+                                log.debug("Redirecting to {}", newUrl);
+                                for (String cookieStr : future.getHttpResponse().getHeaders(HttpHeaders.Names.SET_COOKIE)) {
+                                    Cookie c = AsyncHttpProviderUtils.parseCookie(cookieStr);
+                                    nBuilder.addOrReplaceCookie(c);
+                                }
+
+                                for (String cookieStr : future.getHttpResponse().getHeaders(HttpHeaders.Names.SET_COOKIE2)) {
+                                    Cookie c = AsyncHttpProviderUtils.parseCookie(cookieStr);
+                                    nBuilder.addOrReplaceCookie(c);
+                                }
+
+                                AsyncCallable ac = new AsyncCallable(future) {
+                                    public Object call() throws Exception {
+                                        if (initialConnectionKeepAlive && ctx.getChannel().isReadable() &&
+                                                connectionsPool.offer(AsyncHttpProviderUtils.getBaseUrl(initialConnectionUri), ctx.getChannel())) {
+                                            return null;
+                                        }
+                                        finishChannel(ctx);
+                                        return null;
+                                    }
+                                };
+
+                                if (response.isChunked()) {
+                                    // We must make sure there is no bytes left before executing the next request.
+                                    ctx.setAttachment(ac);
+                                } else {
+                                    ac.call();
+                                }
+                                nextRequest(nBuilder.setUrl(newUrl).build(), future);
+                                return;
+                            }
+                        } else {
+                            throw new MaxRedirectException("Maximum redirect reached: " + config.getMaxRedirects());
+                        }
+                    }
+=======
+                    if (redirect(request, future, response, ctx)) return;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+                    }                                                                                        // @Override
+=======
+                    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/netty/NettyAsyncHttpProvider.java;<<<<<<< MINE
+=======
+                future.setHttpResponse(response);
+                if (redirect(request, future, response, ctx)) return;
+
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;<<<<<<< MINE
+=======
+import org.glassfish.grizzly.http.Cookies;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;<<<<<<< MINE
+    private List<Cookie> convertCookies(final List<org.glassfish.grizzly.http.Cookie> grizzlyCookies) {
+=======
+    private List<Cookie> convertCookies(Cookies cookies) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;<<<<<<< MINE
+        List<Cookie> cookies = new ArrayList<Cookie>(grizzlyCookies.size());
+=======
+        final org.glassfish.grizzly.http.Cookie[] grizzlyCookies = cookies.get();
+        List<Cookie> convertedCookies = new ArrayList<Cookie>(grizzlyCookies.length);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;<<<<<<< MINE
+            cookies.add(new Cookie(gCookie.getDomain(),
+=======
+            convertedCookies.add(new Cookie(gCookie.getDomain(),
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/main/java/com/ning/http/client/providers/grizzly/GrizzlyResponse.java;<<<<<<< MINE
+        return Collections.unmodifiableList(cookies);
+=======
+        return Collections.unmodifiableList(convertedCookies);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/netty/NettyRedirectTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2012 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+package com.ning.http.client.websocket.netty;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.async.ProviderUtil;
+import com.ning.http.client.websocket.RedirectTest;
+
+public class NettyRedirectTest extends RedirectTest {
+
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        return ProviderUtil.nettyProvider(config);
+    }
+
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/TextMessageTest.java;<<<<<<< MINE
+    private final class EchoTextWebSocket implements org.eclipse.jetty.websocket.WebSocket, org.eclipse.jetty.websocket.WebSocket.OnTextMessage {
+=======
+    public static final class EchoTextWebSocket implements org.eclipse.jetty.websocket.WebSocket, org.eclipse.jetty.websocket.WebSocket.OnTextMessage {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/RedirectTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2012 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+
+package com.ning.http.client.websocket;
+
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.testng.Assert.assertEquals;
+
+public abstract class RedirectTest extends AbstractBasicTest {
+
+    protected int port2;
+
+    // ------------------------------------------ Methods from AbstractBasicTest
+
+    @BeforeClass
+    @Override
+    public void setUpGlobal() throws Exception {
+        port1 = findFreePort();
+
+        _connector = new SelectChannelConnector();
+        _connector.setPort(port1);
+
+        addConnector(_connector);
+
+
+
+
+        port2 = findFreePort();
+        final SelectChannelConnector connector2 = new SelectChannelConnector();
+        connector2.setPort(port2);
+        addConnector(connector2);
+        WebSocketHandler _wsHandler = getWebSocketHandler();
+        HandlerList list = new HandlerList();
+        list.addHandler(new AbstractHandler() {
+                    @Override
+                    public void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
+                        if (request.getLocalPort() == port2) {
+                            httpServletResponse.sendRedirect(getTargetUrl());
+                        }
+                    }
+                });
+        list.addHandler(_wsHandler);
+        setHandler(list);
+
+        start();
+        log.info("Local HTTP server started successfully");
+    }
+
+    @Override
+    public WebSocketHandler getWebSocketHandler() {
+        return new WebSocketHandler() {
+            @Override
+            public org.eclipse.jetty.websocket.WebSocket doWebSocketConnect(HttpServletRequest httpServletRequest, String s) {
+                return new TextMessageTest.EchoTextWebSocket();
+            }
+        };
+    }
+
+    // ------------------------------------------------------------ Test Methods
+
+    @Test(timeOut = 60000)
+    public void testRedirectToWSResource() throws Exception {
+        AsyncHttpClient c = getAsyncHttpClient(new AsyncHttpClientConfig.Builder().setFollowRedirects(true).build());
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicReference<String> text = new AtomicReference<String>("");
+
+        WebSocket websocket = c.prepareGet(getRedirectURL())
+                .execute(new WebSocketUpgradeHandler.Builder().addWebSocketListener(new WebSocketListener() {
+
+                    @Override
+                    public void onOpen(com.ning.http.client.websocket.WebSocket websocket) {
+                        text.set("OnOpen");
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onClose(com.ning.http.client.websocket.WebSocket websocket) {
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        t.printStackTrace();
+                        latch.countDown();
+                    }
+                }).build()).get();
+
+
+        latch.await();
+        assertEquals(text.get(), "OnOpen");
+        websocket.close();
+    }
+
+
+    // --------------------------------------------------------- Private Methods
+
+
+    private String getRedirectURL() {
+        return String.format("ws://127.0.0.1:%d/", port2);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_743e746_477bb3a/rev_743e746-477bb3a/src/test/java/com/ning/http/client/websocket/grizzly/GrizzlyRedirectTest.java;<<<<<<< MINE
+=======
+/*
+ * Copyright (c) 2012 Sonatype, Inc. All rights reserved.
+ *
+ * This program is licensed to you under the Apache License Version 2.0,
+ * and you may not use this file except in compliance with the Apache License Version 2.0.
+ * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the Apache License Version 2.0 is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ */
+
+package com.ning.http.client.websocket.grizzly;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.providers.grizzly.GrizzlyAsyncHttpProvider;
+import com.ning.http.client.websocket.RedirectTest;
+
+public class GrizzlyRedirectTest extends RedirectTest {
+
+    @Override
+    public AsyncHttpClient getAsyncHttpClient(AsyncHttpClientConfig config) {
+        if (config == null) {
+            config = new AsyncHttpClientConfig.Builder().build();
+        }
+        return new AsyncHttpClient(new GrizzlyAsyncHttpProvider(config), config);
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d677d01_7ac0ecd/rev_d677d01-7ac0ecd/api/src/main/java/org/asynchttpclient/AsyncHttpClientConfigDefaults.java;<<<<<<< MINE
+
+=======
+    
+    public static boolean defaultAcceptAnyCertificate() {
+        return getBoolean(ASYNC_CLIENT + "acceptAnyCertificate", false);
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_d677d01_7ac0ecd/rev_d677d01-7ac0ecd/api/src/main/java/org/asynchttpclient/util/MiscUtil.java;<<<<<<< MINE
+
+=======
+
+    public static <T> T withDefault(T value, T defaults) {
+        return value != null? value : value;
+    }
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_cdd9574_b175f06/rev_cdd9574-b175f06/api/src/main/java/org/asynchttpclient/PerHostConnectionPoolPartitioning.java;<<<<<<< MINE
+=======
+/*
+ * Copyright 2010 Ning, Inc.
+ *
+ * Ning licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+package org.asynchttpclient;
+
+import org.asynchttpclient.uri.Uri;
+import org.asynchttpclient.util.AsyncHttpProviderUtils;
+
+public enum PerHostConnectionPoolPartitioning implements ConnectionPoolPartitioning {
+
+    INSTANCE;
+
+    @Override
+    public String getPartitionId(Uri uri, ProxyServer proxyServer) {
+        String serverPart = AsyncHttpProviderUtils.getBaseUrl(uri);
+        return proxyServer != null ? proxyServer.getUrl() + serverPart : serverPart;
+    }
+}>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_cdd9574_b175f06/rev_cdd9574-b175f06/api/src/main/java/org/asynchttpclient/RequestBuilderBase.java;<<<<<<< MINE
+        private ConnectionPoolPartitioning connectionPoolPartitioning = PerHostConnectionPoolPartioning.INSTANCE;
+=======
+        private ConnectionPoolPartitioning connectionPoolPartitioning = PerHostConnectionPoolPartitioning.INSTANCE;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieUtil.java;<<<<<<< MINE
+        return -1L;
+=======
+        return Long.MIN_VALUE;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+            int valueBegin = -1;
+=======
+            int valueStart = -1;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                        valueBegin = valueEnd = -1;
+=======
+                        valueStart = valueEnd = -1;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                            valueBegin = valueEnd = 0;
+=======
+                            valueStart = valueEnd = 0;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                        valueBegin = i;
+=======
+                        valueStart = i;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                        valueBegin = valueEnd = -1;
+=======
+                        valueStart = valueEnd = -1;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                if (valueBegin == -1) {
+=======
+                if (valueStart == -1) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                CharSequence wrappedValue = CharBuffer.wrap(header, valueBegin, valueEnd);
+=======
+                CharSequence wrappedValue = CharBuffer.wrap(header, valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                final boolean wrap = unwrappedValue.length() != valueEnd - valueBegin;
+=======
+                final boolean wrap = unwrappedValue.length() != valueEnd - valueStart;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                cookieBuilder = new CookieBuilder(name, unwrappedValue.toString(), wrap);
+=======
+                cookieBuilder = new CookieBuilder(name, unwrappedValue.toString(), wrap, header);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                cookieBuilder.appendAttribute(header, nameBegin, nameEnd, valueBegin, valueEnd);
+=======
+                cookieBuilder.appendAttribute(nameBegin, nameEnd, valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+=======
+        private final String header;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+        private int maxAge = Integer.MIN_VALUE;
+        private String expires;
+=======
+        private long maxAge = Long.MIN_VALUE;
+        private int expiresStart;
+        private int expiresEnd;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+        public CookieBuilder(String name, String value, boolean wrap) {
+=======
+        public CookieBuilder(String name, String value, boolean wrap, String header) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+=======
+            this.header = header;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+            return new Cookie(name, value, wrap, domain, path, computeExpires(expires), maxAge, secure, httpOnly);
+=======
+            return new Cookie(name, value, wrap, domain, path, mergeMaxAgeAndExpires(), secure, httpOnly);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+=======
+        private long mergeMaxAgeAndExpires() {
+            // max age has precedence over expires
+            if (maxAge != Long.MIN_VALUE) {
+                return maxAge;
+            } else {
+                String expires = computeValue(expiresStart, expiresEnd);
+                if (expires != null) {
+                    long expiresMillis = computeExpires(expires);
+                    if (expiresMillis != Long.MIN_VALUE) {
+                        long maxAgeMillis = expiresMillis - System.currentTimeMillis();
+                        return maxAgeMillis / 1000 + (maxAgeMillis % 1000 != 0 ? 1 : 0);
+                    }
+                }
+            }
+            return Long.MIN_VALUE;
+        }
+        
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+         * @param header
+         *            the HTTP header
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+         * @param valueBegin
+=======
+         * @param valueStart
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+        public void appendAttribute(String header, int keyStart, int keyEnd, int valueBegin, int valueEnd) {
+            setCookieAttribute(header, keyStart, keyEnd, valueBegin, valueEnd);
+=======
+        public void appendAttribute(int keyStart, int keyEnd, int valueStart, int valueEnd) {
+            setCookieAttribute(keyStart, keyEnd, valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+        private void setCookieAttribute(String header, int keyStart, int keyEnd, int valueBegin, int valueEnd) {
+=======
+        private void setCookieAttribute(int keyStart, int keyEnd, int valueStart, int valueEnd) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                parse4(header, keyStart, valueBegin, valueEnd);
+=======
+                parse4(keyStart, valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                parse6(header, keyStart, valueBegin, valueEnd);
+=======
+                parse6(keyStart, valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                parse7(header, keyStart, valueBegin, valueEnd);
+=======
+                parse7(keyStart, valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                parse8(header, keyStart, valueBegin, valueEnd);
+=======
+                parse8(keyStart, valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+        private void parse4(String header, int nameStart, int valueBegin, int valueEnd) {
+=======
+        private void parse4(int nameStart, int valueStart, int valueEnd) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                path = computeValue(header, valueBegin, valueEnd);
+=======
+                path = computeValue(valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+        private void parse6(String header, int nameStart, int valueBegin, int valueEnd) {
+=======
+        private void parse6(int nameStart, int valueStart, int valueEnd) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                domain = computeValue(header, valueBegin, valueEnd);
+=======
+                domain = computeValue(valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+        private void parse7(String header, int nameStart, int valueBegin, int valueEnd) {
+=======
+        private void parse7(int nameStart, int valueStart, int valueEnd) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                expires = computeValue(header, valueBegin, valueEnd);
+=======
+                expiresStart = valueStart;
+                expiresEnd = valueEnd;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                    maxAge = Math.max(Integer.valueOf(computeValue(header, valueBegin, valueEnd)), 0);
+=======
+                    maxAge = Math.max(Integer.valueOf(computeValue(valueStart, valueEnd)), 0);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+        private void parse8(String header, int nameStart, int valueBegin, int valueEnd) {
+
+=======
+        private void parse8(int nameStart, int valueStart, int valueEnd) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+        private String computeValue(String header, int valueBegin, int valueEnd) {
+            if (valueBegin == -1 || valueBegin == valueEnd) {
+=======
+        private String computeValue(int valueStart, int valueEnd) {
+            if (valueStart == -1 || valueStart == valueEnd) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                while (valueBegin < valueEnd && header.charAt(valueBegin) <= ' ') {
+                    valueBegin++;
+=======
+                while (valueStart < valueEnd && header.charAt(valueStart) <= ' ') {
+                    valueStart++;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                while (valueBegin < valueEnd && (header.charAt(valueEnd - 1) <= ' ')) {
+=======
+                while (valueStart < valueEnd && (header.charAt(valueEnd - 1) <= ' ')) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/CookieDecoder.java;<<<<<<< MINE
+                return valueBegin == valueEnd ? null : header.substring(valueBegin, valueEnd);
+=======
+                return valueStart == valueEnd ? null : header.substring(valueStart, valueEnd);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;<<<<<<< MINE
+    public static Cookie newValidCookie(String name, String value, boolean wrap, String domain, String path, long expires, int maxAge, boolean secure, boolean httpOnly) {
+=======
+    public static Cookie newValidCookie(String name, String value, boolean wrap, String domain, String path, long maxAge, boolean secure, boolean httpOnly) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;<<<<<<< MINE
+        return new Cookie(name, value, wrap, domain, path, expires, maxAge, secure, httpOnly);
+=======
+        return new Cookie(name, value, wrap, domain, path, maxAge, secure, httpOnly);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;<<<<<<< MINE
+    private long expires;
+    private final int maxAge;
+=======
+    private final long maxAge;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;<<<<<<< MINE
+    public Cookie(String name, String value, boolean wrap, String domain, String path, long expires, int maxAge, boolean secure, boolean httpOnly) {
+=======
+    public Cookie(String name, String value, boolean wrap, String domain, String path, long maxAge, boolean secure, boolean httpOnly) {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;<<<<<<< MINE
+        this.expires = expires;
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;<<<<<<< MINE
+    public long getExpires() {
+        return expires;
+    }
+    
+    public int getMaxAge() {
+=======
+    public long getMaxAge() {
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/api/src/main/java/org/asynchttpclient/cookie/Cookie.java;<<<<<<< MINE
+        if (expires >= 0) {
+            buf.append("; expires=");
+            buf.append(expires);
+        }
+=======
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/providers/netty3/src/test/java/org/asynchttpclient/providers/netty3/NettyAsyncResponseTest.java;<<<<<<< MINE
+        assertEquals(cookie.getMaxAge(), Integer.MIN_VALUE);
+=======
+        assertEquals(cookie.getMaxAge(), Long.MIN_VALUE);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/providers/netty4/src/test/java/org/asynchttpclient/providers/netty4/NettyAsyncResponseTest.java;<<<<<<< MINE
+import static org.testng.Assert.assertEquals;
+=======
+import static org.testng.Assert.*;
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/providers/netty4/src/test/java/org/asynchttpclient/providers/netty4/NettyAsyncResponseTest.java;<<<<<<< MINE
+        long originalDateWith1SecPrecision = date.getTime() / 1000 * 1000;
+        assertEquals(cookie.getExpires(), originalDateWith1SecPrecision);
+=======
+        assertTrue(cookie.getMaxAge() >= 58 && cookie.getMaxAge() <= 60);
+>>>>>>> YOURS
+/experiment_results/projects/async-http-client/revisions/rev_fa2c4b6_251cb18/rev_fa2c4b6-251cb18/providers/netty4/src/test/java/org/asynchttpclient/providers/netty4/NettyAsyncResponseTest.java;<<<<<<< MINE
+        assertEquals(cookie.getMaxAge(), Integer.MIN_VALUE);
+=======
+        assertEquals(cookie.getMaxAge(), Long.MIN_VALUE);
+>>>>>>> YOURS

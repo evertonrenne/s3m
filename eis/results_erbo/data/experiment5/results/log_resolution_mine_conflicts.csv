@@ -1,0 +1,176 @@
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171/core/src/main/java/org/elasticsearch/common/io/stream/StreamOutput.java;<<<<<<< MINE
+=======
+            @SuppressWarnings("unchecked")
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_b763265_6f13171/rev_b763265-6f13171/core/src/main/java/org/elasticsearch/transport/TransportModule.java;<<<<<<< MINE
+=======
+        bind(NamedWriteableRegistry.class).asEagerSingleton();
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_260a929_34635a4/rev_260a929-34635a4/core/src/main/java/org/elasticsearch/index/query/GeoBoundingBoxQueryBuilder.java;<<<<<<< MINE
+=======
+     * Sets the filter name for the filter that can be used when searching for matched_filters per hit.
+     */
+    public GeoBoundingBoxQueryBuilder queryName(String queryName) {
+        this.queryName = queryName;
+        return this;
+    }
+
+    public GeoBoundingBoxQueryBuilder coerce(boolean coerce) {
+        this.coerce = coerce;
+        return this;
+    }
+
+    public GeoBoundingBoxQueryBuilder ignoreMalformed(boolean ignoreMalformed) {
+        this.ignoreMalformed = ignoreMalformed;
+        return this;
+    }
+
+    /**
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_ceab9a8_257f3e8/rev_ceab9a8-257f3e8/core/src/main/java/org/elasticsearch/index/engine/EngineConfig.java;<<<<<<< MINE
+=======
+     * Index setting to control the initial index buffer size.  NOTE: this setting is somewhat
+     * useless, since IndexingMemoryController will take over quickly and partition the
+     * indices.memory.index_buffer_size for this node across all shards.
+     *
+     * <p>This setting is <b>not</b> realtime updateable.
+     */
+    public static final String INDEX_BUFFER_SIZE_SETTING = "index.buffer_size";
+
+    /**
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_197313c_c8d1f7a/rev_197313c-c8d1f7a/core/src/main/java/org/elasticsearch/index/query/GeoDistanceQueryParser.java;<<<<<<< MINE
+=======
+        // validation was not available prior to 2.x, so to support bwc percolation queries we only ignore_malformed on 2.x created indexes
+        if (!indexCreatedBeforeV2_0 && !ignoreMalformed) {
+            if (point.lat() > 90.0 || point.lat() < -90.0) {
+                throw new ParsingException(parseContext, "illegal latitude value [{}] for [{}]", point.lat(), NAME);
+            }
+            if (point.lon() > 180.0 || point.lon() < -180) {
+                throw new ParsingException(parseContext, "illegal longitude value [{}] for [{}]", point.lon(), NAME);
+            }
+        }
+
+        if (coerce) {
+            GeoUtils.normalizePoint(point, coerce, coerce);
+        }
+
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_197313c_c8d1f7a/rev_197313c-c8d1f7a/core/src/main/java/org/elasticsearch/index/query/SpanContainingQueryParser.java;<<<<<<< MINE
+=======
+        }        
+        
+        if (big == null) {
+            throw new ParsingException(parseContext, "span_containing must include [big]");
+        }
+        if (little == null) {
+            throw new ParsingException(parseContext, "span_containing must include [little]");
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_197313c_c8d1f7a/rev_197313c-c8d1f7a/core/src/main/java/org/elasticsearch/index/query/GeoShapeQueryParser.java;<<<<<<< MINE
+=======
+                            if (id == null) {
+                                throw new ParsingException(parseContext, "ID for indexed shape not provided");
+                            } else if (type == null) {
+                                throw new ParsingException(parseContext, "Type for indexed shape not provided");
+                            }
+                            GetRequest getRequest = new GetRequest(index, type, id);
+                            getRequest.copyContextAndHeadersFrom(SearchContext.current());
+                            shape = fetchService.fetch(getRequest, shapePath);
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests.java;<<<<<<< MINE
+=======
+        assertFalse(startedShard0.isRelocationTarget());
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests.java;<<<<<<< MINE
+=======
+        assertFalse(startedShard0.isRelocationTarget());
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests.java;<<<<<<< MINE
+=======
+        assertFalse(startedShard1.isRelocationTarget());
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests.java;<<<<<<< MINE
+=======
+        assertFalse(startedShard1.isRelocationTarget());
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests.java;<<<<<<< MINE
+=======
+        assertFalse(sourceShard0a.isRelocationTarget());
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_95e8a39_fafeb3a/rev_95e8a39-fafeb3a/core/src/test/java/org/elasticsearch/cluster/routing/ShardRoutingTests.java;<<<<<<< MINE
+=======
+        assertTrue(targetShard0a.isRelocationTarget());
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_e9e300c_5c88164/rev_e9e300c-5c88164/core/src/main/java/org/elasticsearch/action/support/broadcast/BroadcastRequest.java;<<<<<<< MINE
+=======
+
+    }
+
+    protected BroadcastRequest(ActionRequest<?> originalRequest) {
+        super(originalRequest);
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_e9e300c_5c88164/rev_e9e300c-5c88164/core/src/main/java/org/elasticsearch/action/support/master/MasterNodeRequest.java;<<<<<<< MINE
+=======
+
+    }
+
+    protected MasterNodeRequest(ActionRequest<?> request) {
+        super(request);
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7/core/src/test/java/org/elasticsearch/cluster/routing/allocation/PrimaryElectionRoutingTests.java;<<<<<<< MINE
+=======
+        routingTable = clusterState.routingTable();
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7/core/src/test/java/org/elasticsearch/cluster/metadata/ToAndFromJsonMetaDataTests.java;<<<<<<< MINE
+=======
+        assertThat(indexMetaData.primaryTerm(0), equalTo(1L));
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_7c8cdf4_b8227a7/rev_7c8cdf4-b8227a7/core/src/test/java/org/elasticsearch/cluster/metadata/ToAndFromJsonMetaDataTests.java;<<<<<<< MINE
+=======
+        assertThat(indexMetaData.primaryTerm(0), equalTo(2L));
+        assertThat(indexMetaData.primaryTerm(1), equalTo(2L));
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_08b3b62_d24cc65/rev_08b3b62-d24cc65/core/src/main/java/org/elasticsearch/node/NodeModule.java;<<<<<<< MINE
+=======
+        bind(ProcessorsRegistry.Builder.class).toInstance(processorsRegistryBuilder);
+    }
+
+    /**
+     * Returns the node
+     */
+    public Node getNode() {
+        return node;
+    }
+
+    /**
+     * Adds a processor factory under a specific type name.
+     */
+    public void registerProcessor(String type, Function<ProcessorsRegistry, Processor.Factory> provider) {
+        processorsRegistryBuilder.registerProcessor(type, provider);
+>>>>>>> YOURS
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_e556c28_e168b3b/rev_e556c28-e168b3b/core/src/test/java/org/elasticsearch/indices/IndicesRequestCacheIT.java;<<<<<<< MINE
+=======
+        // If the request has an aggregation containng now we should not cache
+        final SearchResponse r4 = client().prepareSearch("index").setSearchType(SearchType.QUERY_THEN_FETCH).setSize(0)
+                .setRequestCache(true).setQuery(QueryBuilders.rangeQuery("s").gte("2016-03-20").lte("2016-03-26"))
+                .addAggregation(filter("foo", QueryBuilders.rangeQuery("s").from("now-10y").to("now"))).get();
+        assertSearchResponse(r4);
+        assertThat(r4.getHits().getTotalHits(), equalTo(7L));
+        assertThat(client().admin().indices().prepareStats("index").setRequestCache(true).get().getTotal().getRequestCache().getHitCount(),
+                equalTo(0L));
+        assertThat(client().admin().indices().prepareStats("index").setRequestCache(true).get().getTotal().getRequestCache().getMissCount(),
+                equalTo(0L));
+
+        // If the request has an aggregation containng now we should not cache
+        final SearchResponse r5 = client().prepareSearch("index").setSearchType(SearchType.QUERY_THEN_FETCH).setSize(0)
+                .setRequestCache(true).setQuery(QueryBuilders.rangeQuery("s").gte("2016-03-20").lte("2016-03-26"))
+                .addAggregation(dateRange("foo").field("s").addRange("now-10y", "now")).get();
+        assertSearchResponse(r5);
+        assertThat(r5.getHits().getTotalHits(), equalTo(7L));
+        assertThat(client().admin().indices().prepareStats("index").setRequestCache(true).get().getTotal().getRequestCache().getHitCount(),
+                equalTo(0L));
+        assertThat(client().admin().indices().prepareStats("index").setRequestCache(true).get().getTotal().getRequestCache().getMissCount(),
+                equalTo(0L));
+
+>>>>>>> YOURS

@@ -1,0 +1,1731 @@
+revision;file;leftContent;rightContent;conflict
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a.revisions;/core/src/main/java/cucumber/runtime/World.java;public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    };voidrunAfterHooksAndDisposeBackendWorlds(Reporterreporter);;
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a.revisions;/core/src/main/java/cucumber/runtime/World.java;public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    };voidrunStep(Stringuri,Stepstep,Reporterreporter,Localelocale);;
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a.revisions;/core/src/main/java/cucumber/runtime/World.java;public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    };voidrunStep(Stringuri,Stepstep,Reporterreporter,Localelocale);;
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a.revisions;/core/src/main/java/cucumber/runtime/World.java;public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    };voidaddStepDefinition(StepDefinitionstepDefinition);;
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a.revisions;/core/src/main/java/cucumber/runtime/World.java;public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    };voidaddBeforeHook(HookDefinitionhookDefinition);;
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a.revisions;/core/src/main/java/cucumber/runtime/World.java;public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    };voidaddAfterHook(HookDefinitionhookDefinition);;
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a.revisions;/core/src/main/java/cucumber/runtime/World.java;public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    };List<HookDefinition>getBeforeHooks();;
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a.revisions;/core/src/main/java/cucumber/runtime/World.java;public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    };List<HookDefinition>getAfterHooks();;
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_4514f91_c196d7a/rev_4514f91-c196d7a.revisions;/core/src/main/java/cucumber/runtime/World.java;public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    };List<StepDefinition>getStepDefinitions();;
+    // TODO - it's expensive to create a new LocalizedXStreams for each scenario - reuse a global one.
+    private final LocalizedXStreams localizedXStreams = new LocalizedXStreams();
+    private final List<StepDefinition> stepDefinitions = new ArrayList<StepDefinition>();
+    private final List<HookDefinition> beforeHooks = new ArrayList<HookDefinition>();
+    private final List<HookDefinition> afterHooks = new ArrayList<HookDefinition>();
+    private final ScenarioResultImpl scenarioResult = new ScenarioResultImpl();
+
+    private final Runtime runtime;
+
+    private final Collection<String> tags;
+
+    private boolean skipNextStep = false;
+
+    public World(Runtime runtime, Collection<String> tags) {
+        this.runtime = runtime;
+        this.tags = tags;
+    }
+
+    public void buildBackendWorldsAndRunBeforeHooks(List<String> gluePaths, Reporter reporter) {
+        runtime.buildBackendWorlds(gluePaths, this);
+        Collections.sort(beforeHooks, new HookComparator(true));
+        runHooks(beforeHooks, reporter);
+    }
+
+    public void runAfterHooksAndDisposeBackendWorlds(Reporter reporter) {
+        Collections.sort(afterHooks, new HookComparator(false));
+        runHooks(afterHooks, reporter);
+        runtime.disposeBackendWorlds();
+    }
+
+    private void runHooks(List<HookDefinition> hooks, Reporter reporter) {
+        for (HookDefinition hook : hooks) {
+            runHookIfTagsMatch(hook, reporter);
+        }
+    }
+
+    private void runHookIfTagsMatch(HookDefinition hook, Reporter reporter) {
+        if (hook.matches(tags)) {
+            long start = System.nanoTime();
+            try {
+                hook.execute(scenarioResult);
+            } catch (Throwable t) {
+                skipNextStep = true;
+
+                long duration = System.nanoTime() - start;
+                Result result = new Result(Result.FAILED, duration, t, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runStep(String uri, Step step, Reporter reporter, Locale locale) {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match != null) {
+            reporter.match(match);
+        } else {
+            reporter.match(Match.UNDEFINED);
+            reporter.result(Result.UNDEFINED);
+            skipNextStep = true;
+            return;
+        }
+
+        if (runtime.isDryRun()) {
+            skipNextStep = true;
+        }
+
+        if (skipNextStep) {
+            scenarioResult.add(Result.SKIPPED);
+            reporter.result(Result.SKIPPED);
+        } else {
+            String status = Result.PASSED;
+            Throwable error = null;
+            long start = System.nanoTime();
+            try {
+                match.runStep(locale);
+            } catch (Throwable t) {
+                error = t;
+                status = Result.FAILED;
+                runtime.addError(t);
+                skipNextStep = true;
+            } finally {
+                long duration = System.nanoTime() - start;
+                Result result = new Result(status, duration, error, DUMMY_ARG);
+                scenarioResult.add(result);
+                reporter.result(result);
+            }
+        }
+    }
+
+    public void runUnreportedStep(String uri, Step step, Locale locale) throws Throwable {
+        StepDefinitionMatch match = stepDefinitionMatch(uri, step, locale);
+        if (match == null) {
+            throw new CucumberException("Calling an undefined step from " + uri);
+        }
+
+        match.runStep(locale);
+    }
+
+    private StepDefinitionMatch stepDefinitionMatch(String uri, Step step, Locale locale) {
+        List<StepDefinitionMatch> matches = stepDefinitionMatches(uri, step);
+        try {
+            if (matches.size() == 0) {
+                runtime.addUndefinedStep(step, locale);
+                return null;
+            }
+            if (matches.size() == 1) {
+                return matches.get(0);
+            } else {
+                throw new AmbiguousStepDefinitionsException(matches);
+            }
+        } finally {
+            runtime.storeStepKeyword(step, locale);
+        }
+    }
+
+    public void addStepDefinition(StepDefinition stepDefinition) {
+        stepDefinitions.add(stepDefinition);
+    }
+
+    private List<StepDefinitionMatch> stepDefinitionMatches(String uri, Step step) {
+        List<StepDefinitionMatch> result = new ArrayList<StepDefinitionMatch>();
+        for (StepDefinition stepDefinition : stepDefinitions) {
+            List<Argument> arguments = stepDefinition.matchedArguments(step);
+            if (arguments != null) {
+                result.add(new StepDefinitionMatch(arguments, stepDefinition, uri, step, localizedXStreams));
+            }
+        }
+        return result;
+    }
+
+    public void addBeforeHook(HookDefinition hookDefinition) {
+        beforeHooks.add(hookDefinition);
+    }
+
+    public void addAfterHook(HookDefinition hookDefinition) {
+        afterHooks.add(hookDefinition);
+    }
+
+    public List<HookDefinition> getBeforeHooks() {
+        return beforeHooks;
+    }
+
+    public List<HookDefinition> getAfterHooks() {
+        return afterHooks;
+    }
+
+    public List<StepDefinition> getStepDefinitions() {
+        return stepDefinitions;
+    }
+
+    private final class HookComparator implements Comparator<HookDefinition> {
+        final boolean ascending;
+
+        public HookComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(HookDefinition hook1, HookDefinition hook2) {
+            int comparison = hook1.getOrder() - hook2.getOrder();
+            return ascending ? comparison : -comparison;
+        }
+    }
+=======
+    void runAfterHooksAndDisposeBackendWorlds(Reporter reporter);
+
+    void runStep(String uri, Step step, Reporter reporter, Locale locale);
+
+    void addStepDefinition(StepDefinition stepDefinition);
+
+    void addBeforeHook(HookDefinition hookDefinition);
+
+    void addAfterHook(HookDefinition hookDefinition);
+
+    List<HookDefinition> getBeforeHooks();
+
+    List<HookDefinition> getAfterHooks();
+
+    List<StepDefinition> getStepDefinitions();
+
+
+/home/ramdisk/experiment4/projects/cucumber-jvm/revisions/rev_9612724_e572769/rev_9612724-e572769.revisions;/jython/src/main/java/cucumber/runtime/jython/JythonBackend.java;public void executeHook(PyInstance hookDefinition, Object[] scenarioResults) {
+        PyObject[] pyArgs = new PyObject[1];
+        pyArgs[0] = pyWorld;
+        hookDefinition.invoke("execute", pyArgs);
+    };publicvoidexecute(PyInstancestepdef,Object[]args)throwsThrowable{PyObject[]pyArgs=newPyObject[args.length+1];pyArgs[0]=pyWorld;for(inti=0;i<args.length;i++){pyArgs[i+1]=newPyString((String)args[i]);}try{stepdef.invoke("execute",pyArgs);}catch(PyExceptiont){Objectunwrapped=t.value.__tojava__(Object.class);if(unwrappedinstanceofThrowable){throw(Throwable)unwrapped;}else{throwt.getCause()==null?t:t.getCause();}}};
+    public void addBeforeHook(PyInstance hookDefinition) {
+        glue.addBeforeHook(new JythonHookDefinition(this, hookDefinition));
+    }
+
+    public void addAfterHook(PyInstance hookDefinition) {
+        glue.addAfterHook(new JythonHookDefinition(this, hookDefinition));
+    }
+
+    public void executeHook(PyInstance hookDefinition, Object[] scenarioResults) {
+        PyObject[] pyArgs = new PyObject[1];
+        pyArgs[0] = pyWorld;
+        hookDefinition.invoke("execute", pyArgs);
+    }
+
+    public void execute(PyInstance stepdef, Object[] args) {
+=======
+    public void execute(PyInstance stepdef, Object[] args) throws Throwable {
+
+

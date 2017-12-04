@@ -1,0 +1,29 @@
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/util/JSONUtil.java;<<<<<<< MINE
+=======
+   *
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/common/src/main/java/com/twitter/ambrose/model/Job.java;<<<<<<< MINE
+=======
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "runtime")
+@JsonTypeName("default")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value=com.twitter.ambrose.model.Job.class, name="default"),
+})
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_74d23a0_5374520/rev_74d23a0-5374520/pig/src/main/java/com/twitter/ambrose/pig/PigJob.java;<<<<<<< MINE
+=======
+@JsonTypeName("pig")
+>>>>>>> YOURS
+/experiment_ambrose/projects/ambrose/revisions/rev_24fc935_6383000/rev_24fc935-6383000/pig/src/main/java/com/twitter/ambrose/pig/AmbrosePigProgressNotificationListener.java;<<<<<<< MINE
+=======
+   * Support Pig 12 PPNL API. Remove this once Pig 12 support is no longer needed.
+   *
+   * @param scriptId script identifier.
+   * @param plan MR operator plan.
+   */
+  public void initialPlanNotification(String scriptId, MROperPlan plan) {
+    initialPlanNotification(scriptId, (OperatorPlan<?>) plan);
+  }
+
+  /**
+>>>>>>> YOURS

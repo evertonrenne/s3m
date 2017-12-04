@@ -1,0 +1,11 @@
+revision;file;nodeIdentifier1;;nodeIdentifier2;conflict
+/experiment_ambrose/projects/ambrose/revisions/rev_8000215_8ad1e53/rev_8000215-8ad1e53.revisions;/pig/src/main/java/com/twitter/ambrose/service/DAGNode.java;private Double x, y;private Double x, y;
+  private String runtimeName;
+  private Integer dagLevel;
+  private Double x, y;
+=======
+  private String runtime;
+  private Integer dagLevel;
+  private Double x, y;
+
+

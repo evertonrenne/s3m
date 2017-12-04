@@ -1,0 +1,1771 @@
+file;ssmergeConf
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f46d555_e134bf0/rev_f46d555-e134bf0/src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java;<<<<<<< MINE
+=======
+@Override
+    public JsonNode getSchema(SerializerProvider provider, Type typeHint)
+        throws JsonMappingException
+    {
+        ObjectNode o = createSchemaNode("object", true);
+        // [JACKSON-813]: Add optional JSON Schema id attribute, if found
+        // NOTE: not optimal, does NOT go through AnnotationIntrospector etc:
+        JsonSerializableSchema ann = _handledType.getAnnotation(JsonSerializableSchema.class);
+        if (ann != null) {
+            String id = ann.id();
+            if (id != null && id.length() > 0) {
+                o.put("id", id);
+            }
+        }
+ 
+        //todo: should the classname go in the title?
+        //o.put("title", _className);
+        ObjectNode propertiesNode = o.objectNode();
+        final BeanPropertyFilter filter;
+        if (_propertyFilterId != null) {
+        	filter = findFilter(provider);
+        } else {
+        	filter = null;
+        }
+        		
+        for (int i = 0; i < _props.length; i++) {
+            BeanPropertyWriter prop = _props[i];
+            if (filter != null) {
+            	filter.depositSchemaProperty(prop, propertiesNode, provider);
+            	 continue;
+            }
+            depositSchemaProperty(prop, propertiesNode, provider);
+
+        }
+        o.put("properties", propertiesNode);
+        return o;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f46d555_e134bf0/rev_f46d555-e134bf0/src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java;<<<<<<< MINE
+=======
+public static void depositSchemaProperty(BeanPropertyWriter writer, ObjectNode propertiesNode, SerializerProvider provider)
+    {
+        JavaType propType = writer.getSerializationType();
+
+        // 03-Dec-2010, tatu: SchemaAware REALLY should use JavaType, but alas it doesn't...
+        Type hint = (propType == null) ? writer.getGenericPropertyType() : propType.getRawClass();
+        JsonNode schemaNode;
+        // Maybe it already has annotated/statically configured serializer?
+        JsonSerializer<Object> ser = writer.getSerializer();
+
+        try {
+            if (ser == null) { // nope
+                Class<?> serType = writer.getRawSerializationType();
+                if (serType == null) {
+                    serType = writer.getPropertyType();
+                }
+                ser = provider.findValueSerializer(serType, writer);
+            }
+            boolean isOptional = !BeanSerializerBase.isPropertyRequired(writer, provider);
+            if (ser instanceof SchemaAware) {
+                schemaNode =  ((SchemaAware) ser).getSchema(provider, hint, isOptional) ;
+            } else {  
+                schemaNode = JsonSchema.getDefaultSchemaNode(); 
+            }
+        } catch (JsonMappingException e) {
+            schemaNode = JsonSchema.getDefaultSchemaNode(); 
+            // TODO: handle in better way (why not throw?)
+        }
+        propertiesNode.put(writer.getName(), schemaNode);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f46d555_e134bf0/rev_f46d555-e134bf0/src/main/java/com/fasterxml/jackson/databind/ser/std/EnumSerializer.java;<<<<<<< MINE
+=======
+@Override
+    public JsonNode getSchema(SerializerProvider provider, Type typeHint)
+    {
+        // [JACKSON-684]: serialize as index?
+        if (_serializeAsIndex(provider)) {
+            return createSchemaNode("integer", true);
+        }
+        ObjectNode objectNode = createSchemaNode("string", true);
+        if (typeHint != null) {
+            JavaType type = provider.constructType(typeHint);
+            if (type.isEnumType()) {
+                ArrayNode enumNode = objectNode.putArray("enum");
+                for (SerializedString value : _values.values()) {
+                    enumNode.add(value.getValue());
+                }
+            }
+        }
+        return objectNode;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_62425ef_fd0f1fe/rev_62425ef-fd0f1fe/src/test/java/com/fasterxml/jackson/databind/introspect/TestMixinMerging.java;<<<<<<< MINE
+public void testDisappearingMixins515() throws Exception
+    {
+        // TBI
+    }
+=======
+public void testDisappearingMixins515() throws Exception
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
+            .disable(MapperFeature.AUTO_DETECT_FIELDS)
+            .disable(MapperFeature.AUTO_DETECT_GETTERS)
+            .disable(MapperFeature.AUTO_DETECT_IS_GETTERS)
+            .disable(MapperFeature.INFER_PROPERTY_MUTATORS);
+        SimpleModule module = new SimpleModule("Test");
+        module.setMixInAnnotation(Person.class, PersonMixin.class);        
+        mapper.registerModule(module);
+
+        assertEquals("{\"city\":\"Seattle\"}", mapper.writeValueAsString(new PersonImpl()));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_64319ad_87e4661/rev_64319ad-87e4661/src/main/java/com/fasterxml/jackson/databind/deser/std/MapDeserializer.java;<<<<<<< MINE
+=======
+@Override
+    public boolean isCachable() {
+        return (_valueTypeDeserializer == null) && (_ignorableProperties == null);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testSimpleDeserializationClass() throws Exception
+    {
+        // then bring back...
+        Identifiable result = MAPPER.readValue(EXP_SIMPLE_INT_CLASS, Identifiable.class);
+        assertEquals(13, result.value);
+        assertSame(result, result.next);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testMissingObjectId() throws Exception
+    {
+        Identifiable result = MAPPER.readValue(aposToQuotes("{'value':28, 'next':{'value':29}}"),
+                Identifiable.class);
+        assertNotNull(result);
+        assertEquals(28, result.value);
+        assertNotNull(result.next);
+        assertEquals(29, result.next.value);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testSimpleUUIDForClassRoundTrip() throws Exception
+    {
+        UUIDNode root = new UUIDNode(1);
+        UUIDNode child1 = new UUIDNode(2);
+        UUIDNode child2 = new UUIDNode(3);
+        root.first = child1;
+        root.second = child2;
+        child1.parent = root;
+        child2.parent = root;
+        child1.first = child2;
+
+        String json = MAPPER.writeValueAsString(root);
+
+        // and should come back the same too...
+        UUIDNode result = MAPPER.readValue(json, UUIDNode.class);
+        assertEquals(1, result.value);
+        UUIDNode result2 = result.first;
+        UUIDNode result3 = result.second;
+        assertNotNull(result2);
+        assertNotNull(result3);
+        assertEquals(2, result2.value);
+        assertEquals(3, result3.value);
+
+        assertSame(result, result2.parent);
+        assertSame(result, result3.parent);
+        assertSame(result3, result2.first);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testSimpleDeserializationProperty() throws Exception
+    {
+        IdWrapper result = MAPPER.readValue(EXP_SIMPLE_INT_PROP, IdWrapper.class);
+        assertEquals(7, result.node.value);
+        assertSame(result.node, result.node.next.node);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testSimpleDeserWithForwardRefs() throws Exception
+    {
+        IdWrapper result = MAPPER.readValue("{\"node\":{\"value\":7,\"next\":{\"node\":1}, \"@id\":1}}"
+                ,IdWrapper.class);
+        assertEquals(7, result.node.value);
+        assertSame(result.node, result.node.next.node);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testForwardReference()
+        throws Exception
+    {
+        String json = "{\"employees\":["
+                      + "{\"id\":1,\"name\":\"First\",\"manager\":2,\"reports\":[]},"
+                      + "{\"id\":2,\"name\":\"Second\",\"manager\":null,\"reports\":[1]}"
+                      + "]}";
+        Company company = MAPPER.readValue(json, Company.class);
+        assertEquals(2, company.employees.size());
+        Employee firstEmployee = company.employees.get(0);
+        Employee secondEmployee = company.employees.get(1);
+        assertEquals(1, firstEmployee.id);
+        assertEquals(2, secondEmployee.id);
+        assertEquals(secondEmployee, firstEmployee.manager); // Ensure that forward reference was properly resolved.
+        assertEquals(firstEmployee, secondEmployee.reports.get(0)); // And that back reference is also properly resolved.
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testForwardReferenceInCollection()
+        throws Exception
+    {
+        String json = "{\"employees\":["
+                      + "{\"id\":1,\"name\":\"First\",\"manager\":null,\"reports\":[2]},"
+                      + "{\"id\":2,\"name\":\"Second\",\"manager\":1,\"reports\":[]}"
+                      + "]}";
+        Company company = MAPPER.readValue(json, Company.class);
+        assertEquals(2, company.employees.size());
+        Employee firstEmployee = company.employees.get(0);
+        Employee secondEmployee = company.employees.get(1);
+        assertEmployees(firstEmployee, secondEmployee);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testForwardReferenceInMap()
+        throws Exception
+    {
+        String json = "{\"employees\":{"
+                      + "\"1\":{\"id\":1,\"name\":\"First\",\"manager\":null,\"reports\":[2]},"
+                      + "\"2\": 2,"
+                      + "\"3\":{\"id\":2,\"name\":\"Second\",\"manager\":1,\"reports\":[]}"
+                      + "}}";
+        MappedCompany company = MAPPER.readValue(json, MappedCompany.class);
+        assertEquals(3, company.employees.size());
+        Employee firstEmployee = company.employees.get(1);
+        Employee secondEmployee = company.employees.get(3);
+        assertEmployees(firstEmployee, secondEmployee);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testForwardReferenceAnySetterCombo() throws Exception {
+        String json = "{\"@id\":1, \"foo\":2, \"bar\":{\"@id\":2, \"foo\":1}}";
+        AnySetterObjectId value = MAPPER.readValue(json, AnySetterObjectId.class);
+        assertSame(value.values.get("bar"), value.values.get("foo"));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testUnresolvedForwardReference()
+        throws Exception
+    {
+        String json = "{\"employees\":[" 
+                      + "{\"id\":1,\"name\":\"First\",\"manager\":null,\"reports\":[3]},"
+                      + "{\"id\":2,\"name\":\"Second\",\"manager\":3,\"reports\":[]}" 
+                      + "]}";
+        try {
+            MAPPER.readValue(json, Company.class);
+            fail("Should have thrown.");
+        } catch (UnresolvedForwardReference exception) {
+            // Expected
+            List<UnresolvedId> unresolvedIds = exception.getUnresolvedIds();
+            assertEquals(2, unresolvedIds.size());
+            UnresolvedId firstUnresolvedId = unresolvedIds.get(0);
+            assertEquals(3, firstUnresolvedId.getId());
+            assertEquals(Employee.class, firstUnresolvedId.getType());
+            UnresolvedId secondUnresolvedId = unresolvedIds.get(1);
+            assertEquals(firstUnresolvedId.getId(), secondUnresolvedId.getId());
+            assertEquals(Employee.class, secondUnresolvedId.getType());
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testUnresolvableAsNull() throws Exception
+    {
+        IdWrapper w = MAPPER.reader(IdWrapper.class)
+                .without(DeserializationFeature.FAIL_ON_UNRESOLVED_OBJECT_IDS)
+                .readValue(aposToQuotes("{'node':123}"));
+        assertNotNull(w);
+        assertNull(w.node);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testKeepCollectionOrdering() throws Exception
+    {
+        String json = "{\"employees\":[2,1,"
+                + "{\"id\":1,\"name\":\"First\",\"manager\":null,\"reports\":[2]},"
+                + "{\"id\":2,\"name\":\"Second\",\"manager\":1,\"reports\":[]}"
+                + "]}";
+        Company company = MAPPER.readValue(json, Company.class);
+        assertEquals(4, company.employees.size());
+        // Deser must keep object ordering.
+        Employee firstEmployee = company.employees.get(1);
+        Employee secondEmployee = company.employees.get(0);
+        assertSame(firstEmployee, company.employees.get(2));
+        assertSame(secondEmployee, company.employees.get(3));
+        assertEmployees(firstEmployee, secondEmployee);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testKeepMapOrdering()
+        throws Exception
+    {
+        String json = "{\"employees\":{"
+                      + "\"1\":2, \"2\":1,"
+                      + "\"3\":{\"id\":1,\"name\":\"First\",\"manager\":null,\"reports\":[2]},"
+                      + "\"4\":{\"id\":2,\"name\":\"Second\",\"manager\":1,\"reports\":[]}"
+                      + "}}";
+        MappedCompany company = MAPPER.readValue(json, MappedCompany.class);
+        assertEquals(4, company.employees.size());
+        Employee firstEmployee = company.employees.get(2);
+        Employee secondEmployee = company.employees.get(1);
+        assertEmployees(firstEmployee, secondEmployee);
+        // Deser must keep object ordering. Not sure if it's really important for maps,
+        // but since default map is LinkedHashMap might as well ensure it does...
+        Iterator<Entry<Integer,Employee>> iterator = company.employees.entrySet().iterator();
+        assertSame(secondEmployee, iterator.next().getValue());
+        assertSame(firstEmployee, iterator.next().getValue());
+        assertSame(firstEmployee, iterator.next().getValue());
+        assertSame(secondEmployee, iterator.next().getValue());
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testCustomDeserializationClass() throws Exception
+    {
+        // then bring back...
+        IdentifiableCustom result = MAPPER.readValue(EXP_CUSTOM_VIA_CLASS, IdentifiableCustom.class);
+        assertEquals(-900, result.value);
+        assertSame(result, result.next);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testCustomDeserializationProperty() throws Exception
+    {
+        // then bring back...
+        IdWrapperExt result = MAPPER.readValue(EXP_CUSTOM_VIA_PROP, IdWrapperExt.class);
+        assertEquals(99, result.node.value);
+        assertSame(result.node, result.node.next.node);
+        assertEquals(3, result.node.customId);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7785dff_0ec81c0/rev_7785dff-0ec81c0/src/test/java/com/fasterxml/jackson/databind/struct/TestObjectIdDeserialization.java;<<<<<<< MINE
+=======
+public void testCustomPoolResolver() throws Exception
+    {
+        Map<Object,WithCustomResolution> pool = new HashMap<Object,WithCustomResolution>();
+        pool.put(1, new WithCustomResolution(1, 1));
+        pool.put(2, new WithCustomResolution(2, 2));
+        pool.put(3, new WithCustomResolution(3, 3));
+        pool.put(4, new WithCustomResolution(4, 4));
+        pool.put(5, new WithCustomResolution(5, 5));
+        ContextAttributes attrs = MAPPER.getDeserializationConfig().getAttributes().withSharedAttribute(POOL_KEY, pool);
+        String content = "{\"data\":[1,2,3,4,5]}";
+        CustomResolutionWrapper wrapper = MAPPER.reader(CustomResolutionWrapper.class).with(attrs).readValue(content);
+        assertFalse(wrapper.data.isEmpty());
+        for (WithCustomResolution ob : wrapper.data) {
+            assertSame(pool.get(ob.id), ob);
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_54b2a5f_7d5c50b/rev_54b2a5f-7d5c50b/src/main/java/com/fasterxml/jackson/databind/util/EnumValues.java;<<<<<<< MINE
+public List<Enum<?>> enums() {
+        return Arrays.asList(_values);
+    }
+=======
+@SuppressWarnings("unchecked")
+    public Collection<Enum<?>> enums() {
+        return (Collection<Enum<?>>) _values.keySet();
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_6172d75_726b6e0/rev_6172d75-726b6e0/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializer.java;<<<<<<< MINE
+=======
+protected Object deserializeWithErrorWrapping(SettableBeanProperty prop,
+            JsonParser p, DeserializationContext ctxt, String propName) throws IOException
+    {
+        try {
+            return prop.deserialize(p, ctxt);
+        } catch (IOException e) {
+            wrapAndThrow(e, _beanType.getRawClass(), propName, ctxt);
+            // exception below will be throw only if someone overwrite default implementation of wrapAndThrow method
+            throw e;
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f75f2bf_660ec8f/rev_f75f2bf-660ec8f/src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java;<<<<<<< MINE
+            return PropertyName.construct(jg.value());
+=======
+            name = jg.value();
+        } else {
+            JsonProperty pann = _findAnnotation(a, JsonProperty.class);
+            if (pann != null) {
+                name = pann.value();
+                /* 22-Apr-2014, tatu: Should figure out a better way to do this, but
+                 *   it's actually bit tricky to do it more efficiently (meta-annotations
+                 *   add more lookups; AnnotationMap costs etc)
+                 */
+            } else if (_hasAnnotation(a, JsonSerialize.class)
+                    || _hasAnnotation(a, JsonView.class)
+                    || _hasAnnotation(a, JsonRawValue.class)
+                    || _hasAnnotation(a, JsonUnwrapped.class)
+                    || _hasAnnotation(a, JsonBackReference.class)
+                    || _hasAnnotation(a, JsonManagedReference.class)) {
+                name = "";
+            } else {
+                return null;
+            }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_bf2b2b0_e59a1ae/rev_bf2b2b0-e59a1ae/src/test/java/com/fasterxml/jackson/databind/ser/TestJsonSerializeAs.java;<<<<<<< MINE
+@JsonSerialize(as=Fooable.class)
+        public FooImplNoAnno getFoo() {
+            return new FooImplNoAnno();
+        }
+=======
+@JsonSerialize(as=Fooable.class)
+        public Fooable getFoo() {
+            return new FooImplNoAnno();
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8caf290_ccf82e8/rev_8caf290-ccf82e8/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java;<<<<<<< MINE
+=======
+private void resolveClassAnnotations()
+    {
+        AnnotationMap ca = new AnnotationMap();
+        // [JACKSON-659] Should skip processing if annotation processing disabled
+        if (_annotationIntrospector != null) {
+            // add mix-in annotations first (overrides)
+            if (_primaryMixIn != null) {
+                _addClassMixIns(ca, _class, _primaryMixIn);
+            }
+            // first, annotations from the class itself:
+            _addAnnotationsIfNotPresent(ca, _class.getDeclaredAnnotations());
+    
+            // and then from super types
+            for (Class<?> cls : _superTypes) {
+                // and mix mix-in annotations in-between
+                _addClassMixIns(ca, cls);
+                _addAnnotationsIfNotPresent(ca, cls.getDeclaredAnnotations());
+            }
+            /* and finally... any annotations there might be for plain
+             * old Object.class: separate because for all other purposes
+             * it is just ignored (not included in super types)
+             */
+            /* 12-Jul-2009, tatu: Should this be done for interfaces too?
+             *   For now, yes, seems useful for some cases, and not harmful for any?
+             */
+            _addClassMixIns(ca, Object.class);
+        }
+        _classAnnotations = ca;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_0934fb7_493ba8d/rev_0934fb7-493ba8d/src/main/java/com/fasterxml/jackson/databind/deser/std/EnumDeserializer.java;<<<<<<< MINE
+private final Object _deserializeAltString(JsonParser p, DeserializationContext ctxt,
+            String name) throws IOException
+    {
+        name = name.trim();
+        if (name.length() == 0) {
+            if (ctxt.isEnabled(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)) {
+                return null;
+            }
+        } else {
+            // [databind#149]: Allow use of 'String' indexes as well
+            char c = name.charAt(0);
+            if (c >= '0' && c <= '9') {
+                try {
+                    int ix = Integer.parseInt(name);
+                    if (ctxt.isEnabled(DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS)) {
+                        _failOnNumber(ctxt, p, ix);
+                    }
+                    if (ix >= 0 && ix <= _enumsByIndex.length) {
+                        return _enumsByIndex[ix];
+                    }
+                } catch (NumberFormatException e) {
+                    // fine, ignore, was not an integer
+                }
+            }
+        }
+        if ((_enumDefaultValue != null)
+                && ctxt.isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)) {
+            return _enumDefaultValue;
+        }
+        if (!ctxt.isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {
+            throw ctxt.weirdStringException(name, _enumClass(),
+                    "value not one of declared Enum instance names: "+_enumLookup.keys());
+        }
+        return null;
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_e09adcb_f1f4023/rev_e09adcb-f1f4023/src/main/java/com/fasterxml/jackson/databind/ser/std/AtomicReferenceSerializer.java;<<<<<<< MINE
+=======
+@Override
+    public boolean isEmpty(SerializerProvider provider, AtomicReference<?> value)
+    {
+        if (value == null) {
+            return true;
+        }
+        Object contents = value.get();
+        if (contents == null) {
+            return true;
+        }
+        if (_contentInclusion == null) {
+            return false;
+        }
+        JsonSerializer<Object> ser = _valueSerializer;
+        if (ser == null) {
+            try {
+                ser = _findCachedSerializer(provider, contents.getClass());
+            } catch (JsonMappingException e) { // nasty but necessary
+                throw new RuntimeJsonMappingException(e);
+            }
+        }
+        return ser.isEmpty(provider, contents);
+
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_9845fb2_779411e/rev_9845fb2-779411e/src/main/java/com/fasterxml/jackson/databind/ser/std/AtomicReferenceSerializer.java;<<<<<<< MINE
+=======
+@Override
+    public void serializeWithType(AtomicReference<?> ref,
+            JsonGenerator g, SerializerProvider provider,
+            TypeSerializer typeSer) throws IOException
+    {
+        Object value = ref.get();
+        if (value == null) {
+            if (_unwrapper == null) {
+                provider.defaultSerializeNull(g);
+            }
+            return;
+        }
+
+        // 19-Apr-2016, tatu: In order to basically "skip" the whole wrapper level
+        //    (which is what non-polymorphic serialization does too), we will need
+        //    to simply delegate call, I think, and NOT try to use it here.
+        
+        // Otherwise apply type-prefix/suffix, then std serialize:
+        /*
+        typeSer.writeTypePrefixForScalar(ref, g);
+        serialize(ref, g, provider);
+        typeSer.writeTypeSuffixForScalar(ref, g);
+        */
+
+        JsonSerializer<Object> ser = _valueSerializer;
+        if (ser == null) {
+            ser = _findCachedSerializer(provider, value.getClass());
+        }
+        ser.serializeWithType(value, g, provider, typeSer);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_f68be3c_cbad874/rev_f68be3c-cbad874/src/main/java/com/fasterxml/jackson/databind/ser/std/JsonValueSerializer.java;<<<<<<< MINE
+@SuppressWarnings("unchecked")
+    public JsonValueSerializer(AnnotatedMethod valueMethod, JsonSerializer<?> ser)
+    {
+        super(valueMethod.getType());
+        _accessorMethod = valueMethod;
+        _valueSerializer = (JsonSerializer<Object>) ser;
+        _property = null;
+        _forceTypeInformation = true; // gets reconsidered when we are contextualized
+    }
+=======
+public JsonValueSerializer(AnnotatedMethod valueMethod, JsonSerializer<?> ser) {
+        this(valueMethod.getAnnotated(), ser);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c270be0_cc53828/rev_c270be0-cc53828/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver.java;<<<<<<< MINE
+=======
+@Deprecated // since 2.3
+    @Override
+    public JavaType typeFromId(String id) {
+        return _typeFromId(id, null);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c270be0_cc53828/rev_c270be0-cc53828/src/main/java/com/fasterxml/jackson/databind/jsontype/impl/ClassNameIdResolver.java;<<<<<<< MINE
+protected JavaType _typeFromId(String id, TypeFactory typeFactory)
+    {
+        /* 30-Jan-2010, tatu: Most ids are basic class names; so let's first
+         *    check if any generics info is added; and only then ask factory
+         *    to do translation when necessary
+         */
+        if (id.indexOf('<') > 0) {
+            // note: may want to try combining with specialization (esp for EnumMap)?
+            return typeFactory.constructFromCanonical(id);
+        }
+        try {
+            Class<?> cls =  typeFactory.findClass(id);
+            return typeFactory.constructSpecializedType(_baseType, cls);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Invalid type id '"+id+"' (for id type 'Id.class'): no such class found");
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid type id '"+id+"' (for id type 'Id.class'): "+e.getMessage(), e);
+        }
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_548245c_7bc0fc4/rev_548245c-7bc0fc4/src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java;<<<<<<< MINE
+@Deprecated
+    public JsonMappingException mappingException(Class<?> targetClass, JsonToken token) {
+=======
+public JsonMappingException mappingException(Class<?> targetClass, JsonToken token) {
+        String tokenDesc = (token == null) ? "<end of input>" : String.format("%s token", token);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c4ecc55_f6fbed5/rev_c4ecc55-f6fbed5/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest1288.java;<<<<<<< MINE
+@Override
+            public JavaType typeFromId (DatabindContext context, String id) throws IOException {
+                return TypeFactory.defaultInstance ().constructType (FormOfPayment.valueOf (id).getDetailsClass ());
+            }
+=======
+@Override
+            public JavaType typeFromId (DatabindContext context, String id) {
+                return context.getTypeFactory().constructType(FormOfPayment.valueOf(id).getDetailsClass ());
+            }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c4ecc55_f6fbed5/rev_c4ecc55-f6fbed5/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest1288.java;<<<<<<< MINE
+public CompanyCreditCardDetailsBuilder address (final String address) {
+                    this.address = address;
+                    return this;
+                }
+=======
+public CompanyCreditCardDetailsBuilder address (final String a) {
+                    address = a;
+                    return this;
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c4ecc55_f6fbed5/rev_c4ecc55-f6fbed5/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest1288.java;<<<<<<< MINE
+@Override
+                public CreditCardDetails build () {
+                    return new CreditCardDetails (this.cardHolderFirstName, this.cardHolderLastName, this.number, this.expiryDate, this.csc, this.address, this.zipCode, this.city,
+                            this.province, this.countryCode, "COMPANY CREDIT CARD");
+                }
+=======
+@Override
+                public CreditCardDetails build() {
+                    return new CreditCardDetails (this.cardHolderFirstName, this.cardHolderLastName, this.number, this.expiryDate, this.csc, this.address, this.zipCode, this.city,
+                            this.province, this.countryCode, "COMPANY CREDIT CARD");
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c4ecc55_f6fbed5/rev_c4ecc55-f6fbed5/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest1288.java;<<<<<<< MINE
+public CompanyCreditCardDetailsBuilder cardHolderFirstName (final String cardHolderFirstName) {
+                    this.cardHolderFirstName = cardHolderFirstName;
+                    return this;
+                }
+=======
+public CompanyCreditCardDetailsBuilder cardHolderFirstName(final String cardHolderFirstName) {
+                    this.cardHolderFirstName = cardHolderFirstName;
+                    return this;
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c4ecc55_f6fbed5/rev_c4ecc55-f6fbed5/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest1288.java;<<<<<<< MINE
+public IndividualCreditCardDetailsBuilder province (final String province) {
+                    this.province = province;
+                    return this;
+                }
+=======
+public IndividualCreditCardDetailsBuilder province (final String p) {
+                    province = p;
+                    return this;
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c4ecc55_f6fbed5/rev_c4ecc55-f6fbed5/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest1288.java;<<<<<<< MINE
+public IndividualCreditCardDetailsBuilder zipCode (final String zipCode) {
+                    this.zipCode = zipCode;
+                    return this;
+                }
+=======
+public IndividualCreditCardDetailsBuilder zipCode (final String z) {
+                    zipCode = z;
+                    return this;
+                }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c4ecc55_f6fbed5/rev_c4ecc55-f6fbed5/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest1288.java;<<<<<<< MINE
+public static Builder create () {
+                return new Builder ();
+            }
+=======
+public static Builder create() {
+                return new Builder();
+            }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c4ecc55_f6fbed5/rev_c4ecc55-f6fbed5/src/test/java/com/fasterxml/jackson/databind/jsontype/ext/ExternalTypeIdTest1288.java;<<<<<<< MINE
+@Override
+            public JavaType typeFromId (DatabindContext context, String id) throws IOException {
+                return TypeFactory.defaultInstance ().constructType (FormOfPayment.valueOf (id).getDetailsClass ());
+            }
+=======
+@Override
+            public JavaType typeFromId (DatabindContext context, String id) {
+                return context.getTypeFactory().constructType(FormOfPayment.valueOf (id).getDetailsClass ());
+            }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_e2184aa_4e94c0e/rev_e2184aa-4e94c0e/src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerBase.java;<<<<<<< MINE
+=======
+protected BeanDeserializerBase(BeanDeserializerBuilder builder,
+            BeanDescription beanDesc,
+            BeanPropertyMap properties, Map<String, SettableBeanProperty> backRefs,
+            HashSet<String> ignorableProps, boolean ignoreAllUnknown,
+            boolean hasViews)
+    {
+        super(beanDesc.getType());
+
+        AnnotatedClass ac = beanDesc.getClassInfo();
+        _classAnnotations = ac.getAnnotations();       
+        _beanType = beanDesc.getType();
+        _valueInstantiator = builder.getValueInstantiator();
+        
+        _beanProperties = properties;
+        _backRefs = backRefs;
+        _ignorableProps = ignorableProps;
+        _ignoreAllUnknown = ignoreAllUnknown;
+
+        _anySetter = builder.getAnySetter();
+        List<ValueInjector> injectables = builder.getInjectables();
+        _injectables = (injectables == null || injectables.isEmpty()) ? null
+                : injectables.toArray(new ValueInjector[injectables.size()]);
+        _objectIdReader = builder.getObjectIdReader();
+        _nonStandardCreation = (_unwrappedPropertyHandler != null)
+            || _valueInstantiator.canCreateUsingDelegate()
+            || _valueInstantiator.canCreateUsingArrayDelegate() // new in 2.7
+            || _valueInstantiator.canCreateFromObjectWith()
+            || !_valueInstantiator.canCreateUsingDefault()
+            ;
+
+        // Any transformation we may need to apply?
+        JsonFormat.Value format = beanDesc.findExpectedFormat(null);
+        _serializationShape = (format == null) ? null : format.getShape();
+
+        _needViewProcesing = hasViews;
+        _vanillaProcessing = !_nonStandardCreation
+                && (_injectables == null)
+                && !_needViewProcesing
+                // also, may need to reorder stuff if we expect Object Id:
+                && (_objectIdReader == null)
+                ;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fdd9596_ab4f17f/rev_fdd9596-ab4f17f/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandling.java;<<<<<<< MINE
+public void testExceptionWithEmpty() throws Exception
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Object result = mapper.readValue("    ", Object.class);
+            fail("Expected an exception, but got result value: "+result);
+        } catch (Exception e) {
+            verifyException(e, InputMismatchException.class, "No content");
+        }
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fdd9596_ab4f17f/rev_fdd9596-ab4f17f/src/test/java/com/fasterxml/jackson/databind/deser/TestExceptionHandling.java;<<<<<<< MINE
+public void testExceptionWithEOF() throws Exception
+    {
+        StringReader r = new StringReader("  3");
+        JsonFactory f = new JsonFactory();
+        JsonParser jp = f.createParser(r);
+        ObjectMapper mapper = new ObjectMapper();
+
+        Integer I = mapper.readValue(jp, Integer.class);
+        assertEquals(3, I.intValue());
+
+        // and then end-of-input...
+        try {
+            I = mapper.readValue(jp, Integer.class);
+            fail("Should have gotten an exception");
+        } catch (IOException e) {
+            verifyException(e, InputMismatchException.class, "No content");
+        }
+        // also: should have no current token after end-of-input
+        JsonToken t = jp.getCurrentToken();
+        if (t != null) {
+            fail("Expected current token to be null after end-of-stream, was: "+t);
+        }
+        jp.close();
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_847fd82_ea30c7b/rev_847fd82-ea30c7b/src/test/java/com/fasterxml/jackson/databind/filter/JsonIncludeTest.java;<<<<<<< MINE
+@com.fasterxml.jackson.annotation.JsonCreator
+        public Issue1351NonBeanParent(@com.fasterxml.jackson.annotation.JsonProperty(NUM_VAR) int num) {
+            this.num = num;
+        }
+=======
+protected Issue1351NonBeanParent(int num) {
+            this.num = num;
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_847fd82_ea30c7b/rev_847fd82-ea30c7b/src/test/java/com/fasterxml/jackson/databind/filter/JsonIncludeTest.java;<<<<<<< MINE
+@com.fasterxml.jackson.annotation.JsonProperty(NUM_VAR)
+        public int getNum() {
+            return num;
+        }
+=======
+@JsonProperty("num")
+        public int getNum() {
+            return num;
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_847fd82_ea30c7b/rev_847fd82-ea30c7b/src/test/java/com/fasterxml/jackson/databind/filter/JsonIncludeTest.java;<<<<<<< MINE
+@com.fasterxml.jackson.annotation.JsonCreator
+        public Issue1351NonBean(@com.fasterxml.jackson.annotation.JsonProperty(NUM_VAR) int num) {
+            super(num);
+        }
+=======
+@JsonCreator
+        public Issue1351NonBean(@JsonProperty("num") int num) {
+            super(num);
+        }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7eaf599_407f10e/rev_7eaf599-407f10e/src/main/java/com/fasterxml/jackson/databind/deser/std/ReferenceTypeDeserializer.java;<<<<<<< MINE
+@SuppressWarnings("unchecked")
+    public ReferenceTypeDeserializer(JavaType fullType, ValueInstantiator vi,
+            TypeDeserializer typeDeser, JsonDeserializer<?> deser)
+    {
+        super(fullType);
+        _valueInstantiator = vi;
+        _fullType = fullType;
+        _valueDeserializer = (JsonDeserializer<Object>) deser;
+        _valueTypeDeserializer = typeDeser;
+    }
+=======
+public ReferenceTypeDeserializer(JavaType fullType, ValueInstantiator inst,
+            TypeDeserializer typeDeser, JsonDeserializer<?> deser) {
+        this(fullType, typeDeser, deser);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_a0bd159_c3e0113/rev_a0bd159-c3e0113/src/test/java/com/fasterxml/jackson/databind/deser/TestUntypedDeserialization.java;<<<<<<< MINE
+=======
+public void testNestedUntyped989() throws IOException
+    {
+        DelegatingUntyped pojo;
+        ObjectReader r = MAPPER.readerFor(DelegatingUntyped.class);
+
+        pojo = r.readValue("[]");
+        assertTrue(pojo.value instanceof List);
+        pojo = r.readValue("[{}]");
+        assertTrue(pojo.value instanceof List);
+        
+        pojo = r.readValue("{}");
+        assertTrue(pojo.value instanceof Map);
+        pojo = r.readValue("{\"a\":[]}");
+        assertTrue(pojo.value instanceof Map);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_75b7049_d44600d/rev_75b7049-d44600d/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java;<<<<<<< MINE
+protected void verifyNonDup(AnnotatedWithParams newOne, int typeIndex,
+            boolean explicit) {
+=======
+protected boolean verifyNonDup(AnnotatedWithParams newOne, int typeIndex, boolean explicit)
+    {
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_c59ad69_64967c4/rev_c59ad69-64967c4/src/main/java/com/fasterxml/jackson/databind/ser/std/MapSerializer.java;<<<<<<< MINE
+=======
+protected Map<?,?> _orderEntries(Map<?,?> input, JsonGenerator gen,
+            SerializerProvider provider, Object suppressableValue) throws IOException
+    {
+        // minor optimization: may already be sorted?
+        if (input instanceof SortedMap<?,?>) {
+            return input;
+        }
+        // [databind#1411]: TreeMap does not like null key... (although note that
+        //   check above should prevent this code from being called in that case)
+        // [databind#153]: but, apparently, some custom Maps do manage hit this
+        //   problem.
+        if (_hasNullKey(input)) {
+            TreeMap<Object,Object> result = new TreeMap<Object,Object>();
+            for (Map.Entry<?,?> entry : input.entrySet()) {
+                Object key = entry.getKey();
+                if (key == null) {
+                    _writeNullKeyedEntry(gen, provider, suppressableValue, entry.getValue());
+                    continue;
+                } 
+                result.put(key, entry.getValue());
+            }
+            return result;
+        }
+        return new TreeMap<Object,Object>(input);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_71430dd_0ee6a6d/rev_71430dd-0ee6a6d/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder.java;<<<<<<< MINE
+        return _metadata;
+=======
+        return PropertyMetadata.construct(b, desc, idx, def);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef/src/main/java/com/fasterxml/jackson/databind/deser/impl/ManagedReferenceProperty.java;<<<<<<< MINE
+=======
+@Override
+    public ManagedReferenceProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new ManagedReferenceProperty(this, deser);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef/src/main/java/com/fasterxml/jackson/databind/deser/impl/InnerClassProperty.java;<<<<<<< MINE
+=======
+@Override
+    public InnerClassProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new InnerClassProperty(this, deser);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef/src/main/java/com/fasterxml/jackson/databind/deser/impl/ObjectIdValueProperty.java;<<<<<<< MINE
+    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new ObjectIdValueProperty(this, deser, _nullProvider);
+=======
+    public ObjectIdValueProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new ObjectIdValueProperty(this, deser);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef/src/main/java/com/fasterxml/jackson/databind/deser/impl/MethodProperty.java;<<<<<<< MINE
+    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new MethodProperty(this, deser, _nullProvider);
+=======
+    public MethodProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new MethodProperty(this, deser);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef/src/main/java/com/fasterxml/jackson/databind/deser/impl/FieldProperty.java;<<<<<<< MINE
+    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new FieldProperty(this, deser, _nullProvider);
+=======
+    public FieldProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new FieldProperty(this, deser);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fc74771_8de9cef/rev_fc74771-8de9cef/src/main/java/com/fasterxml/jackson/databind/deser/impl/SetterlessProperty.java;<<<<<<< MINE
+    public SettableBeanProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        return new SetterlessProperty(this, deser, _nullProvider);
+=======
+    public SetterlessProperty withValueDeserializer(JsonDeserializer<?> deser) {
+        if (_valueDeserializer == deser) {
+            return this;
+        }
+        return new SetterlessProperty(this, deser);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_2db5afe_934f485/rev_2db5afe-934f485/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializer.java;<<<<<<< MINE
+        // 19-Oct-2016, tatu: Simplified to bare essentials since this is deprecated
+        g.writeFieldName(value.toString());
+=======
+        String str;
+        Class<?> cls = value.getClass();
+
+        if (cls == String.class) {
+            str = (String) value;
+        } else if (cls.isEnum()) {
+            // 24-Sep-2015, tatu: Minor improvement over older (2.6.2 and before) code: at least
+            //     use name/toString() variation for as per configuration
+            if (provider.isEnabled(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)) {
+                str = value.toString();
+            } else {
+                Enum<?> en = (Enum<?>) value;
+                if (provider.isEnabled(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)) {
+                    str = String.valueOf(en.ordinal());
+                } else {
+                    str = en.name();
+                }
+            }
+        } else if (value instanceof Date) {
+            provider.defaultSerializeDateKey((Date) value, g);
+            return;
+        } else if (cls == Class.class) {
+            str = ((Class<?>) value).getName();
+        } else {
+            str = value.toString();
+        }
+        g.writeFieldName(str);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_fea0d29_9919f9d/rev_fea0d29-9919f9d/src/main/java/com/fasterxml/jackson/databind/deser/BuilderBasedDeserializer.java;<<<<<<< MINE
+            DeserializationContext ctxt, Object builder) throws IOException
+    {        
+=======
+            DeserializationContext ctxt, Object builder)
+        throws IOException, JsonProcessingException
+    {
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_93a0b9b_32001a6/rev_93a0b9b-32001a6/src/main/java/com/fasterxml/jackson/databind/introspect/AnnotatedClass.java;<<<<<<< MINE
+private void resolveMemberMethods() {
+        _memberMethods = _resolveMemberMethods();
+=======
+private void resolveMemberMethods()
+    {
+        _memberMethods = _resolveMemberMethods();
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_24b5821_9a083ad/rev_24b5821-9a083ad/src/test/java/com/fasterxml/jackson/databind/filter/ProblemHandlerTest.java;<<<<<<< MINE
+=======
+public void testWeirdStringHandling() throws Exception
+    {
+        ObjectMapper mapper = new ObjectMapper()
+            .addHandler(new WeirdStringHandler(SingleValuedEnum.A))
+            ;
+        SingleValuedEnum result = mapper.readValue("\"B\"", SingleValuedEnum.class);
+        assertEquals(SingleValuedEnum.A, result);
+
+        // also, write [databind#1629] try this
+        mapper = new ObjectMapper()
+                .addHandler(new WeirdStringHandler(null));
+        UUID result2 = mapper.readValue(quote("not a uuid!"), UUID.class);
+        assertNull(result2);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_e353aa0_fe80e86/rev_e353aa0-fe80e86/src/test/java/com/fasterxml/jackson/databind/filter/TestAnyGetterFiltering.java;<<<<<<< MINE
+=======
+public void testAnyGetterFiltering() throws Exception
+    {
+        FilterProvider prov = new SimpleFilterProvider().addFilter("anyFilter",
+                SimpleBeanPropertyFilter.filterOutAllExcept("b"));
+        assertEquals("{\"b\":\"2\"}", MAPPER.writer(prov).writeValueAsString(new AnyBean()));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_e353aa0_fe80e86/rev_e353aa0-fe80e86/src/test/java/com/fasterxml/jackson/databind/filter/TestAnyGetterFiltering.java;<<<<<<< MINE
+=======
+public void testAnyGetterIgnore() throws Exception
+    {
+        assertEquals(aposToQuotes("{'a':'1','b':'3'}"),
+                MAPPER.writeValueAsString(new AnyBeanWithIgnores()));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+@Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        // Create an ObjectMapper with its timezone set to something other than the default (UTC).
+        // This way we can verify that serialization and deserialization actually consider the time
+        // zone set on the mapper.
+        ObjectMapper m = new ObjectMapper();
+        m.setTimeZone(TimeZone.getTimeZone(LOCAL_TZ));
+        MAPPER = m;
+        
+        FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtilISO8601_Timezone() throws Exception
+    {
+        // Complete offset, with ':' between hours and minutes
+        verify( MAPPER, "2000-01-02T03:04:05.678+01:00", judate(2000, 1, 2,   3, 4, 5, 678, "GMT+1"));
+        // Complete offset, without ':' between hours and minutes
+        verify( MAPPER, "2000-01-02T03:04:05.678+0100",  judate(2000, 1, 2,   3, 4, 5, 678, "GMT+1"));
+        // Hour offset (no minutes)
+        verify( MAPPER, "2000-01-02T03:04:05.678+01",    judate(2000, 1, 2,   3, 4, 5, 678, "GMT+1"));
+
+        // 'zulu' offset
+        verify( MAPPER, "2000-01-02T03:04:05.678Z",      judate(2000, 1, 2,   3, 4, 5, 678, "UTC"));
+
+        // ---------------------------------------------------------------------------------------------
+        // WARNING:
+        //   According to ISO8601, hours and minutes of the offset must be expressed with 2 digits 
+        //   (not more, not less), i.e. Z or +hh:mm or -hh:mm. See https://www.w3.org/TR/NOTE-datetime. 
+        //
+        //   The forms below should be refused but some are accepted by the StdDateFormat. They are 
+        //   included in the test to detect any change in behavior in futur releases...
+        // ---------------------------------------------------------------------------------------------
+
+        // Interpreted as if there was no timezone, therefore producing a date with the TZ set on the mapper
+        // FIXME it is probably better to refuse these cases instead of silently creating dates in local tz...
+        verify( MAPPER, "2000-01-02T03:04:05.678+",        judate(2000, 1, 2,   3, 4, 5, 678, LOCAL_TZ));
+        verify( MAPPER, "2000-01-02T03:04:05.678+1",       judate(2000, 1, 2,   3, 4, 5, 678, LOCAL_TZ));
+            // FIXME this should probably give GMT+1
+        verify( MAPPER, "2000-01-02T03:04:05.678+001",     judate(2000, 1, 2,   3, 4, 5, 678, LOCAL_TZ));
+        verify( MAPPER, "2000-01-02T03:04:05.678+00:",     judate(2000, 1, 2,   3, 4, 5, 678, LOCAL_TZ));
+        verify( MAPPER, "2000-01-02T03:04:05.678+00:001",  judate(2000, 1, 2,   3, 4, 5, 678, LOCAL_TZ));
+        verify( MAPPER, "2000-01-02T03:04:05.678+001:001", judate(2000, 1, 2,   3, 4, 5, 678, LOCAL_TZ));
+
+        // Considering the above forms have been accepted, it is strange the following are refused...
+        failure( MAPPER, "2000-01-02T03:04:05.678+1:");      // FIXME
+        failure( MAPPER, "2000-01-02T03:04:05.678+00:1");    // FIXME
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtilISO8601_DateTimeMillis() throws Exception 
+    {    
+        // WITH timezone (from 4 to 0 digits)
+        failure(MAPPER, "2000-01-02T03:04:05.6789+01:00");
+        verify( MAPPER, "2000-01-02T03:04:05.678+01:00", judate(2000, 1, 2,   3, 4, 5, 678, "GMT+1"));
+        verify( MAPPER, "2000-01-02T03:04:05.67+01:00",  judate(2000, 1, 2,   3, 4, 5, 670, "GMT+1"));
+        verify( MAPPER, "2000-01-02T03:04:05.6+01:00",   judate(2000, 1, 2,   3, 4, 5, 600, "GMT+1"));
+        verify( MAPPER, "2000-01-02T03:04:05+01:00",     judate(2000, 1, 2,   3, 4, 5, 000, "GMT+1"));
+
+        
+        // WITH timezone Z (from 4 to 0 digits)
+        verify( MAPPER, "2000-01-02T03:04:05.6789Z", judate(2000, 1, 2,   3, 4, 11, 789, "UTC"));
+            // FIXME the .6789 millis are interpreted as 6789 millisecondes or 6.789 seconds!
+        verify( MAPPER, "2000-01-02T03:04:05.678Z", judate(2000, 1, 2,   3, 4, 5, 678, "UTC"));
+        verify( MAPPER, "2000-01-02T03:04:05.67Z",  judate(2000, 1, 2,   3, 4, 5,  67, "UTC"));
+           // FIXME should be 670 millis instead of 67
+        verify( MAPPER, "2000-01-02T03:04:05.6Z",   judate(2000, 1, 2,   3, 4, 5,   6, "UTC"));
+           // FIXME should be 600 millis instead of 6
+        verify( MAPPER, "2000-01-02T03:04:05Z",     judate(2000, 1, 2,   3, 4, 5,   0, "UTC"));
+        
+
+        // WITHOUT timezone (from 4 to 0 digits)
+        verify(MAPPER, "2000-01-02T03:04:05.6789",       judate(2000, 1, 2,   3, 4, 11, 789, LOCAL_TZ));
+            // FIXME: the .6789 millis are interpreted as 6789 millisecondes or 6.789 seconds!
+        
+        verify( MAPPER, "2000-01-02T03:04:05.678",       judate(2000, 1, 2,   3, 4,  5, 678, LOCAL_TZ));
+        verify( MAPPER, "2000-01-02T03:04:05.67",        judate(2000, 1, 2,   3, 5, 12, 000, LOCAL_TZ));
+            // FIXME: the .67 millis are interpreted as 67 seconds.
+        
+        verify( MAPPER, "2000-01-02T03:04:05.6",         judate(2000, 1, 2,   3, 4,  5, 600, LOCAL_TZ));
+        verify( MAPPER, "2000-01-02T03:04:05",           judate(2000, 1, 2,   3, 4,  5, 000, LOCAL_TZ));
+        
+        
+        // ---------------------------------------------------------------------------------------------
+        // WARNING:
+        //   RFC339 includes an Internet profile of the ISO 8601 standard for representation of dates 
+        //   and times using the Gregorian calendar (https://tools.ietf.org/html/rfc3339).
+        //
+        //   The RFC defines a partial time with the following BNF notation (chapter 5.6):
+        //      time-hour       = 2DIGIT  ; 00-23
+        //      time-minute     = 2DIGIT  ; 00-59
+        //      time-second     = 2DIGIT  ; 00-58, 00-59, 00-60 based on leap second rules
+        //      time-secfrac    = "." 1*DIGIT
+        //      partial-time    = time-hour ":" time-minute ":" time-second [time-secfrac]
+        //
+        //   The second fraction (ie the millis) is optional and can be ommitted. However, a fraction
+        //   with only a dot (.) and no digit is not allowed.
+        //
+        //   The forms below should be refused but some are accepted by the StdDateFormat. They are 
+           //   included in the test to detect any change in behavior in futur releases...
+        // ---------------------------------------------------------------------------------------------
+        
+        // millis part with only a dot (.) and no digits
+        verify( MAPPER, "2000-01-02T03:04:05.+01:00",    judate(2000, 1, 2,   3, 4, 5, 000, "GMT+1"));
+        verify( MAPPER, "2000-01-02T03:04:05.",          judate(2000, 1, 2,   3, 4, 5, 000, LOCAL_TZ));
+        failure(MAPPER, "2000-01-02T03:04:05.Z");	     // FIXME this one fails, but not the others...
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtilISO8601_DateTime() throws Exception 
+    {
+        // Full representation with a timezone
+        verify(MAPPER, "2000-01-02T03:04:05+01:00",  judate(2000, 1, 2,   3, 4, 5, 0, "GMT+1"));
+
+        // No timezone --> the one configured on the ObjectMapper must be used
+        verify(MAPPER, "2000-01-02T03:04:05",        judate(2000, 1, 2,   3, 4, 5, 0, LOCAL_TZ));
+
+        // Hours, minutes and seconds are mandatory when time is specified
+        failure(MAPPER, "2000-01-02T");
+        failure(MAPPER, "2000-01-02T03");
+        failure(MAPPER, "2000-01-02T03:");
+        failure(MAPPER, "2000-01-02T03:04");
+        failure(MAPPER, "2000-01-02T03:04:");
+
+        // Although hours, minutes and seconds are mandatory, they can sometimes be omitted 
+        // if a TZ is specified... !!??
+        failure(MAPPER, "2000-01-02T+01:00");
+        failure(MAPPER, "2000-01-02T03+01:00");
+        failure(MAPPER, "2000-01-02T03:+01:00");
+        verify( MAPPER, "2000-01-02T03:04+01:00",   judate(2000, 1, 2,   3, 4, 0, 0, "GMT+1"));    // FIXME should be refused
+        failure(MAPPER, "2000-01-02T03:04:+01:00");
+        
+        failure(MAPPER, "2000-01-02TZ");
+        failure(MAPPER, "2000-01-02T03Z");
+        failure(MAPPER, "2000-01-02T03:Z");
+        failure(MAPPER, "2000-01-02T03:04Z");
+        failure(MAPPER, "2000-01-02T03:04:Z");
+
+        
+        // ---------------------------------------------------------------------------------------------
+        // WARNING:
+        //   ISO8601 (https://en.wikipedia.org/wiki/ISO_8601#Times) and its RFC339 profile 
+        //   (https://tools.ietf.org/html/rfc3339, chapter 5.6) seem to require 2 DIGITS for 
+        //   the hours, minutes and seconds.
+        //
+        //   The following forms should therefore be refused but are accepted by Jackson (and 
+        //   java.text.SimpleDateFormat). They are verified here to detect any changes in future
+        //   releases.
+        //
+        // ---------------------------------------------------------------------------------------------
+        
+        // FIXME As highlighted in the tests below, the behaviour is not consistent and largely 
+        // depends on wether a timezone and or millis are specified or not.
+        // The tests assert the behavior with different number of digits for hour, min and sec.
+        // Behavior should be the SAME whatever the timezone and/or the millis.
+        
+        // seconds (no TZ)
+        verify( MAPPER, "2000-01-02T03:04:5",           judate(2000, 1, 2,   3, 4, 5, 0, LOCAL_TZ));
+        verify( MAPPER, "2000-01-02T03:04:5.000",       judate(2000, 1, 2,   3, 4, 5, 0, LOCAL_TZ));
+        failure(MAPPER, "2000-01-02T03:04:005");
+        
+        // seconds (+01:00)
+        failure(MAPPER, "2000-01-02T03:04:5+01:00");
+        failure(MAPPER, "2000-01-02T03:04:5.000+01:00");
+        failure(MAPPER, "2000-01-02T03:04:005+01:00");
+        
+        // seconds (Z)
+        failure(MAPPER, "2000-01-02T03:04:5Z");
+        verify( MAPPER, "2000-01-02T03:04:5.000Z",      judate(2000, 1, 2,   3, 4, 5, 0, "UTC"));
+        failure(MAPPER, "2000-01-02T03:04:005Z");
+        
+
+        // minutes (no TZ)
+        verify( MAPPER, "2000-01-02T03:4:05",           judate(2000, 1, 2,   3, 4, 5, 0, LOCAL_TZ));
+        verify( MAPPER, "2000-01-02T03:4:05.000",       judate(2000, 1, 2,   3, 4, 5, 0, LOCAL_TZ));
+        failure(MAPPER, "2000-01-02T03:004:05");
+        
+        // minutes (+01:00)
+        failure(MAPPER, "2000-01-02T03:4:05+01:00");
+        failure(MAPPER, "2000-01-02T03:4:05.000+01:00");
+        failure(MAPPER, "2000-01-02T03:004:05+01:00");
+        
+        // minutes (Z)
+        verify( MAPPER, "2000-01-02T03:4:05Z",          judate(2000, 1, 2,   3, 4, 5, 0, "UTC"));
+        verify( MAPPER, "2000-01-02T03:4:05.000Z",      judate(2000, 1, 2,   3, 4, 5, 0, "UTC"));
+        verify( MAPPER, "2000-01-02T03:004:05Z",        judate(2000, 1, 2,   3, 4, 5, 0, "UTC"));
+
+
+        // hour (no TZ)
+        verify( MAPPER, "2000-01-02T3:04:05",           judate(2000, 1, 2,   3, 4, 5, 0, LOCAL_TZ));
+        verify( MAPPER, "2000-01-02T3:04:05.000",       judate(2000, 1, 2,   3, 4, 5, 0, LOCAL_TZ));
+        failure(MAPPER, "2000-01-02T003:04:05");
+
+        // hour (+01:00)
+        failure(MAPPER, "2000-01-02T3:04:05+01:00");
+        failure(MAPPER, "2000-01-02T3:04:05.000+01:00");
+        failure(MAPPER, "2000-01-02T003:04:05+01:00");
+
+        // hour (Z)
+        verify( MAPPER, "2000-01-02T3:04:05Z",         judate(2000, 1, 2,   3, 4, 5, 0, "UTC"));
+        verify( MAPPER, "2000-01-02T3:04:05.000Z",     judate(2000, 1, 2,   3, 4, 5, 0, "UTC"));
+        verify( MAPPER, "2000-01-02T003:04:05Z",       judate(2000, 1, 2,   3, 4, 5, 0, "UTC"));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtilISO8601_Date() throws Exception
+    {
+        // Date is constructed with the timezone of the ObjectMapper. Time part is set to zero.
+        verify(MAPPER, "2000-01-02", judate(2000, 1, 2,   0, 0, 0, 0, LOCAL_TZ));
+        
+        
+        // ---------------------------------------------------------------------------------------------
+        // WARNING:
+        //   ISO8601 (https://en.wikipedia.org/wiki/ISO_8601#Times) and its RFC339 profile 
+        //   (https://tools.ietf.org/html/rfc3339, chapter 5.6) seem to require 2 DIGITS for 
+        //   the month and dayofweek but 4 DIGITS for the year.
+        //
+        //   The following forms should therefore be refused but are accepted by Jackson (and 
+        //   java.text.SimpleDateFormat). They are verified here to detect any changes in future
+        //   releases.
+        // ---------------------------------------------------------------------------------------------
+
+        // day
+        verify(  MAPPER, "2000-01-2",      judate(2000, 1, 2,   0, 0, 0, 0, LOCAL_TZ));
+        failure( MAPPER, "2000-01-002");
+        
+        // month
+        verify(  MAPPER, "2000-1-02",      judate(2000, 1, 2,   0, 0, 0, 0, LOCAL_TZ));
+        failure( MAPPER, "2000-001-02");
+        
+        // year
+        failure( MAPPER, "20000-01-02");
+        failure( MAPPER, "200-01-02"  );
+        failure( MAPPER, "20-01-02"   );
+        verify(  MAPPER, "2-01-02",        judate(2, 1, 2,   0, 0, 0, 0, LOCAL_TZ));    // FIXME Why accept 1 digit and refuse they other cases??
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtil_Numeric() throws Exception
+    {
+        {
+            long now = 123456789L;
+            verify( MAPPER,                now, new java.util.Date(now) ); // as a long
+            verify( MAPPER, Long.toString(now), new java.util.Date(now) ); // as a string
+        }
+        {
+            /* As of 1.5.0, should be ok to pass as JSON String, as long
+             * as it is plain timestamp (all numbers, 64-bit)
+             */
+            long now = 1321992375446L;
+            verify( MAPPER,                now, new java.util.Date(now) );    // as a long
+            verify( MAPPER, Long.toString(now), new java.util.Date(now) );  // as a string
+        }
+        {
+            // #267: should handle negative timestamps too; like 12 hours before 1.1.1970
+            long now = - (24 * 3600 * 1000L);
+            verify( MAPPER,                now, new java.util.Date(now) );    // as a long
+            verify( MAPPER, Long.toString(now), new java.util.Date(now) );  // as a string
+        }
+
+        // value larger than a long (Long.MAX_VALUE+1)
+        BigInteger tooLarge = BigInteger.valueOf(Long.MAX_VALUE).add( BigInteger.valueOf(1) );
+        failure(MAPPER, tooLarge, JsonParseException.class);    // FIXME: InvalidFormatException is thrown everywhere else...
+        failure(MAPPER, tooLarge.toString());
+
+        // decimal value
+        failure(MAPPER, 0.0, JsonMappingException.class);        // FIXME: InvalidFormatException is thrown everywhere else...
+        failure(MAPPER, "0.0");
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtil_Annotation() throws Exception
+    {
+        // Build the input JSON and expected value
+        String json = aposToQuotes("{'date':'/2005/05/25/'}");
+        java.util.Date expected = judate(2005, 05, 25, 0, 0, 0, 0, LOCAL_TZ);
+        
+        
+        // Read it to make sure the format specified by the annotation is taken into account
+        {
+            DateAsStringBean result = MAPPER.readValue(json, DateAsStringBean.class);
+            assertNotNull(result);
+            assertEquals( expected, result.date );
+        }
+        {
+            DateAsStringBean result = MAPPER.readerFor(DateAsStringBean.class)
+                    .with(Locale.GERMANY)
+                    .readValue(json);
+            assertNotNull(result);
+            assertEquals( expected, result.date );
+        }
+        
+        // or, via annotations
+        {
+            DateAsStringBeanGermany result = MAPPER.readerFor(DateAsStringBeanGermany.class)
+                                                   .readValue(json);
+            assertNotNull(result);
+            assertEquals( expected, result.date );
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtil_Annotation_PatternAndLocale() throws Exception
+    {
+        // Change the default locale set on the ObjectMapper to something else than the default.
+        // This way we know if the default is correctly taken into account
+        ObjectMapper mapper = MAPPER.copy();
+        mapper.setLocale( Locale.ITALY );
+
+        // Build the JSON string. This is a mixed of ITALIAN and FRENCH (no ENGLISH because this 
+        // would be the default).
+        String json = aposToQuotes("{ 'pattern': '*1 giu 2000 01:02:03*', 'pattern_FR': '*01 juin 2000 01:02:03*', 'pattern_GMT4': '*1 giu 2000 01:02:03*', 'pattern_FR_GMT4': '*1 juin 2000 01:02:03*'}");
+        Annot_Pattern result = mapper.readValue(json, Annot_Pattern.class);
+
+        assertNotNull(result);
+        assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, LOCAL_TZ), result.pattern        );
+        assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, LOCAL_TZ), result.pattern_FR     );
+        assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, "GMT+4"),  result.pattern_GMT4    );
+        assertEquals( judate(2000, 6, 1, 1, 2, 3, 0, "GMT+4"),  result.pattern_FR_GMT4 );
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtil_Annotation_TimeZone() throws Exception
+    {
+        // WITHOUT timezone
+        {
+            String json = aposToQuotes("{ 'date': '2000-01-02T03:04:05.678' }");
+            Annot_TimeZone result = MAPPER.readValue(json, Annot_TimeZone.class);
+            
+            assertNotNull(result);
+            assertEquals( judate(2000, 1, 2, 3, 4, 5, 678, "GMT+4"), result.date);
+        }
+        
+        // WITH timezone
+        //   --> the annotation acts as the "default" timezone. The timezone specified
+        //       in the JSON should be considered first.
+        {
+            String json = aposToQuotes("{ 'date': '2000-01-02T03:04:05.678+01:00' }");
+            Annot_TimeZone result = MAPPER.readValue(json, Annot_TimeZone.class);
+            
+            assertNotNull(result);
+            assertEquals( judate(2000, 1, 2, 3, 4, 5, 678, "GMT+1"), result.date);
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtil_customDateFormat_withoutTZ() throws Exception
+    {
+        // FIXME
+        //
+        // The general rule with the StdDateFormat is:
+        //     the TimeZone of the ObjectMapper is used if the JSON doesn't hold
+        //     any timezone/offset information.
+        //
+        // This rule remains valid with the @JsonFormat annotation unless it forces
+        // an explicit timezeone, in which case the latter takes precedence.
+        //
+        // One would expect the same behavior when the StdDateFormat is replaced by a 
+        // custom DateFormat on the ObjectMapper. In other words, the timezone of the 
+        // DateFormat is of no importance: the ObjectMapper's default should be used
+        // whenever it is needed.
+        
+        
+        // Test first with a non default TZ on the ObjectMapper
+        // --> OK: the mapper's default TZ is used to parse the date.
+        {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'X'HH:mm:ss");
+            df.setTimeZone( TimeZone.getTimeZone("GMT+4") );    // TZ different from mapper's default
+            
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setTimeZone( TimeZone.getTimeZone(LOCAL_TZ) );
+            mapper.setDateFormat(df);
+            
+            // The mapper's default TZ is used...
+            verify(mapper, "2000-01-02X04:00:00", judate(2000, 1, 2, 4, 00, 00, 00, LOCAL_TZ));
+        }
+        
+        // Test a second time with the default TZ on the ObjectMapper
+        // Note it is important NOT TO CALL mapper.setTimeZone(...) in this test..
+        // --> KO: the custom format's TZ is used instead of the mapper's default as above.
+        //
+        {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'X'HH:mm:ss");
+            df.setTimeZone( TimeZone.getTimeZone("GMT+4") );    // TZ different from mapper's default
+            
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setDateFormat(df);
+            
+            // FIXME mapper's default TZ should have been used
+            verify(mapper, "2000-01-02X04:00:00", judate(2000, 1, 2, 4, 00, 00, 00, "GMT+4"));
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+public void testDateUtil_customDateFormat_withTZ() throws Exception
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'X'HH:mm:ssZ");
+        df.setTimeZone(TimeZone.getTimeZone("GMT+4"));    // use a timezone different than the ObjectMapper and the system default
+        mapper.setDateFormat(df);
+
+        verify(mapper, "2000-01-02X03:04:05+0300", judate(2000, 1, 2, 3, 4, 5, 00, "GMT+3"));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+private static Date judate(int year, int month, int day, int hour, int minutes, int seconds, int millis, String tz) 
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setLenient(false);
+        cal.set(year, month-1, day, hour, minutes, seconds);
+        cal.set(Calendar.MILLISECOND, millis);
+        cal.setTimeZone(TimeZone.getTimeZone(tz));
+        
+        return cal.getTime();
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+private static void verify(ObjectMapper mapper, Object input, Date expected) throws Exception {
+        // Deserialize using the supplied ObjectMapper
+        Date actual = read(mapper, input, java.util.Date.class);
+
+        // Test against the expected
+        if( expected==null && actual==null) {
+            return;
+        }
+        if( expected==null && actual != null) {
+            fail("Failed to deserialize "+input+", actual: '"+FORMAT.format(actual)+"', expected: <null>'");
+        }
+        if( expected != null && actual == null ) {
+            fail("Failed to deserialize "+input+", actual: <null>, expected: '"+FORMAT.format(expected)+"'");
+        }
+        if( actual.getTime() != expected.getTime() ) {
+            fail("Failed to deserialize "+input+", actual: '"+FORMAT.format(actual)+"', expected: '"+FORMAT.format(expected)+"'");
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+private static void failure(ObjectMapper mapper, Object input) throws Exception {
+        failure(mapper, input, InvalidFormatException.class);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+private static void failure(ObjectMapper mapper, Object input, Class<? extends Exception> exceptionType) throws Exception {
+        try {
+            Date date = read(mapper, input, java.util.Date.class);
+            fail("Input "+input+" should not have been accepted but was deserialized into "+FORMAT.format(date));
+        }
+        catch(Exception e) {
+            // Is it the expected exception ?
+            if( ! exceptionType.isAssignableFrom(e.getClass()) ) {
+                fail("Wrong exception thrown when reading "+input+", actual: "+e.getClass().getName() + "("+e.getMessage()+"), expected: "+exceptionType.getName());
+            }
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_7683f49_dc2c003/rev_7683f49-dc2c003/src/test/java/com/fasterxml/jackson/databind/deser/DateDeserializationTest.java;<<<<<<< MINE
+=======
+private static <T> T read(ObjectMapper mapper, Object input, Class<T> type) throws Exception {
+        // Construct the json representation from the input
+        String json = input.toString();
+        if( !(input instanceof Number) ) {
+            json = "\""+json+"\"";
+        }
+
+        // Deserialize using the supplied ObjectMapper
+        return (T) mapper.readValue(json, type);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_03cc86b_27491ae/rev_03cc86b-27491ae/src/test/java/com/fasterxml/jackson/databind/deser/exc/TestExceptionDeserialization.java;<<<<<<< MINE
+=======
+public void testSingleValueArrayDeserializationException() throws Exception {
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS);
+        
+        final IOException exp;
+        try {
+            throw new IOException("testing");
+        } catch (IOException internal) {
+            exp = internal;
+        }
+        final String value = "[" + mapper.writeValueAsString(exp) + "]";
+        
+        try {
+            mapper.readValue(value, IOException.class);
+            fail("Exception not thrown when attempting to deserialize an IOException wrapped in a single value array with UNWRAP_SINGLE_VALUE_ARRAYS disabled");
+        } catch (JsonMappingException exp2) {
+            verifyException(exp2, "out of START_ARRAY");
+        }
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_5136650_9c4a7e5/rev_5136650-9c4a7e5/src/test/java/com/fasterxml/jackson/databind/node/TestNumberNodes.java;<<<<<<< MINE
+=======
+public void testDecimalNodeEqualsHashCode()
+    {
+        // We want DecimalNodes with equivalent _numeric_ values to be equal;
+        // this is not the case for BigDecimal where "1.0" and "1" are not
+        // equal!
+        BigDecimal b1 = BigDecimal.ONE;
+        BigDecimal b2 = new BigDecimal("1.0");
+        BigDecimal b3 = new BigDecimal("0.01e2");
+        BigDecimal b4 = new BigDecimal("1000e-3");
+
+        DecimalNode node1 = new DecimalNode(b1);
+        DecimalNode node2 = new DecimalNode(b2);
+        DecimalNode node3 = new DecimalNode(b3);
+        DecimalNode node4 = new DecimalNode(b4);
+
+        assertEquals(node1.hashCode(), node2.hashCode());
+        assertEquals(node2.hashCode(), node3.hashCode());
+        assertEquals(node3.hashCode(), node4.hashCode());
+
+        assertEquals(node1, node2);
+        assertEquals(node2, node1);
+        assertEquals(node2, node3);
+        assertEquals(node3, node4);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_5136650_9c4a7e5/rev_5136650-9c4a7e5/src/test/java/com/fasterxml/jackson/databind/node/TestNumberNodes.java;<<<<<<< MINE
+=======
+public void testBigIntegerNode() throws Exception
+    {
+        BigIntegerNode n = BigIntegerNode.valueOf(BigInteger.ONE);
+        assertStandardEquals(n);
+        assertTrue(n.equals(new BigIntegerNode(BigInteger.ONE)));
+        assertEquals(JsonToken.VALUE_NUMBER_INT, n.asToken());
+        assertEquals(JsonParser.NumberType.BIG_INTEGER, n.numberType());
+        assertTrue(n.isNumber());
+        assertTrue(n.isIntegralNumber());
+        assertTrue(n.isBigInteger());
+        assertEquals(BigInteger.ONE, n.numberValue());
+        assertEquals(1, n.intValue());
+        assertEquals(1L, n.longValue());
+        assertEquals(BigInteger.ONE, n.bigIntegerValue());
+        assertEquals("1", n.asText());
+        assertNodeNumbers(n, 1, 1.0);
+
+        BigInteger maxLong = BigInteger.valueOf(Long.MAX_VALUE);
+        
+        n = BigIntegerNode.valueOf(maxLong);
+        assertEquals(Long.MAX_VALUE, n.longValue());
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode n2 = mapper.readTree(maxLong.toString());
+        assertEquals(Long.MAX_VALUE, n2.longValue());
+
+        // then over long limit:
+        BigInteger beyondLong = maxLong.shiftLeft(2); // 4x max long
+        n2 = mapper.readTree(beyondLong.toString());
+        assertEquals(beyondLong, n2.bigIntegerValue());
+
+        assertTrue(BigIntegerNode.valueOf(BigInteger.ZERO).canConvertToInt());
+        assertTrue(BigIntegerNode.valueOf(BigInteger.valueOf(Integer.MAX_VALUE)).canConvertToInt());
+        assertTrue(BigIntegerNode.valueOf(BigInteger.valueOf(Integer.MIN_VALUE)).canConvertToInt());
+        assertFalse(BigIntegerNode.valueOf(BigInteger.valueOf(1L + Integer.MAX_VALUE)).canConvertToInt());
+        assertFalse(BigIntegerNode.valueOf(BigInteger.valueOf(-1L + Integer.MIN_VALUE)).canConvertToInt());
+
+        assertTrue(BigIntegerNode.valueOf(BigInteger.ZERO).canConvertToLong());
+        assertTrue(BigIntegerNode.valueOf(BigInteger.valueOf(Long.MAX_VALUE)).canConvertToLong());
+        assertTrue(BigIntegerNode.valueOf(BigInteger.valueOf(Long.MIN_VALUE)).canConvertToLong());
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_991ccbe_ddfddfb/rev_991ccbe-ddfddfb/src/test/java/com/fasterxml/jackson/databind/interop/IllegalTypesCheckTest.java;<<<<<<< MINE
+public void testIssue1599() throws Exception
+    {
+        final String NASTY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl";
+        final String JSON = aposToQuotes(
+ "{'id': 124,\n"
++" 'obj':[ '"+NASTY_CLASS+"',\n"
++"  {\n"
++"    'transletBytecodes' : [ 'AAIAZQ==' ],\n"
++"    'transletName' : 'a.b',\n"
++"    'outputProperties' : { }\n"
++"  }\n"
++" ]\n"
++"}"
+        );
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enableDefaultTyping();
+        try {
+            mapper.readValue(JSON, Bean1599.class);
+            fail("Should not pass");
+        } catch (InvalidDefinitionException e) {
+            verifyException(e, "Illegal type");
+            verifyException(e, "to deserialize");
+            verifyException(e, "prevented for security reasons");
+            BeanDescription desc = e.getBeanDescription();
+            assertNotNull(desc);
+            assertEquals(NASTY_CLASS, desc.getBeanClass().getName());
+        }
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8d0b850_dcfb0cc/rev_8d0b850-dcfb0cc/src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java;<<<<<<< MINE
+=======
+public Object handleMissingInstantiator(Class<?> instClass, JsonParser p,
+            String msg, Object... msgArgs)
+        throws IOException
+    {
+        if (msgArgs.length > 0) {
+            msg = String.format(msg, msgArgs);
+        }
+        LinkedNode<DeserializationProblemHandler> h = _config.getProblemHandlers();
+        while (h != null) {
+            // Can bail out if it's handled
+            Object instance = h.value().handleMissingInstantiator(this,
+                    instClass, p, msg);
+            if (instance != DeserializationProblemHandler.NOT_HANDLED) {
+                // Sanity check for broken handlers, otherwise nasty to debug:
+                if (_isCompatible(instClass, instance)) {
+                    return instance;
+                }
+                throw instantiationException(instClass, String.format(
+                        "DeserializationProblemHandler.handleMissingInstantiator() for type %s returned value of type %s",
+                        instClass, instance.getClass()));
+            }
+            h = h.next();
+        }
+        throw instantiationException(instClass, msg);
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_8ca9c1c_04c777f/rev_8ca9c1c-04c777f/src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java;<<<<<<< MINE
+=======
+@Deprecated
+    public JsonMappingException mappingException(Class<?> targetClass, JsonToken token) {
+        return JsonMappingException.from(_parser,
+                String.format("Cannot deserialize instance of %s out of %s token",
+                        ClassUtil.nameOf(targetClass), token));
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_998d79f_9d4a741/rev_998d79f-9d4a741/src/main/java/com/fasterxml/jackson/databind/deser/impl/CreatorCollector.java;<<<<<<< MINE
+public void addDelegatingCreator(AnnotatedWithParams creator,
+            boolean explicit, SettableBeanProperty[] injectables)
+    {
+        int delegateIndex = 0; // !!! TO FIX !!!
+        if (creator.getParameterType(delegateIndex).isCollectionLikeType()) {
+            if (verifyNonDup(creator, C_ARRAY_DELEGATE, explicit)) {
+                _arrayDelegateArgs = injectables;
+            }
+        } else {
+            if (verifyNonDup(creator, C_DELEGATE, explicit)) {
+                _delegateArgs = injectables;
+            }
+        }
+    }
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b505162_4675896/rev_b505162-4675896/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+
+        // 20-Oct-2015, tatu: Old simplistic approach
+
+        /*
+        // Currently mostly SimpleType instances can become something else
+        if (baseType instanceof SimpleType) {
+            // and only if subclass is an array, Collection or Map
+            if (subclass.isArray()
+                || Map.class.isAssignableFrom(subclass)
+                || Collection.class.isAssignableFrom(subclass)) {
+                // need to assert type compatibility...
+                if (!baseType.getRawClass().isAssignableFrom(subclass)) {
+                    throw new IllegalArgumentException("Class "+subclass.getClass().getName()+" not subtype of "+baseType);
+                }
+                // this _should_ work, right?
+                JavaType subtype = _fromClass(null, subclass, EMPTY_BINDINGS);
+                // one more thing: handlers to copy?
+                Object h = baseType.getValueHandler();
+                if (h != null) {
+                    subtype = subtype.withValueHandler(h);
+                }
+                h = baseType.getTypeHandler();
+                if (h != null) {
+                    subtype = subtype.withTypeHandler(h);
+                }
+                return subtype;
+            }
+        }
+        // But there is the need for special case for arrays too, it seems
+        if (baseType instanceof ArrayType) {
+            if (subclass.isArray()) {
+                // actually see if it might be a no-op first:
+                ArrayType at = (ArrayType) baseType;
+                Class<?> rawComp = subclass.getComponentType();
+                if (at.getContentType().getRawClass() == rawComp) {
+                    return baseType;
+                }
+                JavaType componentType = _fromAny(null, rawComp, null);
+                return ((ArrayType) baseType).withComponentType(componentType);
+            }
+        }
+
+        // otherwise regular narrowing should work just fine
+        return baseType.narrowBy(subclass);
+        */
+=======
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_b505162_4675896/rev_b505162-4675896/src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java;<<<<<<< MINE
+        // Otherwise, two choices: match N first, or empty. Do latter, for now
+        return EMPTY_BINDINGS;
+=======
+        return TypeBindings.create(subclass, typeParams);
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_6ec6e3e_a43d23d/rev_6ec6e3e-a43d23d/src/main/java/com/fasterxml/jackson/databind/node/MissingNode.java;<<<<<<< MINE
+@Override
+    public final boolean isMissingNode() {
+        return true;
+    }
+=======
+@Override
+    public boolean isMissingNode() {
+        return true;
+    }
+>>>>>>> YOURS
+/home/ramdisk/experiment1/projects/jackson-databind/revisions/rev_6ec6e3e_a43d23d/rev_6ec6e3e-a43d23d/src/main/java/com/fasterxml/jackson/databind/JsonNode.java;<<<<<<< MINE
+=======
+@Override
+    public boolean isMissingNode() {
+        return false;
+    }
+>>>>>>> YOURS

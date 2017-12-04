@@ -1,0 +1,10 @@
+file;ssmergeConf;linedbasedConf
+/home/ramdisk/experiment3/projects/astyanax/revisions/rev_0ea859d_8e7e118/rev_0ea859d-8e7e118/astyanax-entity-mapper/src/main/java/com/netflix/astyanax/entitystore/DefaultEntityManager.java;<<<<<<< MINE
+                    .withPartitioner(Murmur3Partitioner.get())
+=======
+                    .withPartitioner(partitioner)
+>>>>>>> YOURS;<<<<<<< MINE
+                    .withPartitioner(Murmur3Partitioner.get())
+=======
+                    .withPartitioner(partitioner)
+>>>>>>> YOURS

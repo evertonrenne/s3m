@@ -1,0 +1,10 @@
+revision;file;leftImport;rightImport;conflictUnmerge
+/experiment/projects/dropwizard-metrics/revisions/rev_a29c81a_c3041c6/rev_a29c81a-c3041c6.revisions;/experiment/projects/dropwizard-metrics/revisions/rev_a29c81a_c3041c6/rev_a29c81a-c3041c6/metrics-servlets/src/test/java/com/codahale/metrics/servlets/MetricsServletTest.java;importorg.eclipse.jetty.testing.ServletTester;;importorg.eclipse.jetty.servlet.ServletTester;;
+import com.codahale.metrics.health.HealthCheckRegistry;
+
+import org.eclipse.jetty.testing.ServletTester;
+=======
+import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.servlet.ServletTester;
+
+
